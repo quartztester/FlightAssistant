@@ -131,7 +131,7 @@ class FireworkComputer(computers: ComputerView, private val mc: MinecraftClient)
         }
     }
 
-    override fun calculateThrustForSpeed(targetSpeed: Int): Float {
+    override fun calculateThrustForSpeed(targetSpeed: Float): Float {
         return (targetSpeed / 30.0f).coerceIn(0.0f..1.0f)
     }
 
