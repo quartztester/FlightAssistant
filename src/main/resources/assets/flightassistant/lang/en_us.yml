@@ -207,7 +207,7 @@ menu.flightassistant:
         flightassistant:flight_path: Flight path display
         flightassistant:heading: Heading display
         flightassistant:radar_altitude: Radar altitude display
-        flightassistant:speed: Speed
+        flightassistant:speed: Speed display
         flightassistant:velocity_components: G/S & V/S display
       computer:
         flightassistant:air_data: Air data computer
@@ -231,9 +231,15 @@ menu.flightassistant:
     auto_thrust: Auto thrust
     autopilot: Autopilot
     thrust:
-      selected_speed: SPD
-      vertical_target: VERT
-      waypoint_thrust: F/PLN
+      .: Thrust
+      selected_speed:
+        .: SPEED
+        target: Target speed
+      vertical_target:
+        .: VERT
+        climb_thrust: Climb thrust
+        descend_thrust: Descend thrust
+      waypoint_thrust: F/PLAN
 
 mode.flightassistant:
   thrust:
@@ -241,8 +247,11 @@ mode.flightassistant:
     manual_toga: MAN TOGA
     locked: THR LK %s
     locked_toga: TOGA LK
+    idle: THR IDLE
     toga: THR TOGA
     selected_speed: SPD %s
+    climb: THR CLB
+    descend: THR DES
   pitch:
     void_protection: VOID PROT
     void_escape: VOID ESC

@@ -94,7 +94,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
 
     fun setTarget(target: Float, input: ControlInput? = null) {
         val oldThrust: Float = current
-        if (oldThrust != target) {
+        if (oldThrust != target || input == null) {
             current = target
             ThrustChangeCallback.EVENT.invoker().onThrustChange(oldThrust, current, input)
             lastChangeAutomatic = input != null

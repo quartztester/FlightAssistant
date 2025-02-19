@@ -234,9 +234,16 @@ menu.flightassistant:
     flight_directors: Указатели полёта
     auto_thrust: Автомат тяги
     autopilot: Автопилот
-    speed: Скорость
-    pitch: Высота
-    heading: Курс
+    thrust:
+      .: Тяга
+      selected_speed:
+        .: СКОР
+        target: Целевая скор.
+      vertical_target:
+        .: ВЕРТ
+        climb_thrust: Тяга набора
+        descend_thrust: Тяга снижения
+      waypoint_thrust: ПЛАН/П
 
 mode.flightassistant:
   thrust:
@@ -244,8 +251,11 @@ mode.flightassistant:
     manual_toga: РУЧН ВЗЛЕТН
     locked: БЛОК ТЯГА %s
     locked_toga: БЛОК ВЗЛЕТН
+    idle: ТЯГА МАЛ
     toga: ТЯГА ВЗЛЕТН
-    speed: СКОР %s
+    selected_speed: СКОР %s
+    climb: ТЯГА НАБОР
+    descend: ТЯГА СНИЖ
   pitch:
     void_protection: ПУСТ ЗАЩ
     void_escape: ПУСТ ВЫХОД

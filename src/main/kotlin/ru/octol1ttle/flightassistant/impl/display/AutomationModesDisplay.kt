@@ -13,6 +13,7 @@ import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComputer
 
 class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     private val thrustDisplay: ModeDisplay = ModeDisplay(1) { toPair(computers.thrust.activeInput) }
@@ -24,7 +25,8 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
             text.appendWithSeparation(Text.translatable("short.flightassistant.flight_directors"))
         }
         if (computers.automations.autoThrust) {
-            text.appendWithSeparation(Text.translatable("short.flightassistant.auto_thrust"))
+            val autoThrustText = Text.translatable("short.flightassistant.auto_thrust")
+            text.appendWithSeparation(if (computers.thrust.activeInput?.identifier == AutopilotLogicComputer.ID) autoThrustText else autoThrustText.styled { it.withColor(advisoryColor) })
         }
         if (computers.automations.autopilot) {
             text.appendWithSeparation(Text.translatable("short.flightassistant.autopilot"))

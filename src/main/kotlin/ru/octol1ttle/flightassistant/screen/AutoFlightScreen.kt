@@ -1,6 +1,7 @@
 package ru.octol1ttle.flightassistant.screen
 
 import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.Element
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -28,7 +29,16 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
             computers.automations.setAutoPilot(!computers.automations.autopilot, true)
         }.position(this.centerX + 5, this.centerY + 80).width(95).build())
 
-        this.addDrawableChild(ThrustModeWidget(computers))
+        this.addDrawableChild(ThrustModeWidget(computers, 0, this.height / 3, this.width / 3))
+    }
+
+    override fun close() {
+        super.close()
+        for (child: Element in children()) {
+            if (child is AutoCloseable) {
+                child.close()
+            }
+        }
     }
 
     override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {

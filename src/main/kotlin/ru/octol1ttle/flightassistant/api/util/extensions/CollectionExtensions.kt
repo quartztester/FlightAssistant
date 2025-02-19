@@ -30,3 +30,13 @@ fun List<AlertData>.getHighestPriority(): List<AlertData> {
 fun <T> List<T>.filterNonFaulted(): List<T> {
     return this.filter { it !is Computer || !it.faulted}
 }
+
+fun <E, T : MutableList<E>> T.clearAndAdd(element: E) {
+    this.clear()
+    this.add(element)
+}
+
+fun <E, T : MutableList<E>> T.clearAndAdd(vararg elements: E) {
+    this.clear()
+    this.addAll(elements)
+}
