@@ -76,7 +76,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
 
         fun render(drawContext: DrawContext) {
             val leftX: Int = (HudFrame.left + HudFrame.width * ((order - 1) / TOTAL_MODES)).toInt()
-            val rightX: Int = (HudFrame.left + HudFrame.width * (order / TOTAL_MODES)).toInt()
+            val rightX: Int = (HudFrame.left + HudFrame.width * (order / TOTAL_MODES)).toInt() - 1
             val y: Int = HudFrame.top - 9
 
             val pair = textSupplier.invoke()

@@ -23,9 +23,9 @@ object HudFrame {
     fun updateDimensions() {
         width = window.scaledWidth * FAConfig.display.frameWidth
         height = window.scaledHeight * FAConfig.display.frameHeight
-        top = ((window.scaledHeight - height) * 0.5f).toInt()
+        top = (window.scaledHeight - height.toInt()) / 2
         bottom = window.scaledHeight - top
-        left = ((window.scaledWidth - width) * 0.5f).toInt() + 1
+        left = (window.scaledWidth - width.toInt()) / 2
         right = window.scaledWidth - left
     }
 
