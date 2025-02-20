@@ -241,7 +241,7 @@ menu.flightassistant:
         descend_thrust: Descend thrust
       waypoint_thrust: F/PLAN
     vertical:
-      .: Vertical
+      .: Vertical navigation
       selected_pitch:
         .: PITCH
         target: Target pitch
@@ -249,6 +249,16 @@ menu.flightassistant:
         .: ALT
         target: Target altitude
       waypoint_altitude: F/PLAN
+    lateral:
+      .: Lateral navigation
+      selected_heading:
+        .: HDG
+        target: Target heading
+      selected_coordinates:
+        .: COORDS
+        target_x: X
+        target_z: Z
+      waypoint_coordinates: F/PLAN
 
 mode.flightassistant:
   thrust:
@@ -272,8 +282,9 @@ mode.flightassistant:
       climb: CLB %s
       descend: DES %s
       hold: ALT %s
-  heading:
-    selected: HDG %s
+  lateral:
+    selected_heading: HDG %s
+    selected_coordinates: COORD %s %s
 
 short.flightassistant:
   alert: ALERT

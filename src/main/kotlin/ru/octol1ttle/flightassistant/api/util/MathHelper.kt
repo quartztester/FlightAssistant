@@ -3,7 +3,11 @@ package ru.octol1ttle.flightassistant.api.util
 import kotlin.math.*
 
 fun degrees(value: Float): Float {
-    return (value * (180 / PI)).toFloat()
+    return (value * (180.0f / PI)).toFloat()
+}
+
+fun degrees(value: Double): Double {
+    return (value * (180.0 / PI))
 }
 
 fun furtherFromZero(value: Float): Float {
@@ -51,13 +55,13 @@ fun Double.requireIn(range: ClosedRange<Double>): Double {
 }
 
 fun findShortestPath(from: Float, to: Float, valueRange: Float): Float {
-    var diff: Float = to - from
+    var diff: Float = (to - from) % valueRange
 
+    if (diff >= valueRange * 0.5) {
+        diff -= valueRange
+    }
     if (diff < -valueRange * 0.5) {
         diff += valueRange
-    }
-    if (diff > valueRange * 0.5) {
-        diff -= valueRange
     }
 
     return diff

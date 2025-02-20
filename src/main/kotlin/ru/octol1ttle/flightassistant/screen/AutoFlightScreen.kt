@@ -8,6 +8,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.screen.widgets.ColoredButtonWidget
 import ru.octol1ttle.flightassistant.screen.widgets.autoflight.DelayedApplyChanges
+import ru.octol1ttle.flightassistant.screen.widgets.autoflight.LateralModeWidget
 import ru.octol1ttle.flightassistant.screen.widgets.autoflight.ThrustModeWidget
 import ru.octol1ttle.flightassistant.screen.widgets.autoflight.VerticalModeWidget
 
@@ -17,6 +18,7 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
     private lateinit var autopilot: ColoredButtonWidget
     private var thrustMode: ThrustModeWidget? = null
     private var verticalMode: VerticalModeWidget? = null
+    private var lateralMode: LateralModeWidget? = null
 
     override fun init() {
         super.init()
@@ -35,9 +37,11 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
         }.position(this.centerX + 5, this.centerY + 80).width(95).build())
 
         thrustMode?.applyChanges()
-        thrustMode = this.addDrawableChild(ThrustModeWidget(computers, 5, this.height / 3, this.width / 3 - 3))
+        thrustMode = this.addDrawableChild(ThrustModeWidget(computers, 5, this.height / 3, this.width / 3 - 10))
         verticalMode?.applyChanges()
-        verticalMode = this.addDrawableChild(VerticalModeWidget(computers, 3 + this.width / 3 + 3, this.height / 3, this.width / 3 - 3))
+        verticalMode = this.addDrawableChild(VerticalModeWidget(computers, this.width / 3 + 5, this.height / 3, this.width / 3 - 10))
+        lateralMode?.applyChanges()
+        lateralMode = this.addDrawableChild(LateralModeWidget(computers, this.width / 3 * 2 + 5, this.height / 3, this.width / 3 - 10))
     }
 
     override fun close() {
