@@ -22,12 +22,14 @@ class FireworkComputer(computers: ComputerView, private val mc: MinecraftClient)
     override val priority: ThrustSource.Priority = ThrustSource.Priority.LOW
     override val supportsReverse: Boolean = false
     override val optimumClimbPitch: Float = 55.0f
+    override val altitudeHoldPitch: Float = 2.0f
 
     private var safeFireworkCount: Int = 0
-    private var safeFireworkSlot: Int? = null
 
+    private var safeFireworkSlot: Int? = null
     var waitingForResponse: Boolean = false
     var lastActivationTime: Int = 0
+
     var responseTimes: LimitedFIFOQueue<Int> = LimitedFIFOQueue(5)
 
     override fun subscribeToEvents() {

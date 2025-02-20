@@ -42,7 +42,7 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
         selectedPitchWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.vertical.selected_pitch.target"))
         selectedPitchWidget.setTextPredicate {
             val i: Float? = it.toFloatOrNull()
-            it.isEmpty() || i != null && i in -90.0f..90.0f
+            it.isEmpty() || it == "-" || i != null && i in -90.0f..90.0f
         }
         textFields.computeIfAbsent(type) { ArrayList() }.clearAndAdd(selectedPitchWidget)
     }

@@ -98,7 +98,7 @@ class AirDataComputer(computers: ComputerView, private val mc: MinecraftClient) 
             return groundLevel
         }
 
-        val minY: Double = world.bottomY.toDouble().coerceAtLeast(altitude - 1000)
+        val minY: Double = world.bottomY.toDouble().coerceAtLeast(altitude - 2500)
         val result: BlockHitResult = world.raycast(
             RaycastContext(
                 position,

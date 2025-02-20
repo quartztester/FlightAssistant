@@ -65,7 +65,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         }
 
         val descendThrustWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.firstOrNull(), Text.empty()
+            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.get(1), Text.empty()
         )
         descendThrustWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target.descend_thrust"))
         descendThrustWidget.setTextPredicate {

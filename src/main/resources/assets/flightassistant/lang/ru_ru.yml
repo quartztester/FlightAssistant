@@ -272,6 +272,10 @@ mode.flightassistant:
     terrain_protection: ЗЕМЛ ЗАЩ
     terrain_escape: ЗЕМЛ ИЗБЕЖ
     selected_pitch: УГОЛ %s
+    selected_altitude:
+      climb: НАБОР %s
+      descend: СНИЖ %s
+      hold: ВЫС %s
   heading:
     selected: КУРС %s
 

@@ -25,7 +25,8 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
             ThrustMode.Type.VerticalTarget ->
                 if (!verticalMode.isAltitude()) null
                 else {
-                    val useClimbThrust: Boolean = abs(verticalMode.pitchOrAltitude - (computers.data.altitude + computers.data.velocity.y * 20)) < 5.0f
+                    val nearTarget: Boolean = abs(verticalMode.pitchOrAltitude - (computers.data.altitude + computers.data.velocity.y * 20)) < 10.0f
+                    val useClimbThrust: Boolean = nearTarget || verticalMode.pitchOrAltitude > computers.data.altitude
                     ControlInput(
                         if (useClimbThrust) thrustMode.climbThrust!! else thrustMode.descendThrust!!,
                         ControlInput.Priority.NORMAL,
@@ -49,13 +50,41 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                     active = active,
                     identifier = ID
                 )
-            VerticalMode.Type.SelectedAltitude -> TODO()
+            VerticalMode.Type.SelectedAltitude -> {
+                val diff: Float = (verticalMode.pitchOrAltitude - computers.data.altitude).toFloat()
+                val abs: Float = abs(diff)
+                val neutralPitch: Float = computers.thrust.getAltitudeHoldPitch()
+
+                var finalPitch: Float
+                var text: Text
+                if (diff >= 0) {
+                    finalPitch = computers.thrust.getOptimumClimbPitch()
+                    text = Text.translatable("mode.flightassistant.vertical.selected_altitude.climb", "%.0f".format(verticalMode.pitchOrAltitude))
+
+                    val distanceFromNeutral: Float = finalPitch - neutralPitch
+                    finalPitch -= distanceFromNeutral * 0.6f * ((200.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
+                    finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
+                } else {
+                    finalPitch = -35.0f
+                    text = Text.translatable("mode.flightassistant.vertical.selected_altitude.descend", "%.0f".format(verticalMode.pitchOrAltitude))
+
+                    val distanceFromNeutral: Float = finalPitch - neutralPitch
+                    finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 50.0f).coerceIn(0.0f..1.0f)
+                    finalPitch -= distanceFromNeutral * 0.6f * ((50.0f - abs) / 50.0f).coerceIn(0.0f..1.0f)
+                }
+
+                if (abs <= 5.0f) {
+                    text = Text.translatable("mode.flightassistant.vertical.selected_altitude.hold", "%.0f".format(verticalMode.pitchOrAltitude))
+                }
+
+                ControlInput(finalPitch, ControlInput.Priority.NORMAL, text, 1.5f, active, ID)
+            }
             VerticalMode.Type.WaypointAltitude -> TODO()
         }
     }
 
     fun computeHeading(active: Boolean): ControlInput? {
-        TODO()
+        return null
     }
 
     override fun tick() {

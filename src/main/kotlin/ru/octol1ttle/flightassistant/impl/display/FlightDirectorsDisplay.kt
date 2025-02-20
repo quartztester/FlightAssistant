@@ -10,7 +10,7 @@ import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.ScreenSpace
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutomationsComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComputer
 
 class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
     override fun allowedByConfig(): Boolean {
@@ -21,7 +21,7 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
         if (!computers.automations.flightDirectors) {
             return
         }
-        if (computers.pitch.activeInput?.identifier != AutomationsComputer.ID || computers.heading.activeInput?.identifier != AutomationsComputer.ID) {
+        if (computers.pitch.activeInput?.identifier != AutopilotLogicComputer.ID && computers.heading.activeInput?.identifier != AutopilotLogicComputer.ID) {
             renderFaulted(drawContext)
             return
         }
@@ -32,11 +32,15 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
             matrices.push()
             matrices.translate(0, 0, -50)
 
-            val pitchY: Int = ScreenSpace.getY(computers.pitch.activeInput?.target ?: return, false) ?: return
-            drawHorizontalLine(this.centerXI - halfWidth, this.centerXI + halfWidth, pitchY, advisoryColor)
+            if (computers.pitch.activeInput?.identifier == AutopilotLogicComputer.ID) {
+                val pitchY: Int = ScreenSpace.getY(computers.pitch.activeInput?.target ?: return, false) ?: return
+                drawHorizontalLine(this.centerXI - halfWidth, this.centerXI + halfWidth, pitchY, advisoryColor)
+            }
 
-            val headingX: Int = ScreenSpace.getX(computers.heading.activeInput?.target ?: return, false) ?: return
-            drawVerticalLine(headingX, this.centerYI - halfWidth, this.centerYI + halfWidth, advisoryColor)
+            if (computers.heading.activeInput?.identifier == AutopilotLogicComputer.ID) {
+                val headingX: Int = ScreenSpace.getX(computers.heading.activeInput?.target ?: return, false) ?: return
+                drawVerticalLine(headingX, this.centerYI - halfWidth, this.centerYI + halfWidth, advisoryColor)
+            }
 
             matrices.pop()
         }

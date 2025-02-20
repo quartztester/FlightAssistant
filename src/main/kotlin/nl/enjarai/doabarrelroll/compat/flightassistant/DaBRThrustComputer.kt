@@ -14,8 +14,8 @@ import ru.octol1ttle.flightassistant.api.util.FATickCounter
 class DaBRThrustComputer(computers: ComputerView) : Computer(computers), ThrustSource {
     override val priority: ThrustSource.Priority = ThrustSource.Priority.HIGH
     override val supportsReverse: Boolean = true
-    override val optimumClimbPitch: Float
-        get() = 30.0f
+    override val optimumClimbPitch: Float = 30.0f
+    override val altitudeHoldPitch: Float = 4.65f
 
     override fun subscribeToEvents() {
         ThrustEvents.MODIFY_THRUST_INPUT.register({
