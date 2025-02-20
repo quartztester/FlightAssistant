@@ -245,7 +245,7 @@ menu.flightassistant:
         descend_thrust: Тяга снижения
       waypoint_thrust: ПЛАН/П
     vertical:
-      .: Вертикаль
+      .: Вертикальная навигация
       selected_pitch:
         .: УГОЛ
         target: Целевой угол
@@ -253,6 +253,16 @@ menu.flightassistant:
         .: ВЫС
         target: Целевая выс.
       waypoint_altitude: ПЛАН/П
+    lateral:
+      .: Горизонтальная навигация
+      selected_heading:
+        .: КУРС
+        target: Целевой курс
+      selected_coordinates:
+        .: КООРД
+        target_x: X
+        target_z: Z
+      waypoint_coordinates: ПЛАН/П
 
 mode.flightassistant:
   thrust:
@@ -276,8 +286,9 @@ mode.flightassistant:
       climb: НАБОР %s
       descend: СНИЖ %s
       hold: ВЫС %s
-  heading:
-    selected: КУРС %s
+  lateral:
+    selected_heading: КУРС %s
+    selected_coordinates: КООРД %s %s
 
 short.flightassistant:
   alert: ПРЕДУПР

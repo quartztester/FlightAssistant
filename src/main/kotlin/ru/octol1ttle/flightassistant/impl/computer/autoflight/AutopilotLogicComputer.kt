@@ -1,12 +1,14 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import kotlin.math.abs
+import kotlin.math.atan2
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.util.degrees
 
 class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     var thrustMode: ThrustMode = ThrustMode(ThrustMode.Type.SelectedSpeed, 0.0f)
@@ -15,13 +17,12 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
 
     fun computeThrust(): ControlInput? {
         return when (thrustMode.type) {
-            ThrustMode.Type.SelectedSpeed ->
-                ControlInput(
-                    computers.thrust.calculateThrustForSpeed(thrustMode.speed) ?: 0.0f,
-                    ControlInput.Priority.NORMAL,
-                    Text.translatable("mode.flightassistant.thrust.selected_speed", thrustMode.speed.toInt()),
-                    identifier = ID
-                )
+            ThrustMode.Type.SelectedSpeed -> ControlInput(
+                computers.thrust.calculateThrustForSpeed(thrustMode.speed) ?: 0.0f,
+                ControlInput.Priority.NORMAL,
+                Text.translatable("mode.flightassistant.thrust.selected_speed", thrustMode.speed.toInt()),
+                identifier = ID
+            )
             ThrustMode.Type.VerticalTarget ->
                 if (!verticalMode.isAltitude()) null
                 else {
@@ -83,8 +84,24 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
         }
     }
 
-    fun computeHeading(active: Boolean): ControlInput? {
-        return null
+    fun computeHeading(active: Boolean): ControlInput {
+        return when (lateralMode.type) {
+            LateralMode.Type.SelectedHeading -> ControlInput(
+                lateralMode.heading!!,
+                ControlInput.Priority.NORMAL,
+                Text.translatable("mode.flightassistant.lateral.selected_heading", "%.0f".format(lateralMode.heading!!)),
+                active = active,
+                identifier = ID
+            )
+            LateralMode.Type.SelectedCoordinates -> ControlInput(
+                degrees(atan2(-(lateralMode.x!! - computers.data.position.x), lateralMode.z!! - computers.data.position.z)).toFloat() + 180.0f,
+                ControlInput.Priority.NORMAL,
+                Text.translatable("mode.flightassistant.lateral.selected_coordinates", "%.0f".format(lateralMode.x!!), "%.0f".format(lateralMode.z!!)),
+                active = active,
+                identifier = ID
+            )
+            LateralMode.Type.WaypointCoordinates -> TODO()
+        }
     }
 
     override fun tick() {

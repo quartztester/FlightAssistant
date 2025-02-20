@@ -91,7 +91,7 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.heading"), centerXI, HudFrame.top + 1, warningColor)
+            drawMiddleAlignedText(Text.translatable("short.flightassistant.heading"), centerXI, HudFrame.top - 24, warningColor)
         }
     }
 
