@@ -60,7 +60,7 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
         )
         selectedAltitudeWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.vertical.selected_altitude.target"))
         selectedAltitudeWidget.setTextPredicate {
-            it.isEmpty() || it.toIntOrNull() != null
+            it.isEmpty() || it == "-" || it.toIntOrNull() != null
         }
         textFields.computeIfAbsent(type) { ArrayList() }.clearAndAdd(selectedAltitudeWidget)
     }
