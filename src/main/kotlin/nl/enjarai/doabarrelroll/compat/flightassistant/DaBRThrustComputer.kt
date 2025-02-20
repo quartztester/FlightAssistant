@@ -19,7 +19,9 @@ class DaBRThrustComputer(computers: ComputerView) : Computer(computers), ThrustS
 
     override fun subscribeToEvents() {
         ThrustEvents.MODIFY_THRUST_INPUT.register({
-            computers.thrust.setTarget((computers.thrust.current + FATickCounter.timePassed / 3 * sign(it)).toFloat().coerceIn(-1.0f..1.0f))
+            if (it != 0.0) {
+                computers.thrust.setTarget((computers.thrust.current + FATickCounter.timePassed / 3 * sign(it)).toFloat().coerceIn(-1.0f..1.0f))
+            }
             if (!computers.thrust.disabledOrFaulted()) {
                 return@register computers.thrust.current.toDouble()
             }
