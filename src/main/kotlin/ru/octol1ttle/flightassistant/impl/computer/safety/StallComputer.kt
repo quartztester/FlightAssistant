@@ -53,7 +53,7 @@ class StallComputer(computers: ComputerView) : Computer(computers), PitchLimiter
         return ControlInput(
             maximumSafePitch,
             ControlInput.Priority.HIGHEST,
-            Text.translatable("mode.flightassistant.pitch.stall_protection"),
+            Text.translatable("mode.flightassistant.vertical.stall_protection"),
             1.5f,
             FAConfig.safety.stallLimitPitch
         )

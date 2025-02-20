@@ -13,8 +13,7 @@ import ru.octol1ttle.flightassistant.api.util.extensions.clearAndAdd
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComputer
 import ru.octol1ttle.flightassistant.screen.widgets.AbstractParentWidget
 
-// TODO: fix dimensions
-class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val width: Int) : AbstractParentWidget(), AutoCloseable {
+class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val width: Int) : AbstractParentWidget(), DelayedApplyChanges {
     private val title: TextWidget = TextWidget(
         x, y, width, 20, Text.translatable("menu.flightassistant.autoflight.thrust"), mc.textRenderer
     )
@@ -27,7 +26,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         buttons[AutopilotLogicComputer.ThrustMode.Type.WaypointThrust] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.thrust.waypoint_thrust")
         ) { newType = AutopilotLogicComputer.ThrustMode.Type.WaypointThrust }
-            .dimensions(x, y + 20, width / 3 - 5, 15).build()
+            .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
 
     private fun initSelectedSpeed() {
@@ -36,7 +35,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         buttons[type] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
         ) { newType = type }
-            .dimensions(x, y + 20, (width - 15) / 3, 15).build()
+            .dimensions(x + 1, y + 20, width / 3 - 1, 15).build()
         val targetSpeedWidget = TextFieldWidget(
             mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Text.empty()
         )
@@ -54,10 +53,10 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         buttons[type] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target")
         ) { newType = type }
-            .dimensions(x + (width - 15) / 3, y + 20, (width - 15) / 3, 15).build()
+            .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
         val climbThrustWidget = TextFieldWidget(
-            mc.textRenderer, x, y + 40, (width - 10) / 2, 15, textFields[type]?.firstOrNull(), Text.empty()
+            mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.firstOrNull(), Text.empty()
         )
         climbThrustWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target.climb_thrust"))
         climbThrustWidget.setTextPredicate {
@@ -66,7 +65,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         }
 
         val descendThrustWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 2, y + 40, (width - 10) / 2, 15, textFields[type]?.firstOrNull(), Text.empty()
+            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.firstOrNull(), Text.empty()
         )
         descendThrustWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target.descend_thrust"))
         descendThrustWidget.setTextPredicate {
@@ -81,13 +80,13 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         val list = ArrayList<Element>()
         list.add(title)
         list.addAll(buttons.values)
-        textFields[computers.autopilot.thrustMode.type]?.let {
+        textFields[newType]?.let {
             list.addAll(it)
         }
         return list
     }
 
-    override fun close() {
+    override fun applyChanges() {
         computers.autopilot.thrustMode.type = newType
         when (val type: AutopilotLogicComputer.ThrustMode.Type = computers.autopilot.thrustMode.type) {
             AutopilotLogicComputer.ThrustMode.Type.SelectedSpeed -> computers.autopilot.thrustMode.speed = textFields[type]!!.single().text.toFloatOrNull() ?: 0.0f
@@ -101,7 +100,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
 
     override fun render(context: DrawContext?, mouseX: Int, mouseY: Int, delta: Float) {
         for (button in buttons) {
-            button.value.active = computers.autopilot.thrustMode.type != button.key
+            button.value.active = newType != button.key
         }
 
         super.render(context, mouseX, mouseY, delta)
@@ -110,5 +109,6 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
     companion object {
         private val buttons: EnumMap<AutopilotLogicComputer.ThrustMode.Type, ButtonWidget> = EnumMap(AutopilotLogicComputer.ThrustMode.Type::class.java)
         private val textFields: EnumMap<AutopilotLogicComputer.ThrustMode.Type, MutableList<TextFieldWidget>> = EnumMap(AutopilotLogicComputer.ThrustMode.Type::class.java)
+        const val TOTAL_MODES: Float = 3.0f
     }
 }

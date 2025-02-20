@@ -39,8 +39,19 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
         }
     }
 
-    fun computePitch(active: Boolean): ControlInput? {
-        TODO()
+    fun computePitch(active: Boolean): ControlInput {
+        return when (verticalMode.type) {
+            VerticalMode.Type.SelectedPitch ->
+                ControlInput(
+                    verticalMode.pitchOrAltitude,
+                    ControlInput.Priority.NORMAL,
+                    Text.translatable("mode.flightassistant.vertical.selected_pitch", "%.1f".format(verticalMode.pitchOrAltitude)),
+                    active = active,
+                    identifier = ID
+                )
+            VerticalMode.Type.SelectedAltitude -> TODO()
+            VerticalMode.Type.WaypointAltitude -> TODO()
+        }
     }
 
     fun computeHeading(active: Boolean): ControlInput? {

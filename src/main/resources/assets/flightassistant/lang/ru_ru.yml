@@ -244,6 +244,15 @@ menu.flightassistant:
         climb_thrust: Тяга набора
         descend_thrust: Тяга снижения
       waypoint_thrust: ПЛАН/П
+    vertical:
+      .: Вертикаль
+      selected_pitch:
+        .: УГОЛ
+        target: Целевой угол
+      selected_altitude:
+        .: ВЫС
+        target: Целевая выс.
+      waypoint_altitude: ПЛАН/П
 
 mode.flightassistant:
   thrust:
@@ -256,13 +265,13 @@ mode.flightassistant:
     selected_speed: СКОР %s
     climb: ТЯГА НАБОР
     descend: ТЯГА СНИЖ
-  pitch:
+  vertical:
     void_protection: ПУСТ ЗАЩ
     void_escape: ПУСТ ВЫХОД
     stall_protection: СВАЛ ЗАЩ
     terrain_protection: ЗЕМЛ ЗАЩ
     terrain_escape: ЗЕМЛ ИЗБЕЖ
-    altitude: ВЫС %s
+    selected_pitch: УГОЛ %s
   heading:
     selected: КУРС %s
 

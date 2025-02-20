@@ -7,12 +7,16 @@ import net.minecraft.util.Formatting
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.screen.widgets.ColoredButtonWidget
+import ru.octol1ttle.flightassistant.screen.widgets.autoflight.DelayedApplyChanges
 import ru.octol1ttle.flightassistant.screen.widgets.autoflight.ThrustModeWidget
+import ru.octol1ttle.flightassistant.screen.widgets.autoflight.VerticalModeWidget
 
 class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.autoflight")) {
     private lateinit var flightDirectors: ColoredButtonWidget
     private lateinit var autoThrust: ColoredButtonWidget
     private lateinit var autopilot: ColoredButtonWidget
+    private var thrustMode: ThrustModeWidget? = null
+    private var verticalMode: VerticalModeWidget? = null
 
     override fun init() {
         super.init()
@@ -23,20 +27,24 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
             computers.automations.setFlightDirectors(!computers.automations.flightDirectors)
         }.position(this.centerX - 100, this.centerY + 50).width(200).build())
         autoThrust = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.auto_thrust")) {
+            thrustMode?.applyChanges()
             computers.automations.setAutoThrust(!computers.automations.autoThrust, true)
         }.position(this.centerX - 100, this.centerY + 80).width(95).build())
         autopilot = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.autopilot")) {
             computers.automations.setAutoPilot(!computers.automations.autopilot, true)
         }.position(this.centerX + 5, this.centerY + 80).width(95).build())
 
-        this.addDrawableChild(ThrustModeWidget(computers, 0, this.height / 3, this.width / 3))
+        thrustMode?.applyChanges()
+        thrustMode = this.addDrawableChild(ThrustModeWidget(computers, 5, this.height / 3, this.width / 3 - 3))
+        verticalMode?.applyChanges()
+        verticalMode = this.addDrawableChild(VerticalModeWidget(computers, 3 + this.width / 3 + 3, this.height / 3, this.width / 3 - 3))
     }
 
     override fun close() {
         super.close()
         for (child: Element in children()) {
-            if (child is AutoCloseable) {
-                child.close()
+            if (child is DelayedApplyChanges) {
+                child.applyChanges()
             }
         }
     }

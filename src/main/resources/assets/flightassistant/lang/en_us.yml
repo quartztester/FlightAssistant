@@ -240,6 +240,15 @@ menu.flightassistant:
         climb_thrust: Climb thrust
         descend_thrust: Descend thrust
       waypoint_thrust: F/PLAN
+    vertical:
+      .: Vertical
+      selected_pitch:
+        .: PITCH
+        target: Target pitch
+      selected_altitude:
+        .: ALT
+        target: Target altitude
+      waypoint_altitude: F/PLAN
 
 mode.flightassistant:
   thrust:
@@ -252,13 +261,13 @@ mode.flightassistant:
     selected_speed: SPD %s
     climb: THR CLB
     descend: THR DES
-  pitch:
+  vertical:
     void_protection: VOID PROT
     void_escape: VOID ESC
     stall_protection: STALL PROT
     terrain_protection: TERR PROT
     terrain_escape: TERR ESC
-    altitude: ALT %s
+    selected_pitch: PITCH %s
   heading:
     selected: HDG %s
 

@@ -133,7 +133,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
             return ControlInput(
                 computers.data.pitch.coerceAtMost(0.0f),
                 ControlInput.Priority.HIGH,
-                Text.translatable("mode.flightassistant.pitch.terrain_protection")
+                Text.translatable("mode.flightassistant.vertical.terrain_protection")
             )
         }
 
@@ -149,7 +149,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
             return ControlInput(
                 90.0f,
                 ControlInput.Priority.HIGH,
-                Text.translatable("mode.flightassistant.pitch.terrain_escape"),
+                Text.translatable("mode.flightassistant.vertical.terrain_escape"),
                 1.0f / minImpactTime,
                 active = groundImpactStatus == Status.RECOVER || obstacleImpactStatus == Status.RECOVER
             )
