@@ -53,6 +53,9 @@ object FAKeyBindings {
         }
 
         while (autopilotDisconnect.wasPressed()) {
+            if (!computers.automations.autopilot && !computers.automations.autopilotAlert) {
+                computers.automations.setFlightDirectors(false)
+            }
             computers.automations.setAutoPilot(false, alert = false)
         }
         computers.pitch.manualOverride = manualPitchOverride.isPressed
