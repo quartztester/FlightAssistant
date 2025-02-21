@@ -26,7 +26,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
             ThrustMode.Type.VerticalTarget ->
                 if (!verticalMode.isAltitude()) null
                 else {
-                    val nearTarget: Boolean = abs(verticalMode.pitchOrAltitude - (computers.data.altitude + computers.data.velocity.y * 20)) < 10.0f
+                    val nearTarget: Boolean = abs(verticalMode.pitchOrAltitude - computers.data.altitude) <= 5.0f
                     val useClimbThrust: Boolean = nearTarget || verticalMode.pitchOrAltitude > computers.data.altitude
                     ControlInput(
                         if (useClimbThrust) thrustMode.climbThrust!! else thrustMode.descendThrust!!,
