@@ -1,20 +1,18 @@
-This is Alpha 5 of a major update to FlightAssistant. Please note that there may be critical issues and features may
+This is Alpha 6 of a major update to FlightAssistant. Please note that there may be critical issues and features may
 not work as intended. Please use [Discord](https://discord.gg/5kcBCvnbTp)
 or [GitHub](https://github.com/Octol1ttle/FlightAssistant) to discuss this alpha or report any bugs.
 
-Versions 1.20.2, 1.20.3 and 1.20.4 are no longer supported.
+## New features in Alpha 6
+- **New Autothrust mode: Vertical Target**: Adjusts thrust based on the target altitude
+- **New Autopilot vertical mode: Selected Altitude**: Climbs or descends to reach an altitude, then holds that altitude
+- **New Autopilot lateral mode: Selected Coordinates**: Adjusts heading to reach the target coordinates
 
-## New features in Alpha 5
-- **Added support for Do a Barrel Roll's Thrusting feature**
-- **Added ability for autopilot to control roll when Do a Barrel Roll is installed**
-
-## Changes in Alpha 5
-- **Significantly reduced the strictness of the stall protection**
-- Increased the speed at which the stall protection will move the camera to a safe position
-- Moved the Heading Display above the Automation Modes Display, to not overlap with alerts
+## Changes in Alpha 6
+- **Pressing the A/P Disconnect button when autopilot is already off will now turn off the flight directors**
+- Armed, but inactive automation will no longer appear crossed out on the display
 
 ## Fixed issues
-- **The stall warning and protections no longer trigger when performing very quick turns**
-- **The Firework Computer no longer activates fireworks more frequently than intended**
-- Low-priority alert sounds no longer can start when a high-priority alert sound is playing
-- Fixed broken text when a Display Fault Alert activates
+- Flight directors now move when rolling
+- Fixed a THRUST SYS FAULT that could appear when using DaBR thrust
+- Fixed an issue that caused Thrust Lock to be reset automatically when using DaBR thrust
+- Fixed an issue that caused the autopilot to randomly disconnect when DaBR is enabled
