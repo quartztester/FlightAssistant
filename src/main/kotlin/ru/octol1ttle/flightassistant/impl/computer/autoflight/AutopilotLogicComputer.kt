@@ -37,11 +37,11 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                         identifier = ID
                     )
                 }
-            ThrustMode.Type.WaypointThrust -> TODO()
+            ThrustMode.Type.WaypointThrust -> null
         }
     }
 
-    fun computePitch(active: Boolean): ControlInput {
+    fun computePitch(active: Boolean): ControlInput? {
         return when (verticalMode.type) {
             VerticalMode.Type.SelectedPitch ->
                 ControlInput(
@@ -80,11 +80,11 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
 
                 ControlInput(finalPitch, ControlInput.Priority.NORMAL, text, 1.5f, active, ID)
             }
-            VerticalMode.Type.WaypointAltitude -> TODO()
+            VerticalMode.Type.WaypointAltitude -> null
         }
     }
 
-    fun computeHeading(active: Boolean): ControlInput {
+    fun computeHeading(active: Boolean): ControlInput? {
         return when (lateralMode.type) {
             LateralMode.Type.SelectedHeading -> ControlInput(
                 lateralMode.heading!!,
@@ -100,7 +100,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 active = active,
                 identifier = ID
             )
-            LateralMode.Type.WaypointCoordinates -> TODO()
+            LateralMode.Type.WaypointCoordinates -> null
         }
     }
 
