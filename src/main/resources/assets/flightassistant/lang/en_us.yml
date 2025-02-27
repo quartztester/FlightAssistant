@@ -189,7 +189,8 @@ config.flightassistant:
 
 menu.flightassistant:
   .: Flight setup
-  flight_plan: Flight plan
+  flight_plan:
+    .: Flight plan
   system:
     .: System status
     fault: FAULT

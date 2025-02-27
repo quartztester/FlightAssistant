@@ -2,6 +2,9 @@ package ru.octol1ttle.flightassistant.screen
 
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.widget.ButtonWidget
+import net.minecraft.client.gui.widget.TextWidget
+import net.minecraft.screen.ScreenTexts
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -23,6 +26,8 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
     override fun init() {
         super.init()
 
+        this.addDrawableChild(TextWidget(0, this.height / 5, this.width, 9, this.title, this.textRenderer))
+
         val computers: ComputerView = ComputerHost
 
         flightDirectors = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.flight_directors")) {
@@ -42,6 +47,10 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
         verticalMode = this.addDrawableChild(VerticalModeWidget(computers, this.width / 3 + 5, this.height / 3, this.width / 3 - 10))
         lateralMode?.applyChanges()
         lateralMode = this.addDrawableChild(LateralModeWidget(computers, this.width / 3 * 2 + 5, this.height / 3, this.width / 3 - 10))
+
+        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE) { _: ButtonWidget? ->
+            this.close()
+        }.position(this.width - 100, this.height - 40).width(80).build())
     }
 
     override fun close() {

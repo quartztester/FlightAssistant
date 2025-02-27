@@ -193,7 +193,8 @@ config.flightassistant:
 
 menu.flightassistant:
   .: Настройка полёта
-  flight_plan: План полёта
+  flight_plan:
+    .: План полёта
   system:
     .: Статус систем
     fault: ОТКАЗ
