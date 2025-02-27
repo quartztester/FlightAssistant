@@ -166,22 +166,24 @@ config.flightassistant:
         .: Stall
         alert_mode: Stall alert mode
         limit_pitch: Limit pitch to prevent stalls
-        auto_thrust: Automatically use thrust to recover from stalls
+        auto_thrust: Automatically increase thrust to recover from stalls
       void:
         .: Void damage altitude
         alert_mode: Void damage altitude alert mode
         limit_pitch: Limit pitch above the void
-        auto_thrust: Automatically use thrust to escape the void
+        auto_thrust: Automatically increase thrust to escape the void
         auto_pitch: Automatically raise pitch to escape the void
       gpws:
         .: Ground Proximity Warning System
         sink_rate:
           alert_mode: Sink rate alert mode
           limit_pitch: Limit pitch when sink rate is excessive
+          auto_thrust: Automatically reduce thrust when sink rate is excessive
           auto_pitch: Automatically raise pitch to recover from excessive sink rate
         obstacle:
           alert_mode: Terrain alert mode
           limit_pitch: Limit pitch when terrain is detected
+          auto_thrust: Automatically reduce thrust when terrain is detected
           auto_pitch: Automatically raise pitch to escape from terrain
       firework:
         .: Fireworks

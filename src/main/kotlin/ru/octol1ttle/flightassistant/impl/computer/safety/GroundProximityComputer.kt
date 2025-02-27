@@ -15,6 +15,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.FlightController
 import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchControllerRegistrationCallback
 import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiter
 import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiterRegistrationCallback
+import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.requireIn
@@ -30,6 +31,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
         private set
 
     override fun subscribeToEvents() {
+        ThrustControllerRegistrationCallback.EVENT.register { it.accept(this) }
         PitchLimiterRegistrationCallback.EVENT.register { it.accept(this) }
         PitchControllerRegistrationCallback.EVENT.register { it.accept(this) }
     }
@@ -140,6 +142,19 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
         return null
     }
 
+    override fun getThrustInput(): ControlInput? {
+        if (groundImpactStatus <= Status.CAUTION && FAConfig.safety.sinkRateAutoThrust || obstacleImpactStatus <= Status.CAUTION && FAConfig.safety.obstacleAutoThrust) {
+            return ControlInput(
+                0.0f,
+                ControlInput.Priority.HIGH,
+                Text.translatable("mode.flightassistant.thrust.idle"),
+                active = groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateAutoThrust || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleAutoThrust
+            )
+        }
+
+        return null
+    }
+
     override fun getPitchInput(): ControlInput? {
         if (groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateAutoPitch || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleAutoPitch) {
             val minImpactTime: Float = min(groundImpactTime, obstacleImpactTime)
@@ -151,7 +166,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
                 ControlInput.Priority.HIGH,
                 Text.translatable("mode.flightassistant.vertical.terrain_escape"),
                 1.0f / minImpactTime,
-                active = groundImpactStatus == Status.RECOVER || obstacleImpactStatus == Status.RECOVER
+                active = groundImpactStatus == Status.RECOVER && FAConfig.safety.sinkRateAutoPitch || obstacleImpactStatus == Status.RECOVER && FAConfig.safety.obstacleAutoPitch
             )
         }
 

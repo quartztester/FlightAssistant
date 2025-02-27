@@ -39,12 +39,16 @@ class SafetyOptions {
     @SerialEntry
     var sinkRateLimitPitch: Boolean = true
     @SerialEntry
+    var sinkRateAutoThrust: Boolean = true
+    @SerialEntry
     var sinkRateAutoPitch: Boolean = true
 
     @SerialEntry
     var obstacleAlertMode: AlertMode = AlertMode.WARNING_AND_CAUTION
     @SerialEntry
     var obstacleLimitPitch: Boolean = false
+    @SerialEntry
+    var obstacleAutoThrust: Boolean = true
     @SerialEntry
     var obstacleAutoPitch: Boolean = true
 

@@ -354,6 +354,11 @@ object FAConfigScreen {
                 binding(current::sinkRateLimitPitch, defaults.sinkRateLimitPitch)
                 controller(tickBox())
             }
+            rootOptions.register<Boolean>("gpws.sink_rate.auto_thrust") {
+                setSafetyName()
+                binding(current::sinkRateAutoThrust, defaults.sinkRateAutoThrust)
+                controller(tickBox())
+            }
             rootOptions.register<Boolean>("gpws.sink_rate.auto_pitch") {
                 setSafetyName()
                 binding(current::sinkRateAutoPitch, defaults.sinkRateAutoPitch)
@@ -367,6 +372,11 @@ object FAConfigScreen {
             rootOptions.register<Boolean>("gpws.obstacle.limit_pitch") {
                 setSafetyName()
                 binding(current::obstacleLimitPitch, defaults.obstacleLimitPitch)
+                controller(tickBox())
+            }
+            rootOptions.register<Boolean>("gpws.obstacle.auto_thrust") {
+                setSafetyName()
+                binding(current::obstacleAutoThrust, defaults.obstacleAutoThrust)
                 controller(tickBox())
             }
             rootOptions.register<Boolean>("gpws.obstacle.auto_pitch") {
