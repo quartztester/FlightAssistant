@@ -5,6 +5,7 @@ import net.minecraft.text.MutableText
 import net.minecraft.text.Style
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
+import ru.octol1ttle.flightassistant.FAKeyBindings
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -51,7 +52,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
         noThrustSource = false
         reverseUnsupported = false
 
-        if (finalInput?.active == true) {
+        if (finalInput?.active == true && !FAKeyBindings.isHoldingThrust()) {
             setTarget(finalInput.target, finalInput)
             activeInput = finalInput
             thrustLocked = false

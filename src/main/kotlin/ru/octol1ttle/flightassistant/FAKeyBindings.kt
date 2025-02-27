@@ -80,4 +80,8 @@ object FAKeyBindings {
             computers.thrust.setTarget((computers.thrust.current + FATickCounter.timePassed / 3).coerceIn(-1.0f..1.0f))
         }
     }
+
+    fun isHoldingThrust(): Boolean {
+        return setIdle.isPressed || setToga.isPressed
+    }
 }
