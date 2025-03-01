@@ -37,6 +37,7 @@ repositories {
     strictMaven("https://maven.fallenbreath.me/releases", "me.fallenbreath")
     strictMaven("https://maven.isxander.dev/releases", "dev.isxander", "org.quiltmc.parsers")
     strictMaven("https://maven.su5ed.dev/releases", "org.sinytra", "org.sinytra.forgified-fabric-api")
+    strictMaven("https://oss.sonatype.org/content/repositories/snapshots", "me.lucko")
     maven("https://jitpack.io")
     maven("https://maven.neoforged.net/releases/")
     maven("https://maven.terraformersmc.com/releases/")
@@ -104,7 +105,9 @@ dependencies {
             modCompileOnly("${group}:${modId}:${version}")
         }
         if (!isSnapshot && stonecutter.current.isActive) {
-            modLocalRuntime("${group}:${modId}:${version}")
+            modLocalRuntime("${group}:${modId}:${version}") {
+                exclude("net.fabricmc")
+            }
         }
         stonecutter.consts[modId] = true
     }
