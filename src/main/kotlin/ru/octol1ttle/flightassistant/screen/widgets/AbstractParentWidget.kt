@@ -16,6 +16,16 @@ abstract class AbstractParentWidget : AbstractParentElement(), Drawable, Selecta
         this.hoveredElement = this.hoveredElement(mouseX.toDouble(), mouseY.toDouble()).getOrNull()
     }
 
+    override fun isMouseOver(mouseX: Double, mouseY: Double): Boolean {
+        for (child: Element in children()) {
+            if (child.isMouseOver(mouseX, mouseY)) {
+                return true
+            }
+        }
+
+        return super.isMouseOver(mouseX, mouseY)
+    }
+
     override fun appendNarrations(builder: NarrationMessageBuilder?) {
     }
 
