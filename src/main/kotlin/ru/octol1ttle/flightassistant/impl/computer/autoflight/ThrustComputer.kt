@@ -66,7 +66,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
             thrustLocked = lastChangeAutomatic
             reverseUnsupported = current < 0.0f && thrustSource?.supportsReverse == false
 
-            val thrustValueText: MutableText = Text.literal(furtherFromZero(current * 100).toInt().toString() + "%").setStyle(Style.EMPTY.withColor(advisoryColor))
+            val thrustValueText: MutableText = Text.literal(furtherFromZero(current * 100).toString() + "%").setStyle(Style.EMPTY.withColor(advisoryColor))
             val manualThrustText: Text =
                 if (thrustLocked) {
                     if (totalTicks % 20 >= 10)

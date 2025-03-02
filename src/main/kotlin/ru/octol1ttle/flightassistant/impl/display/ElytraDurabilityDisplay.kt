@@ -17,7 +17,7 @@ class ElytraDurabilityDisplay(computers: ComputerView) : Display(computers) {
 
     override fun render(drawContext: DrawContext) {
         with(drawContext) {
-            val x: Int = centerXI
+            val x: Int = centerX
             val y: Int = HudFrame.bottom + 1
 
             val text: Text =
@@ -39,7 +39,7 @@ class ElytraDurabilityDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.elytra_durability"), centerXI, HudFrame.bottom + 1, warningColor)
+            drawMiddleAlignedText(Text.translatable("short.flightassistant.elytra_durability"), centerX, HudFrame.bottom + 1, warningColor)
         }
     }
 

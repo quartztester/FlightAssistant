@@ -1,5 +1,6 @@
 package ru.octol1ttle.flightassistant.api.display
 
+import kotlin.math.roundToInt
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.util.Window
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
@@ -11,11 +12,19 @@ object HudFrame {
         private set
     var height: Float = 0.0f
         private set
+    var topF: Float = 0.0f
+        private set
     var top: Int = 0
+        private set
+    var bottomF: Float = 0.0f
         private set
     var bottom: Int = 0
         private set
+    var leftF: Float = 0.0f
+        private set
     var left: Int = 0
+        private set
+    var rightF: Float = 0.0f
         private set
     var right: Int = 0
         private set
@@ -23,10 +32,16 @@ object HudFrame {
     fun updateDimensions() {
         width = window.scaledWidth * FAConfig.display.frameWidth
         height = window.scaledHeight * FAConfig.display.frameHeight
-        top = (window.scaledHeight - height.toInt()) / 2
-        bottom = window.scaledHeight - top
-        left = (window.scaledWidth - width.toInt()) / 2
-        right = window.scaledWidth - left
+
+        topF = ((window.scaledHeight - height) * 0.5f)
+        bottomF = top + height
+        leftF = ((window.scaledWidth - width) * 0.5f)
+        rightF = left + width
+
+        top = topF.roundToInt()
+        bottom = bottomF.toInt()
+        left = leftF.roundToInt()
+        right = rightF.toInt()
     }
 
     fun scissor(context: DrawContext) {

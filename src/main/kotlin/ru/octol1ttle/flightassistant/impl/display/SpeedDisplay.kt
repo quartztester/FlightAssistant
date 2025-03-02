@@ -18,20 +18,18 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
 
     override fun render(drawContext: DrawContext) {
         with(drawContext) {
-            val trueX: Int = HudFrame.left
-            val trueY: Int = centerYI
             if (FAConfig.display.showSpeedReading) {
-                renderSpeedReading(trueX, trueY)
+                renderSpeedReading(HudFrame.leftF, centerYF)
             }
             if (FAConfig.display.showSpeedScale) {
-                renderSpeedScale(trueX, trueY)
+                renderSpeedScale(HudFrame.left, centerY)
             }
         }
     }
 
-    private fun DrawContext.renderSpeedReading(trueX: Int, trueY: Int) {
+    private fun DrawContext.renderSpeedReading(x: Float, y: Float) {
         matrices.push()
-        val (x: Int, y: Int) = scaleMatrix(READING_MATRIX_SCALE, trueX, trueY)
+        fusedTranslateScale(x * 1.005f, y, READING_MATRIX_SCALE)
 
         val speed: Double = computers.data.forwardVelocity.length() * 20
         val color: Int =
@@ -39,12 +37,12 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
             else primaryColor
 
         val text: String = speed.roundToInt().toString()
-        val width: Int = getTextWidth(text) + 4
+        val width: Int = getTextWidth(text) + 5
         val halfHeight = 6
-        val textY: Int = y - 4
+        val textY: Int = -4
 
-        drawBorder(x - width, y - halfHeight, width + 1, halfHeight * 2 - 1, color)
-        drawRightAlignedText(text, x - 1, textY, color)
+        drawBorder(-width, -halfHeight, width, halfHeight * 2 - 1, color)
+        drawRightAlignedText(text, -2, textY, color)
 
         matrices.pop()
     }
@@ -65,7 +63,7 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
         enableScissor(0, minY, scaledWindowWidth, (if (FAConfig.display.showSpeedReading) y - 6 * READING_MATRIX_SCALE else maxY).toInt() + 1)
         drawHorizontalLine(x - 20, x, y, color)
         drawHorizontalLine(x - 35, x, minY, color)
-        for (i: Int in speed.toInt()..speed.toInt() + 100) {
+        for (i: Int in speed.roundToInt()..speed.roundToInt() + 100) {
             if (!drawSpeedLine(x, y, i, speed, color)) {
                 break
             }
@@ -106,7 +104,7 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
         with(drawContext) {
             drawRightAlignedText(
                 Text.translatable("short.flightassistant.speed"),
-                HudFrame.left, centerYI - 5, warningColor
+                HudFrame.left, centerY - 5, warningColor
             )
         }
     }

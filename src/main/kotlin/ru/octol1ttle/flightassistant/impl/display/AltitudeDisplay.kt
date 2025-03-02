@@ -19,30 +19,28 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
 
     override fun render(drawContext: DrawContext) {
         with(drawContext) {
-            val trueX: Int = HudFrame.right
-            val trueY: Int = centerYI
             if (FAConfig.display.showAltitudeReading) {
-                renderAltitudeReading(trueX, trueY)
+                renderAltitudeReading(HudFrame.rightF, centerYF)
             }
             if (FAConfig.display.showAltitudeScale) {
-                renderAltitudeScale(trueX - 1, trueY)
+                renderAltitudeScale(HudFrame.right, centerY)
             }
         }
     }
 
-    private fun DrawContext.renderAltitudeReading(trueX: Int, trueY: Int) {
+    private fun DrawContext.renderAltitudeReading(x: Float, y: Float) {
         matrices.push()
-        val (x: Int, y: Int) = scaleMatrix(READING_MATRIX_SCALE, trueX, trueY)
+        fusedTranslateScale(x, y, READING_MATRIX_SCALE)
 
         val altitude: Double = computers.data.altitude
         val text: String = altitude.roundToInt().toString()
 
         val width: Int = getTextWidth(text) + 5
         val halfHeight = 6
-        drawBorder(x, y - halfHeight, width, halfHeight * 2 - 1, primaryColor)
+        drawBorder(0, -halfHeight, width, halfHeight * 2 - 1, primaryColor)
 
-        val textY: Int = y - 4
-        drawText(text, x + 3, textY, primaryColor)
+        val textY: Int = -4
+        drawText(text, 3, textY, primaryColor)
 
         matrices.pop()
     }
@@ -65,7 +63,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
         if (maxY < scissorMaxY) {
             drawHorizontalLine(x, x + 35, maxY, primaryColor)
         }
-        val altitudeRoundedUp: Int = MathHelper.roundUpToMultiple(altitude.toInt(), 5)
+        val altitudeRoundedUp: Int = MathHelper.roundUpToMultiple(altitude.roundToInt(), 5)
         for (i: Int in altitudeRoundedUp..altitudeRoundedUp + 1000 step 5) {
             if (!drawAltitudeLine(x, y, i, altitude)) {
                 break
@@ -101,7 +99,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            drawText(Text.translatable("short.flightassistant.altitude"), HudFrame.right, centerYI - 5, warningColor)
+            drawText(Text.translatable("short.flightassistant.altitude"), HudFrame.right, centerY - 5, warningColor)
         }
     }
 

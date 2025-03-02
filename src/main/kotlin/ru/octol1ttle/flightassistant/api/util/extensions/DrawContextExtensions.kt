@@ -16,17 +16,17 @@ val fontHeight: Int
 val DrawContext.halfWidth: Float
     get() = scaledWindowWidth * 0.5f
 
-val DrawContext.centerX: Float
-    get() = halfWidth - 1
+val DrawContext.centerXF: Float
+    get() = halfWidth
 
-val DrawContext.centerXI: Int
-    get() = centerX.toInt()
+val DrawContext.centerX: Int
+    get() = centerXF.toInt()
 
-val DrawContext.centerY: Float
+val DrawContext.centerYF: Float
     get() = scaledWindowHeight * 0.5f
 
-val DrawContext.centerYI: Int
-    get() = centerY.toInt()
+val DrawContext.centerY: Int
+    get() = centerYF.toInt()
 
 val primaryColor: Int
     get() = FAConfig.display.primaryColor.rgb
@@ -41,16 +41,11 @@ val warningColor: Int
     get() = FAConfig.display.warningColor.rgb
 
 /**
- * Scales this draw context's matrix and returns the adjusted coordinates.
- *
- * @return a pair of adjusted coordinates.
+ * Translates this draw context's matrix and then scales it.
  */
-fun DrawContext.scaleMatrix(scale: Float, trueX: Int, trueY: Int): Pair<Int, Int> {
+fun DrawContext.fusedTranslateScale(x: Float, y: Float, scale: Float) {
+    matrices.translate(x, y, 0.0f)
     matrices.scale(scale, scale, 1.0f)
-
-    val x: Int = (trueX / scale).toInt()
-    val y: Int = (trueY / scale).toInt()
-    return Pair(x, y)
 }
 
 fun DrawContext.drawHorizontalLineDashed(

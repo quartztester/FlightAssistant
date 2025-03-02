@@ -32,7 +32,7 @@ object FAKeyBindings {
         openFlightSetup = addKeyBinding("open_flight_setup", GLFW.GLFW_KEY_KP_ENTER)
 
         autopilotDisconnect = addKeyBinding("autopilot_disconnect", GLFW.GLFW_KEY_CAPS_LOCK)
-        manualPitchOverride = addKeyBinding("manual_pitch_override", GLFW.GLFW_KEY_LEFT_ALT)
+        manualPitchOverride = addKeyBinding("manual_pitch_override", GLFW.GLFW_KEY_RIGHT_ALT)
 
         hideCurrentAlert = addKeyBinding("hide_current_alert", GLFW.GLFW_KEY_KP_0)
         showHiddenAlert = addKeyBinding("show_hidden_alert", GLFW.GLFW_KEY_KP_DECIMAL)

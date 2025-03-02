@@ -22,7 +22,7 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
     override fun render(drawContext: DrawContext) {
         with(drawContext) {
             if (FAConfig.display.showHeadingReading) {
-                val x: Int = centerXI
+                val x: Int = centerX
                 val y: Int = HudFrame.top - 24
 
                 drawBorder(x - 11, y, 23, 11, primaryColor)
@@ -36,7 +36,7 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
                 }
                 matrices.push()
                 matrices.translate(0, 0, -200)
-                matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(computers.data.roll), centerX, centerY, 0.0f)
+                matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(computers.data.roll), centerXF, centerYF, 0.0f)
 
                 ScreenSpace.getY(0.0f)?.let {
                     drawHeading(it)
@@ -62,7 +62,7 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
             drawHeadingLine(x, y, heading, text)
         }
 
-        val nextUp: Int = MathHelper.roundUpToMultiple(computers.data.heading.toInt(), step)
+        val nextUp: Int = MathHelper.roundUpToMultiple(computers.data.heading.roundToInt(), step)
         for (i: Int in nextUp..720 step step) {
             val heading: Int = i % 360
             val x: Int = ScreenSpace.getX(heading.toFloat()) ?: break
@@ -91,7 +91,7 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.heading"), centerXI, HudFrame.top - 24, warningColor)
+            drawMiddleAlignedText(Text.translatable("short.flightassistant.heading"), centerX, HudFrame.top - 24, warningColor)
         }
     }
 

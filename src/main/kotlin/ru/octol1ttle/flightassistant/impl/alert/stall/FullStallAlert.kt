@@ -7,7 +7,7 @@ import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.CenteredAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter.totalTicks
-import ru.octol1ttle.flightassistant.api.util.extensions.centerXI
+import ru.octol1ttle.flightassistant.api.util.extensions.centerX
 import ru.octol1ttle.flightassistant.api.util.extensions.drawHighlightedCenteredText
 import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
 import ru.octol1ttle.flightassistant.config.FAConfig
@@ -21,7 +21,7 @@ class FullStallAlert(computers: ComputerView) : Alert(computers), CenteredAlert 
     }
 
     override fun render(drawContext: DrawContext, y: Int): Boolean {
-        drawContext.drawHighlightedCenteredText(Text.translatable("alert.flightassistant.stall"), drawContext.centerXI, y, warningColor, totalTicks % 20 >= 10)
+        drawContext.drawHighlightedCenteredText(Text.translatable("alert.flightassistant.stall"), drawContext.centerX, y, warningColor, totalTicks % 20 >= 10)
         return true
     }
 }

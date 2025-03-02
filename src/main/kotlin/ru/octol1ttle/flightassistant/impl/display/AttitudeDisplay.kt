@@ -26,7 +26,7 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
         with(drawContext) {
             matrices.push()
             matrices.translate(0, 0, -200)
-            matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(computers.data.roll), centerX, centerY, 0.0f)
+            matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(computers.data.roll), centerXF, centerYF, 0.0f)
 
             if (FAConfig.display.showAttitude <= DisplayOptions.AttitudeDisplayMode.HORIZON_ONLY) {
                 renderHorizon()
@@ -46,10 +46,10 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
         }
 
         ScreenSpace.getY(0.0f)?.let {
-            val leftXEnd: Int = (centerX - halfWidth * 0.025).toInt()
+            val leftXEnd: Int = (centerXF - halfWidth * 0.025).toInt()
             drawHorizontalLine(0, leftXEnd, it, primaryColor)
 
-            val rightXStart: Int = (centerX + halfWidth * 0.025).toInt()
+            val rightXStart: Int = (centerXF + halfWidth * 0.025).toInt()
             drawHorizontalLine(rightXStart, scaledWindowWidth, it, primaryColor)
         }
 
@@ -93,7 +93,7 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
             val y: Int = ScreenSpace.getY(max) ?: break
             matrices.push()
 
-            matrices.translate(centerXI, y, 0) // Rotate around the middle of the arrow
+            matrices.translate(centerX, y, 0) // Rotate around the middle of the arrow
             matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180.0f)) // Flip upside down
             drawMiddleAlignedText(arrowText, -1, 0, if (maxInput?.active == true) warningColor else cautionColor)
 
@@ -104,7 +104,7 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
             val y: Int = ScreenSpace.getY(min) ?: break
             matrices.push()
 
-            drawMiddleAlignedText(arrowText, centerXI, y, if (minInput?.active == true) warningColor else cautionColor)
+            drawMiddleAlignedText(arrowText, centerX, y, if (minInput?.active == true) warningColor else cautionColor)
 
             matrices.pop()
             min -= step
@@ -128,14 +128,14 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
             else
                 primaryColor
 
-        val leftXEnd: Int = (centerX - halfWidth * 0.05).toInt()
-        val leftXStart: Int = (leftXEnd - halfWidth * 0.075).toInt()
+        val leftXEnd: Int = (centerXF - halfWidth * 0.05f).toInt()
+        val leftXStart: Int = (leftXEnd - halfWidth * 0.075f).toInt()
         drawRightAlignedText(pitch.toString(), leftXStart - 2, if (pitch > 0) y else y - 4, color)
         drawVerticalLine(leftXStart, y, y + 5 * pitch.sign, color)
         drawHorizontalLineDashed(leftXStart, leftXEnd, y, if (pitch < 0) 3 else 1, color)
 
-        val rightXStart: Int = (centerX + halfWidth * 0.05).toInt()
-        val rightXEnd: Int = (rightXStart + halfWidth * 0.075).toInt()
+        val rightXStart: Int = (centerXF + halfWidth * 0.05f).toInt()
+        val rightXEnd: Int = (rightXStart + halfWidth * 0.075f).toInt()
         drawHorizontalLineDashed(rightXStart, rightXEnd, y, if (pitch < 0) 3 else 1, color)
         drawVerticalLine(rightXEnd, y, y + 5 * pitch.sign, color)
         drawText(pitch.toString(), rightXEnd + 4, if (pitch > 0) y else y - 4, color)
@@ -143,7 +143,7 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.attitude"), centerXI, centerYI - 16, warningColor)
+            drawMiddleAlignedText(Text.translatable("short.flightassistant.attitude"), centerX, centerY - 16, warningColor)
         }
     }
 

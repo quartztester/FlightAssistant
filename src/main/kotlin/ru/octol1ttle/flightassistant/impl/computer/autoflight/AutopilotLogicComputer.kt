@@ -2,6 +2,7 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.roundToInt
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import ru.octol1ttle.flightassistant.FlightAssistant
@@ -20,7 +21,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
             ThrustMode.Type.SelectedSpeed -> ControlInput(
                 computers.thrust.calculateThrustForSpeed(thrustMode.speed) ?: 0.0f,
                 ControlInput.Priority.NORMAL,
-                Text.translatable("mode.flightassistant.thrust.selected_speed", thrustMode.speed.toInt()),
+                Text.translatable("mode.flightassistant.thrust.selected_speed", thrustMode.speed.roundToInt()),
                 identifier = ID
             )
             ThrustMode.Type.VerticalTarget ->

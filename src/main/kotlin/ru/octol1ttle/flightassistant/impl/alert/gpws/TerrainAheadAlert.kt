@@ -8,7 +8,7 @@ import ru.octol1ttle.flightassistant.api.alert.CenteredAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter.totalTicks
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
-import ru.octol1ttle.flightassistant.api.util.extensions.centerXI
+import ru.octol1ttle.flightassistant.api.util.extensions.centerX
 import ru.octol1ttle.flightassistant.api.util.extensions.drawHighlightedCenteredText
 import ru.octol1ttle.flightassistant.impl.computer.safety.GroundProximityComputer
 
@@ -20,7 +20,7 @@ class TerrainAheadAlert(computers: ComputerView) : Alert(computers), CenteredAle
     }
 
     override fun render(drawContext: DrawContext, y: Int): Boolean {
-        drawContext.drawHighlightedCenteredText(Text.translatable("alert.flightassistant.gpws.terrain_ahead"), drawContext.centerXI, y, cautionColor, totalTicks % 40 >= 20)
+        drawContext.drawHighlightedCenteredText(Text.translatable("alert.flightassistant.gpws.terrain_ahead"), drawContext.centerX, y, cautionColor, totalTicks % 40 >= 20)
         return true
     }
 }

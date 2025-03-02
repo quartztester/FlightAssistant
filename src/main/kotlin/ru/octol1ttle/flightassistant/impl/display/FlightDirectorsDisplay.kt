@@ -34,12 +34,12 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
 
             if (computers.pitch.activeInput?.identifier == AutopilotLogicComputer.ID) {
                 val pitchY: Int = ScreenSpace.getY(computers.pitch.activeInput?.target ?: return, false) ?: return
-                drawHorizontalLine(this.centerXI - halfWidth, this.centerXI + halfWidth, pitchY, advisoryColor)
+                drawHorizontalLine(this.centerX - halfWidth, this.centerX + halfWidth, pitchY, advisoryColor)
             }
 
             if (computers.heading.activeInput?.identifier == AutopilotLogicComputer.ID) {
                 val headingX: Int = ScreenSpace.getX(computers.heading.activeInput?.target ?: return, false) ?: return
-                drawVerticalLine(headingX, this.centerYI - halfWidth, this.centerYI + halfWidth, advisoryColor)
+                drawVerticalLine(headingX, this.centerY - halfWidth, this.centerY + halfWidth, advisoryColor)
             }
 
             matrices.pop()
@@ -48,7 +48,7 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.flight_directors"), centerXI, HudFrame.top + 30, warningColor)
+            drawMiddleAlignedText(Text.translatable("short.flightassistant.flight_directors"), centerX, HudFrame.top + 30, warningColor)
         }
     }
 

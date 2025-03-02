@@ -3,7 +3,7 @@ package ru.octol1ttle.flightassistant.impl.display
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.Vec3d
+import org.joml.Vector3f
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
@@ -18,26 +18,26 @@ class FlightPathDisplay(computers: ComputerView) : Display(computers) {
 
     override fun render(drawContext: DrawContext) {
         with(drawContext) {
-            val screenSpaceVec: Vec3d = ScreenSpace.getVec3d(computers.data.velocity, false) ?: return
-            val trueX: Int = screenSpaceVec.x.toInt()
-            val trueY: Int = screenSpaceVec.y.toInt()
+            val screenSpaceVec: Vector3f = ScreenSpace.getVector3f(computers.data.velocity, false) ?: return
+            val trueX: Float = screenSpaceVec.x
+            val trueY: Float = screenSpaceVec.y
 
             matrices.push()
             matrices.translate(0, 0, -100)
-            val (x: Int, y: Int) = scaleMatrix(FAConfig.display.flightPathVectorSize, trueX, trueY)
+            fusedTranslateScale(trueX, trueY, FAConfig.display.flightPathVectorSize)
 
             val bodySideSize = 3
-            drawVerticalLine(x - bodySideSize, y - bodySideSize, y + bodySideSize, primaryColor)
-            drawVerticalLine(x + bodySideSize, y - bodySideSize, y + bodySideSize, primaryColor)
-            drawHorizontalLine(x - bodySideSize, x + bodySideSize, y - bodySideSize, primaryColor)
-            drawHorizontalLine(x - bodySideSize, x + bodySideSize, y + bodySideSize, primaryColor)
+            drawVerticalLine(-bodySideSize, -bodySideSize, bodySideSize, primaryColor)
+            drawVerticalLine(bodySideSize, -bodySideSize, bodySideSize, primaryColor)
+            drawHorizontalLine(-bodySideSize, bodySideSize, -bodySideSize, primaryColor)
+            drawHorizontalLine(-bodySideSize, bodySideSize, bodySideSize, primaryColor)
 
             val stabilizerSize = 5
-            drawVerticalLine(x, y - bodySideSize - stabilizerSize, y - bodySideSize, primaryColor)
+            drawVerticalLine(0, -bodySideSize - stabilizerSize, -bodySideSize, primaryColor)
 
             val wingSize = 5
-            drawHorizontalLine(x - bodySideSize - wingSize, x - bodySideSize, y, primaryColor)
-            drawHorizontalLine(x + bodySideSize, x + bodySideSize + wingSize, y, primaryColor)
+            drawHorizontalLine(-bodySideSize - wingSize, -bodySideSize, 0, primaryColor)
+            drawHorizontalLine(bodySideSize, bodySideSize + wingSize, 0, primaryColor)
 
             matrices.pop()
         }
@@ -45,7 +45,7 @@ class FlightPathDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.flight_path"), centerXI, centerYI + 16, warningColor)
+            drawMiddleAlignedText(Text.translatable("short.flightassistant.flight_path"), centerX, centerY + 16, warningColor)
         }
     }
 

@@ -7,7 +7,7 @@ import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.CenteredAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter.totalTicks
-import ru.octol1ttle.flightassistant.api.util.extensions.centerXI
+import ru.octol1ttle.flightassistant.api.util.extensions.centerX
 import ru.octol1ttle.flightassistant.api.util.extensions.drawHighlightedCenteredText
 import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
 import ru.octol1ttle.flightassistant.impl.computer.safety.GroundProximityComputer
@@ -24,7 +24,7 @@ class PullUpAlert(computers: ComputerView) : Alert(computers), CenteredAlert {
             if (computers.gpws.groundImpactStatus == GroundProximityComputer.Status.RECOVER
                 || computers.gpws.obstacleImpactStatus == GroundProximityComputer.Status.RECOVER) totalTicks % 10 >= 5
             else totalTicks % 20 >= 10
-        drawContext.drawHighlightedCenteredText(Text.translatable("alert.flightassistant.gpws.pull_up"), drawContext.centerXI, y, warningColor, flash)
+        drawContext.drawHighlightedCenteredText(Text.translatable("alert.flightassistant.gpws.pull_up"), drawContext.centerX, y, warningColor, flash)
         return true
     }
 }

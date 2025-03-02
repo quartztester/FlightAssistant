@@ -38,7 +38,7 @@ class AlertDisplay(computers: ComputerView) : Display(computers) {
                 var lastRenderedLines = 0
                 for (alert: Alert in category.activeAlerts) {
                     if (!renderedCentered && alert is CenteredAlert) {
-                        renderedCentered = alert.render(this, centerYI + 8)
+                        renderedCentered = alert.render(this, centerY + 8)
                         categoryRendered = categoryRendered || renderedCentered
                         y += fontHeight
                     }

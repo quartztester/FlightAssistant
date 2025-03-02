@@ -39,7 +39,7 @@ object ScreenSpace {
      * @throws NullPointerException If `pos` is null
      */
     @Contract(value = "_ -> new", pure = true)
-    private fun fromWorldSpace(deltaPos: Vec3d, useNoRollMatrix: Boolean = true): Vec3d {
+    private fun fromWorldSpace(deltaPos: Vec3d, useNoRollMatrix: Boolean = true): Vector3f {
         val displayHeight: Int = mc.window.height
         val target = Vector3f()
 
@@ -57,10 +57,10 @@ object ScreenSpace {
                 target
             )
 
-        return Vec3d(
-            target.x / mc.window.scaleFactor,
-            (displayHeight - target.y) / mc.window.scaleFactor,
-            target.z.toDouble()
+        return Vector3f(
+            target.x / mc.window.scaleFactor.toFloat(),
+            (displayHeight - target.y) / mc.window.scaleFactor.toFloat(),
+            target.z
         )
     }
 
@@ -70,7 +70,7 @@ object ScreenSpace {
      * @param pos The (x, y, d) coordinates to check
      * @return True if the coordinates are visible
      */
-    private fun isVisible(pos: Vec3d?): Boolean {
+    private fun isVisible(pos: Vector3f?): Boolean {
         if (pos == null) {
             return false
         }
@@ -78,7 +78,7 @@ object ScreenSpace {
     }
 
     fun getX(heading: Float, useNoRollMatrix: Boolean = true): Int? {
-        val vec: Vec3d = fromWorldSpace(Vec3d.fromPolar(0.0f, heading - 180.0f), useNoRollMatrix)
+        val vec: Vector3f = fromWorldSpace(Vec3d.fromPolar(0.0f, heading - 180.0f), useNoRollMatrix)
         if (!isVisible(vec)) {
             return null
         }
@@ -87,7 +87,7 @@ object ScreenSpace {
     }
 
     fun getY(pitch: Float, useNoRollMatrix: Boolean = true): Int? {
-        val vec: Vec3d = fromWorldSpace(Vec3d.fromPolar(-pitch, mc.entityRenderDispatcher.camera.yaw), useNoRollMatrix)
+        val vec: Vector3f = fromWorldSpace(Vec3d.fromPolar(-pitch, mc.entityRenderDispatcher.camera.yaw), useNoRollMatrix)
         if (!isVisible(vec)) {
             return null
         }
@@ -95,8 +95,8 @@ object ScreenSpace {
         return vec.y.toInt()
     }
 
-    fun getVec3d(deltaPos: Vec3d, useNoRollMatrix: Boolean = true): Vec3d? {
-        val vec: Vec3d = fromWorldSpace(deltaPos, useNoRollMatrix)
+    fun getVector3f(deltaPos: Vec3d, useNoRollMatrix: Boolean = true): Vector3f? {
+        val vec: Vector3f = fromWorldSpace(deltaPos, useNoRollMatrix)
         if (!isVisible(vec)) {
             return null
         }

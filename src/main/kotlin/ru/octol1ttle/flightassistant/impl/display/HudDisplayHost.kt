@@ -15,8 +15,8 @@ import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.RenderMatrices
 import ru.octol1ttle.flightassistant.api.util.ScreenSpace
-import ru.octol1ttle.flightassistant.api.util.extensions.centerXI
-import ru.octol1ttle.flightassistant.api.util.extensions.centerYI
+import ru.octol1ttle.flightassistant.api.util.extensions.centerX
+import ru.octol1ttle.flightassistant.api.util.extensions.centerY
 import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedText
 import ru.octol1ttle.flightassistant.api.util.extensions.primaryColor
 import ru.octol1ttle.flightassistant.config.FAConfig
@@ -109,8 +109,8 @@ internal object HudDisplayHost: ModuleController<Display> {
         for ((id: Identifier, display: Display) in displays.filter { entry -> entry.value.allowedByConfig() }) {
             if (FATickCounter.ticksSinceWorldLoad < FATickCounter.worldLoadWaitTime) {
                 with(drawContext) {
-                    drawMiddleAlignedText(Text.translatable("misc.flightassistant.waiting_for_world_load"), centerXI, centerYI - 16, primaryColor)
-                    drawMiddleAlignedText(Text.translatable("misc.flightassistant.waiting_for_world_load.maximum_time"), centerXI, centerYI + 8, primaryColor)
+                    drawMiddleAlignedText(Text.translatable("misc.flightassistant.waiting_for_world_load"), centerX, centerY - 16, primaryColor)
+                    drawMiddleAlignedText(Text.translatable("misc.flightassistant.waiting_for_world_load.maximum_time"), centerX, centerY + 8, primaryColor)
                 }
                 return
             }

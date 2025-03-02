@@ -58,7 +58,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            val x: Int = centerXI
+            val x: Int = centerX
             val y: Int = HudFrame.top - 9
 
             drawMiddleAlignedText(Text.translatable("short.flightassistant.automation_modes"), x, y, warningColor)

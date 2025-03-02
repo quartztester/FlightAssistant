@@ -10,11 +10,11 @@ fun degrees(value: Double): Double {
     return (value * (180.0 / PI))
 }
 
-fun furtherFromZero(value: Float): Float {
+fun furtherFromZero(value: Float): Int {
     return if (value < 0.0f) {
-        floor(value)
+        floor(value).toInt()
     } else {
-        ceil(value)
+        ceil(value).toInt()
     }
 }
 
