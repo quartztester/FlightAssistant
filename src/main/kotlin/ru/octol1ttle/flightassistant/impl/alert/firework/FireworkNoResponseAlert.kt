@@ -18,6 +18,6 @@ class FireworkNoResponseAlert(computers: ComputerView) : Alert(computers), ECAMA
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alerts.flightassistant.firework.no_response"), firstLineX, firstLineY, warningColor)
+        return drawContext.drawText(Text.translatable("alert.flightassistant.firework.no_response"), firstLineX, firstLineY, warningColor)
     }
 }

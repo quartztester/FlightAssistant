@@ -22,10 +22,10 @@ class DisplayFaultAlert(computers: ComputerView, val identifier: Identifier) : A
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
         var i = 0
-        i += drawContext.drawText(Text.translatable("alerts.flightassistant.fault.hud.$identifier"), firstLineX, firstLineY, cautionColor)
+        i += drawContext.drawText(Text.translatable("alert.flightassistant.fault.hud.$identifier"), firstLineX, firstLineY, cautionColor)
         i +=
             if (HudDisplayHost.countFaults(identifier) == 1) {
-                drawContext.drawText(Text.translatable("alerts.flightassistant.fault.hud.reset"), otherLinesX, firstLineY + 11, advisoryColor)
+                drawContext.drawText(Text.translatable("alert.flightassistant.fault.hud.reset"), otherLinesX, firstLineY + 11, advisoryColor)
             } else {
                 0
             }

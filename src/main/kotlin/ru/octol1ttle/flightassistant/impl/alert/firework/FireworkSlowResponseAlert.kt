@@ -18,6 +18,6 @@ class FireworkSlowResponseAlert(computers: ComputerView) : Alert(computers), ECA
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alerts.flightassistant.firework.slow_response"), firstLineX, firstLineY, cautionColor)
+        return drawContext.drawText(Text.translatable("alert.flightassistant.firework.slow_response"), firstLineX, firstLineY, cautionColor)
     }
 }

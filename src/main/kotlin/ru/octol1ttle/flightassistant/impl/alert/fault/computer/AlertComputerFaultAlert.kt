@@ -18,6 +18,6 @@ class AlertComputerFaultAlert(computers: ComputerView) : Alert(computers), ECAMA
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alerts.flightassistant.alert.fault"), firstLineX, firstLineY, cautionColor)
+        return drawContext.drawText(Text.translatable("alert.flightassistant.alert.fault"), firstLineX, firstLineY, cautionColor)
     }
 }

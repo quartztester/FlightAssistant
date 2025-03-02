@@ -31,6 +31,6 @@ class SlowChunkLoadingAlert(computers: ComputerView) : Alert(computers), ECAMAle
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alerts.flightassistant.navigation.slow_chunk_loading"), firstLineX, firstLineY, cautionColor)
+        return drawContext.drawText(Text.translatable("alert.flightassistant.navigation.slow_chunk_loading"), firstLineX, firstLineY, cautionColor)
     }
 }

@@ -14,31 +14,31 @@ object FAConfigScreen {
     fun generate(parent: Screen): Screen {
         return YetAnotherConfigLib(FlightAssistant.MOD_ID) {
             val global: ConfigCategory by registerGlobalOptions(
-                Text.translatable("config.flightassistant.categories.global"),
+                Text.translatable("config.flightassistant.category.global"),
                 FAConfig.global,
                 GlobalOptions()
             )
 
             with(FAConfig.displaysStorage) {
                 val notFlyingNoElytra: ConfigCategory by registerDisplayOptions(
-                    Text.translatable("config.flightassistant.categories.no_elytra"),
+                    Text.translatable("config.flightassistant.category.no_elytra"),
                     notFlyingNoElytra,
                     DisplayOptions().setDisabled()
                 )
                 val notFlyingHasElytra: ConfigCategory by registerDisplayOptions(
-                    Text.translatable("config.flightassistant.categories.has_elytra"),
+                    Text.translatable("config.flightassistant.category.has_elytra"),
                     notFlyingHasElytra,
                     DisplayOptions().setMinimal()
                 )
                 val flying: ConfigCategory by registerDisplayOptions(
-                    Text.translatable("config.flightassistant.categories.flying"),
+                    Text.translatable("config.flightassistant.category.flying"),
                     flying,
                     DisplayOptions()
                 )
             }
 
             val safety: ConfigCategory by registerSafetyOptions(
-                Text.translatable("config.flightassistant.categories.safety"),
+                Text.translatable("config.flightassistant.category.safety"),
                 FAConfig.safety,
                 SafetyOptions()
             )
@@ -87,7 +87,7 @@ object FAConfigScreen {
             val percentageFormatter: (Float) -> Text = { value: Float -> Text.of("${(value * 100).toInt()}%") }
             val degreeFormatter: (Int) -> Text = { value: Int -> Text.of("$value°") }
 
-            rootOptions.registerLabel("frame", Text.translatable("config.flightassistant.options.display.frame"))
+            rootOptions.registerLabel("frame", Text.translatable("config.flightassistant.option.display.frame"))
             rootOptions.register<Float>("frame.width") {
                 setDisplayName()
                 binding(current::frameWidth, defaults.frameWidth)
@@ -99,7 +99,7 @@ object FAConfigScreen {
                 controller(slider(0.2f..0.8f, 0.05f, percentageFormatter))
             }
 
-            rootOptions.registerLabel("colors", Text.translatable("config.flightassistant.options.display.colors"))
+            rootOptions.registerLabel("colors", Text.translatable("config.flightassistant.option.display.colors"))
             rootOptions.register<Color>("colors.primary") {
                 setDisplayName()
                 binding(current::primaryColor, defaults.primaryColor)
@@ -121,7 +121,7 @@ object FAConfigScreen {
                 controller(colorPicker())
             }
 
-            rootOptions.registerLabel("attitude", Text.translatable("config.flightassistant.options.display.attitude"))
+            rootOptions.registerLabel("attitude", Text.translatable("config.flightassistant.option.display.attitude"))
             rootOptions.register<DisplayOptions.AttitudeDisplayMode>("attitude.show") {
                 setDisplayName()
                 binding(current::showAttitude, defaults.showAttitude)
@@ -143,7 +143,7 @@ object FAConfigScreen {
                 controller(tickBox())
             }
 
-            rootOptions.registerLabel("heading", Text.translatable("config.flightassistant.options.display.heading"))
+            rootOptions.registerLabel("heading", Text.translatable("config.flightassistant.option.display.heading"))
             rootOptions.register<Boolean>("heading.show_reading") {
                 setDisplayName()
                 binding(current::showHeadingReading, defaults.showHeadingReading)
@@ -160,7 +160,7 @@ object FAConfigScreen {
                 controller(slider(5..90, 5, degreeFormatter))
             }
 
-            rootOptions.registerLabel("speed", Text.translatable("config.flightassistant.options.display.speed"))
+            rootOptions.registerLabel("speed", Text.translatable("config.flightassistant.option.display.speed"))
             rootOptions.register<Boolean>("speed.show_reading") {
                 setDisplayName()
                 binding(current::showSpeedReading, defaults.showSpeedReading)
@@ -182,7 +182,7 @@ object FAConfigScreen {
                 controller(tickBox())
             }
 
-            rootOptions.registerLabel("altitude", Text.translatable("config.flightassistant.options.display.altitude"))
+            rootOptions.registerLabel("altitude", Text.translatable("config.flightassistant.option.display.altitude"))
             rootOptions.register<Boolean>("altitude.show_reading") {
                 setDisplayName()
                 binding(current::showAltitudeReading, defaults.showAltitudeReading)
@@ -201,7 +201,7 @@ object FAConfigScreen {
 
             rootOptions.registerLabel(
                 "flight_path_vector",
-                Text.translatable("config.flightassistant.options.display.flight_path_vector")
+                Text.translatable("config.flightassistant.option.display.flight_path_vector")
             )
             rootOptions.register<Boolean>("flight_path_vector.show") {
                 setDisplayName()
@@ -216,7 +216,7 @@ object FAConfigScreen {
 
             rootOptions.registerLabel(
                 "elytra_durability",
-                Text.translatable("config.flightassistant.options.display.elytra_durability")
+                Text.translatable("config.flightassistant.option.display.elytra_durability")
             )
             rootOptions.register<Boolean>("elytra_durability.show") {
                 setDisplayName()
@@ -229,7 +229,7 @@ object FAConfigScreen {
                 controller(enumSwitch(DisplayOptions.DurabilityUnits::class.java))
             }
 
-            rootOptions.registerLabel("misc", Text.translatable("config.flightassistant.options.display.misc"))
+            rootOptions.registerLabel("misc", Text.translatable("config.flightassistant.option.display.misc"))
             rootOptions.register<Boolean>("misc.coordinates") {
                 setDisplayName()
                 binding(current::showCoordinates, defaults.showCoordinates)
@@ -277,7 +277,7 @@ object FAConfigScreen {
 
             rootOptions.registerLabel(
                 "elytra",
-                Text.translatable("config.flightassistant.options.safety.elytra")
+                Text.translatable("config.flightassistant.option.safety.elytra")
             )
             rootOptions.register<SafetyOptions.AlertMode>("elytra.durability_alert_mode") {
                 setSafetyName()
@@ -297,7 +297,7 @@ object FAConfigScreen {
 
             rootOptions.registerLabel(
                 "stall",
-                Text.translatable("config.flightassistant.options.safety.stall")
+                Text.translatable("config.flightassistant.option.safety.stall")
             )
             rootOptions.register<SafetyOptions.AlertMode>("stall.alert_mode") {
                 setSafetyName()
@@ -317,7 +317,7 @@ object FAConfigScreen {
 
             rootOptions.registerLabel(
                 "void",
-                Text.translatable("config.flightassistant.options.safety.void")
+                Text.translatable("config.flightassistant.option.safety.void")
             )
             rootOptions.register<SafetyOptions.AlertMode>("void.alert_mode") {
                 setSafetyName()
@@ -342,7 +342,7 @@ object FAConfigScreen {
 
             rootOptions.registerLabel(
                 "gpws",
-                Text.translatable("config.flightassistant.options.safety.gpws")
+                Text.translatable("config.flightassistant.option.safety.gpws")
             )
             rootOptions.register<SafetyOptions.AlertMode>("gpws.sink_rate.alert_mode") {
                 setSafetyName()
@@ -387,7 +387,7 @@ object FAConfigScreen {
 
             rootOptions.registerLabel(
                 "firework",
-                Text.translatable("config.flightassistant.options.safety.firework")
+                Text.translatable("config.flightassistant.option.safety.firework")
             )
             rootOptions.register<Boolean>("firework.lock_explosive") {
                 setSafetyName()
@@ -398,14 +398,14 @@ object FAConfigScreen {
     }
 
     private fun OptionDsl<*>.setGlobalName() {
-        name(Text.translatable("config.flightassistant.options.global.${this.optionId}"))
+        name(Text.translatable("config.flightassistant.option.global.${this.optionId}"))
     }
 
     private fun OptionDsl<*>.setDisplayName() {
-        name(Text.translatable("config.flightassistant.options.display.${this.optionId}"))
+        name(Text.translatable("config.flightassistant.option.display.${this.optionId}"))
     }
 
     private fun OptionDsl<*>.setSafetyName() {
-        name(Text.translatable("config.flightassistant.options.safety.${this.optionId}"))
+        name(Text.translatable("config.flightassistant.option.safety.${this.optionId}"))
     }
 }

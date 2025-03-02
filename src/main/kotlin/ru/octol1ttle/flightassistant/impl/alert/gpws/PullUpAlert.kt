@@ -24,7 +24,7 @@ class PullUpAlert(computers: ComputerView) : Alert(computers), CenteredAlert {
             if (computers.gpws.groundImpactStatus == GroundProximityComputer.Status.RECOVER
                 || computers.gpws.obstacleImpactStatus == GroundProximityComputer.Status.RECOVER) totalTicks % 10 >= 5
             else totalTicks % 20 >= 10
-        drawContext.drawHighlightedCenteredText(Text.translatable("alerts.flightassistant.gpws.pull_up"), drawContext.centerXI, y, warningColor, flash)
+        drawContext.drawHighlightedCenteredText(Text.translatable("alert.flightassistant.gpws.pull_up"), drawContext.centerXI, y, warningColor, flash)
         return true
     }
 }

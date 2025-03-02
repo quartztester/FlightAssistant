@@ -111,30 +111,30 @@ class DisplayOptions {
     enum class AttitudeDisplayMode : NameableEnum {
         HORIZON_AND_LADDER {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.display.attitude.show.horizon_and_ladder")
+                Text.translatable("config.flightassistant.option.display.attitude.show.horizon_and_ladder")
         },
         HORIZON_ONLY {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.display.attitude.show.horizon_only")
+                Text.translatable("config.flightassistant.option.display.attitude.show.horizon_only")
         },
         DISABLED {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.display.attitude.show.disabled")
+                Text.translatable("config.flightassistant.option.display.attitude.show.disabled")
         };
     }
 
     enum class DurabilityUnits : NameableEnum {
         RAW {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.display.elytra_durability.units.raw")
+                Text.translatable("config.flightassistant.option.display.elytra_durability.units.raw")
         },
         PERCENTAGE {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.display.elytra_durability.units.percentage")
+                Text.translatable("config.flightassistant.option.display.elytra_durability.units.percentage")
         },
         TIME {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.display.elytra_durability.units.time")
+                Text.translatable("config.flightassistant.option.display.elytra_durability.units.time")
         };
     }
 }

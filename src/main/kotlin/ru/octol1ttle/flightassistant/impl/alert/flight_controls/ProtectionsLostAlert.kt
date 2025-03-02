@@ -20,23 +20,23 @@ class ProtectionsLostAlert(computers: ComputerView) : Alert(computers), ECAMAler
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
         var i = 0
-        i += drawContext.drawText(Text.translatable("alerts.flightassistant.flight_controls.protections_lost"), firstLineX, firstLineY, cautionColor)
+        i += drawContext.drawText(Text.translatable("alert.flightassistant.flight_controls.protections_lost"), firstLineX, firstLineY, cautionColor)
 
         var y: Int = firstLineY + 1
         if (!computers.data.enabled && computers.data.faultCount <= 1) {
             y += 10
-            i += drawContext.drawText(Text.translatable("alerts.flightassistant.flight_controls.protections_lost.enable_air_data"), otherLinesX, y, advisoryColor)
+            i += drawContext.drawText(Text.translatable("alert.flightassistant.flight_controls.protections_lost.enable_air_data"), otherLinesX, y, advisoryColor)
         }
         if (!computers.pitch.enabled && computers.pitch.faultCount <= 1) {
             y += 10
-            i += drawContext.drawText(Text.translatable("alerts.flightassistant.flight_controls.protections_lost.enable_pitch"), otherLinesX, y, advisoryColor)
+            i += drawContext.drawText(Text.translatable("alert.flightassistant.flight_controls.protections_lost.enable_pitch"), otherLinesX, y, advisoryColor)
         }
         y += 10
-        i += drawContext.drawText(Text.translatable("alerts.flightassistant.flight_controls.protections_lost.max_pitch"), otherLinesX, y, advisoryColor)
+        i += drawContext.drawText(Text.translatable("alert.flightassistant.flight_controls.protections_lost.max_pitch"), otherLinesX, y, advisoryColor)
         y += 10
-        i += drawContext.drawText(Text.translatable("alerts.flightassistant.flight_controls.protections_lost.min_pitch"), otherLinesX, y, advisoryColor)
+        i += drawContext.drawText(Text.translatable("alert.flightassistant.flight_controls.protections_lost.min_pitch"), otherLinesX, y, advisoryColor)
         y += 10
-        i += drawContext.drawText(Text.translatable("alerts.flightassistant.flight_controls.protections_lost.maneuver_with_care"), otherLinesX, y, advisoryColor)
+        i += drawContext.drawText(Text.translatable("alert.flightassistant.flight_controls.protections_lost.maneuver_with_care"), otherLinesX, y, advisoryColor)
 
         return i
     }

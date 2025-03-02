@@ -38,7 +38,7 @@ class ComputerFaultAlert(computers: ComputerView,
 
         i +=
             if (ComputerHost.getFaultCount(identifier) == 1) {
-                drawContext.drawText(Text.translatable("alerts.flightassistant.fault.computer.reset"), otherLinesX, y, advisoryColor)
+                drawContext.drawText(Text.translatable("alert.flightassistant.fault.computer.reset"), otherLinesX, y, advisoryColor)
             } else {
                 0
             }

@@ -22,6 +22,6 @@ class ElytraDurabilityCriticalAlert(computers: ComputerView) : Alert(computers),
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alerts.flightassistant.elytra.critical_durability"), firstLineX, firstLineY, warningColor)
+        return drawContext.drawText(Text.translatable("alert.flightassistant.elytra.critical_durability"), firstLineX, firstLineY, warningColor)
     }
 }

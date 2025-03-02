@@ -20,6 +20,6 @@ class ApproachingVoidDamageAltitudeAlert(computers: ComputerView) : Alert(comput
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alerts.flightassistant.navigation.approaching_void_damage_altitude"), firstLineX, firstLineY, cautionColor)
+        return drawContext.drawText(Text.translatable("alert.flightassistant.navigation.approaching_void_damage_altitude"), firstLineX, firstLineY, cautionColor)
     }
 }

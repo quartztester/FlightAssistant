@@ -84,19 +84,19 @@ class SafetyOptions {
     enum class AlertMode : NameableEnum {
         WARNING_AND_CAUTION {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.safety.alert_mode.warning_and_caution")
+                Text.translatable("config.flightassistant.option.safety.alert_mode.warning_and_caution")
         },
         WARNING {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.safety.alert_mode.warning")
+                Text.translatable("config.flightassistant.option.safety.alert_mode.warning")
         },
         CAUTION {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.safety.alert_mode.caution")
+                Text.translatable("config.flightassistant.option.safety.alert_mode.caution")
         },
         DISABLED {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.options.safety.alert_mode.disabled")
+                Text.translatable("config.flightassistant.option.safety.alert_mode.disabled")
         };
 
         fun warning(): Boolean {

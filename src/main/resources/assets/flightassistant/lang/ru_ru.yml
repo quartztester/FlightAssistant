@@ -2,7 +2,7 @@ modmenu:
   descriptionTranslation:
     flightassistant: FlightAssistant предлагает вам ощутить полеты с Элитрами по-новому, и все на стороне клиента!
 
-alerts.flightassistant:
+alert.flightassistant:
   alert:
     .: ПРЕДУПР
     fault: ОТКАЗ (НЕКОТОРЫЕ ПРЕДУПР ПОТЕР)
@@ -86,13 +86,13 @@ alerts.flightassistant:
       set_forward: ' -ТЯГА: УСТАН ВПЕРЕД'
 
 config.flightassistant:
-  categories:
+  category:
     global: Глобальные настройки
     no_elytra: На земле (без элитр)
     has_elytra: На земле (с элитрами)
     flying: В полёте
     safety: Предупреждения и системы безопасности
-  options:
+  option:
     global:
       mod_enabled: Включить FlightAssistant
       hud_enabled: Включить HUD (интерфейс)

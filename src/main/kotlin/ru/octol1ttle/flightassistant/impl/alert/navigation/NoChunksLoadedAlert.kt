@@ -18,6 +18,6 @@ class NoChunksLoadedAlert(computers: ComputerView) : Alert(computers), ECAMAlert
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alerts.flightassistant.navigation.no_chunks_loaded"), firstLineX, firstLineY, warningColor)
+        return drawContext.drawText(Text.translatable("alert.flightassistant.navigation.no_chunks_loaded"), firstLineX, firstLineY, warningColor)
     }
 }

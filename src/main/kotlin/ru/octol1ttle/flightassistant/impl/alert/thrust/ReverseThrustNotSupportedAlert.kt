@@ -18,8 +18,8 @@ class ReverseThrustNotSupportedAlert(computers: ComputerView) : Alert(computers)
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
         var i = 0
-        i += drawContext.drawText(Text.translatable("alerts.flightassistant.thrust.reverse_not_supported"), firstLineX, firstLineY, cautionColor)
-        i += drawContext.drawText(Text.translatable("alerts.flightassistant.thrust.reverse_not_supported.set_forward"), otherLinesX, firstLineY + 11, advisoryColor)
+        i += drawContext.drawText(Text.translatable("alert.flightassistant.thrust.reverse_not_supported"), firstLineX, firstLineY, cautionColor)
+        i += drawContext.drawText(Text.translatable("alert.flightassistant.thrust.reverse_not_supported.set_forward"), otherLinesX, firstLineY + 11, advisoryColor)
         return i
     }
 }

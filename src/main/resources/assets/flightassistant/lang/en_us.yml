@@ -1,4 +1,4 @@
-alerts.flightassistant:
+alert.flightassistant:
   alert:
     .: ALERT
     fault: SYS FAULT (SOME ALERTS LOST)
@@ -82,13 +82,13 @@ alerts.flightassistant:
       set_forward: ' -THR: SET FORWARD'
 
 config.flightassistant:
-  categories:
+  category:
     global: Global options
     no_elytra: Not flying (no elytra)
     has_elytra: Not flying (with elytra)
     flying: Flying
     safety: Alerts & flight protections
-  options:
+  option:
     global:
       mod_enabled: Enable FlightAssistant
       hud_enabled: Enable HUD

@@ -16,6 +16,6 @@ class NoThrustSourceAlert(computers: ComputerView) : Alert(computers), ECAMAlert
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alerts.flightassistant.thrust.no_source"), firstLineX, firstLineY, cautionColor)
+        return drawContext.drawText(Text.translatable("alert.flightassistant.thrust.no_source"), firstLineX, firstLineY, cautionColor)
     }
 }
