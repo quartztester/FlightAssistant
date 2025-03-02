@@ -314,17 +314,20 @@ misc.flightassistant:
     .: WAITING FOR WORLD LOAD
     maximum_time: (MAX 3 SECONDS)
 
-keys.flightassistant:
+key.flightassistant:
   .: FlightAssistant
+  toggle_enabled: Toggle mod enabled
   open_flight_setup: Open flight setup screen
   autopilot_disconnect: Disconnect autopilot
   manual_pitch_override: Manual pitch override (hold)
   hide_current_alert: Hide currently active alert
   show_hidden_alert: Show last hidden alert
-  decrease_thrust: Decrease thrust
-  increase_thrust: Increase thrust
-  set_idle: Set thrust to idle (0%)
-  set_toga: Set thrust to TOGA (100%)
+  thrust:
+    .: 'FlightAssistant: Thrust'
+    decrease_thrust: Decrease thrust
+    increase_thrust: Increase thrust
+    set_idle: Set thrust to idle (0%)
+    set_toga: Set thrust to TOGA (100%)
 
 # Other mods
 menu.flightassistant.system.name.computer.do_a_barrel_roll:roll: DaBR Roll Computer

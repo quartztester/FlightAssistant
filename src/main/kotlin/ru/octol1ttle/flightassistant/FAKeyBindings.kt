@@ -6,10 +6,13 @@ import org.lwjgl.glfw.GLFW
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
+import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.screen.FlightSetupScreen
 
 object FAKeyBindings {
     internal val keyBindings: MutableList<KeyBinding> = ArrayList()
+
+    private lateinit var toggleEnabled: KeyBinding
 
     private lateinit var openFlightSetup: KeyBinding
 
@@ -25,27 +28,32 @@ object FAKeyBindings {
     private lateinit var setToga: KeyBinding
 
     fun setup() {
-        openFlightSetup = addKeyBinding("keys.flightassistant.open_flight_setup", GLFW.GLFW_KEY_KP_ENTER)
+        toggleEnabled = addKeyBinding("toggle_enabled", -1)
+        openFlightSetup = addKeyBinding("open_flight_setup", GLFW.GLFW_KEY_KP_ENTER)
 
-        autopilotDisconnect = addKeyBinding("keys.flightassistant.autopilot_disconnect", GLFW.GLFW_KEY_CAPS_LOCK)
-        manualPitchOverride = addKeyBinding("keys.flightassistant.manual_pitch_override", GLFW.GLFW_KEY_LEFT_ALT)
+        autopilotDisconnect = addKeyBinding("autopilot_disconnect", GLFW.GLFW_KEY_CAPS_LOCK)
+        manualPitchOverride = addKeyBinding("manual_pitch_override", GLFW.GLFW_KEY_LEFT_ALT)
 
-        hideCurrentAlert = addKeyBinding("keys.flightassistant.hide_current_alert", GLFW.GLFW_KEY_KP_0)
-        showHiddenAlert = addKeyBinding("keys.flightassistant.show_hidden_alert", GLFW.GLFW_KEY_KP_DECIMAL)
+        hideCurrentAlert = addKeyBinding("hide_current_alert", GLFW.GLFW_KEY_KP_0)
+        showHiddenAlert = addKeyBinding("show_hidden_alert", GLFW.GLFW_KEY_KP_DECIMAL)
 
-        setIdle = addKeyBinding("keys.flightassistant.set_idle", GLFW.GLFW_KEY_LEFT)
-        decreaseThrust = addKeyBinding("keys.flightassistant.decrease_thrust", GLFW.GLFW_KEY_DOWN)
-        increaseThrust = addKeyBinding("keys.flightassistant.increase_thrust", GLFW.GLFW_KEY_UP)
-        setToga = addKeyBinding("keys.flightassistant.set_toga", GLFW.GLFW_KEY_RIGHT)
+        setIdle = addKeyBinding("set_idle", GLFW.GLFW_KEY_LEFT, "key.flightassistant.thrust")
+        decreaseThrust = addKeyBinding("decrease_thrust", GLFW.GLFW_KEY_DOWN, "key.flightassistant.thrust")
+        increaseThrust = addKeyBinding("increase_thrust", GLFW.GLFW_KEY_UP, "key.flightassistant.thrust")
+        setToga = addKeyBinding("set_toga", GLFW.GLFW_KEY_RIGHT, "key.flightassistant.thrust")
     }
 
-    private fun addKeyBinding(translationKey: String, code: Int, type: InputUtil.Type = InputUtil.Type.KEYSYM): KeyBinding {
-        val keyBinding = KeyBinding(translationKey, type, code, "keys.flightassistant")
+    private fun addKeyBinding(translationKey: String, code: Int, category: String = "key.flightassistant"): KeyBinding {
+        val keyBinding = KeyBinding("${category}.${translationKey}", InputUtil.Type.KEYSYM, code, category)
         keyBindings.add(keyBinding)
         return keyBinding
     }
 
     fun checkPressed(computers: ComputerView) {
+        while (toggleEnabled.wasPressed()) {
+            FAConfig.global.modEnabled = !FAConfig.global.modEnabled
+        }
+
         while (openFlightSetup.wasPressed()) {
             mc.execute {
                 mc.setScreen(FlightSetupScreen())

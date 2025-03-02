@@ -318,17 +318,20 @@ misc.flightassistant:
     .: ОЖИДАНИЕ ЗАГРУЗКИ МИРА
     maximum_time: (МАКС 3 СЕКУНДЫ)
 
-keys.flightassistant:
+key.flightassistant:
   .: FlightAssistant
+  toggle_enabled: Включить/выключить мод
   open_flight_setup: Открыть экран настройки полёта
   autopilot_disconnect: Отключить автопилот
   manual_pitch_override: Принудительное ручное управление углом наклона (зажать)
   hide_current_alert: Скрыть активное предупреждение
   show_hidden_alert: Показать скрытое предупреждение
-  decrease_thrust: Убавить тягу (накл. рычаги назад)
-  increase_thrust: Добавить тягу (накл. рычаги вперед)
-  set_idle: Установить нулевую тягу (0%)
-  set_toga: Установить взлётную тягу (100%)
+  thrust:
+    .: 'FlightAssistant: Тяга'
+    decrease_thrust: Снизить тягу
+    increase_thrust: Увеличить тягу
+    set_idle: Установить малую тягу (0%)
+    set_toga: Установить взлётную тягу (100%)
 
 # Other mods
 menu.flightassistant.system.name.computer.do_a_barrel_roll:roll: Компьютер крена DaBR
