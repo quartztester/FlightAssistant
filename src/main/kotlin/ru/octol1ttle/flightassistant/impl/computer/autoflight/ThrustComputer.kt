@@ -1,6 +1,5 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
-import java.awt.Color
 import net.minecraft.text.MutableText
 import net.minecraft.text.Style
 import net.minecraft.text.Text
@@ -9,7 +8,10 @@ import ru.octol1ttle.flightassistant.FAKeyBindings
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
-import ru.octol1ttle.flightassistant.api.autoflight.thrust.*
+import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustChangeCallback
+import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegistrationCallback
+import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSource
+import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSourceRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter.totalTicks
