@@ -13,10 +13,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.thrust.*
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter.totalTicks
-import ru.octol1ttle.flightassistant.api.util.extensions.advisoryColor
-import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
-import ru.octol1ttle.flightassistant.api.util.extensions.filterNonFaulted
-import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
+import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.api.util.furtherFromZero
 import ru.octol1ttle.flightassistant.api.util.requireIn
 
@@ -74,8 +71,8 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
                         else Text.translatable("mode.flightassistant.thrust.locked", thrustValueText).setStyle(Style.EMPTY.withColor(cautionColor))
                     else Text.empty()
                 } else {
-                    if (current >= TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.manual_toga").setStyle(Style.EMPTY.withColor(Color.WHITE.rgb))
-                    else Text.translatable("mode.flightassistant.thrust.manual", thrustValueText).setStyle(Style.EMPTY.withColor(Color.WHITE.rgb))
+                    if (current >= TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.manual_toga").setStyle(Style.EMPTY.withColor(secondaryColor))
+                    else Text.translatable("mode.flightassistant.thrust.manual", thrustValueText).setStyle(Style.EMPTY.withColor(secondaryColor))
                 }
 
             activeInput = ControlInput(current, ControlInput.Priority.NORMAL, manualThrustText)

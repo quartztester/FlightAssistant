@@ -102,6 +102,7 @@ config.flightassistant:
       colors:
         .: Colors
         primary: Primary color
+        secondary: Secondary color
         advisory: Advisory color
         caution: Caution color
         warning: Warning color

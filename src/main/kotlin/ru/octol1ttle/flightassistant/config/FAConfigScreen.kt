@@ -105,6 +105,11 @@ object FAConfigScreen {
                 binding(current::primaryColor, defaults.primaryColor)
                 controller(colorPicker())
             }
+            rootOptions.register<Color>("colors.secondary") {
+                setDisplayName()
+                binding(current::secondaryColor, defaults.secondaryColor)
+                controller(colorPicker())
+            }
             rootOptions.register<Color>("colors.advisory") {
                 setDisplayName()
                 binding(current::advisoryColor, defaults.advisoryColor)

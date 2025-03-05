@@ -106,6 +106,7 @@ config.flightassistant:
       colors:
         .: Цвета
         primary: Основной цвет
+        secondary: Вторичный цвет
         advisory: Цвет указывающих элементов
         caution: Цвет предупреждения
         warning: Цвет опасности

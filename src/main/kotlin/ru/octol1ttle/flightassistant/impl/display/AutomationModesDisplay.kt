@@ -88,10 +88,10 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
             }
 
             if (text != null) {
-                drawContext.drawMiddleAlignedText(text, (leftX + rightX) / 2, y, if (pair.second) primaryColor else 0xFFFFFFFF.toInt())
+                drawContext.drawMiddleAlignedText(text, (leftX + rightX) / 2, y, if (pair.second) primaryColor else secondaryColor)
             }
             if (FATickCounter.totalTicks <= textChangeTicks + (if (text == null) 60 else 100)) {
-                drawContext.drawBorder(leftX + 1, y - 2, rightX - leftX - 1, 11, 0xFFFFFFFF.toInt())
+                drawContext.drawBorder(leftX + 1, y - 2, rightX - leftX - 1, 11, secondaryColor)
             }
         }
     }
