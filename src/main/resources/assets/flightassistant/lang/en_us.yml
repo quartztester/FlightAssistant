@@ -157,6 +157,10 @@ config.flightassistant:
         warning: Warning only
         caution: Caution only
         disabled: Disabled
+      alert_method:
+        screen_and_audio: Screen & audio
+        screen_only: Screen only
+        audio_only: Audio only
       elytra:
         .: Elytra
         durability_alert_mode: Elytra durability alert mode
@@ -165,6 +169,7 @@ config.flightassistant:
       stall:
         .: Stall
         alert_mode: Stall alert mode
+        alert_method: Stall alert method
         limit_pitch: Limit pitch to prevent stalls
         auto_thrust: Automatically increase thrust to recover from stalls
       void:
@@ -177,16 +182,19 @@ config.flightassistant:
         .: Ground Proximity Warning System
         sink_rate:
           alert_mode: Sink rate alert mode
+          alert_method: Sink rate alert method
           limit_pitch: Limit pitch when sink rate is excessive
           auto_thrust: Automatically reduce thrust when sink rate is excessive
           auto_pitch: Automatically raise pitch to recover from excessive sink rate
         obstacle:
           alert_mode: Terrain alert mode
+          alert_method: Terrain alert method
           limit_pitch: Limit pitch when terrain is detected
           auto_thrust: Automatically reduce thrust when terrain is detected
           auto_pitch: Automatically raise pitch to escape from terrain
       firework:
         .: Fireworks
+        explosive_alert: Alert when holding explosive fireworks
         lock_explosive: Lock explosive fireworks
 
 menu.flightassistant:

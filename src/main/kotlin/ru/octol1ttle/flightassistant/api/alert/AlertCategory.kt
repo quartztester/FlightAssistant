@@ -52,7 +52,7 @@ class AlertCategory(val categoryText: Text) {
         return if (activeAlerts.isEmpty()) null else activeAlerts[0].priority
     }
 
-    fun getFirstData(): AlertData? {
-        return if (activeAlerts.isEmpty()) null else activeAlerts[0].data
+    fun getFirstData(filter: ((Alert) -> Boolean)? = null): AlertData? {
+        return if (filter != null) activeAlerts.firstOrNull(filter)?.data else activeAlerts.firstOrNull()?.data
     }
 }

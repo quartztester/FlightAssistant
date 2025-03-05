@@ -9,13 +9,14 @@ import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
 import ru.octol1ttle.flightassistant.api.util.extensions.drawText
+import ru.octol1ttle.flightassistant.config.FAConfig
 
-class FireworkExplosiveAlert(computers: ComputerView, private val hand: Hand)  : Alert(computers), ECAMAlert {
+class FireworkExplosiveAlert(computers: ComputerView, private val hand: Hand) : Alert(computers), ECAMAlert {
     override val priorityOffset: Int = 5
     override val data: AlertData = AlertData.MASTER_CAUTION
 
     override fun shouldActivate(): Boolean {
-        return !computers.firework.isEmptyOrSafe(computers.data.player, hand)
+        return FAConfig.safety.fireworkExplosiveAlert && !computers.firework.isEmptyOrSafe(computers.data.player, hand)
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {

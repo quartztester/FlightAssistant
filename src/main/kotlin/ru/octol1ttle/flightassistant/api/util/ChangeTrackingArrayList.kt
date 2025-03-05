@@ -17,12 +17,12 @@ class ChangeTrackingArrayList<E> : Collection<E> {
         backingList = ArrayList()
     }
 
-    fun hasNewElements(): Boolean {
-        if (backingList.size > staleList.size) {
+    fun hasNewElements(filter: ((E) -> Boolean)? = null): Boolean {
+        if (filter == null && backingList.size > staleList.size) {
             return true
         }
 
-        return backingList.any { !staleList.contains(it) }
+        return backingList.any { !staleList.contains(it) && filter?.invoke(it) ?: true }
     }
 
     override val size: Int

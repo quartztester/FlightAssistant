@@ -31,12 +31,16 @@ class AlertDisplay(computers: ComputerView) : Display(computers) {
             var renderedCentered = false
             for (category: AlertCategory in computers.alert.categories) {
                 val copy: MutableText = category.categoryText.copy()
-                drawText(copy.setStyle(withUnderline), x, y, (category.getFirstData() ?: continue).colorSupplier.invoke())
+                drawText(copy.setStyle(withUnderline), x, y, (category.getFirstData { it.getAlertMethod().screen() } ?: continue).colorSupplier.invoke())
                 copy.append(" ")
 
                 var categoryRendered = false
                 var lastRenderedLines = 0
                 for (alert: Alert in category.activeAlerts) {
+                    if (!alert.getAlertMethod().screen()) {
+                        continue
+                    }
+
                     if (!renderedCentered && alert is CenteredAlert) {
                         renderedCentered = alert.render(this, centerY + 8)
                         categoryRendered = categoryRendered || renderedCentered

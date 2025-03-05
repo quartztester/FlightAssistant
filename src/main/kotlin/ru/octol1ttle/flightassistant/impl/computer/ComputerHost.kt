@@ -13,7 +13,7 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.*
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
 internal object ComputerHost : ModuleController<Computer>, ComputerView {
-    private val computers: MutableMap<Identifier, Computer> = HashMap()
+    private val computers: MutableMap<Identifier, Computer> = LinkedHashMap()
 
     override fun isEnabled(identifier: Identifier): Boolean {
         return get(identifier).enabled

@@ -202,7 +202,7 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
     }
 
     private fun startNewSounds() {
-        val newDatas: List<AlertData> = alertLists.filterValues { list -> list.hasNewElements() || list.any { !sounds.containsKey(it.data) } }.keys.sortedBy { it.priority }
+        val newDatas: List<AlertData> = alertLists.filterValues { list -> list.hasNewElements { it.getAlertMethod().audio() } || list.any { !sounds.containsKey(it.data) && it.getAlertMethod().audio() } }.keys.sortedBy { it.priority }
         val newHighestPriorityDatas: List<AlertData> = newDatas.getHighestPriority()
         val activeHighestPriority: Int = sounds.keys.minByOrNull { it.priority }?.priority ?: Int.MAX_VALUE
 

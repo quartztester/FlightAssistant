@@ -11,6 +11,7 @@ import ru.octol1ttle.flightassistant.api.util.extensions.centerX
 import ru.octol1ttle.flightassistant.api.util.extensions.drawHighlightedCenteredText
 import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
 import ru.octol1ttle.flightassistant.config.FAConfig
+import ru.octol1ttle.flightassistant.config.options.SafetyOptions
 import ru.octol1ttle.flightassistant.impl.computer.safety.StallComputer
 
 class FullStallAlert(computers: ComputerView) : Alert(computers), CenteredAlert {
@@ -18,6 +19,10 @@ class FullStallAlert(computers: ComputerView) : Alert(computers), CenteredAlert 
 
     override fun shouldActivate(): Boolean {
         return FAConfig.safety.stallAlertMode.warning() && computers.stall.status == StallComputer.Status.FULL_STALL
+    }
+
+    override fun getAlertMethod(): SafetyOptions.AlertMethod {
+        return FAConfig.safety.stallAlertMethod
     }
 
     override fun render(drawContext: DrawContext, y: Int): Boolean {

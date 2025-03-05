@@ -10,6 +10,8 @@ import ru.octol1ttle.flightassistant.api.util.FATickCounter.totalTicks
 import ru.octol1ttle.flightassistant.api.util.extensions.centerX
 import ru.octol1ttle.flightassistant.api.util.extensions.drawHighlightedCenteredText
 import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
+import ru.octol1ttle.flightassistant.config.FAConfig
+import ru.octol1ttle.flightassistant.config.options.SafetyOptions
 import ru.octol1ttle.flightassistant.impl.computer.safety.GroundProximityComputer
 
 class PullUpAlert(computers: ComputerView) : Alert(computers), CenteredAlert {
@@ -17,6 +19,16 @@ class PullUpAlert(computers: ComputerView) : Alert(computers), CenteredAlert {
 
     override fun shouldActivate(): Boolean {
         return computers.gpws.groundImpactStatus <= GroundProximityComputer.Status.WARNING || computers.gpws.obstacleImpactStatus <= GroundProximityComputer.Status.WARNING
+    }
+
+    override fun getAlertMethod(): SafetyOptions.AlertMethod {
+        return if (computers.gpws.groundImpactStatus < computers.gpws.obstacleImpactStatus) {
+            FAConfig.safety.sinkRateAlertMethod
+        } else if (computers.gpws.groundImpactStatus == computers.gpws.obstacleImpactStatus) {
+            SafetyOptions.AlertMethod.min(FAConfig.safety.sinkRateAlertMethod, FAConfig.safety.obstacleAlertMethod)
+        } else {
+            FAConfig.safety.obstacleAlertMethod
+        }
     }
 
     override fun render(drawContext: DrawContext, y: Int): Boolean {

@@ -304,6 +304,11 @@ object FAConfigScreen {
                 binding(current::stallAlertMode, defaults.stallAlertMode)
                 controller(enumSwitch(SafetyOptions.AlertMode::class.java))
             }
+            rootOptions.register<SafetyOptions.AlertMethod>("stall.alert_method") {
+                setSafetyName()
+                binding(current::stallAlertMethod, defaults.stallAlertMethod)
+                controller(enumSwitch(SafetyOptions.AlertMethod::class.java))
+            }
             rootOptions.register<Boolean>("stall.limit_pitch") {
                 setSafetyName()
                 binding(current::stallLimitPitch, defaults.stallLimitPitch)
@@ -349,6 +354,11 @@ object FAConfigScreen {
                 binding(current::sinkRateAlertMode, defaults.sinkRateAlertMode)
                 controller(enumSwitch(SafetyOptions.AlertMode::class.java))
             }
+            rootOptions.register<SafetyOptions.AlertMethod>("gpws.sink_rate.alert_method") {
+                setSafetyName()
+                binding(current::sinkRateAlertMethod, defaults.sinkRateAlertMethod)
+                controller(enumSwitch(SafetyOptions.AlertMethod::class.java))
+            }
             rootOptions.register<Boolean>("gpws.sink_rate.limit_pitch") {
                 setSafetyName()
                 binding(current::sinkRateLimitPitch, defaults.sinkRateLimitPitch)
@@ -368,6 +378,11 @@ object FAConfigScreen {
                 setSafetyName()
                 binding(current::obstacleAlertMode, defaults.obstacleAlertMode)
                 controller(enumSwitch(SafetyOptions.AlertMode::class.java))
+            }
+            rootOptions.register<SafetyOptions.AlertMethod>("gpws.obstacle.alert_method") {
+                setSafetyName()
+                binding(current::obstacleAlertMethod, defaults.obstacleAlertMethod)
+                controller(enumSwitch(SafetyOptions.AlertMethod::class.java))
             }
             rootOptions.register<Boolean>("gpws.obstacle.limit_pitch") {
                 setSafetyName()
@@ -389,6 +404,11 @@ object FAConfigScreen {
                 "firework",
                 Text.translatable("config.flightassistant.option.safety.firework")
             )
+            rootOptions.register<Boolean>("firework.explosive_alert") {
+                setSafetyName()
+                binding(current::fireworkExplosiveAlert, defaults.fireworkExplosiveAlert)
+                controller(tickBox())
+            }
             rootOptions.register<Boolean>("firework.lock_explosive") {
                 setSafetyName()
                 binding(current::fireworkLockExplosive, defaults.fireworkLockExplosive)

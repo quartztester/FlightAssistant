@@ -21,6 +21,8 @@ class SafetyOptions {
     @SerialEntry
     var stallAlertMode: AlertMode = AlertMode.WARNING_AND_CAUTION
     @SerialEntry
+    var stallAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
+    @SerialEntry
     var stallLimitPitch: Boolean = true
     @SerialEntry
     var stallAutoThrust: Boolean = true
@@ -37,6 +39,8 @@ class SafetyOptions {
     @SerialEntry
     var sinkRateAlertMode: AlertMode = AlertMode.WARNING_AND_CAUTION
     @SerialEntry
+    var sinkRateAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
+    @SerialEntry
     var sinkRateLimitPitch: Boolean = true
     @SerialEntry
     var sinkRateAutoThrust: Boolean = true
@@ -46,12 +50,16 @@ class SafetyOptions {
     @SerialEntry
     var obstacleAlertMode: AlertMode = AlertMode.WARNING_AND_CAUTION
     @SerialEntry
+    var obstacleAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
+    @SerialEntry
     var obstacleLimitPitch: Boolean = false
     @SerialEntry
     var obstacleAutoThrust: Boolean = true
     @SerialEntry
     var obstacleAutoPitch: Boolean = true
 
+    @SerialEntry
+    var fireworkExplosiveAlert: Boolean = true
     @SerialEntry
     var fireworkLockExplosive: Boolean = true
 
@@ -105,6 +113,35 @@ class SafetyOptions {
 
         fun caution(): Boolean {
             return this == WARNING_AND_CAUTION || this == CAUTION
+        }
+    }
+
+    enum class AlertMethod : NameableEnum {
+        SCREEN_AND_AUDIO {
+            override fun getDisplayName(): Text =
+                Text.translatable("config.flightassistant.option.safety.alert_method.screen_and_audio")
+        },
+        AUDIO_ONLY {
+            override fun getDisplayName(): Text =
+                Text.translatable("config.flightassistant.option.safety.alert_method.audio_only")
+        },
+        SCREEN_ONLY {
+            override fun getDisplayName(): Text =
+                Text.translatable("config.flightassistant.option.safety.alert_method.screen_only")
+        };
+
+        fun screen(): Boolean {
+            return this == SCREEN_AND_AUDIO || this == SCREEN_ONLY
+        }
+
+        fun audio(): Boolean {
+            return this == SCREEN_AND_AUDIO || this == AUDIO_ONLY
+        }
+
+        companion object {
+            fun min(a: AlertMethod, b: AlertMethod): AlertMethod {
+                return if (a <= b) a else b
+            }
         }
     }
 
