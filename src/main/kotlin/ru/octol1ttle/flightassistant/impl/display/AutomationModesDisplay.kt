@@ -90,7 +90,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
 
     private fun drawInput(drawContext: DrawContext, display: ModeDisplay, input: ControlInput?) {
         if (input != null) {
-            display.render(drawContext, input.text, input.active, if (input.priority < ControlInput.Priority.NORMAL) cautionColor else null)
+            display.render(drawContext, input.text, input.active, if (input.active && input.priority < ControlInput.Priority.NORMAL) cautionColor else null)
         } else {
             display.render(drawContext, null, true)
         }

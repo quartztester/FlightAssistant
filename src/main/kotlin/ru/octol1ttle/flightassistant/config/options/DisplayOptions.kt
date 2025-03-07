@@ -7,7 +7,7 @@ import net.minecraft.text.Text
 
 class DisplayOptions {
     @SerialEntry
-    var frameWidth: Float = 0.5f
+    var frameWidth: Float = 0.6f
     @SerialEntry
     var frameHeight: Float = 0.5f
 
