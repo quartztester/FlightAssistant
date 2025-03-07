@@ -274,6 +274,7 @@ menu.flightassistant:
 
 mode.flightassistant:
   thrust:
+    override: THR OVRD
     manual: MAN THR %s
     manual_toga: MAN TOGA
     locked: THR LK %s
@@ -284,6 +285,7 @@ mode.flightassistant:
     climb: THR CLB
     descend: THR DES
   vertical:
+    override: PITCH OVRD
     void_protection: VOID PROT
     void_escape: VOID ESC
     stall_protection: STALL PROT

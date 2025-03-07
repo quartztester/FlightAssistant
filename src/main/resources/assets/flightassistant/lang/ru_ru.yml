@@ -278,6 +278,7 @@ menu.flightassistant:
 
 mode.flightassistant:
   thrust:
+    override: РУЧН ТЯГА
     manual: РУЧН ТЯГА %s
     manual_toga: РУЧН ВЗЛЕТН
     locked: БЛОК ТЯГА %s
@@ -288,6 +289,7 @@ mode.flightassistant:
     climb: ТЯГА НАБОР
     descend: ТЯГА СНИЖ
   vertical:
+    override: РУЧН УГОЛ
     void_protection: ПУСТ ЗАЩ
     void_escape: ПУСТ ВЫХОД
     stall_protection: СВАЛ ЗАЩ

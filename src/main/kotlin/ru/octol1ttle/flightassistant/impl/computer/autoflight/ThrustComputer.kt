@@ -1,5 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
+import java.awt.SystemColor.text
 import net.minecraft.text.MutableText
 import net.minecraft.text.Style
 import net.minecraft.text.Text
@@ -14,7 +15,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSource
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSourceRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.FATickCounter.totalTicks
+import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.api.util.furtherFromZero
 import ru.octol1ttle.flightassistant.api.util.requireIn
@@ -57,35 +58,21 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
             thrustLocked = false
         } else if (current == 0.0f) {
             noThrustSource = finalInput != null && thrustSource == null
-            val text: Text? = if (!noThrustSource) finalInput?.text else finalInput?.text?.copy()?.styled { it.withColor(cautionColor) }
-            activeInput = finalInput?.copy(text = text!!)
+            activeInput = finalInput
             thrustLocked = false
+
             return
         } else {
+            activeInput = null
             thrustLocked = lastChangeAutomatic
             reverseUnsupported = current < 0.0f && thrustSource?.supportsReverse == false
-
-            val thrustValueText: MutableText = Text.literal(furtherFromZero(current * 100).toString() + "%").setStyle(Style.EMPTY.withColor(advisoryColor))
-            val manualThrustText: Text =
-                if (thrustLocked) {
-                    if (totalTicks % 20 >= 10)
-                        if (current > TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.locked_toga").setStyle(Style.EMPTY.withColor(cautionColor))
-                        else Text.translatable("mode.flightassistant.thrust.locked", thrustValueText).setStyle(Style.EMPTY.withColor(cautionColor))
-                    else Text.empty()
-                } else {
-                    if (current > TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.manual_toga").setStyle(Style.EMPTY.withColor(secondaryColor))
-                    else Text.translatable("mode.flightassistant.thrust.manual", thrustValueText).setStyle(Style.EMPTY.withColor(secondaryColor))
-                }
-
-            activeInput = ControlInput(current, ControlInput.Priority.NORMAL, manualThrustText)
         }
 
         noThrustSource = thrustSource == null
         current.requireIn(-1.0f..1.0f)
 
         val active: Boolean = !noThrustSource && !reverseUnsupported
-        val text: Text? = if (active) activeInput?.text else activeInput?.text?.copy()?.styled { it.withColor(cautionColor) }
-        activeInput = activeInput?.copy(text = text!!, active = active)
+        activeInput = activeInput?.copy(active = active)
 
         if (computers.data.automationsAllowed()) {
             thrustSource?.tickThrust(current.coerceIn((if (thrustSource.supportsReverse) -1.0f else 0.0f)..1.0f))
@@ -95,9 +82,15 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     fun setTarget(target: Float, input: ControlInput? = null) {
         val oldThrust: Float = current
         if (oldThrust != target || input == null) {
-            current = target
+            current = target.requireIn(-1.0f..1.0f)
             ThrustChangeCallback.EVENT.invoker().onThrustChange(oldThrust, current, input)
             lastChangeAutomatic = input != null
+        }
+    }
+
+    fun tickTarget(sign: Float) {
+        if (sign != 0.0f) {
+            setTarget((current + FATickCounter.timePassed / 3 * sign).coerceIn(-1.0f..1.0f), null)
         }
     }
 

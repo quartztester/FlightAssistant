@@ -23,7 +23,7 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
         with(drawContext) {
             if (FAConfig.display.showHeadingReading) {
                 val x: Int = centerX
-                val y: Int = HudFrame.top - 24
+                val y: Int = HudFrame.top - 25
 
                 drawBorder(x - 11, y, 23, 11, primaryColor)
                 val headingInt: Int = computers.data.heading.roundToInt()
@@ -91,7 +91,7 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.heading"), centerX, HudFrame.top - 24, warningColor)
+            drawMiddleAlignedText(Text.translatable("short.flightassistant.heading"), centerX, HudFrame.top - 25, warningColor)
         }
     }
 

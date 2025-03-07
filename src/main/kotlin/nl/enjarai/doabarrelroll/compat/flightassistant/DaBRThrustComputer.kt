@@ -9,7 +9,6 @@ import nl.enjarai.doabarrelroll.config.ModConfig
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSource
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.FATickCounter
 
 class DaBRThrustComputer(computers: ComputerView) : Computer(computers), ThrustSource {
     override val priority: ThrustSource.Priority = ThrustSource.Priority.HIGH
@@ -19,9 +18,8 @@ class DaBRThrustComputer(computers: ComputerView) : Computer(computers), ThrustS
 
     override fun subscribeToEvents() {
         ThrustEvents.MODIFY_THRUST_INPUT.register({
-            if (it != 0.0) {
-                computers.thrust.setTarget((computers.thrust.current + FATickCounter.timePassed / 3 * sign(it)).toFloat().coerceIn(-1.0f..1.0f))
-            }
+            computers.thrust.tickTarget(sign(it).toFloat())
+
             if (!computers.thrust.disabledOrFaulted()) {
                 return@register computers.thrust.current.toDouble()
             }

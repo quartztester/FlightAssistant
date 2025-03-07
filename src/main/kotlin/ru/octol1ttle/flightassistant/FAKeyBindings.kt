@@ -5,7 +5,6 @@ import net.minecraft.client.util.InputUtil
 import org.lwjgl.glfw.GLFW
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.screen.FlightSetupScreen
 
@@ -82,10 +81,10 @@ object FAKeyBindings {
             computers.thrust.setTarget(1.0f)
         }
         while (decreaseThrust.wasPressed()) {
-            computers.thrust.setTarget((computers.thrust.current - FATickCounter.timePassed / 3).coerceIn(-1.0f..1.0f))
+            computers.thrust.tickTarget(-1.0f)
         }
         while (increaseThrust.wasPressed()) {
-            computers.thrust.setTarget((computers.thrust.current + FATickCounter.timePassed / 3).coerceIn(-1.0f..1.0f))
+            computers.thrust.tickTarget(1.0f)
         }
     }
 
