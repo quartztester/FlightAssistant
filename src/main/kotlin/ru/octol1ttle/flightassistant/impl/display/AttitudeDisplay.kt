@@ -82,7 +82,7 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
         if (!FAConfig.display.drawPitchOutsideFrame) {
             HudFrame.scissor(this)
         }
-        val arrowText: Text = Text.literal("^")
+        val arrowText: Text = Text.literal("V")
 
         val maxInput: ControlInput? = computers.pitch.maximumPitch
         val minInput: ControlInput? = computers.pitch.minimumPitch
@@ -91,20 +91,18 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
 
         while (max <= 180) {
             val y: Int = ScreenSpace.getY(max) ?: break
-            matrices.push()
 
-            matrices.translate(centerX, y, 0) // Rotate around the middle of the arrow
-            matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180.0f)) // Flip upside down
-            drawMiddleAlignedText(arrowText, -1, 0, if (maxInput?.active == true) warningColor else cautionColor)
+            drawMiddleAlignedText(arrowText, centerX, y, if (maxInput?.active == true) warningColor else cautionColor)
 
-            matrices.pop()
             max += step
         }
         while (min >= -180) {
             val y: Int = ScreenSpace.getY(min) ?: break
             matrices.push()
 
-            drawMiddleAlignedText(arrowText, centerX, y, if (minInput?.active == true) warningColor else cautionColor)
+            matrices.translate(centerX, y, 0) // Rotate around the middle of the arrow
+            matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180.0f)) // Flip upside down
+            drawMiddleAlignedText(arrowText, 0, 0, if (minInput?.active == true) warningColor else cautionColor)
 
             matrices.pop()
             min -= step
