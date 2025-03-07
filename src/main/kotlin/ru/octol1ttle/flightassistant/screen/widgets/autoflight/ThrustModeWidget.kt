@@ -59,21 +59,28 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
             mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.firstOrNull(), Text.empty()
         )
         climbThrustWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target.climb_thrust"))
-        climbThrustWidget.setTextPredicate {
-            val i: Int? = it.toIntOrNull()
-            it.isEmpty() || i != null && i in 0..100
-        }
+        configureThrustWidget(climbThrustWidget)
 
         val descendThrustWidget = TextFieldWidget(
             mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.get(1), Text.empty()
         )
         descendThrustWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target.descend_thrust"))
-        descendThrustWidget.setTextPredicate {
+        configureThrustWidget(descendThrustWidget)
+
+        textFields.computeIfAbsent(type) { ArrayList() }.clearAndAdd(climbThrustWidget, descendThrustWidget)
+    }
+
+    private fun configureThrustWidget(thrustWidget: TextFieldWidget) {
+        thrustWidget.setTextPredicate {
             val i: Int? = it.toIntOrNull()
             it.isEmpty() || i != null && i in 0..100
         }
-
-        textFields.computeIfAbsent(type) { ArrayList() }.clearAndAdd(climbThrustWidget, descendThrustWidget)
+        thrustWidget.setChangedListener {
+            val i: Int? = it.toIntOrNull()
+            if (i != null && i == 100) {
+                thrustWidget.text = "99"
+            }
+        }
     }
 
     override fun children(): MutableList<out Element> {

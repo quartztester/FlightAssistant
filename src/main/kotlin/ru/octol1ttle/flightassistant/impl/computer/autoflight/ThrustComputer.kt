@@ -69,11 +69,11 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
             val manualThrustText: Text =
                 if (thrustLocked) {
                     if (totalTicks % 20 >= 10)
-                        if (current >= TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.locked_toga").setStyle(Style.EMPTY.withColor(cautionColor))
+                        if (current > TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.locked_toga").setStyle(Style.EMPTY.withColor(cautionColor))
                         else Text.translatable("mode.flightassistant.thrust.locked", thrustValueText).setStyle(Style.EMPTY.withColor(cautionColor))
                     else Text.empty()
                 } else {
-                    if (current >= TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.manual_toga").setStyle(Style.EMPTY.withColor(secondaryColor))
+                    if (current > TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.manual_toga").setStyle(Style.EMPTY.withColor(secondaryColor))
                     else Text.translatable("mode.flightassistant.thrust.manual", thrustValueText).setStyle(Style.EMPTY.withColor(secondaryColor))
                 }
 

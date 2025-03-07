@@ -55,7 +55,7 @@ class VoidProximityComputer(computers: ComputerView) : Computer(computers), Pitc
     override fun getPitchInput(): ControlInput? {
         if (FAConfig.safety.voidAutoPitch && status <= Status.APPROACHING_DAMAGE_ALTITUDE) {
             return ControlInput(computers.thrust.getOptimumClimbPitch(), ControlInput.Priority.HIGH, Text.translatable("mode.flightassistant.vertical.void_escape"),
-                active = status == Status.REACHED_DAMAGE_ALTITUDE && computers.thrust.current >= ThrustComputer.TOGA_THRESHOLD && !computers.thrust.noThrustSource)
+                active = status == Status.REACHED_DAMAGE_ALTITUDE && computers.thrust.current > ThrustComputer.TOGA_THRESHOLD && !computers.thrust.noThrustSource)
         }
 
         return null
