@@ -56,12 +56,10 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
         if (computers.thrust.thrustLocked) {
             thrustDisplay.render(
                 drawContext,
-                if (FATickCounter.totalTicks % 20 >= 10)
-                    if (computers.thrust.current > TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.locked_toga").setColor(primaryColor)
-                    else Text.translatable("mode.flightassistant.thrust.locked", thrustValueText).setColor(primaryColor)
-                else Text.empty(),
+                if (computers.thrust.current > TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.locked_toga").setColor(primaryColor)
+                else Text.translatable("mode.flightassistant.thrust.locked", thrustValueText).setColor(primaryColor),
                 false,
-                cautionColor
+                if (FATickCounter.totalTicks % 20 >= 10) cautionColor else emptyColor
             )
 
             return

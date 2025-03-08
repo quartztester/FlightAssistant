@@ -28,6 +28,8 @@ val DrawContext.centerYF: Float
 val DrawContext.centerY: Int
     get() = centerYF.toInt()
 
+const val emptyColor: Int = 0
+
 val primaryColor: Int
     get() = FAConfig.display.primaryColor.rgb
 
