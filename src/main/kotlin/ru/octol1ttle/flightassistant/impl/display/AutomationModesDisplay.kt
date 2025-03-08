@@ -46,7 +46,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
             } else {
                 thrustDisplay.render(
                     drawContext, input.text, input.active,
-                    if (thrustUnusable || input.priority < ControlInput.Priority.NORMAL) cautionColor else null
+                    if (thrustUnusable || input.active && input.priority < ControlInput.Priority.NORMAL) cautionColor else null
                 )
             }
             return
