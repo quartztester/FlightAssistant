@@ -22,9 +22,9 @@ class AlertSoundInstance(val player: PlayerEntity, val data: AlertData) :
         this.attenuationType = SoundInstance.AttenuationType.NONE
         this.repeat = data.repeat != AlertData.RepeatType.NO_REPEAT
         if (data.repeat == AlertData.RepeatType.REPEAT_FADE_IN_OUT) {
-            this.volume = 0.05f
             this.actualVolume = 0.05f
         }
+        this.volume = this.actualVolume * FAConfig.safety.alertVolume
     }
 
     override fun shouldAlwaysPlay(): Boolean {
