@@ -19,7 +19,7 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
 /*? if <1.21 {*/ bottom, //?}
     25) {
     init {
-        var y = 20
+        var y = 30
         for (system: Identifier in controller.identifiers()) {
             this.addEntry(
                 SystemStatusWidgetEntry(
