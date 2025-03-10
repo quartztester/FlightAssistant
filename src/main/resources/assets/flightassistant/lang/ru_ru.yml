@@ -253,8 +253,8 @@ menu.flightassistant:
         target: Целевая скор.
       vertical_target:
         .: ВЕРТ
-        climb_thrust: Тяга набора
-        descend_thrust: Тяга снижения
+        climb_thrust: Тяга набора (%)
+        descend_thrust: Тяга снижения (%)
       waypoint_thrust: ПЛАН/П
     vertical:
       .: Вертикальная навигация

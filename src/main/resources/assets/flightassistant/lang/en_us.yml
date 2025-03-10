@@ -249,8 +249,8 @@ menu.flightassistant:
         target: Target speed
       vertical_target:
         .: VERT
-        climb_thrust: Climb thrust
-        descend_thrust: Descend thrust
+        climb_thrust: Climb thrust (%)
+        descend_thrust: Descend thrust (%)
       waypoint_thrust: F/PLAN
     vertical:
       .: Vertical navigation
