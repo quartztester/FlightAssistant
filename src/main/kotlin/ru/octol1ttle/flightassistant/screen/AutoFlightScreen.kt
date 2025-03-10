@@ -65,13 +65,13 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
     override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
         flightDirectors.color =
             if (ComputerHost.automations.flightDirectors) Formatting.GREEN.colorValue!!
-            else 0xFFFFFF
+            else Formatting.RED.colorValue!!
         autoThrust.color =
             if (ComputerHost.automations.autoThrust) Formatting.GREEN.colorValue!!
-            else 0xFFFFFF
+            else Formatting.RED.colorValue!!
         autopilot.color =
             if (ComputerHost.automations.autopilot) Formatting.GREEN.colorValue!!
-            else 0xFFFFFF
+            else Formatting.RED.colorValue!!
 
         super.render(context, mouseX, mouseY, delta)
     }
