@@ -19,7 +19,7 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
 /*? if <1.21 {*/ bottom, //?}
     25) {
     init {
-        var y = 30
+        var y: Int = top + Y_OFFSET
         for (system: Identifier in controller.identifiers()) {
             this.addEntry(
                 SystemStatusWidgetEntry(
@@ -54,31 +54,35 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
                 else ON_RESET_TEXT
         }.position(x, y).width(60).build()
 
-        override fun render(context: DrawContext?, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
-            displayName.x = this.x + 10
+        override fun render(context: DrawContext, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            val renderY: Int = y + Y_OFFSET
 
+            displayName.x = this.x + 10
+            displayName.y = renderY
             displayName.render(context, mouseX, mouseY, tickDelta)
 
             toggleButton.x = this.x + this.listWidth - toggleButton.width - 5
-            toggleButton.y = this.y - toggleButton.height / 4 - 1
-            toggleButton.render(context, mouseX, mouseY, tickDelta)
+            toggleButton.y = renderY - toggleButton.height / 4 - 1
             toggleButton.message =
                 if (controller.isEnabled(identifier)) OFF_TEXT
                 else ON_RESET_TEXT
+            toggleButton.render(context, mouseX, mouseY, tickDelta)
 
             offText.x = toggleButton.x - toggleButton.width / 2 - textRenderer.getWidth(OFF_TEXT) - 2
-            offText.render(context, mouseX, mouseY, tickDelta)
+            offText.y = renderY
             offText.setTextColor(
                 if (controller.isEnabled(identifier)) 0x0F0F0F
                 else 0xFFFFFF
             )
+            offText.render(context, mouseX, mouseY, tickDelta)
 
             faultText.x = offText.x - textRenderer.getWidth(FAULT_TEXT) - 2
-            faultText.render(context, mouseX, mouseY, tickDelta)
+            faultText.y = renderY
             faultText.setTextColor(
                 if (controller.isFaulted(identifier)) cautionColor
                 else 0x0F0F0F
             )
+            faultText.render(context, mouseX, mouseY, tickDelta)
         }
 
         override fun children(): MutableList<out Element> {
@@ -94,5 +98,9 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
             val OFF_TEXT: Text = Text.translatable("menu.flightassistant.system.off")
             val ON_RESET_TEXT: Text = Text.translatable("menu.flightassistant.system.on_reset")
         }
+    }
+
+    companion object {
+        const val Y_OFFSET: Int = 5
     }
 }

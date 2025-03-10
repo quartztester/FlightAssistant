@@ -140,7 +140,9 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
             if (category.activeAlerts.isEmpty()) {
                 continue
             }
-            category.ignoredAlerts.add(category.activeAlerts.removeAt(0))
+            val alert: Alert = category.activeAlerts.removeAt(0)
+            category.ignoredAlerts.add(alert)
+            alert.onHide()
             break
         }
     }
