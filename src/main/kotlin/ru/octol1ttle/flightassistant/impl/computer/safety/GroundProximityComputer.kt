@@ -144,12 +144,14 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
 
     override fun getThrustInput(): ControlInput? {
         if (groundImpactStatus <= Status.CAUTION && FAConfig.safety.sinkRateAutoThrust || obstacleImpactStatus <= Status.CAUTION && FAConfig.safety.obstacleAutoThrust) {
-            return ControlInput(
-                0.0f,
-                ControlInput.Priority.HIGH,
-                Text.translatable("mode.flightassistant.thrust.idle"),
-                active = groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateAutoThrust || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleAutoThrust
-            )
+            if (computers.data.pitch <= computers.thrust.getAltitudeHoldPitch()) {
+                return ControlInput(
+                    0.0f,
+                    ControlInput.Priority.HIGH,
+                    Text.translatable("mode.flightassistant.thrust.idle"),
+                    active = groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateAutoThrust || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleAutoThrust
+                )
+            }
         }
 
         return null
