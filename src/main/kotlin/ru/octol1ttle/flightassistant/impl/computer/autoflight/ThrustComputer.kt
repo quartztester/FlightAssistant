@@ -1,9 +1,5 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
-import java.awt.SystemColor.text
-import net.minecraft.text.MutableText
-import net.minecraft.text.Style
-import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import ru.octol1ttle.flightassistant.FAKeyBindings
 import ru.octol1ttle.flightassistant.FlightAssistant
@@ -16,8 +12,8 @@ import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSourceRegistrat
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
-import ru.octol1ttle.flightassistant.api.util.extensions.*
-import ru.octol1ttle.flightassistant.api.util.furtherFromZero
+import ru.octol1ttle.flightassistant.api.util.extensions.filterNonFaulted
+import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.requireIn
 
 class ThrustComputer(computers: ComputerView) : Computer(computers) {
@@ -57,7 +53,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
             activeInput = finalInput
             thrustLocked = false
         } else if (current == 0.0f) {
-            noThrustSource = finalInput != null && finalInput.target != 0.0f && thrustSource == null
+            noThrustSource = thrustSource == null && finalInput != null && finalInput.target != 0.0f
             activeInput = finalInput
             thrustLocked = false
 
@@ -68,7 +64,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
             reverseUnsupported = current < 0.0f && thrustSource?.supportsReverse == false
         }
 
-        noThrustSource = thrustSource == null
+        noThrustSource = thrustSource == null && activeInput?.target != 0.0f
         current.requireIn(-1.0f..1.0f)
 
         val active: Boolean = !noThrustSource && !reverseUnsupported
