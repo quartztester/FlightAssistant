@@ -32,4 +32,9 @@ abstract class Alert(val computers: ComputerView) {
     open fun getAlertMethod(): SafetyOptions.AlertMethod {
         return SafetyOptions.AlertMethod.SCREEN_AND_AUDIO
     }
+
+    /**
+     * Called when this alert is hidden via keybind. 
+     */
+    open fun onHide() {}
 }

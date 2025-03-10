@@ -34,6 +34,10 @@ class AutopilotOffAlert(computers: ComputerView) : Alert(computers), ECAMAlert {
         return autopilotOff
     }
 
+    override fun onHide() {
+        computers.automations.autopilotAlert = false
+    }
+
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
         return drawContext.drawText(Text.translatable("alert.flightassistant.autoflight.autopilot_off"), firstLineX, firstLineY, warningColor)
     }

@@ -22,12 +22,11 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
     var autoThrust: Boolean = false
         private set
     var autoThrustAlert: Boolean = false
-        private set
 
     var autopilot: Boolean = false
         private set
     var autopilotAlert: Boolean = false
-        private set
+
     private var pitchResistance: Float = 0.0f
     private var headingResistance: Float = 0.0f
 

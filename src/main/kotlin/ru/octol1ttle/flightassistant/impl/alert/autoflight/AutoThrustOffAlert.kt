@@ -17,6 +17,10 @@ class AutoThrustOffAlert(computers: ComputerView) : Alert(computers), ECAMAlert 
         return computers.automations.autoThrustAlert
     }
 
+    override fun onHide() {
+        computers.automations.autoThrustAlert = false
+    }
+
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
         return drawContext.drawText(Text.translatable("alert.flightassistant.autoflight.auto_thrust_off"), firstLineX, firstLineY, cautionColor)
     }
