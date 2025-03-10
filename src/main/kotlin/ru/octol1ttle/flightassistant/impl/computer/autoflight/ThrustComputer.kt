@@ -57,7 +57,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
             activeInput = finalInput
             thrustLocked = false
         } else if (current == 0.0f) {
-            noThrustSource = finalInput != null && thrustSource == null
+            noThrustSource = finalInput != null && finalInput.target != 0.0f && thrustSource == null
             activeInput = finalInput
             thrustLocked = false
 
