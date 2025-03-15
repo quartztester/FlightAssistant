@@ -32,7 +32,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     override fun render(drawContext: DrawContext) {
         renderThrustMode(drawContext)
         renderPitchMode(drawContext)
-        drawInput(drawContext, headingDisplay, computers.heading.activeInput)
+        renderInput(drawContext, headingDisplay, computers.heading.activeInput)
         renderAutomaticsMode(drawContext)
     }
 
@@ -84,10 +84,10 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
             pitchDisplay.render(drawContext, Text.translatable("mode.flightassistant.vertical.override").setColor(cautionColor), false, cautionColor)
             return
         }
-        drawInput(drawContext, pitchDisplay, computers.pitch.activeInput)
+        renderInput(drawContext, pitchDisplay, computers.pitch.activeInput)
     }
 
-    private fun drawInput(drawContext: DrawContext, display: ModeDisplay, input: ControlInput?) {
+    private fun renderInput(drawContext: DrawContext, display: ModeDisplay, input: ControlInput?) {
         if (input != null) {
             display.render(drawContext, input.text, input.active, if (input.active && input.priority < ControlInput.Priority.NORMAL) cautionColor else null)
         } else {

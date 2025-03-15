@@ -7,6 +7,7 @@ import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
+import ru.octol1ttle.flightassistant.api.util.extensions.advisoryColor
 import ru.octol1ttle.flightassistant.api.util.extensions.drawText
 import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
 
@@ -39,6 +40,11 @@ class AutopilotOffAlert(computers: ComputerView) : Alert(computers), ECAMAlert {
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alert.flightassistant.autoflight.autopilot_off"), firstLineX, firstLineY, warningColor)
+        var i: Int = drawContext.drawText(Text.translatable("alert.flightassistant.autoflight.autopilot_off"), firstLineX, firstLineY, warningColor)
+        if (computers.automations.autopilotAlert) {
+            i += drawContext.drawText(Text.translatable("alert.flightassistant.autoflight.autopilot_off.push_to_silence"), otherLinesX, firstLineY + 11, advisoryColor)
+        }
+
+        return i
     }
 }
