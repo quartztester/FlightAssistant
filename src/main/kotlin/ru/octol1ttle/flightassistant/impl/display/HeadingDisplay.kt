@@ -55,11 +55,11 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
 
         val nextDown: Int = MathHelper.roundDownToMultiple(computers.data.heading.toDouble(), step)
         for (i: Int in nextDown downTo -360 step step) {
-            val heading: Int = i % 360
-            val x: Int = ScreenSpace.getX(heading.toFloat()) ?: break
-            val text: String = (if (i > 0) i else 360 + i).toString()
+            val x: Int = ScreenSpace.getX((i % 360).toFloat()) ?: break
+            val wrappedHeading: Int = if (i > 0) i else 360 + i
+            val text: String = wrappedHeading.toString()
 
-            drawHeadingLine(x, y, heading, text)
+            drawHeadingLine(x, y, wrappedHeading, text)
         }
 
         val nextUp: Int = MathHelper.roundUpToMultiple(computers.data.heading.roundToInt(), step)
