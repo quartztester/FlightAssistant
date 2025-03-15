@@ -12,7 +12,9 @@ alert.flightassistant:
     heading_fault: ОТКАЗ УПР КУРСОМ
     pitch_fault: ОТКАЗ УПР УГЛ НАКЛ
     roll_fault: ОТКАЗ УПР КРЕНОМ
-    autopilot_off: АП ОТКЛ
+    autopilot_off:
+      .: АП ОТКЛ
+      push_to_silence: ' -КЛАВИША ОТКЛ АП: НАЖАТЬ ДЛЯ ЗАГЛУШ'
     auto_thrust_off: А/ТЯГА ОТКЛ
   elytra:
     .: ЭЛИТРЫ
@@ -123,8 +125,7 @@ config.flightassistant:
       heading:
         .: Индикатор курса
         show_reading: Отображать значение курса
-        show_scale: Отображать шкалу курса на линии горизонта
-        scale_step: Шаг линий курса
+        show_scale: Отображать шкалу курса
       speed:
         .: Индикатор скорости
         show_reading: Отображать значение скорости

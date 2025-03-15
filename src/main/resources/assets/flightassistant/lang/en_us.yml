@@ -8,7 +8,9 @@ alert.flightassistant:
     pitch_fault: PITCH CTL FAULT
     heading_fault: HDG CTL FAULT
     roll_fault: ROLL CTL FAULT
-    autopilot_off: AP OFF
+    autopilot_off:
+      .: AP OFF
+      push_to_silence: ' -AP DISC KEY: PUSH TO SILENCE'
     auto_thrust_off: A/THR OFF
   elytra:
     .: ELYTRA
@@ -119,8 +121,7 @@ config.flightassistant:
       heading:
         .: Heading display
         show_reading: Show heading reading
-        show_scale: Show heading scale on horizon line
-        scale_step: Heading degree step
+        show_scale: Show heading scale
       speed:
         .: Speed display
         show_reading: Show speed reading

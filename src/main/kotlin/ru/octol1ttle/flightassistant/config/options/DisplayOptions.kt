@@ -36,8 +36,6 @@ class DisplayOptions {
     var showHeadingReading: Boolean = true
     @SerialEntry
     var showHeadingScale: Boolean = true
-    @SerialEntry
-    var headingDegreeStep: Int = 10
 
     @SerialEntry
     var showSpeedReading: Boolean = true

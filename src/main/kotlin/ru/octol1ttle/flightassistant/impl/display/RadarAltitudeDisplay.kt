@@ -26,7 +26,7 @@ class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
         }
 
         with(drawContext) {
-            val x: Int = HudFrame.right - 1
+            val x: Int = HudFrame.right
             val y: Int = HudFrame.bottom + 2
 
             val altType: MutableText
@@ -55,7 +55,7 @@ class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(drawContext: DrawContext) {
         with(drawContext) {
-            drawText(Text.translatable("short.flightassistant.radar_altitude"), HudFrame.right - 1, HudFrame.bottom + 4, warningColor)
+            drawText(Text.translatable("short.flightassistant.radar_altitude"), HudFrame.right, HudFrame.bottom + 4, warningColor)
         }
     }
 

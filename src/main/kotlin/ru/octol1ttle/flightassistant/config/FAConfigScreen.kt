@@ -159,11 +159,6 @@ object FAConfigScreen {
                 binding(current::showHeadingScale, defaults.showHeadingScale)
                 controller(tickBox())
             }
-            rootOptions.register<Int>("heading.scale_step") {
-                setDisplayName()
-                binding(current::headingDegreeStep, defaults.headingDegreeStep)
-                controller(slider(5..90, 5, degreeFormatter))
-            }
 
             rootOptions.registerLabel("speed", Text.translatable("config.flightassistant.option.display.speed"))
             rootOptions.register<Boolean>("speed.show_reading") {

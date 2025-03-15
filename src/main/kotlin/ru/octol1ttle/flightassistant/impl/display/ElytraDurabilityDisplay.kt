@@ -17,7 +17,7 @@ class ElytraDurabilityDisplay(computers: ComputerView) : Display(computers) {
 
     override fun render(drawContext: DrawContext) {
         with(drawContext) {
-            val x: Int = centerX
+            val x: Int = (HudFrame.left + (HudFrame.width - HudFrame.height) * 0.25f).toInt()
             val y: Int = HudFrame.bottom + 1
 
             val text: Text =
