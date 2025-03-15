@@ -4,6 +4,8 @@ import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.screen.ScreenTexts
 import net.minecraft.text.Text
+import ru.octol1ttle.flightassistant.screen.autoflight.AutoFlightScreen
+import ru.octol1ttle.flightassistant.screen.flight_plan.FlightPlanScreen
 import ru.octol1ttle.flightassistant.screen.status.SystemStatusScreen
 
 class FlightSetupScreen : FABaseScreen(Text.translatable("menu.flightassistant")) {

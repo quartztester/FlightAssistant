@@ -12,7 +12,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegis
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.config.FAConfig
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.ThrustComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
 
 class VoidProximityComputer(computers: ComputerView) : Computer(computers), PitchLimiter, FlightController {
     var status: Status = Status.ABOVE_GROUND

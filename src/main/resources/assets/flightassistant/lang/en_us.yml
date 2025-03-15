@@ -54,6 +54,9 @@ alert.flightassistant:
       max_pitch: ' MAX PITCH: 55* UP'
       min_pitch: ' MIN PITCH: 35* DOWN'
       maneuver_with_care: ' MANEUVER WITH CARE'
+  flight_plan:
+    .: F/PLAN
+    fault: SYS FAULT
   gpws:
     .: GPWS
     fault: FAULT

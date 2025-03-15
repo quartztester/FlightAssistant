@@ -3,6 +3,7 @@ package ru.octol1ttle.flightassistant.api.computer
 import ru.octol1ttle.flightassistant.api.ModuleView
 import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.*
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.*
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
 interface ComputerView : ModuleView<Computer> {

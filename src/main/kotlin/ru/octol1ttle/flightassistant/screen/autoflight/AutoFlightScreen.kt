@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.screen
+package ru.octol1ttle.flightassistant.screen.autoflight
 
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.Element
@@ -9,11 +9,12 @@ import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
-import ru.octol1ttle.flightassistant.screen.widgets.ColoredButtonWidget
-import ru.octol1ttle.flightassistant.screen.widgets.autoflight.DelayedApplyChanges
-import ru.octol1ttle.flightassistant.screen.widgets.autoflight.LateralModeWidget
-import ru.octol1ttle.flightassistant.screen.widgets.autoflight.ThrustModeWidget
-import ru.octol1ttle.flightassistant.screen.widgets.autoflight.VerticalModeWidget
+import ru.octol1ttle.flightassistant.screen.FABaseScreen
+import ru.octol1ttle.flightassistant.screen.autoflight.widgets.ColoredButtonWidget
+import ru.octol1ttle.flightassistant.screen.autoflight.widgets.DelayedApplyChanges
+import ru.octol1ttle.flightassistant.screen.autoflight.widgets.LateralModeWidget
+import ru.octol1ttle.flightassistant.screen.autoflight.widgets.ThrustModeWidget
+import ru.octol1ttle.flightassistant.screen.autoflight.widgets.VerticalModeWidget
 
 class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.autoflight")) {
     private lateinit var flightDirectors: ColoredButtonWidget

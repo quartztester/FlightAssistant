@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.screen.widgets.autoflight
+package ru.octol1ttle.flightassistant.screen.autoflight.widgets
 
 import java.util.EnumMap
 import net.minecraft.client.gui.DrawContext
@@ -11,7 +11,7 @@ import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.clearAndAdd
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComputer
-import ru.octol1ttle.flightassistant.screen.widgets.AbstractParentWidget
+import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, val width: Int) : AbstractParentWidget(), DelayedApplyChanges {
     private val title: TextWidget = TextWidget(

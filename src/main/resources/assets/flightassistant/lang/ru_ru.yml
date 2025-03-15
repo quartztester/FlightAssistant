@@ -58,6 +58,9 @@ alert.flightassistant:
       max_pitch: ' МАКС УГОЛ НАКЛ: 55* ВВЕРХ'
       min_pitch: ' МИН УГОЛ НАКЛ: 35* ВНИЗ'
       maneuver_with_care: ' МАНЕВРИРУЙ С ОСТОРОЖНОСТЬЮ'
+  flight_plan:
+    .: ПЛАН/П
+    fault: ОТКАЗ СИСТ
   gpws:
     .: GPWS
     fault: ОТКАЗ

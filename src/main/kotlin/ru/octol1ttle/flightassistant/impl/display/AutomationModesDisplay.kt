@@ -17,7 +17,7 @@ import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.api.util.furtherFromZero
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComputer
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.ThrustComputer.Companion.TOGA_THRESHOLD
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer.Companion.TOGA_THRESHOLD
 
 class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     private val thrustDisplay: ModeDisplay = ModeDisplay(1)

@@ -43,6 +43,7 @@ import ru.octol1ttle.flightassistant.impl.alert.thrust.ReverseThrustNotSupported
 import ru.octol1ttle.flightassistant.impl.alert.thrust.ThrustLockedAlert
 import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.*
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.*
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 
 class AlertComputer(computers: ComputerView, private val soundManager: SoundManager) : Computer(computers) {
@@ -94,6 +95,10 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
                     Text.translatable("alert.flightassistant.flight_controls.pitch_fault.use_manual_pitch"),
                 )))
                 .add(ProtectionsLostAlert(computers))
+        )
+        register(
+            AlertCategory(Text.translatable("alert.flightassistant.flight_plan"))
+                .add(ComputerFaultAlert(computers, FlightPlanComputer.ID, Text.translatable("alerts.flightassistant.flight_plan.fault")))
         )
         register(
             AlertCategory(Text.translatable("alert.flightassistant.gpws"))

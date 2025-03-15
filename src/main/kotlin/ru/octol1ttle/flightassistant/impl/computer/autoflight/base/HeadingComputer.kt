@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.impl.computer.autoflight
+package ru.octol1ttle.flightassistant.impl.computer.autoflight.base
 
 import kotlin.math.abs
 import net.minecraft.entity.player.PlayerEntity

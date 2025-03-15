@@ -10,6 +10,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.*
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.*
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
 internal object ComputerHost : ModuleController<Computer>, ComputerView {
@@ -61,6 +62,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
         register(ElytraStatusComputer.ID, ElytraStatusComputer(this))
         register(ChunkStatusComputer.ID, ChunkStatusComputer(this))
 
+        register(FlightPlanComputer.ID, FlightPlanComputer(this))
         register(AutomationsComputer.ID, AutomationsComputer(this))
         register(AutopilotLogicComputer.ID, AutopilotLogicComputer(this))
         register(FireworkComputer.ID, FireworkComputer(this, mc))

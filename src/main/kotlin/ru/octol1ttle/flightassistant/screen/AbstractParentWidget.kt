@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.screen.widgets
+package ru.octol1ttle.flightassistant.screen
 
 import kotlin.jvm.optionals.getOrNull
 import net.minecraft.client.gui.*

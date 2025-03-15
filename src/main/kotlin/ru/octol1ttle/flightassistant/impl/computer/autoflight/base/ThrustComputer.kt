@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.impl.computer.autoflight
+package ru.octol1ttle.flightassistant.impl.computer.autoflight.base
 
 import net.minecraft.util.Identifier
 import ru.octol1ttle.flightassistant.FAKeyBindings
