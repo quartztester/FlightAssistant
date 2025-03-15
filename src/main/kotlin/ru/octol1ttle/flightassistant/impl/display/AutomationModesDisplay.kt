@@ -70,7 +70,8 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
                 drawContext,
                 if (computers.thrust.current > TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.manual_toga").setColor(secondaryColor)
                 else Text.translatable("mode.flightassistant.thrust.manual", thrustValueText),
-                computers.thrust.current == 0.0f || computers.thrust.current > TOGA_THRESHOLD
+                computers.thrust.current == 0.0f || computers.thrust.current > TOGA_THRESHOLD,
+                if (thrustUnusable) cautionColor else null
             )
             return
         }
