@@ -137,11 +137,6 @@ object FAConfigScreen {
                 binding(current::attitudeDegreeStep, defaults.attitudeDegreeStep)
                 controller(slider(5..45, 5, degreeFormatter))
             }
-            rootOptions.register<Boolean>("attitude.horizon_outside_frame") {
-                setDisplayName()
-                binding(current::drawHorizonOutsideFrame, defaults.drawHorizonOutsideFrame)
-                controller(tickBox())
-            }
             rootOptions.register<Boolean>("attitude.pitch_outside_frame") {
                 setDisplayName()
                 binding(current::drawPitchOutsideFrame, defaults.drawPitchOutsideFrame)

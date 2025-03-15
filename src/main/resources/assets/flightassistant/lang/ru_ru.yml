@@ -120,7 +120,6 @@ config.flightassistant:
           horizon_only: Только горизонт
           disabled: Отключен
         degree_step: Шаг градусных линий
-        horizon_outside_frame: Отображать горизонт за рамкой
         pitch_outside_frame: Отображать угол наклона за рамкой
       heading:
         .: Индикатор курса

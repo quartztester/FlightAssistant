@@ -41,19 +41,23 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
     }
 
     private fun DrawContext.renderHorizon() {
-        if (!FAConfig.display.drawHorizonOutsideFrame) {
+        if (!FAConfig.display.drawPitchOutsideFrame) {
             HudFrame.scissor(this)
         }
 
         ScreenSpace.getY(0.0f)?.let {
-            val leftXEnd: Int = (centerXF - halfWidth * 0.025).toInt()
-            drawHorizontalLine(0, leftXEnd, it, primaryColor)
+            val leftXEnd: Int = (centerXF - halfWidth * 0.025f).toInt()
+            val leftXStart: Int = (leftXEnd - halfWidth * 0.3f).toInt()
+            drawRightAlignedText("0", leftXStart - 3, it - 3, primaryColor)
+            drawHorizontalLine(leftXStart, leftXEnd, it, primaryColor)
 
-            val rightXStart: Int = (centerXF + halfWidth * 0.025).toInt()
-            drawHorizontalLine(rightXStart, scaledWindowWidth, it, primaryColor)
+            val rightXStart: Int = (centerXF + halfWidth * 0.025f).toInt()
+            val rightXEnd: Int = (rightXStart + halfWidth * 0.3f).toInt()
+            drawHorizontalLine(rightXStart, rightXEnd, it, primaryColor)
+            drawText("0", rightXEnd + 5, it - 3, primaryColor)
         }
 
-        if (!FAConfig.display.drawHorizonOutsideFrame) {
+        if (!FAConfig.display.drawPitchOutsideFrame) {
             disableScissor()
         }
     }

@@ -116,7 +116,6 @@ config.flightassistant:
           horizon_only: Horizon only
           disabled: Disabled
         degree_step: Line degree step
-        horizon_outside_frame: Draw horizon outside frame
         pitch_outside_frame: Draw pitch lines outside frame
       heading:
         .: Heading display

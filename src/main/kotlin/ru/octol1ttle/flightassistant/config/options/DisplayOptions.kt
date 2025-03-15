@@ -28,8 +28,6 @@ class DisplayOptions {
     @SerialEntry
     var attitudeDegreeStep: Int = 15
     @SerialEntry
-    var drawHorizonOutsideFrame: Boolean = true
-    @SerialEntry
     var drawPitchOutsideFrame: Boolean = true
 
     @SerialEntry
