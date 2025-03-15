@@ -157,9 +157,9 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
 
             if (text != null) {
                 drawContext.drawMiddleAlignedText(text, (leftX + rightX) / 2, y, if (active) primaryColor else secondaryColor)
-            }
-            if (borderColor != null || FATickCounter.totalTicks <= textChangedAt + (if (text == null) 60 else 100)) {
-                drawContext.drawBorder(leftX, y - 2, rightX - leftX, 11, borderColor ?: secondaryColor)
+                if (borderColor != null || FATickCounter.totalTicks <= textChangedAt + 100) {
+                    drawContext.drawBorder(leftX, y - 2, rightX - leftX, 11, borderColor ?: secondaryColor)
+                }
             }
         }
     }
