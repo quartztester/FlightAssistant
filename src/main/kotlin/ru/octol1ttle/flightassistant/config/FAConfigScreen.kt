@@ -39,7 +39,7 @@ object FAConfigScreen {
 
             val safety: ConfigCategory by registerSafetyOptions(
                 Text.translatable("config.flightassistant.category.safety"),
-                FAConfig.safety,
+                FAConfig.safetyConfig,
                 SafetyOptions()
             )
 

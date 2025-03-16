@@ -17,20 +17,22 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
     private val title: TextWidget = TextWidget(
         x, y, width, 20, Text.translatable("menu.flightassistant.autoflight.lateral"), mc.textRenderer
     )
-    private var newType: AutopilotLogicComputer.LateralMode.Type = computers.autopilot.lateralMode.type
+    private var newType: ButtonType
 
     init {
+        newType = ButtonType.entries.single { it.matches(computers.autopilot.lateralMode) }
+
         initSelectedHeading()
         initSelectedCoordinates()
 
-        buttons[AutopilotLogicComputer.LateralMode.Type.WaypointCoordinates] = ButtonWidget.builder(
+        buttons[ButtonType.FlightPlan] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.lateral.waypoint_coordinates")
-        ) { newType = AutopilotLogicComputer.LateralMode.Type.WaypointCoordinates }
+        ) { newType = ButtonType.FlightPlan }
             .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
 
     private fun initSelectedHeading() {
-        val type = AutopilotLogicComputer.LateralMode.Type.SelectedHeading
+        val type = ButtonType.SelectedHeading
 
         buttons[type] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.lateral.selected_heading")
@@ -48,7 +50,7 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
     }
 
     private fun initSelectedCoordinates() {
-        val type = AutopilotLogicComputer.LateralMode.Type.SelectedCoordinates
+        val type = ButtonType.SelectedCoordinates
 
         buttons[type] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.lateral.selected_coordinates")
@@ -87,14 +89,17 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
     }
 
     override fun applyChanges() {
-        computers.autopilot.lateralMode.type = newType
-        when (val type: AutopilotLogicComputer.LateralMode.Type = computers.autopilot.lateralMode.type) {
-            AutopilotLogicComputer.LateralMode.Type.SelectedHeading -> computers.autopilot.lateralMode.heading = textFields[type]!!.single().text.toFloatOrNull() ?: 0.0f
-            AutopilotLogicComputer.LateralMode.Type.SelectedCoordinates -> {
-                computers.autopilot.lateralMode.x = textFields[type]!!.first().text.toDoubleOrNull() ?: 0.0
-                computers.autopilot.lateralMode.z = textFields[type]!![1].text.toDoubleOrNull() ?: 0.0
+        computers.autopilot.lateralMode = when (val type: ButtonType = newType) {
+            ButtonType.SelectedHeading -> {
+                val heading: Float? = textFields[type]!!.single().text.toFloatOrNull()
+                if (heading != null) AutopilotLogicComputer.HeadingLateralMode(heading) else computers.autopilot.lateralMode
             }
-            else -> Unit
+            ButtonType.SelectedCoordinates -> {
+                val x: Double? = textFields[type]!!.first().text.toDoubleOrNull()
+                val z: Double? = textFields[type]!![1].text.toDoubleOrNull()
+                if (x != null && z != null) AutopilotLogicComputer.CoordinatesLateralMode(x, z) else computers.autopilot.lateralMode
+            }
+            ButtonType.FlightPlan -> null
         }
     }
 
@@ -106,9 +111,29 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
         super.render(context, mouseX, mouseY, delta)
     }
 
+    enum class ButtonType {
+        SelectedHeading {
+            override fun matches(mode: AutopilotLogicComputer.LateralMode?): Boolean {
+                return mode is AutopilotLogicComputer.HeadingLateralMode
+            }
+        },
+        SelectedCoordinates {
+            override fun matches(mode: AutopilotLogicComputer.LateralMode?): Boolean {
+                return mode is AutopilotLogicComputer.CoordinatesLateralMode
+            }
+        },
+        FlightPlan {
+            override fun matches(mode: AutopilotLogicComputer.LateralMode?): Boolean {
+                return mode == null
+            }
+        };
+
+        abstract fun matches(mode: AutopilotLogicComputer.LateralMode?): Boolean
+    }
+
     companion object {
-        private val buttons: EnumMap<AutopilotLogicComputer.LateralMode.Type, ButtonWidget> = EnumMap(AutopilotLogicComputer.LateralMode.Type::class.java)
-        private val textFields: EnumMap<AutopilotLogicComputer.LateralMode.Type, MutableList<TextFieldWidget>> = EnumMap(AutopilotLogicComputer.LateralMode.Type::class.java)
+        private val buttons: EnumMap<ButtonType, ButtonWidget> = EnumMap(ButtonType::class.java)
+        private val textFields: EnumMap<ButtonType, MutableList<TextFieldWidget>> = EnumMap(ButtonType::class.java)
         const val TOTAL_MODES: Float = 3.0f
     }
 }

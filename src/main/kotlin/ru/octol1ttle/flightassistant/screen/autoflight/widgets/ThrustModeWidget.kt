@@ -17,20 +17,22 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
     private val title: TextWidget = TextWidget(
         x, y, width, 20, Text.translatable("menu.flightassistant.autoflight.thrust"), mc.textRenderer
     )
-    private var newType: AutopilotLogicComputer.ThrustMode.Type = computers.autopilot.thrustMode.type
+    private var newType: ButtonType
 
     init {
+        newType = ThrustModeWidget.ButtonType.entries.single { it.matches(computers.autopilot.thrustMode) }
+
         initSelectedSpeed()
         initVerticalTarget()
 
-        buttons[AutopilotLogicComputer.ThrustMode.Type.WaypointThrust] = ButtonWidget.builder(
+        buttons[ButtonType.FlightPlan] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.thrust.waypoint_thrust")
-        ) { newType = AutopilotLogicComputer.ThrustMode.Type.WaypointThrust }
+        ) { newType = ButtonType.FlightPlan }
             .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
 
     private fun initSelectedSpeed() {
-        val type = AutopilotLogicComputer.ThrustMode.Type.SelectedSpeed
+        val type = ButtonType.SelectedSpeed
 
         buttons[type] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
@@ -48,7 +50,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
     }
 
     private fun initVerticalTarget() {
-        val type = AutopilotLogicComputer.ThrustMode.Type.VerticalTarget
+        val type = ButtonType.SelectedVerticalTarget
 
         buttons[type] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target")
@@ -94,14 +96,17 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
     }
 
     override fun applyChanges() {
-        computers.autopilot.thrustMode.type = newType
-        when (val type: AutopilotLogicComputer.ThrustMode.Type = computers.autopilot.thrustMode.type) {
-            AutopilotLogicComputer.ThrustMode.Type.SelectedSpeed -> computers.autopilot.thrustMode.speed = textFields[type]!!.single().text.toFloatOrNull() ?: 0.0f
-            AutopilotLogicComputer.ThrustMode.Type.VerticalTarget -> {
-                computers.autopilot.thrustMode.climbThrust = (textFields[type]!!.first().text.toIntOrNull() ?: 0) / 100.0f
-                computers.autopilot.thrustMode.descendThrust = (textFields[type]!![1].text.toIntOrNull() ?: 0) / 100.0f
+        computers.autopilot.thrustMode = when (val type: ButtonType = newType) {
+            ButtonType.SelectedSpeed -> {
+                val speed: Float? = textFields[type]!!.single().text.toFloatOrNull()
+                if (speed != null) AutopilotLogicComputer.SpeedThrustMode(speed) else computers.autopilot.thrustMode
             }
-            else -> Unit
+            ButtonType.SelectedVerticalTarget -> {
+                val climbThrust: Int? = textFields[type]!!.first().text.toIntOrNull()
+                val descendThrust: Int? = textFields[type]!![1].text.toIntOrNull()
+                if (climbThrust != null && descendThrust != null) AutopilotLogicComputer.VerticalTargetThrustMode(climbThrust / 100.0f, descendThrust / 100.0f) else computers.autopilot.thrustMode
+            }
+            ButtonType.FlightPlan -> null
         }
     }
 
@@ -113,9 +118,29 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         super.render(context, mouseX, mouseY, delta)
     }
 
+    enum class ButtonType {
+        SelectedSpeed {
+            override fun matches(mode: AutopilotLogicComputer.ThrustMode?): Boolean {
+                return mode is AutopilotLogicComputer.SpeedThrustMode
+            }
+        },
+        SelectedVerticalTarget {
+            override fun matches(mode: AutopilotLogicComputer.ThrustMode?): Boolean {
+                return mode is AutopilotLogicComputer.VerticalTargetThrustMode
+            }
+        },
+        FlightPlan {
+            override fun matches(mode: AutopilotLogicComputer.ThrustMode?): Boolean {
+                return mode == null
+            }
+        };
+
+        abstract fun matches(mode: AutopilotLogicComputer.ThrustMode?): Boolean
+    }
+
     companion object {
-        private val buttons: EnumMap<AutopilotLogicComputer.ThrustMode.Type, ButtonWidget> = EnumMap(AutopilotLogicComputer.ThrustMode.Type::class.java)
-        private val textFields: EnumMap<AutopilotLogicComputer.ThrustMode.Type, MutableList<TextFieldWidget>> = EnumMap(AutopilotLogicComputer.ThrustMode.Type::class.java)
+        private val buttons: EnumMap<ButtonType, ButtonWidget> = EnumMap(ButtonType::class.java)
+        private val textFields: EnumMap<ButtonType, MutableList<TextFieldWidget>> = EnumMap(ButtonType::class.java)
         const val TOTAL_MODES: Float = 3.0f
     }
 }

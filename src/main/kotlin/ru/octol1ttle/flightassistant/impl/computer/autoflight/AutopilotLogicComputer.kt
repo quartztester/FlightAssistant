@@ -17,7 +17,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     var lateralMode: LateralMode? = HeadingLateralMode(360.0f)
 
     fun computeThrust(): ControlInput? {
-        return when (val mode: ThrustMode? = thrustMode) {
+        return when (val mode: ThrustMode? = thrustMode ?: computers.plan.getThrustMode()) {
             is SpeedThrustMode -> ControlInput(
                 computers.thrust.calculateThrustForSpeed(mode.speed) ?: 0.0f,
                 ControlInput.Priority.NORMAL,
@@ -40,12 +40,13 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                     identifier = ID
                 )
             }
+            null -> null
             else -> throw AssertionError()
         }
     }
 
     fun computePitch(active: Boolean): ControlInput? {
-        return when (val mode = verticalMode) {
+        return when (val mode = verticalMode ?: computers.plan.getVerticalMode()) {
             is PitchVerticalMode ->
                 ControlInput(
                     mode.pitch,
@@ -84,12 +85,13 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 ControlInput(finalPitch, ControlInput.Priority.NORMAL, text, 1.5f, active, ID)
             }
             is ManagedAltitudeVerticalMode -> TODO()
+            null -> null
             else -> throw AssertionError()
         }
     }
 
     fun computeHeading(active: Boolean): ControlInput? {
-        return when (val mode = lateralMode) {
+        return when (val mode = lateralMode ?: computers.plan.getLateralMode()) {
             is HeadingLateralMode -> ControlInput(
                 mode.heading,
                 ControlInput.Priority.NORMAL,
@@ -104,6 +106,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 active = active,
                 identifier = ID
             )
+            null -> null
             else -> throw AssertionError()
         }
     }

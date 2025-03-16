@@ -14,11 +14,21 @@ class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
         private set
 
     override fun tick() {
-        TODO("Not yet implemented")
+    }
+
+    fun getThrustMode(): AutopilotLogicComputer.ThrustMode? {
+        return null
+    }
+
+    fun getVerticalMode(): AutopilotLogicComputer.VerticalMode? {
+        return null
+    }
+
+    fun getLateralMode(): AutopilotLogicComputer.LateralMode? {
+        return null
     }
 
     override fun reset() {
-        TODO("Not yet implemented")
     }
 
     companion object {

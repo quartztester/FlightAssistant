@@ -17,20 +17,22 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
     private val title: TextWidget = TextWidget(
         x, y, width, 20, Text.translatable("menu.flightassistant.autoflight.vertical"), mc.textRenderer
     )
-    private var newType: AutopilotLogicComputer.VerticalMode.Type = computers.autopilot.verticalMode.type
+    private var newType: ButtonType
 
     init {
+        newType = ButtonType.entries.single { it.matches(computers.autopilot.verticalMode) }
+
         initSelectedPitch()
         initSelectedAltitude()
 
-        buttons[AutopilotLogicComputer.VerticalMode.Type.WaypointAltitude] = ButtonWidget.builder(
+        buttons[ButtonType.FlightPlan] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.vertical.waypoint_altitude")
-        ) { newType = AutopilotLogicComputer.VerticalMode.Type.WaypointAltitude }
+        ) { newType = ButtonType.FlightPlan }
             .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
 
     private fun initSelectedPitch() {
-        val type = AutopilotLogicComputer.VerticalMode.Type.SelectedPitch
+        val type = ButtonType.SelectedPitch
 
         buttons[type] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.vertical.selected_pitch")
@@ -48,7 +50,7 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
     }
 
     private fun initSelectedAltitude() {
-        val type = AutopilotLogicComputer.VerticalMode.Type.SelectedAltitude
+        val type = ButtonType.SelectedAltitude
 
         buttons[type] = ButtonWidget.builder(
             Text.translatable("menu.flightassistant.autoflight.vertical.selected_altitude")
@@ -76,11 +78,16 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
     }
 
     override fun applyChanges() {
-        computers.autopilot.verticalMode.type = newType
-        when (val type: AutopilotLogicComputer.VerticalMode.Type = computers.autopilot.verticalMode.type) {
-            AutopilotLogicComputer.VerticalMode.Type.SelectedPitch, AutopilotLogicComputer.VerticalMode.Type.SelectedAltitude
-                 -> computers.autopilot.verticalMode.pitchOrAltitude = textFields[type]!!.single().text.toFloatOrNull() ?: 0.0f
-            else -> Unit
+        computers.autopilot.verticalMode = when (val type: ButtonType = newType) {
+            ButtonType.SelectedPitch -> {
+                val pitch: Float? = textFields[type]!!.single().text.toFloatOrNull()
+                if (pitch != null) AutopilotLogicComputer.PitchVerticalMode(pitch) else computers.autopilot.verticalMode
+            }
+            ButtonType.SelectedAltitude -> {
+                val altitude: Double? = textFields[type]!!.single().text.toDoubleOrNull()
+                if (altitude != null) AutopilotLogicComputer.SelectedAltitudeVerticalMode(altitude) else computers.autopilot.verticalMode
+            }
+            ButtonType.FlightPlan -> null
         }
     }
 
@@ -92,9 +99,29 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
         super.render(context, mouseX, mouseY, delta)
     }
 
+    enum class ButtonType {
+        SelectedPitch {
+            override fun matches(mode: AutopilotLogicComputer.VerticalMode?): Boolean {
+                return mode is AutopilotLogicComputer.PitchVerticalMode
+            }
+        },
+        SelectedAltitude {
+            override fun matches(mode: AutopilotLogicComputer.VerticalMode?): Boolean {
+                return mode is AutopilotLogicComputer.SelectedAltitudeVerticalMode
+            }
+        },
+        FlightPlan {
+            override fun matches(mode: AutopilotLogicComputer.VerticalMode?): Boolean {
+                return mode == null
+            }
+        };
+
+        abstract fun matches(mode: AutopilotLogicComputer.VerticalMode?): Boolean
+    }
+
     companion object {
-        private val buttons: EnumMap<AutopilotLogicComputer.VerticalMode.Type, ButtonWidget> = EnumMap(AutopilotLogicComputer.VerticalMode.Type::class.java)
-        private val textFields: EnumMap<AutopilotLogicComputer.VerticalMode.Type, MutableList<TextFieldWidget>> = EnumMap(AutopilotLogicComputer.VerticalMode.Type::class.java)
+        private val buttons: EnumMap<ButtonType, ButtonWidget> = EnumMap(ButtonType::class.java)
+        private val textFields: EnumMap<ButtonType, MutableList<TextFieldWidget>> = EnumMap(ButtonType::class.java)
         const val TOTAL_MODES: Float = 3.0f
     }
 }

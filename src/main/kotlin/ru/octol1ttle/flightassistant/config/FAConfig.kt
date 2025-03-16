@@ -55,7 +55,7 @@ object FAConfig {
         get() = GLOBAL_HANDLER.instance()
     internal val hudEnabled: Boolean
         get() = global.modEnabled && global.hudEnabled
-    internal val safetyEnabled: Boolean
+    private val safetyEnabled: Boolean
         get() = global.modEnabled && global.safetyEnabled
     internal val displaysStorage: DisplayOptionsStorage
         get() = DISPLAY_HANDLER.instance()
@@ -91,6 +91,9 @@ object FAConfig {
 
     val safety: SafetyOptions
         get() = if (safetyEnabled) SAFETY_HANDLER.instance() else SafetyOptions.DISABLED
+
+    internal val safetyConfig
+        get() = SAFETY_HANDLER.instance()
 
     fun load() {
         GLOBAL_HANDLER.load()

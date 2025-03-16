@@ -19,6 +19,9 @@ interface ComputerView : ModuleView<Computer> {
     val firework: FireworkComputer
         get() = get(FireworkComputer.ID) as FireworkComputer
 
+    val plan: FlightPlanComputer
+        get() = get(FlightPlanComputer.ID) as FlightPlanComputer
+
     val heading: HeadingComputer
         get() = get(HeadingComputer.ID) as HeadingComputer
 

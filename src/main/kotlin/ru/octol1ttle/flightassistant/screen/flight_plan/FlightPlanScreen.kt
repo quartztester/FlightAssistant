@@ -12,7 +12,7 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
 
         this.addDrawableChild(TextWidget(0, 10, this.width, 9, this.title, this.textRenderer))
 
-        this.addDrawableChild(WaypointsListWidget())
+        //this.addDrawableChild(WaypointsListWidget())
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE) { _: ButtonWidget? ->
             this.close()
         }.position(this.width - 100, this.height - 40).width(80).build())

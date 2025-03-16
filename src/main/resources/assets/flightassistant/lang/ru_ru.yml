@@ -240,6 +240,7 @@ menu.flightassistant:
         flightassistant:automations: Компьютер автоматики
         flightassistant:autopilot_logic: Компьютер логики автопилота
         flightassistant:firework: Компьютер фейерверков
+        flightassistant:flight_plan: Компьютер плана полёта
         flightassistant:heading: Компьютер управления курсом
         flightassistant:pitch: Компьютер управления углом наклона
         flightassistant:roll: Компьютер управления креном

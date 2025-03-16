@@ -236,6 +236,7 @@ menu.flightassistant:
         flightassistant:automations: Automatics computer
         flightassistant:autopilot_logic: Autopilot logic computer
         flightassistant:firework: Firework computer
+        flightassistant:flight_plan: Flight plan computer
         flightassistant:heading: Heading computer
         flightassistant:pitch: Pitch computer
         flightassistant:roll: Roll computer
