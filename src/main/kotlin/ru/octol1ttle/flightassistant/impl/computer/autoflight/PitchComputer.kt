@@ -110,6 +110,10 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
     }
 
     override fun getPitchInput(): ControlInput? {
+        if (!computers.data.flying) {
+            return null
+        }
+
         val max: ControlInput? = maximumPitch
         if (max != null && computers.data.pitch > max.target) {
             return max
