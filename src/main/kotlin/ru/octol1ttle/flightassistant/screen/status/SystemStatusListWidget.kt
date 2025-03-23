@@ -19,6 +19,10 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
 /*? if <1.21 {*/ bottom, //?}
     25) {
     init {
+//? if <1.21 {
+        setRenderBackground(false)
+        setRenderHorizontalShadows(false)
+//?}
         var y: Int = top + Y_OFFSET
         for (system: Identifier in controller.identifiers()) {
             this.addEntry(
@@ -31,11 +35,11 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
 
 //? if >=1.21 {
     /*override fun getScrollbarX(): Int {
-        return this.x + this.width - 4
+        return this.x + this.width - 6
     }
 *///?} else {
     override fun getScrollbarPositionX(): Int {
-        return this.left + this.width - 4
+        return this.left + this.width - 6
     }
 //?}
 
@@ -46,8 +50,8 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
     class SystemStatusWidgetEntry(val x: Int, val y: Int, private val listWidth: Int, val identifier: Identifier, displayNameText: Text, private val controller: ModuleController<*>)
         : Entry<SystemStatusWidgetEntry>() {
         private val displayName: TextWidget = TextWidget(x, y, this.listWidth / 2, 9, displayNameText, textRenderer).alignLeft()
-        private val faultText: TextWidget = TextWidget(x, y, this.listWidth / 8, 9, FAULT_TEXT, textRenderer)
-        private val offText: TextWidget = TextWidget(x, y, this.listWidth / 8, 9, OFF_TEXT, textRenderer)
+        private val faultText: TextWidget = TextWidget(x, y, this.listWidth / 6, 9, FAULT_TEXT, textRenderer)
+        private val offText: TextWidget = TextWidget(x, y, this.listWidth / 6, 9, OFF_TEXT, textRenderer)
         private val toggleButton: ButtonWidget = ButtonWidget.builder(OFF_TEXT) {
             it.message =
                 if (controller.toggleEnabled(identifier)) OFF_TEXT
@@ -61,14 +65,14 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
             displayName.y = renderY
             displayName.render(context, mouseX, mouseY, tickDelta)
 
-            toggleButton.x = this.x + this.listWidth - toggleButton.width - 5
+            toggleButton.x = this.x + this.listWidth - toggleButton.width - 10
             toggleButton.y = renderY - toggleButton.height / 4 - 1
             toggleButton.message =
                 if (controller.isEnabled(identifier)) OFF_TEXT
                 else ON_RESET_TEXT
             toggleButton.render(context, mouseX, mouseY, tickDelta)
 
-            offText.x = toggleButton.x - toggleButton.width / 2 - textRenderer.getWidth(OFF_TEXT) - 2
+            offText.x = toggleButton.x - this.listWidth / 12 - textRenderer.getWidth(OFF_TEXT)
             offText.y = renderY
             offText.setTextColor(
                 if (controller.isEnabled(identifier)) 0x0F0F0F
@@ -76,7 +80,7 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
             )
             offText.render(context, mouseX, mouseY, tickDelta)
 
-            faultText.x = offText.x - textRenderer.getWidth(FAULT_TEXT) - 2
+            faultText.x = offText.x - textRenderer.getWidth(FAULT_TEXT)
             faultText.y = renderY
             faultText.setTextColor(
                 if (controller.isFaulted(identifier)) cautionColor

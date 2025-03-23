@@ -14,10 +14,14 @@ class SystemStatusScreen : FABaseScreen(Text.translatable("menu.flightassistant.
 
         this.addDrawableChild(TextWidget(0, 7, this.width, 9, this.title, this.textRenderer))
 
-        val hudListWidget = SystemStatusListWidget(centerX, this.height, 20, this.height - 40, 0, HudDisplayHost, "menu.flightassistant.system.name.hud")
+        val top = 20
+        val bottom: Int = this.height - 40
+        val height: Int = bottom - top
+
+        val hudListWidget = SystemStatusListWidget(centerX, height, 20, bottom, 0, HudDisplayHost, "menu.flightassistant.system.name.hud")
         this.addDrawableChild(hudListWidget)
 
-        val computerListWidget = SystemStatusListWidget(centerX, this.height, 20, this.height - 40, this.centerX, ComputerHost, "menu.flightassistant.system.name.computer")
+        val computerListWidget = SystemStatusListWidget(centerX, height, 20, bottom, this.centerX, ComputerHost, "menu.flightassistant.system.name.computer")
 //? if >=1.21 {
         /*computerListWidget.x = this.centerX
 *///?} else
