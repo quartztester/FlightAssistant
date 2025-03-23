@@ -35,10 +35,10 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
         }.position(this.centerX - 100, this.centerY + 50).width(200).build())
         autoThrust = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.auto_thrust")) {
             thrustMode?.applyChanges()
-            computers.automations.setAutoThrust(!computers.automations.autoThrust, true)
+            computers.automations.setAutoThrust(!computers.automations.autoThrust, false)
         }.position(this.centerX - 100, this.centerY + 80).width(95).build())
         autopilot = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.autopilot")) {
-            computers.automations.setAutoPilot(!computers.automations.autopilot, true)
+            computers.automations.setAutoPilot(!computers.automations.autopilot, false)
         }.position(this.centerX + 5, this.centerY + 80).width(95).build())
 
         thrustMode?.applyChanges()
