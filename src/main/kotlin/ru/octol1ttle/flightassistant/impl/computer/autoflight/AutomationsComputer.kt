@@ -44,7 +44,7 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
             }
         })
         ChangeLookDirectionEvents.PITCH.register(ChangeLookDirectionEvents.ChangeLookDirection { pitchDelta, output ->
-            if (autopilot) {
+            if (computers.data.flying && autopilot) {
                 pitchResistance += abs(pitchDelta)
                 if (pitchResistance < 20.0f) {
                     output.add(ControlInput(0.0f, ControlInput.Priority.NORMAL))
@@ -56,7 +56,7 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
             pitchResistance = 0.0f
         })
         ChangeLookDirectionEvents.HEADING.register(ChangeLookDirectionEvents.ChangeLookDirection { headingDelta, output ->
-            if (autopilot) {
+            if (computers.data.flying && autopilot) {
                 headingResistance += abs(headingDelta)
                 if (headingResistance < 40.0f) {
                     output.add(ControlInput(0.0f, ControlInput.Priority.NORMAL))
