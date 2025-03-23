@@ -19,7 +19,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     fun computeThrust(): ControlInput? {
         return when (thrustMode.type) {
             ThrustMode.Type.SelectedSpeed -> ControlInput(
-                computers.thrust.calculateThrustForSpeed(thrustMode.speed) ?: 0.0f,
+                computers.thrust.calculateThrustForSpeed(thrustMode.speed) ?: 1.0f,
                 ControlInput.Priority.NORMAL,
                 Text.translatable("mode.flightassistant.thrust.selected_speed", thrustMode.speed.roundToInt()),
                 identifier = ID
