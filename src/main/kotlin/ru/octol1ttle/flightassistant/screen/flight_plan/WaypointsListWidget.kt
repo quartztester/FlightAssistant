@@ -16,8 +16,10 @@ class WaypointsListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSED_P
     /*? if <1.21 {*/ bottom, //?}
     40) {
     init {
+//? if <1.21 {
         setRenderBackground(false)
         setRenderHorizontalShadows(false)
+//?}
 
         var y: Int = top + OFFSET
         var id = 0

@@ -12,7 +12,11 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
 
         this.addDrawableChild(TextWidget(0, 10, this.width, 9, this.title, this.textRenderer))
 
-        val waypointsListWidget = WaypointsListWidget(this.width / 3 - 5, this.height, 20, this.height - 40, 5)
+        val top = 20
+        val bottom: Int = this.height - 40
+        val height: Int = bottom - top
+
+        val waypointsListWidget = WaypointsListWidget(this.width / 3 - 5, height, top, bottom, 5)
 //? if >=1.21 {
         /*waypointsListWidget.x = 5
 *///?} else
