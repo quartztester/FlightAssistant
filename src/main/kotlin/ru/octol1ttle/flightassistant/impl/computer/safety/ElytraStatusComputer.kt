@@ -47,8 +47,9 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 
         val flying: Boolean = data.flying || data.player.abilities.allowFlying
         val hasUsableElytra: Boolean = data.player.armorItems.contains(activeElytra) && activeElytra.canUse()
-        val notLookingToClutch: Boolean = data.pitch > -70.0f
-        if (FAConfig.safety.elytraAutoOpen && !data.fallDistanceSafe && !flying && hasUsableElytra && notLookingToClutch) {
+        val isInsideBlock: Boolean = !data.player.blockStateAtPos.isAir
+        val lookingToClutch: Boolean = data.pitch <= -70.0f
+        if (FAConfig.safety.elytraAutoOpen && !flying && !data.fallDistanceSafe && hasUsableElytra && !isInsideBlock && !lookingToClutch) {
             sendSwitchState(data)
         }
     }
