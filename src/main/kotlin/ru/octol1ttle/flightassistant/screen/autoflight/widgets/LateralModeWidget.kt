@@ -58,18 +58,18 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
             .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
         val xCoordWidget = TextFieldWidget(
-            mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.firstOrNull(), Text.empty()
+            mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Text.empty()
         )
-        xCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.selected_coordinates.target_x"))
+        xCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.target_x"))
         xCoordWidget.setTextPredicate {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
         }
 
         val zCoordWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.get(1), Text.empty()
+            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Text.empty()
         )
-        zCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.selected_coordinates.target_z"))
+        zCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.target_z"))
         zCoordWidget.setTextPredicate {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
@@ -95,7 +95,7 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
                 if (heading != null) AutopilotLogicComputer.HeadingLateralMode(heading) else computers.autopilot.lateralMode
             }
             ButtonType.SelectedCoordinates -> {
-                val x: Double? = textFields[type]!!.first().text.toDoubleOrNull()
+                val x: Double? = textFields[type]!![0].text.toDoubleOrNull()
                 val z: Double? = textFields[type]!![1].text.toDoubleOrNull()
                 if (x != null && z != null) AutopilotLogicComputer.CoordinatesLateralMode(x, z) else computers.autopilot.lateralMode
             }

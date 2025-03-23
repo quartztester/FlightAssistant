@@ -35,7 +35,12 @@ class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
         val ID: Identifier = FlightAssistant.id("flight_plan")
     }
 
+    data class DepartureWaypoint(val x: Double, val z: Double) {
+    }
+
     class Waypoint {
 
     }
+
+    data class ArrivalWaypoint(val x: Double, val z: Double)
 }

@@ -58,13 +58,13 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
             .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
         val climbThrustWidget = TextFieldWidget(
-            mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.firstOrNull(), Text.empty()
+            mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Text.empty()
         )
         climbThrustWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target.climb_thrust"))
         configureThrustWidget(climbThrustWidget)
 
         val descendThrustWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.get(1), Text.empty()
+            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Text.empty()
         )
         descendThrustWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target.descend_thrust"))
         configureThrustWidget(descendThrustWidget)
@@ -102,7 +102,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
                 if (speed != null) AutopilotLogicComputer.SpeedThrustMode(speed) else computers.autopilot.thrustMode
             }
             ButtonType.SelectedVerticalTarget -> {
-                val climbThrust: Int? = textFields[type]!!.first().text.toIntOrNull()
+                val climbThrust: Int? = textFields[type]!![0].text.toIntOrNull()
                 val descendThrust: Int? = textFields[type]!![1].text.toIntOrNull()
                 if (climbThrust != null && descendThrust != null) AutopilotLogicComputer.VerticalTargetThrustMode(climbThrust / 100.0f, descendThrust / 100.0f) else computers.autopilot.thrustMode
             }

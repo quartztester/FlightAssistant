@@ -32,6 +32,8 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
         val computers: ComputerView = ComputerHost
 
         flightDirectors = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.flight_directors")) {
+            verticalMode?.applyChanges()
+            lateralMode?.applyChanges()
             computers.automations.setFlightDirectors(!computers.automations.flightDirectors)
         }.position(this.centerX - 100, this.centerY + 50).width(200).build())
         autoThrust = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.auto_thrust")) {
@@ -39,6 +41,8 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
             computers.automations.setAutoThrust(!computers.automations.autoThrust, false)
         }.position(this.centerX - 100, this.centerY + 80).width(95).build())
         autopilot = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.autopilot")) {
+            verticalMode?.applyChanges()
+            lateralMode?.applyChanges()
             computers.automations.setAutoPilot(!computers.automations.autopilot, false)
         }.position(this.centerX + 5, this.centerY + 80).width(95).build())
 

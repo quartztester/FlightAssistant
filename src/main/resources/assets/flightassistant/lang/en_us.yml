@@ -271,11 +271,10 @@ menu.flightassistant:
       selected_heading:
         .: HDG
         target: Target heading
-      selected_coordinates:
-        .: COORDS
-        target_x: X
-        target_z: Z
+      selected_coordinates: COORDS
       waypoint_coordinates: F/PLAN
+    target_x: X
+    target_z: Z
 
 mode.flightassistant:
   thrust:
