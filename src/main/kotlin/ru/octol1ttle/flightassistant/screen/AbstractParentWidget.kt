@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder
 
 abstract class AbstractParentWidget : AbstractParentElement(), Drawable, Selectable {
     private var hoveredElement: Element? = null
+    var forceFocused: Boolean = false
 
     override fun render(context: DrawContext?, mouseX: Int, mouseY: Int, delta: Float) {
         for (child: Element in children()) {
@@ -35,5 +36,9 @@ abstract class AbstractParentWidget : AbstractParentElement(), Drawable, Selecta
         } else {
             if (this.hoveredElement != null) Selectable.SelectionType.HOVERED else Selectable.SelectionType.NONE
         }
+    }
+
+    override fun isFocused(): Boolean {
+        return forceFocused || super.isFocused()
     }
 }

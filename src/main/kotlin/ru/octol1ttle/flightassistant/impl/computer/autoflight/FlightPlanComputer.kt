@@ -6,12 +6,10 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 
 class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
-    var departureWaypoint: Waypoint? = null
+    var departureWaypoint: DepartureWaypoint? = null
+    var enrouteWaypoints: List<EnrouteWaypoint>? = null
         private set
-    var enrouteWaypoints: List<Waypoint>? = null
-        private set
-    var arrivalWaypoint: Waypoint? = null
-        private set
+    var arrivalWaypoint: ArrivalWaypoint? = null
 
     override fun tick() {
     }
@@ -35,12 +33,9 @@ class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
         val ID: Identifier = FlightAssistant.id("flight_plan")
     }
 
-    data class DepartureWaypoint(val x: Double, val z: Double) {
-    }
+    data class DepartureWaypoint(val x: Double, val z: Double, val takeoffThrust: Float?, val thrustReductionAltitude: Double?)
 
-    class Waypoint {
-
-    }
+    class EnrouteWaypoint
 
     data class ArrivalWaypoint(val x: Double, val z: Double)
 }

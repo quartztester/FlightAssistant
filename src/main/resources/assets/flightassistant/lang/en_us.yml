@@ -205,7 +205,12 @@ menu.flightassistant:
   .: Flight setup
   flight_plan:
     .: Flight plan
-    departure_waypoint: Departure
+    save: Save
+    discard_changes: Discard changes
+    departure:
+      .: Departure
+      takeoff_thrust: Takeoff thrust
+      thrust_reduction_altitude: Thrust reduction altitude
   system:
     .: System status
     fault: FAULT

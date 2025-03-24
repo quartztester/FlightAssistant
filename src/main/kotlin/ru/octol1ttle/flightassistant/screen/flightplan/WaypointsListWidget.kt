@@ -16,11 +16,6 @@ class WaypointsListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSED_P
 
         var y: Int = top + OFFSET
         var id = 0
-
-        textFieldStorage[id] = ArrayList()
-        this.addEntryToTop(DepartureWaypointEntry(left + OFFSET, y, width - OFFSET, ITEM_HEIGHT))
-        id++
-        y += 40
     }
 
 //? if >=1.21 {

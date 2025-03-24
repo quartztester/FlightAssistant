@@ -1,27 +1,38 @@
 package ru.octol1ttle.flightassistant.screen.flightplan
 
-import com.google.common.collect.ImmutableList
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.text.Text
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
+import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.textRenderer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
-class DepartureWaypointWidget(val waypoint: FlightPlanComputer.DepartureWaypoint, val x: Int, val y: Int, val width: Int, val height: Int) : AbstractParentWidget() {
-    private val displayName: TextWidget = TextWidget(x, y, width, 9, Text.translatable("menu.flightassistant.flight_plan.departure_waypoint"), textRenderer).alignLeft()
+class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, val y: Int, val width: Int, val height: Int) : AbstractParentWidget(), FlightPlanState {
+    private val displayText: TextWidget = TextWidget(x, y, width, 9, Text.translatable("menu.flightassistant.flight_plan.departure"), textRenderer).alignLeft()
     private val xField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x, y + 11, width / 2 - 4, 15, xFieldOld, Text.empty()
+        mc.textRenderer, x, y + 11, width / 2 - 4, 15, textFields[0], Text.empty()
     )
     private val zField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width / 2, y + 11, width / 2 - 4, 15, zFieldOld, Text.empty()
+        mc.textRenderer, x + width / 2, y + 11, width / 2 - 4, 15, textFields[1], Text.empty()
+    )
+    private var takeoffThrustText: TextWidget
+    private val takeoffThrustField: TextFieldWidget = TextFieldWidget(
+        mc.textRenderer, x + width + 15, y + 33, width / 2, 15, textFields[2], Text.empty()
+    )
+    private var thrustReductionAltitudeText: TextWidget
+    private val thrustReductionAltitudeField: TextFieldWidget = TextFieldWidget(
+        mc.textRenderer, x + width + 15, y + 66, width / 2, 15, textFields[3], Text.empty()
     )
 
     init {
-        xFieldOld = xField
-        zFieldOld = zField
+        textFields[0] = xField
+        textFields[1] = zField
+        textFields[2] = takeoffThrustField
+        textFields[3] = thrustReductionAltitudeField
 
         xField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.target_x"))
         xField.setTextPredicate {
@@ -33,14 +44,56 @@ class DepartureWaypointWidget(val waypoint: FlightPlanComputer.DepartureWaypoint
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
         }
+        takeoffThrustText = TextWidget(takeoffThrustField.x, takeoffThrustField.y - 12, takeoffThrustField.width, 9, Text.translatable("menu.flightassistant.flight_plan.departure.takeoff_thrust"), textRenderer).alignLeft()
+        thrustReductionAltitudeText = TextWidget(thrustReductionAltitudeField.x, thrustReductionAltitudeField.y - 12, thrustReductionAltitudeField.width, 9, Text.translatable("menu.flightassistant.flight_plan.departure.thrust_reduction_altitude"), textRenderer).alignLeft()
+    }
+
+    override fun render(context: DrawContext?, mouseX: Int, mouseY: Int, delta: Float) {
+        super.render(context, mouseX, mouseY, delta)
+        if (isFocused) {
+            context!!.drawBorder(x - 3, y - 3, width + 1, height + 1, 0xFFFFFFFF.toInt())
+        }
+    }
+
+    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        if (super.mouseClicked(mouseX, mouseY, button)) return true
+        this.forceFocused = mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height
+        return this.forceFocused
     }
 
     override fun children(): MutableList<out Element> {
-        return ImmutableList.of(displayName, xField, zField)
+        val list = ArrayList<Element>()
+        list.add(displayText)
+        list.add(xField)
+        list.add(zField)
+        if (isFocused) {
+            list.add(takeoffThrustText)
+            list.add(takeoffThrustField)
+            list.add(thrustReductionAltitudeText)
+            list.add(thrustReductionAltitudeField)
+        }
+        return list
+    }
+
+    override fun needsSaving(): Boolean {
+        val waypoint: FlightPlanComputer.DepartureWaypoint = computers.plan.departureWaypoint ?: return textFields.any { it!!.text.isNotEmpty() }
+        return !xField.text.equals(waypoint.x.toString()) || !zField.text.equals(waypoint.z.toString()) || !takeoffThrustField.text.equals(waypoint.takeoffThrust.toString()) || !thrustReductionAltitudeField.text.equals(waypoint.thrustReductionAltitude.toString())
+    }
+
+    override fun canSave(): Boolean {
+        return xField.text.toDoubleOrNull() != null && zField.text.toDoubleOrNull() != null && (takeoffThrustField.text.toFloatOrNull() != null || thrustReductionAltitudeField.text.toDoubleOrNull() == null)
+    }
+
+    override fun save() {
+        val x: Double = xField.text.toDouble()
+        val z: Double = zField.text.toDouble()
+        val takeoffThrust: Float? = takeoffThrustField.text.toFloatOrNull()
+        val thrustReductionAltitude: Double? = thrustReductionAltitudeField.text.toDoubleOrNull()
+
+        computers.plan.departureWaypoint = FlightPlanComputer.DepartureWaypoint(x, z, takeoffThrust, thrustReductionAltitude)
     }
 
     companion object {
-        var xFieldOld: TextFieldWidget? = null
-        var zFieldOld: TextFieldWidget? = null
+        var textFields: MutableList<TextFieldWidget?> = mutableListOf(null, null, null, null)
     }
 }
