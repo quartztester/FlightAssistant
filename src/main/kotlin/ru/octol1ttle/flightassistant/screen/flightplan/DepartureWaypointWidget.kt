@@ -75,6 +75,14 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
         return list
     }
 
+    override fun load() {
+        val waypoint: FlightPlanComputer.DepartureWaypoint = computers.plan.departureWaypoint ?: return
+        xField.text = waypoint.x.toString()
+        zField.text = waypoint.z.toString()
+        takeoffThrustField.text = waypoint.takeoffThrust?.toString() ?: ""
+        thrustReductionAltitudeField.text = waypoint.thrustReductionAltitude?.toString() ?: ""
+    }
+
     override fun needsSaving(): Boolean {
         val waypoint: FlightPlanComputer.DepartureWaypoint = computers.plan.departureWaypoint ?: return textFields.any { it!!.text.isNotEmpty() }
         return !xField.text.equals(waypoint.x.toString()) || !zField.text.equals(waypoint.z.toString()) || !takeoffThrustField.text.equals(waypoint.takeoffThrust.toString()) || !thrustReductionAltitudeField.text.equals(waypoint.thrustReductionAltitude.toString())

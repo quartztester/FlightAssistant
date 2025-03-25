@@ -14,6 +14,7 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
     private lateinit var discardChangesButton: ButtonWidget
 
     private val states: MutableList<FlightPlanState> = ArrayList()
+    private var loaded: Boolean = false
 
     override fun init() {
         super.init()
@@ -31,7 +32,9 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
             }
         }.position(this.width - 190, this.height - 30).width(80).build()
         discardChangesButton = ButtonWidget.builder(Text.translatable("menu.flightassistant.flight_plan.discard_changes")) { _: ButtonWidget? ->
-            // TODO: reload
+            for (state: FlightPlanState in states) {
+                state.load()
+            }
         }.position(this.width - 300, this.height - 30).width(100).build()
 
         this.addDrawableChild(doneButton)
@@ -47,24 +50,32 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
     }
 
     private fun addWaypointsList() {
-        val width: Int = this.width / 3 - WaypointsListWidget.OFFSET
-        val top: Int = WaypointsListWidget.ITEM_HEIGHT
-        val left: Int = WaypointsListWidget.OFFSET * 2
-        val bottom: Int = this.height - WaypointsListWidget.ITEM_HEIGHT - 10
+        val width: Int = this.width / 3 - EnrouteWaypointsListWidget.OFFSET
+        val top: Int = EnrouteWaypointsListWidget.ITEM_HEIGHT
+        val left: Int = EnrouteWaypointsListWidget.OFFSET * 2
+        val bottom: Int = this.height - EnrouteWaypointsListWidget.ITEM_HEIGHT - 10
         val height: Int = bottom - top
 
         val computers: ComputerView = ComputerHost
 
-        val departureWaypointWidget = DepartureWaypointWidget(computers, left, left, width, WaypointsListWidget.ITEM_HEIGHT)
+        val departureWaypointWidget = DepartureWaypointWidget(computers, left, left, width, EnrouteWaypointsListWidget.ITEM_HEIGHT)
+
         //val arrivalWaypointWidget = ArrivalWaypointWidget(computers, left, this.height - WaypointsListWidget.ITEM_HEIGHT - 5, width, WaypointsListWidget.ITEM_HEIGHT)
-        //val waypointsListWidget = WaypointsListWidget(computers, width, height, top, bottom, 5)
+        val waypointsListWidget = EnrouteWaypointsListWidget(computers, width, height, top, bottom, 5)
         //? if >=1.21 {
         /*waypointsListWidget.x = left
 *///?} else
-        //waypointsListWidget.setLeftPos(left)
+        waypointsListWidget.setLeftPos(left)
+
+        if (!loaded) {
+            departureWaypointWidget.load()
+            //arrivalWaypointWidget.load()
+            waypointsListWidget.load()
+        }
+        loaded = true
 
         states.add(this.addDrawableChild(departureWaypointWidget))
         //states.add(this.addDrawableChild(arrivalWaypointWidget))
-        //states.add(this.addDrawableChild(waypointsListWidget))
+        states.add(this.addDrawableChild(waypointsListWidget))
     }
 }
