@@ -1,30 +1,21 @@
-This is Alpha 8 of a major update to FlightAssistant. Please note that there may be critical issues and features may
+This is Alpha 9 of a major update to FlightAssistant. Please note that there may be critical issues and features may
 not work as intended. Please use [Discord](https://discord.gg/5kcBCvnbTp)
 or [GitHub](https://github.com/Octol1ttle/FlightAssistant) to discuss this alpha or report any bugs.
 
-## New features in Alpha 8
-- Added ability to set a keybind to quickly enable/disable mod
-- Added config option to disable `FRWK EXPLOSIVE` alert
-- Added config options to configure how `STALL` and GPWS warnings are relayed to the user:
-- - Each warning can now be configured to be relayed via `Screen & Audio`, `Audio Only` or `Screen Only`
-- Added config option to customize secondary color
-- A graphical representation of vertical speed now appears near the altitude scale
+## New features in Alpha 9
+- Reworked the heading scale
 
-## Changes in Alpha 8
-- Automation Modes Display:
-- - `THR OVRD` and `PITCH OVRD` are now annunciated
-- - Changed the way `THR LK` and `TOGA LK` are annunicated to be easier to read
-- - Safety-related inputs are now highlighted with the caution color rather than the secondary color
-- - Increased the width the display can take up to reduce text overlap
-- Changed the Pitch Limit symbol to be more legible
-- Changed the default HUD width to 60%
-- Clarified thrust units when selecting Climb and Descend Thrust in VERT mode
-- Disabled systems in the Auto Flight Screen now appear in red instead of white
+## Changes in Alpha 9
+- Added ECAM action on how to silence the `AUTO FLT AP OFF` alarm
+- Disabling auto thrust or autopilot in the Auto Flight screen no longer triggers alarms
+- Moving the camera on ground no longer disconnects the autopilot
+- Pitch limit mode is no longer displayed when on ground
 
 ## Fixed issues
-- Fixed an issue where alerts would play for a split second even when Alert Sound Volume was set to 0%
-- Fixed an issue where alerts would play at the wrong volume for a split second when Alert Sound Volume wasn't equal to 100%
-- Fixed an issue where Speed Display and Altitude Display would not be aligned with their scales at some screen resolutions
-- Fixed button hitboxes in the System Status Screen
-- Fixed scrolling in the System Status Screen
-- The `NO SRC AVAIL` alert no longer displays when `THR IDLE` is commanded
+- Elytra will no longer auto-open when climbing ladders
+- Fixed visual distortion when the HUD is being resized
+- Fixed `HUD SPD DSPL FAULT` and `HUD ALT DSPL FAULT` appearing when the HUD is being resized
+- Fixed `HUD HDG DSPL FAULT` appearing in extremely rare circumstances
+- Fixed various usability issues in the System Status screen
+- Thrust mode is now highlighted when thrust cannot be used (no source or reverse unsupported)
+- `THR NO SRC AVAIL` now works correctly when using auto thrust in SPEED mode
