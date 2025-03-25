@@ -34,9 +34,9 @@ object HudFrame {
         height = window.scaledHeight * FAConfig.display.frameHeight
 
         topF = ((window.scaledHeight - height) * 0.5f)
-        bottomF = top + height
+        bottomF = topF + height
         leftF = ((window.scaledWidth - width) * 0.5f)
-        rightF = left + width
+        rightF = leftF + width
 
         top = topF.roundToInt()
         bottom = bottomF.toInt()
