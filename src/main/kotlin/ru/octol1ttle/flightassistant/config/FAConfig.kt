@@ -76,7 +76,7 @@ object FAConfig {
                     }
                 }
 *///?} else if >=1.21 {
-                /*if (player.equippedItems.any { stack -> stack.item is net.minecraft.item.ElytraItem }) {
+                /*if (player.equippedItems.any { stack -> stack.item == net.minecraft.item.Items.ELYTRA }) {
                     return displaysStorage.notFlyingHasElytra
                 }
 *///?} else {
