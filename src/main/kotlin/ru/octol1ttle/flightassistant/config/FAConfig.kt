@@ -76,11 +76,11 @@ object FAConfig {
                     }
                 }
 *///?} else if >=1.21 {
-                /*if (player.equippedItems.any { stack -> stack.contains(net.minecraft.component.DataComponentTypes.GLIDER) }) {
+                /*if (player.equippedItems.any { stack -> stack.item is net.minecraft.item.ElytraItem }) {
                     return displaysStorage.notFlyingHasElytra
                 }
 *///?} else {
-                if (player.itemsEquipped.any { stack -> stack.item == net.minecraft.item.Items.ELYTRA }) {
+                if (player.itemsEquipped.any { stack -> stack.item is net.minecraft.item.ElytraItem }) {
                     return displaysStorage.notFlyingHasElytra
                 }
 //?}
