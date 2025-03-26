@@ -42,10 +42,14 @@ class AirDataComputer(computers: ComputerView, private val mc: MinecraftClient) 
     var groundLevel: Double? = null
         private set(value) { field = value?.requireIn(world.bottomY.toDouble()..Double.MAX_VALUE) }
 
-    private val fallDistance: Float
+    private val fallDistance: Double
         get() =
-            if (groundLevel == null || groundLevel!! == Double.MAX_VALUE) Float.MAX_VALUE
-            else max(player.fallDistance, (altitude - groundLevel!!).toFloat())
+            if (groundLevel == null || groundLevel!! == Double.MAX_VALUE) Double.MAX_VALUE
+//? if >=1.21.5 {
+            /*else max(player.fallDistance, altitude - groundLevel!!)
+*///?} else
+            else max(player.fallDistance.toDouble(), altitude - groundLevel!!)
+
     val fallDistanceSafe: Boolean
         get() = player.isTouchingWater || fallDistance <= player.safeFallDistance || isInvulnerableTo(player.damageSources.fall())
 

@@ -5,7 +5,6 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder
 import dev.isxander.yacl3.platform.YACLPlatform
 import net.minecraft.client.network.ClientPlayerEntity
-import net.minecraft.item.Items
 import ru.octol1ttle.flightassistant.FlightAssistant.MOD_ID
 import ru.octol1ttle.flightassistant.FlightAssistant.id
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
@@ -69,13 +68,22 @@ object FAConfig {
                 return displaysStorage.flying
             }
 
-            if (!player.abilities.allowFlying && player.
-//? if >=1.21 {
-                /*equippedItems
-*///?} else
-                itemsEquipped
-                    .any { stack -> stack.item == Items.ELYTRA }) {
-                return displaysStorage.notFlyingHasElytra
+            if (!player.abilities.allowFlying) {
+//? if >=1.21.5 {
+                /*for (slot: net.minecraft.entity.EquipmentSlot in net.minecraft.entity.EquipmentSlot.VALUES) {
+                    if (player.getEquippedStack(slot).contains(net.minecraft.component.DataComponentTypes.GLIDER)) {
+                        return displaysStorage.notFlyingHasElytra
+                    }
+                }
+*///?} else if >=1.21 {
+                /*if (player.equippedItems.any { stack -> stack.contains(net.minecraft.component.DataComponentTypes.GLIDER) }) {
+                    return displaysStorage.notFlyingHasElytra
+                }
+*///?} else {
+                if (player.itemsEquipped.any { stack -> stack.item == net.minecraft.item.Items.ELYTRA }) {
+                    return displaysStorage.notFlyingHasElytra
+                }
+//?}
             }
 
             return displaysStorage.notFlyingNoElytra

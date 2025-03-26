@@ -19,7 +19,12 @@ abstract class WorldRendererMixin {
 ^///?} else {
     private void onStartRender(net.minecraft.client.render.RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, net.minecraft.client.render.LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
 //?}
-        WorldRenderCallback.EVENT.invoker().onStartRenderWorld(tickCounter.getTickDelta(true), camera, projectionMatrix, positionMatrix.get3x3(new org.joml.Matrix3f()));
+        WorldRenderCallback.EVENT.invoker().onStartRenderWorld(
+                //? if >=1.21.5 {
+                /^tickCounter.getTickProgress(true)
+                ^///?} else
+                tickCounter.getTickDelta(true)
+                , camera, projectionMatrix, positionMatrix.get3x3(new org.joml.Matrix3f()));
 *///?} else {
     private void onStartRender(net.minecraft.client.util.math.MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, net.minecraft.client.render.LightmapTextureManager lightmapTextureManager, Matrix4f projectionMatrix, CallbackInfo ci) {
         WorldRenderCallback.EVENT.invoker().onStartRenderWorld(tickDelta, camera, projectionMatrix, com.mojang.blaze3d.systems.RenderSystem.getInverseViewRotationMatrix().invert());

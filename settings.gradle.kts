@@ -23,7 +23,8 @@ stonecutter {
         }
         mc("1.20.1", "fabric", "forge")
         mc("1.21", "fabric", "neoforge")
-        mc("1.21.4", "fabric", "neoforge")
+        mc("1.21.4", "fabric")
+        mc("1.21.5", "fabric")
     }
     create(rootProject)
 }

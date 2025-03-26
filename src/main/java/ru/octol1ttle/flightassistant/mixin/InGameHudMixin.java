@@ -11,7 +11,12 @@ abstract class InGameHudMixin {
 //? if >=1.21 {
     /*@com.llamalad7.mixinextras.injector.ModifyReceiver(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/LayeredDrawer;addLayer(Lnet/minecraft/client/gui/LayeredDrawer$Layer;)Lnet/minecraft/client/gui/LayeredDrawer;", ordinal = 2))
     public net.minecraft.client.gui.LayeredDrawer render(net.minecraft.client.gui.LayeredDrawer instance, net.minecraft.client.gui.LayeredDrawer.Layer layer) {
-        return instance.addLayer((context, tickCounter) -> FixedHudRenderCallback.EVENT.invoker().onRenderHud(context, tickCounter.getTickDelta(true)));
+        return instance.addLayer((context, tickCounter) -> FixedHudRenderCallback.EVENT.invoker().onRenderHud(context,
+//? if >=1.21.5 {
+                /^tickCounter.getTickProgress(true)
+^///?} else
+                tickCounter.getTickDelta(true)
+        ));
     }
 *///?} else {
     @org.spongepowered.asm.mixin.injection.Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;getCurrentGameMode()Lnet/minecraft/world/GameMode;", ordinal = 0))

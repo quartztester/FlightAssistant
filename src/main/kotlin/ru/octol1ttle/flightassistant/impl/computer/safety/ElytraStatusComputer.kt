@@ -46,7 +46,12 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
         }
 
         val flying: Boolean = data.flying || data.player.abilities.allowFlying
-        val hasUsableElytra: Boolean = data.player.armorItems.contains(activeElytra) && activeElytra.canUse()
+        val hasUsableElytra: Boolean =
+//? if >=1.21.5 {
+            /*net.minecraft.entity.EquipmentSlot.VALUES.any { data.player.getEquippedStack(it) == activeElytra && net.minecraft.entity.LivingEntity.canGlideWith(data.player.getEquippedStack(it), it) }
+*///?} else
+            data.player.armorItems.contains(activeElytra)
+                    && activeElytra.canUse()
         val isInsideBlock: Boolean = !data.player.blockStateAtPos.isAir
         val lookingToClutch: Boolean = data.pitch <= -70.0f
         if (FAConfig.safety.elytraAutoOpen && !flying && !data.fallDistanceSafe && hasUsableElytra && !isInsideBlock && !lookingToClutch) {
@@ -58,9 +63,8 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
         syncedFlyingState = data.flying
 //? if neoforge {
         /*data.player.networkHandler.send(ClientCommandC2SPacket(data.player, ClientCommandC2SPacket.Mode.START_FALL_FLYING))
-*///?} else {
+*///?} else
         data.player.networkHandler.sendPacket(ClientCommandC2SPacket(data.player, ClientCommandC2SPacket.Mode.START_FALL_FLYING))
-//?}
     }
 
     private fun findActiveElytra(player: PlayerEntity): ItemStack? {
@@ -78,6 +82,11 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
             }
         }
 //?}
+
+//? if >=1.21.5 {
+        /*for (equipmentSlot in net.minecraft.entity.EquipmentSlot.VALUES) {
+            val stack: ItemStack = player.getEquippedStack(equipmentSlot)
+*///?} else
         for (stack: ItemStack in player.handItems) {
 //? if >=1.21.2 {
             /*if (stack.contains(net.minecraft.component.DataComponentTypes.GLIDER)) {
