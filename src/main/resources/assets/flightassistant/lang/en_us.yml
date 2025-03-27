@@ -211,6 +211,8 @@ menu.flightassistant:
       .: Departure
       takeoff_thrust: Takeoff thrust
       thrust_reduction_altitude: Thrust reduction altitude
+    add_waypoint: Add waypoint
+    enroute: 'Enroute #%s'
   system:
     .: System status
     fault: FAULT

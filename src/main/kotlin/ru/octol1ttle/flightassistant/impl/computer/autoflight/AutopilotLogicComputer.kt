@@ -46,7 +46,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     }
 
     fun computePitch(active: Boolean): ControlInput? {
-        return when (val mode = verticalMode ?: computers.plan.getVerticalMode()) {
+        return when (val mode: VerticalMode? = verticalMode ?: computers.plan.getVerticalMode()) {
             is PitchVerticalMode ->
                 ControlInput(
                     mode.pitch,
@@ -91,7 +91,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     }
 
     fun computeHeading(active: Boolean): ControlInput? {
-        return when (val mode = lateralMode ?: computers.plan.getLateralMode()) {
+        return when (val mode: LateralMode? = lateralMode ?: computers.plan.getLateralMode()) {
             is HeadingLateralMode -> ControlInput(
                 mode.heading,
                 ControlInput.Priority.NORMAL,

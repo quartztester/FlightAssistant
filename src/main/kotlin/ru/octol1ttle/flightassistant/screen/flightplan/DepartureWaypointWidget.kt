@@ -2,6 +2,7 @@ package ru.octol1ttle.flightassistant.screen.flightplan
 
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.ParentElement
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.text.Text
@@ -12,12 +13,13 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, val y: Int, val width: Int, val height: Int) : AbstractParentWidget(), FlightPlanState {
-    private val displayText: TextWidget = TextWidget(x, y, width, 9, Text.translatable("menu.flightassistant.flight_plan.departure"), textRenderer).alignLeft()
+    private val displayText: TextWidget = TextWidget(x + 5, y + 8, width, 9, Text.translatable("menu.flightassistant.flight_plan.departure"), textRenderer).alignLeft()
+    private val fieldWidth: Int = width / 3 - 4
     private val xField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x, y + 11, width / 2 - 4, 15, textFields[0], Text.empty()
+        mc.textRenderer, x + width - fieldWidth * 2 - 8, y + 5, fieldWidth, 15, textFields[0], Text.empty()
     )
     private val zField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width / 2, y + 11, width / 2 - 4, 15, textFields[1], Text.empty()
+        mc.textRenderer, x + width - fieldWidth - 4, y + 5, fieldWidth, 15, textFields[1], Text.empty()
     )
     private var takeoffThrustText: TextWidget
     private val takeoffThrustField: TextFieldWidget = TextFieldWidget(
@@ -51,13 +53,19 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
     override fun render(context: DrawContext?, mouseX: Int, mouseY: Int, delta: Float) {
         super.render(context, mouseX, mouseY, delta)
         if (isFocused) {
-            context!!.drawBorder(x - 3, y - 3, width + 1, height + 1, 0xFFFFFFFF.toInt())
+            context!!.drawBorder(x, y, width, height, 0xFFFFFFFF.toInt())
         }
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        if (super.mouseClicked(mouseX, mouseY, button)) return true
-        this.forceFocused = mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height
+        this.forceFocused = super.mouseClicked(mouseX, mouseY, button) || (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height)
+        if (!this.forceFocused) {
+            val focused: Element? = this.focused
+            if (focused is ParentElement) {
+                focused.focused = null
+            }
+            this.focused = null
+        }
         return this.forceFocused
     }
 
@@ -76,6 +84,10 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
     }
 
     override fun load() {
+        for (field: TextFieldWidget? in textFields) {
+            field?.text = ""
+        }
+
         val waypoint: FlightPlanComputer.DepartureWaypoint = computers.plan.departureWaypoint ?: return
         xField.text = waypoint.x.toString()
         zField.text = waypoint.z.toString()

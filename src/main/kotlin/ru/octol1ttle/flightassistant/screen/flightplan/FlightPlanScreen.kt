@@ -1,5 +1,7 @@
 package ru.octol1ttle.flightassistant.screen.flightplan
 
+import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.ParentElement
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.screen.ScreenTexts
@@ -19,7 +21,7 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
     override fun init() {
         super.init()
 
-        this.addDrawableChild(TextWidget(0, 10, this.width, 9, this.title, this.textRenderer))
+        this.addDrawableChild(TextWidget(this.width / 2, 10, this.width / 2, 9, this.title, this.textRenderer))
 
         addWaypointsList()
 
@@ -49,17 +51,35 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
         discardChangesButton.active = !doneButton.active
     }
 
+    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        for (element: Element in this.children()) {
+            if (element.mouseClicked(mouseX, mouseY, button)) {
+                val focused: Element? = focused
+                if (element != focused && focused is ParentElement) {
+                    focused.focused = null
+                }
+                this.focused = element
+                if (button == 0) {
+                    this.isDragging = true
+                }
+
+                return true
+            }
+        }
+
+        return false
+    }
+
     private fun addWaypointsList() {
-        val width: Int = this.width / 3 - EnrouteWaypointsListWidget.OFFSET
-        val top: Int = EnrouteWaypointsListWidget.ITEM_HEIGHT
+        val width: Int = this.width / 2 - EnrouteWaypointsListWidget.OFFSET
         val left: Int = EnrouteWaypointsListWidget.OFFSET * 2
+        val top: Int = left + EnrouteWaypointsListWidget.ITEM_HEIGHT + EnrouteWaypointsListWidget.OFFSET
         val bottom: Int = this.height - EnrouteWaypointsListWidget.ITEM_HEIGHT - 10
         val height: Int = bottom - top
 
         val computers: ComputerView = ComputerHost
 
         val departureWaypointWidget = DepartureWaypointWidget(computers, left, left, width, EnrouteWaypointsListWidget.ITEM_HEIGHT)
-
         //val arrivalWaypointWidget = ArrivalWaypointWidget(computers, left, this.height - WaypointsListWidget.ITEM_HEIGHT - 5, width, WaypointsListWidget.ITEM_HEIGHT)
         val waypointsListWidget = EnrouteWaypointsListWidget(computers, width, height, top, bottom, 5)
         //? if >=1.21 {
