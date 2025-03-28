@@ -81,9 +81,13 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
         }
         disableScissor()
 
-        fill(x - 3, y, x - 1, (y - 2 * (computers.data.velocity.y * 20)).toInt(), secondaryColor)
-
         disableScissor()
+
+        if (FAConfig.display.showVerticalSpeed) {
+            enableScissor(0, HudFrame.top, scaledWindowWidth, HudFrame.bottom)
+            fill(x - 3, y, x - 1, (y - 2 * (computers.data.velocity.y * 20)).toInt(), secondaryColor)
+            disableScissor()
+        }
     }
 
     private fun DrawContext.drawAltitudeLine(x: Int, y: Int, altitude: Int, currentAltitude: Double): Boolean {
