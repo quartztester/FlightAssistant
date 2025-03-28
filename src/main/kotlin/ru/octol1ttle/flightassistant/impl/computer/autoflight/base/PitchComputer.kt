@@ -116,11 +116,17 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
 
         val max: ControlInput? = maximumPitch
         if (max != null && computers.data.pitch > max.target) {
+            if (computers.data.pitch - max.target < 5.0f) {
+                return max.copy(text = null)
+            }
             return max
         }
 
         val min: ControlInput? = minimumPitch
         if (min != null && computers.data.pitch < min.target) {
+            if (min.target - computers.data.pitch < 5.0f) {
+                return min.copy(text = null)
+            }
             return min
         }
 
