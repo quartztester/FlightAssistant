@@ -256,32 +256,29 @@ menu.flightassistant:
     autopilot: Autopilot
     thrust:
       .: Thrust
-      selected_speed:
-        .: SPEED
-        target: Target speed
-      vertical_target:
-        .: VERT
-        climb_thrust: Climb thrust (%)
-        descend_thrust: Descend thrust (%)
+      climb_thrust: Climb thrust (%)
+      descend_thrust: Descend thrust (%)
+      target_speed: Target speed
+      selected_speed: SPEED
+      vertical_target: VERT
       waypoint_thrust: F/PLAN
     vertical:
       .: Vertical navigation
+      target_altitude: Target altitude
       selected_pitch:
         .: PITCH
         target: Target pitch
-      selected_altitude:
-        .: ALT
-        target: Target altitude
+      selected_altitude: ALT
       waypoint_altitude: F/PLAN
     lateral:
       .: Lateral navigation
+      target_x: X
+      target_z: Z
       selected_heading:
         .: HDG
         target: Target heading
       selected_coordinates: COORDS
       waypoint_coordinates: F/PLAN
-    target_x: X
-    target_z: Z
 
 mode.flightassistant:
   thrust:

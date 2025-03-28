@@ -60,7 +60,7 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
         val xCoordWidget = TextFieldWidget(
             mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Text.empty()
         )
-        xCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.target_x"))
+        xCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_x"))
         xCoordWidget.setTextPredicate {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
@@ -69,7 +69,7 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
         val zCoordWidget = TextFieldWidget(
             mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Text.empty()
         )
-        zCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.target_z"))
+        zCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_z"))
         zCoordWidget.setTextPredicate {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null

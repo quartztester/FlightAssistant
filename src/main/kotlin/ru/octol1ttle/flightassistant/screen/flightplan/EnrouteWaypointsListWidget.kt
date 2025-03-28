@@ -1,9 +1,9 @@
 package ru.octol1ttle.flightassistant.screen.flightplan
 
-import com.google.common.collect.ImmutableList
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.Selectable
+import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.ElementListWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
@@ -48,6 +48,13 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
 
     override fun isSelectedEntry(index: Int): Boolean {
         return this.selectedOrNull == children()[index]
+    }
+
+    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        if (!super.mouseClicked(mouseX, mouseY, button)) {
+            return focused?.mouseClicked(mouseX, mouseY, button) ?: false
+        }
+        return true
     }
 
     private fun rebuildEntries() {
@@ -108,7 +115,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
         }
     }
 
-    class WaypointEntry(private val state: EnrouteWaypointState, order: Int, x: Int, y: Int, width: Int) : AbstractEntry(x, y, width) {
+    inner class WaypointEntry(private val state: EnrouteWaypointState, order: Int, x: Int, y: Int, width: Int) : AbstractEntry(x, y, width) {
         private val displayText: TextWidget = TextWidget(x + 5, y, width / 3, 9, Text.translatable("menu.flightassistant.flight_plan.enroute", order), textRenderer).alignLeft()
         private val fieldWidth: Int = width / 3 - 4
         private val xField: TextFieldWidget = TextFieldWidget(
@@ -117,22 +124,88 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
         private val zField: TextFieldWidget = TextFieldWidget(
             mc.textRenderer, x + width - fieldWidth - 4, y, fieldWidth, 15, null, Text.empty()
         )
+        private val altitudeField: TextFieldWidget = TextFieldWidget(
+            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top, fieldWidth, 15, null, Text.empty()
+        )
+
+        private val speedButton: ButtonWidget = ButtonWidget.builder(
+            Text.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
+        ) { state.thrustModeType = ButtonType.SelectedSpeed }
+            .dimensions(x + width + 15, this@EnrouteWaypointsListWidget.top + 30, fieldWidth, 15).build()
+        private val verticalTargetButton: ButtonWidget = ButtonWidget.builder(
+            Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target")
+        ) { state.thrustModeType = ButtonType.SelectedVerticalTarget }
+            .dimensions(x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 30, fieldWidth, 15).build()
+        private val speedField: TextFieldWidget = TextFieldWidget(
+            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Text.empty()
+        )
+        private val climbThrustField: TextFieldWidget = TextFieldWidget(
+            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Text.empty()
+        )
+        private val descendThrustField: TextFieldWidget = TextFieldWidget(
+            mc.textRenderer, x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Text.empty()
+        )
 
         init {
             xField.text = state.x?.toString() ?: ""
-            xField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.target_x"))
+            xField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_x"))
             xField.setTextPredicate {
                 val i: Double? = it.toDoubleOrNull()
                 it.isEmpty() || it == "-" || i != null
             }
             xField.setChangedListener { state.x = it.toDoubleOrNull() }
+
             zField.text = state.z?.toString() ?: ""
-            zField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.target_z"))
+            zField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_z"))
             zField.setTextPredicate {
                 val i: Double? = it.toDoubleOrNull()
                 it.isEmpty() || it == "-" || i != null
             }
             zField.setChangedListener { state.z = it.toDoubleOrNull() }
+
+            altitudeField.text = state.altitude?.toString() ?: ""
+            altitudeField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.vertical.target_altitude"))
+            altitudeField.setTextPredicate {
+                val i: Double? = it.toDoubleOrNull()
+                it.isEmpty() || it == "-" || i != null
+            }
+            altitudeField.setChangedListener { state.altitude = it.toDoubleOrNull() }
+
+            speedField.text = state.thrustField1?.toString() ?: ""
+            speedField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.target_speed"))
+            speedField.setTextPredicate {
+                val i: Int? = it.toIntOrNull()
+                it.isEmpty() || i != null && i > 0
+            }
+            speedField.setChangedListener { state.thrustField1 = it.toFloatOrNull() }
+
+            climbThrustField.text = state.thrustField1?.toString() ?: ""
+            climbThrustField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.climb_thrust"))
+            climbThrustField.setTextPredicate {
+                val i: Int? = it.toIntOrNull()
+                it.isEmpty() || i != null && i in 0..100
+            }
+            climbThrustField.setChangedListener {
+                val i: Int? = it.toIntOrNull()
+                if (i != null && i == 100) {
+                    climbThrustField.text = "99"
+                }
+                state.thrustField1 = i?.toFloat()
+            }
+
+            descendThrustField.text = state.x?.toString() ?: ""
+            descendThrustField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.descend_thrust"))
+            descendThrustField.setTextPredicate {
+                val i: Int? = it.toIntOrNull()
+                it.isEmpty() || i != null && i in 0..100
+            }
+            descendThrustField.setChangedListener {
+                val i: Int? = it.toIntOrNull()
+                if (i != null && i == 100) {
+                    descendThrustField.text = "99"
+                }
+                state.thrustField2 = i?.toFloat()
+            }
         }
 
         override fun render(context: DrawContext, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
@@ -145,14 +218,61 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             xField.render(context, mouseX, mouseY, tickDelta)
             zField.y = renderY - 2
             zField.render(context, mouseX, mouseY, tickDelta)
+
+            if (isFocused) {
+                speedButton.active = state.thrustModeType == ButtonType.SelectedVerticalTarget
+                verticalTargetButton.active = state.thrustModeType == ButtonType.SelectedSpeed
+
+                context.disableScissor()
+                altitudeField.render(context, mouseX, mouseY, tickDelta)
+                speedButton.render(context, mouseX, mouseY, tickDelta)
+                verticalTargetButton.render(context, mouseX, mouseY, tickDelta)
+                if (state.thrustModeType == ButtonType.SelectedSpeed) {
+                    speedField.render(context, mouseX, mouseY, tickDelta)
+                } else {
+                    climbThrustField.render(context, mouseX, mouseY, tickDelta)
+                    descendThrustField.render(context, mouseX, mouseY, tickDelta)
+                }
+                this@EnrouteWaypointsListWidget.enableScissor(context)
+            }
         }
 
         override fun children(): MutableList<out Element> {
-            return ImmutableList.of(displayText, xField, zField)
+            val list = ArrayList<Element>()
+            list.add(displayText)
+            list.add(xField)
+            list.add(zField)
+            list.add(altitudeField)
+            if (isFocused) {
+                list.add(speedButton)
+                list.add(verticalTargetButton)
+                if (state.thrustModeType == ButtonType.SelectedSpeed) {
+                    list.add(speedField)
+                } else {
+                    list.add(climbThrustField)
+                    list.add(descendThrustField)
+                }
+            }
+            return list
         }
 
         override fun selectableChildren(): MutableList<out Selectable> {
-            return ImmutableList.of(displayText, xField, zField)
+            val list = ArrayList<Selectable>()
+            list.add(displayText)
+            list.add(xField)
+            list.add(zField)
+            list.add(altitudeField)
+            if (isFocused) {
+                list.add(speedButton)
+                list.add(verticalTargetButton)
+                if (state.thrustModeType == ButtonType.SelectedSpeed) {
+                    list.add(speedField)
+                } else {
+                    list.add(climbThrustField)
+                    list.add(descendThrustField)
+                }
+            }
+            return list
         }
     }
 
@@ -209,8 +329,11 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
                 )
             )
         }
+
+        load()
     }
 
+    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
     class EnrouteWaypointState(private val linkedWaypoint: FlightPlanComputer.EnrouteWaypoint?, var x: Double?, var z: Double?, var altitude: Double?, var thrustModeType: ButtonType, var thrustField1: Float?, var thrustField2: Float?) : FlightPlanState {
         override fun load(): Unit = throw UnsupportedOperationException()
 

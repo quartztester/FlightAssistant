@@ -36,12 +36,12 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
         textFields[2] = takeoffThrustField
         textFields[3] = thrustReductionAltitudeField
 
-        xField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.target_x"))
+        xField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_x"))
         xField.setTextPredicate {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
         }
-        zField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.target_z"))
+        zField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_z"))
         zField.setTextPredicate {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
@@ -96,8 +96,9 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
     }
 
     override fun needsSaving(): Boolean {
+        //TODO: toStringOrEmpty
         val waypoint: FlightPlanComputer.DepartureWaypoint = computers.plan.departureWaypoint ?: return textFields.any { it!!.text.isNotEmpty() }
-        return !xField.text.equals(waypoint.x.toString()) || !zField.text.equals(waypoint.z.toString()) || !takeoffThrustField.text.equals(waypoint.takeoffThrust.toString()) || !thrustReductionAltitudeField.text.equals(waypoint.thrustReductionAltitude.toString())
+        return !xField.text.equals(waypoint.x.toString()) || !zField.text.equals(waypoint.z.toString()) || !takeoffThrustField.text.equals(waypoint.takeoffThrust?.toString() ?: "") || !thrustReductionAltitudeField.text.equals(waypoint.takeoffThrust?.toString() ?: "")
     }
 
     override fun canSave(): Boolean {
@@ -111,6 +112,8 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
         val thrustReductionAltitude: Double? = thrustReductionAltitudeField.text.toDoubleOrNull()
 
         computers.plan.departureWaypoint = FlightPlanComputer.DepartureWaypoint(x, z, takeoffThrust, thrustReductionAltitude)
+
+        load()
     }
 
     companion object {

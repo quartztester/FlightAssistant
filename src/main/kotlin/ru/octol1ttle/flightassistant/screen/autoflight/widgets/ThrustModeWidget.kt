@@ -41,7 +41,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         val targetSpeedWidget = TextFieldWidget(
             mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Text.empty()
         )
-        targetSpeedWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.selected_speed.target"))
+        targetSpeedWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.selected_speed"))
         targetSpeedWidget.setTextPredicate {
             val i: Int? = it.toIntOrNull()
             it.isEmpty() || i != null && i > 0

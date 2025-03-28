@@ -32,9 +32,12 @@ class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
         val ID: Identifier = FlightAssistant.id("flight_plan")
     }
 
+    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
     data class DepartureWaypoint(val x: Double, val z: Double, val takeoffThrust: Float?, val thrustReductionAltitude: Double?)
 
+    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
     data class EnrouteWaypoint(val x: Double, val z: Double, val altitude: Double, val thrustMode: AutopilotLogicComputer.ThrustMode)
 
+    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
     data class ArrivalWaypoint(val x: Double, val z: Double)
 }

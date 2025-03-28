@@ -125,10 +125,16 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     data class VerticalTargetThrustMode(val climbThrust: Float, val descendThrust: Float) : ThrustMode
 
     data class PitchVerticalMode(val pitch: Float) : VerticalMode
+
+    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
     data class SelectedAltitudeVerticalMode(val altitude: Double) : VerticalMode
+
+    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
     data class ManagedAltitudeVerticalMode(val altitude: Double) : VerticalMode
 
     data class HeadingLateralMode(val heading: Float) : LateralMode
+
+    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
     data class CoordinatesLateralMode(val x: Double, val z: Double) : LateralMode
 
     companion object {
