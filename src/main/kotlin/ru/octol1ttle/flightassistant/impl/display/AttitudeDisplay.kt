@@ -96,7 +96,7 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
         while (max <= 180) {
             val y: Int = ScreenSpace.getY(max) ?: break
 
-            drawMiddleAlignedText(arrowText, centerX, y, if (maxInput?.active == true) warningColor else cautionColor)
+            drawMiddleAlignedText(arrowText, centerX, y - 9, if (maxInput?.active == true) warningColor else cautionColor)
 
             max += step
         }
@@ -106,7 +106,7 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
 
             matrices.translate(centerX, y, 0) // Rotate around the middle of the arrow
             matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180.0f)) // Flip upside down
-            drawMiddleAlignedText(arrowText, 0, 0, if (minInput?.active == true) warningColor else cautionColor)
+            drawMiddleAlignedText(arrowText, 0, -9, if (minInput?.active == true) warningColor else cautionColor)
 
             matrices.pop()
             min -= step
