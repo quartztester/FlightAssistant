@@ -12,6 +12,7 @@ import ru.octol1ttle.flightassistant.api.util.extensions.textRenderer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
+// TODO: REWRITE THIS ABSOLUTE FUCKY SHITTY HORRIBLE GARBAGE YOU CALL "CODE"
 class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, val y: Int, val width: Int, val height: Int) : AbstractParentWidget(), FlightPlanState {
     private val displayText: TextWidget = TextWidget(x + 5, y + 8, width, 9, Text.translatable("menu.flightassistant.flight_plan.departure"), textRenderer).alignLeft()
     private val fieldWidth: Int = width / 3 - 4
@@ -38,16 +39,23 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
 
         xField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_x"))
         xField.setTextPredicate {
-            val i: Double? = it.toDoubleOrNull()
-            it.isEmpty() || it == "-" || i != null
+            it.isEmpty() || it == "-" || it.toDoubleOrNull() != null
         }
         zField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_z"))
         zField.setTextPredicate {
-            val i: Double? = it.toDoubleOrNull()
-            it.isEmpty() || it == "-" || i != null
+            it.isEmpty() || it == "-" || it.toDoubleOrNull() != null
         }
+
         takeoffThrustText = TextWidget(takeoffThrustField.x, takeoffThrustField.y - 12, takeoffThrustField.width, 9, Text.translatable("menu.flightassistant.flight_plan.departure.takeoff_thrust"), textRenderer).alignLeft()
+        takeoffThrustField.setTextPredicate {
+            val i: Int? = it.toIntOrNull()
+            it.isEmpty() || i != null && i in 0..100
+        }
+
         thrustReductionAltitudeText = TextWidget(thrustReductionAltitudeField.x, thrustReductionAltitudeField.y - 12, thrustReductionAltitudeField.width, 9, Text.translatable("menu.flightassistant.flight_plan.departure.thrust_reduction_altitude"), textRenderer).alignLeft()
+        thrustReductionAltitudeField.setTextPredicate {
+            it.isEmpty() || it == "-" || it.toIntOrNull() != null
+        }
     }
 
     override fun render(context: DrawContext?, mouseX: Int, mouseY: Int, delta: Float) {

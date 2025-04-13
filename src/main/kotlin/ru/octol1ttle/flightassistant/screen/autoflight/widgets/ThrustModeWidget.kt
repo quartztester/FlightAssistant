@@ -78,8 +78,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
             it.isEmpty() || i != null && i in 0..100
         }
         thrustWidget.setChangedListener {
-            val i: Int? = it.toIntOrNull()
-            if (i != null && i == 100) {
+            if (it.toIntOrNull() == 100) {
                 thrustWidget.text = "99"
             }
         }

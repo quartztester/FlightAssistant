@@ -211,6 +211,9 @@ menu.flightassistant:
       .: Departure
       takeoff_thrust: Takeoff thrust
       thrust_reduction_altitude: Thrust reduction altitude
+    arrival:
+      .: Arrival
+      landing_altitude: Landing altitude
     add_waypoint: Add waypoint
     enroute: 'Enroute #%s'
   system:
@@ -249,15 +252,17 @@ menu.flightassistant:
         flightassistant:pitch: Pitch computer
         flightassistant:roll: Roll computer
         flightassistant:thrust: Thrust computer
-  autoflight:
+  autoflight: # TODO: move some to short.flightassistant
     .: Auto flight
     flight_directors: Flight directors
     auto_thrust: Auto thrust
     autopilot: Autopilot
     thrust:
       .: Thrust
+      constant_thrust: CONSTANT
       climb_thrust: Climb thrust (%)
       descend_thrust: Descend thrust (%)
+      target_thrust: Target thrust
       target_speed: Target speed
       selected_speed: SPEED
       vertical_target: VERT

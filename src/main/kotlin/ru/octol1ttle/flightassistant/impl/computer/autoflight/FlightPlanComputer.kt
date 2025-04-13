@@ -39,5 +39,12 @@ class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
     data class EnrouteWaypoint(val x: Double, val z: Double, val altitude: Double, val thrustMode: AutopilotLogicComputer.ThrustMode)
 
     // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
-    data class ArrivalWaypoint(val x: Double, val z: Double)
+    data class ArrivalWaypoint(val x: Double, val z: Double, val landingAltitude: Double?, val thrustMode: AutopilotLogicComputer.ThrustMode?, val minimums: Minimums?, val goAroundAltitude: Double?, val approachReentryWaypointIndex: Int?)
+
+    data class Minimums(val type: Type, val value: Double) {
+        enum class Type {
+            ABSOLUTE,
+            ABOVE_GROUND
+        }
+    }
 }

@@ -10,6 +10,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 
+// TODO: REWRITE THIS ABSOLUTE FUCKY SHITTY HORRIBLE GARBAGE YOU CALL "CODE"
 class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.flight_plan")) {
     private lateinit var doneButton: ButtonWidget
     private lateinit var saveButton: ButtonWidget
@@ -37,7 +38,7 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
             for (state: FlightPlanState in states) {
                 state.load()
             }
-        }.position(this.width - 300, this.height - 30).width(100).build()
+        }.position(this.width - 155, this.height - 60).width(100).build()
 
         this.addDrawableChild(doneButton)
         this.addDrawableChild(saveButton)
@@ -52,22 +53,26 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        var anyClicked = false
+
         for (element: Element in this.children()) {
             if (element.mouseClicked(mouseX, mouseY, button)) {
-                val focused: Element? = focused
-                if (element != focused && focused is ParentElement) {
-                    focused.focused = null
-                }
-                this.focused = element
-                if (button == 0) {
-                    this.isDragging = true
+                if (!anyClicked) {
+                    val focused: Element? = focused
+                    if (element != focused && focused is ParentElement) {
+                        focused.focused = null
+                    }
+                    this.focused = element
+                    if (button == 0) {
+                        this.isDragging = true
+                    }
                 }
 
-                return true
+                anyClicked = true
             }
         }
 
-        return false
+        return anyClicked
     }
 
     private fun addWaypointsList() {
@@ -80,7 +85,7 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
         val computers: ComputerView = ComputerHost
 
         val departureWaypointWidget = DepartureWaypointWidget(computers, left, left, width, EnrouteWaypointsListWidget.ITEM_HEIGHT)
-        //val arrivalWaypointWidget = ArrivalWaypointWidget(computers, left, this.height - WaypointsListWidget.ITEM_HEIGHT - 5, width, WaypointsListWidget.ITEM_HEIGHT)
+        val arrivalWaypointWidget = ArrivalWaypointWidget(computers, left, this.height - EnrouteWaypointsListWidget.ITEM_HEIGHT - 5, width, EnrouteWaypointsListWidget.ITEM_HEIGHT, left)
         val waypointsListWidget = EnrouteWaypointsListWidget(computers, width, height, top, bottom, 5)
         //? if >=1.21 {
         /*waypointsListWidget.x = left
@@ -89,13 +94,13 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
 
         if (!loaded) {
             departureWaypointWidget.load()
-            //arrivalWaypointWidget.load()
+            arrivalWaypointWidget.load()
             waypointsListWidget.load()
         }
         loaded = true
 
         states.add(this.addDrawableChild(departureWaypointWidget))
-        //states.add(this.addDrawableChild(arrivalWaypointWidget))
+        states.add(this.addDrawableChild(arrivalWaypointWidget))
         states.add(this.addDrawableChild(waypointsListWidget))
     }
 }
