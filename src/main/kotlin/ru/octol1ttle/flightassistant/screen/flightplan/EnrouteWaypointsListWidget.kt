@@ -108,7 +108,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             if (order >= states.size) {
                 states.add(new)
             } else {
-                states.add(order, new)
+                states.add(order - 1, new)
             }
             this@EnrouteWaypointsListWidget.rebuildEntries()
             return true
@@ -174,37 +174,37 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             speedField.text = state.thrustField1?.toString() ?: ""
             speedField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.target_speed"))
             speedField.setTextPredicate {
-                val i: Int? = it.toIntOrNull()
-                it.isEmpty() || i != null && i > 0
+                val i: Float? = it.toFloatOrNull()
+                it.isEmpty() || i != null && i > 0.0f
             }
             speedField.setChangedListener { state.thrustField1 = it.toFloatOrNull() }
 
             climbThrustField.text = state.thrustField1?.toString() ?: ""
             climbThrustField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.climb_thrust"))
             climbThrustField.setTextPredicate {
-                val i: Int? = it.toIntOrNull()
-                it.isEmpty() || i != null && i in 0..100
+                val i: Float? = it.toFloatOrNull()
+                it.isEmpty() || i != null && i in 0.0f..100.0f
             }
             climbThrustField.setChangedListener {
-                val i: Int? = it.toIntOrNull()
-                if (i != null && i == 100) {
+                val i: Float? = it.toFloatOrNull()
+                if (i != null && i == 100.0f) {
                     climbThrustField.text = "99"
                 }
-                state.thrustField1 = i?.toFloat()
+                state.thrustField1 = i
             }
 
-            descendThrustField.text = state.x?.toString() ?: ""
+            descendThrustField.text = state.thrustField2?.toString() ?: ""
             descendThrustField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.descend_thrust"))
             descendThrustField.setTextPredicate {
-                val i: Int? = it.toIntOrNull()
-                it.isEmpty() || i != null && i in 0..100
+                val i: Float? = it.toFloatOrNull()
+                it.isEmpty() || i != null && i in 0.0f..100.0f
             }
             descendThrustField.setChangedListener {
-                val i: Int? = it.toIntOrNull()
-                if (i != null && i == 100) {
+                val i: Float? = it.toFloatOrNull()
+                if (i != null && i == 100.0f) {
                     descendThrustField.text = "99"
                 }
-                state.thrustField2 = i?.toFloat()
+                state.thrustField2 = i
             }
         }
 
@@ -284,11 +284,11 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
                 EnrouteWaypointState(
                     waypoint, waypoint.x, waypoint.z, waypoint.altitude, ButtonType.entries.single { it.matches(waypoint.thrustMode) }, when (val mode = waypoint.thrustMode) {
                         is AutopilotLogicComputer.SpeedThrustMode -> mode.speed
-                        is AutopilotLogicComputer.VerticalTargetThrustMode -> mode.climbThrust
+                        is AutopilotLogicComputer.VerticalTargetThrustMode -> mode.climbThrust * 100.0f
                         else -> throw UnsupportedOperationException()
                     }, when (val mode = waypoint.thrustMode) {
                         is AutopilotLogicComputer.SpeedThrustMode -> null
-                        is AutopilotLogicComputer.VerticalTargetThrustMode -> mode.descendThrust
+                        is AutopilotLogicComputer.VerticalTargetThrustMode -> mode.descendThrust * 100.0f
                         else -> throw UnsupportedOperationException()
                     }
                 )
@@ -319,8 +319,8 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
                         }
 
                         ButtonType.SelectedVerticalTarget -> {
-                            val climbThrust: Int = state.thrustField1!!.toInt()
-                            val descendThrust: Int = state.thrustField2!!.toInt()
+                            val climbThrust: Float = state.thrustField1!!.toFloat()
+                            val descendThrust: Float = state.thrustField2!!.toFloat()
                             AutopilotLogicComputer.VerticalTargetThrustMode(climbThrust / 100.0f, descendThrust / 100.0f)
                         }
 
@@ -348,7 +348,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             }
             if (when (thrustMode) {
                     is AutopilotLogicComputer.SpeedThrustMode -> thrustMode.speed != thrustField1
-                    is AutopilotLogicComputer.VerticalTargetThrustMode -> thrustMode.climbThrust != thrustField1 || thrustMode.descendThrust != thrustField2
+                    is AutopilotLogicComputer.VerticalTargetThrustMode -> thrustMode.climbThrust != thrustField1?.div(100.0f) || thrustMode.descendThrust != thrustField2?.div(100.0f)
                     else -> throw UnsupportedOperationException()
                 }
             ) {

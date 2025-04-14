@@ -214,6 +214,11 @@ menu.flightassistant:
     arrival:
       .: Arrival
       landing_altitude: Landing altitude
+      minimums:
+        .: Minimums
+        absolute: ALT
+        relative: HEIGHT
+      go_around_altitude: Go around altitude
     add_waypoint: Add waypoint
     enroute: 'Enroute #%s'
   system:

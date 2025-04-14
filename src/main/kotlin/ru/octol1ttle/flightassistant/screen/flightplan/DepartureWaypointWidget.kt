@@ -48,13 +48,13 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
 
         takeoffThrustText = TextWidget(takeoffThrustField.x, takeoffThrustField.y - 12, takeoffThrustField.width, 9, Text.translatable("menu.flightassistant.flight_plan.departure.takeoff_thrust"), textRenderer).alignLeft()
         takeoffThrustField.setTextPredicate {
-            val i: Int? = it.toIntOrNull()
-            it.isEmpty() || i != null && i in 0..100
+            val i: Float? = it.toFloatOrNull()
+            it.isEmpty() || i != null && i in 0.0f..100.0f
         }
 
         thrustReductionAltitudeText = TextWidget(thrustReductionAltitudeField.x, thrustReductionAltitudeField.y - 12, thrustReductionAltitudeField.width, 9, Text.translatable("menu.flightassistant.flight_plan.departure.thrust_reduction_altitude"), textRenderer).alignLeft()
         thrustReductionAltitudeField.setTextPredicate {
-            it.isEmpty() || it == "-" || it.toIntOrNull() != null
+            it.isEmpty() || it == "-" || it.toFloatOrNull() != null
         }
     }
 
@@ -106,7 +106,7 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
     override fun needsSaving(): Boolean {
         //TODO: toStringOrEmpty
         val waypoint: FlightPlanComputer.DepartureWaypoint = computers.plan.departureWaypoint ?: return textFields.any { it!!.text.isNotEmpty() }
-        return !xField.text.equals(waypoint.x.toString()) || !zField.text.equals(waypoint.z.toString()) || !takeoffThrustField.text.equals(waypoint.takeoffThrust?.toString() ?: "") || !thrustReductionAltitudeField.text.equals(waypoint.takeoffThrust?.toString() ?: "")
+        return !xField.text.equals(waypoint.x.toString()) || !zField.text.equals(waypoint.z.toString()) || !takeoffThrustField.text.equals(waypoint.takeoffThrust?.toString() ?: "") || !thrustReductionAltitudeField.text.equals(waypoint.thrustReductionAltitude?.toString() ?: "")
     }
 
     override fun canSave(): Boolean {
