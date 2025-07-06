@@ -6,7 +6,7 @@ import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.clearAndAdd
@@ -15,7 +15,7 @@ import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, val width: Int) : AbstractParentWidget(), DelayedApplyChanges {
     private val title: TextWidget = TextWidget(
-        x, y, width, 20, Text.translatable("menu.flightassistant.autoflight.vertical"), mc.textRenderer
+        x, y, width, 20, Component.translatable("menu.flightassistant.autoflight.vertical"), mc.textRenderer
     )
     private var newType: ButtonType
 
@@ -26,7 +26,7 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
         initSelectedAltitude()
 
         buttons[ButtonType.FlightPlan] = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.vertical.waypoint_altitude")
+            Component.translatable("menu.flightassistant.autoflight.vertical.waypoint_altitude")
         ) { newType = ButtonType.FlightPlan }
             .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
@@ -35,13 +35,13 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
         val type = ButtonType.SelectedPitch
 
         buttons[type] = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.vertical.selected_pitch")
+            Component.translatable("menu.flightassistant.autoflight.vertical.selected_pitch")
         ) { newType = type }
             .dimensions(x + 1, y + 20, width / 3 - 1, 15).build()
         val selectedPitchWidget = TextFieldWidget(
             mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Text.empty()
         )
-        selectedPitchWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.vertical.selected_pitch.target"))
+        selectedPitchWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.vertical.selected_pitch.target"))
         selectedPitchWidget.setTextPredicate {
             val i: Float? = it.toFloatOrNull()
             it.isEmpty() || it == "-" || i != null && i in -90.0f..90.0f
@@ -53,14 +53,14 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
         val type = ButtonType.SelectedAltitude
 
         buttons[type] = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.vertical.selected_altitude")
+            Component.translatable("menu.flightassistant.autoflight.vertical.selected_altitude")
         ) { newType = type }
             .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
         val selectedAltitudeWidget = TextFieldWidget(
             mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Text.empty()
         )
-        selectedAltitudeWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.vertical.target_altitude"))
+        selectedAltitudeWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.vertical.target_altitude"))
         selectedAltitudeWidget.setTextPredicate {
             it.isEmpty() || it == "-" || it.toIntOrNull() != null
         }

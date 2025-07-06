@@ -7,8 +7,8 @@ import net.minecraft.client.gui.Selectable
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.ElementListWidget
 import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
@@ -16,38 +16,39 @@ import ru.octol1ttle.flightassistant.api.util.extensions.textRenderer
 
 class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") bottom: Int, left: Int, controller: ModuleController<*>, baseKey: String)
     : ElementListWidget<SystemStatusListWidget.SystemStatusWidgetEntry>(mc, width, height, top,
-/*? if <1.21 {*/ bottom, //?}
+    /*? if <1.21 {*/ /*bottom, *///?}
     25) {
     init {
 //? if <1.21 {
-        setRenderBackground(false)
+        /*setRenderBackground(false)
         setRenderHorizontalShadows(false)
-//?}
+*///?}
         var y: Int = top + Y_OFFSET
-        for (system: Identifier in controller.identifiers()) {
+        for (system: ResourceLocation in controller.identifiers()) {
             this.addEntry(
                 SystemStatusWidgetEntry(
-                left, y, width, system, Text.translatable("$baseKey.$system"), controller)
+                    left, y, width, system, Component.translatable("$baseKey.$system"), controller
+                )
             )
             y += 25
         }
     }
 
 //? if >=1.21 {
-    /*override fun getScrollbarX(): Int {
+override fun getScrollbarX(): Int {
         return this.x + this.width - 6
     }
-*///?} else {
-    override fun getScrollbarPositionX(): Int {
+//?} else {
+    /*override fun getScrollbarPositionX(): Int {
         return this.left + this.width - 6
     }
-//?}
+*///?}
 
     override fun getRowWidth(): Int {
         return this.width
     }
 
-    class SystemStatusWidgetEntry(val x: Int, val y: Int, private val listWidth: Int, val identifier: Identifier, displayNameText: Text, private val controller: ModuleController<*>)
+    class SystemStatusWidgetEntry(val x: Int, val y: Int, private val listWidth: Int, val identifier: ResourceLocation, displayNameText: Text, private val controller: ModuleController<*>)
         : Entry<SystemStatusWidgetEntry>() {
         private val displayName: TextWidget = TextWidget(x, y, this.listWidth / 2, 9, displayNameText, textRenderer).alignLeft()
         private val faultText: TextWidget = TextWidget(x, y, this.listWidth / 6, 9, FAULT_TEXT, textRenderer)
@@ -98,9 +99,9 @@ class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSE
         }
 
         companion object {
-            val FAULT_TEXT: Text = Text.translatable("menu.flightassistant.system.fault")
-            val OFF_TEXT: Text = Text.translatable("menu.flightassistant.system.off")
-            val ON_RESET_TEXT: Text = Text.translatable("menu.flightassistant.system.on_reset")
+            val FAULT_TEXT: Text = Component.translatable("menu.flightassistant.system.fault")
+            val OFF_TEXT: Text = Component.translatable("menu.flightassistant.system.off")
+            val ON_RESET_TEXT: Text = Component.translatable("menu.flightassistant.system.on_reset")
         }
     }
 

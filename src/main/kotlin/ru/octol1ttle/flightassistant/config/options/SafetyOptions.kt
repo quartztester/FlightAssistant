@@ -2,7 +2,7 @@ package ru.octol1ttle.flightassistant.config.options
 
 import dev.isxander.yacl3.api.NameableEnum
 import dev.isxander.yacl3.config.v2.api.SerialEntry
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 class SafetyOptions {
     @SerialEntry
@@ -92,19 +92,19 @@ class SafetyOptions {
     enum class AlertMode : NameableEnum {
         WARNING_AND_CAUTION {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.safety.alert_mode.warning_and_caution")
+                Component.translatable("config.flightassistant.option.safety.alert_mode.warning_and_caution")
         },
         WARNING {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.safety.alert_mode.warning")
+                Component.translatable("config.flightassistant.option.safety.alert_mode.warning")
         },
         CAUTION {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.safety.alert_mode.caution")
+                Component.translatable("config.flightassistant.option.safety.alert_mode.caution")
         },
         DISABLED {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.safety.alert_mode.disabled")
+                Component.translatable("config.flightassistant.option.safety.alert_mode.disabled")
         };
 
         fun warning(): Boolean {
@@ -119,15 +119,15 @@ class SafetyOptions {
     enum class AlertMethod : NameableEnum {
         SCREEN_AND_AUDIO {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.safety.alert_method.screen_and_audio")
+                Component.translatable("config.flightassistant.option.safety.alert_method.screen_and_audio")
         },
         AUDIO_ONLY {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.safety.alert_method.audio_only")
+                Component.translatable("config.flightassistant.option.safety.alert_method.audio_only")
         },
         SCREEN_ONLY {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.safety.alert_method.screen_only")
+                Component.translatable("config.flightassistant.option.safety.alert_method.screen_only")
         };
 
         fun screen(): Boolean {

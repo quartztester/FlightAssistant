@@ -2,8 +2,8 @@ package ru.octol1ttle.flightassistant.impl.computer.safety
 
 import kotlin.math.max
 import kotlin.math.min
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.Vec3d
@@ -135,7 +135,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
             return ControlInput(
                 computers.data.pitch.coerceAtMost(0.0f),
                 ControlInput.Priority.HIGH,
-                Text.translatable("mode.flightassistant.vertical.terrain_protection")
+                Component.translatable("mode.flightassistant.vertical.terrain_protection")
             )
         }
 
@@ -148,7 +148,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
                 return ControlInput(
                     0.0f,
                     ControlInput.Priority.HIGH,
-                    Text.translatable("mode.flightassistant.thrust.idle"),
+                    Component.translatable("mode.flightassistant.thrust.idle"),
                     active = groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateAutoThrust || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleAutoThrust
                 )
             }
@@ -166,7 +166,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
             return ControlInput(
                 90.0f,
                 ControlInput.Priority.HIGH,
-                Text.translatable("mode.flightassistant.vertical.terrain_escape"),
+                Component.translatable("mode.flightassistant.vertical.terrain_escape"),
                 1.0f / minImpactTime,
                 active = groundImpactStatus == Status.RECOVER && FAConfig.safety.sinkRateAutoPitch || obstacleImpactStatus == Status.RECOVER && FAConfig.safety.obstacleAutoPitch
             )
@@ -191,6 +191,6 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("ground_proximity")
+        val ID: ResourceLocation = FlightAssistant.id("ground_proximity")
     }
 }

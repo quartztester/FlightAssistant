@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.computer
 
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.ModuleController
@@ -12,19 +12,20 @@ import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.*
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.*
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
+import ru.octol1ttle.flightassistant.mixin.ClientLevelRunningNormallyInvoker
 
 internal object ComputerHost : ModuleController<Computer>, ComputerView {
-    private val computers: MutableMap<Identifier, Computer> = LinkedHashMap()
+    private val computers: MutableMap<ResourceLocation, Computer> = LinkedHashMap()
 
-    override fun isEnabled(identifier: Identifier): Boolean {
+    override fun isEnabled(identifier: ResourceLocation): Boolean {
         return get(identifier).enabled
     }
 
-    override fun isFaulted(identifier: Identifier): Boolean {
+    override fun isFaulted(identifier: ResourceLocation): Boolean {
         return get(identifier).faulted
     }
 
-    override fun setEnabled(identifier: Identifier, enabled: Boolean): Boolean {
+    override fun setEnabled(identifier: ResourceLocation, enabled: Boolean): Boolean {
         val computer: Computer = get(identifier)
 
         val oldEnabled: Boolean = computer.enabled
@@ -34,15 +35,15 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
         return oldEnabled
     }
 
-    fun getFaultCount(identifier: Identifier): Int {
+    fun getFaultCount(identifier: ResourceLocation): Int {
         return get(identifier).faultCount
     }
 
-    override fun identifiers(): Set<Identifier> {
+    override fun identifiers(): Set<ResourceLocation> {
         return computers.keys
     }
 
-    override fun register(identifier: Identifier, module: Computer) {
+    override fun register(identifier: ResourceLocation, module: Computer) {
         if (FlightAssistant.initComplete) {
             throw IllegalStateException("Initialization is already complete, but trying to register a computer with identifier: $identifier")
         }
@@ -89,7 +90,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
 
     private fun logRegisterComplete() {
         val namespaces = ArrayList<String>()
-        for (id: Identifier in computers.keys) {
+        for (id: ResourceLocation in computers.keys) {
             if (!namespaces.contains(id.namespace)) {
                 namespaces.add(id.namespace)
             }
@@ -102,13 +103,13 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
     }
 
     internal fun tick(tickDelta: Float) {
-        val paused: Boolean = mc.isPaused /*? if >=1.21 {*//*|| !(mc as ru.octol1ttle.flightassistant.mixin.ClientShouldTickInvoker).invokeShouldTick() *///?}
+        val paused: Boolean = mc.isPaused /*? if >=1.21 {*/ || !(mc as ClientLevelRunningNormallyInvoker).invokeIsLevelRunningNormally() //?}
         FATickCounter.tick(mc.player!!, tickDelta, paused)
         if (paused || FATickCounter.ticksSinceWorldLoad < FATickCounter.worldLoadWaitTime || !FAConfig.global.modEnabled) {
             return
         }
 
-        for ((id: Identifier, computer: Computer) in computers) {
+        for ((id: ResourceLocation, computer: Computer) in computers) {
             if (computer.enabled) {
                 try {
                     computer.tick()
@@ -127,7 +128,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
         }
     }
 
-    override fun get(identifier: Identifier): Computer {
+    override fun get(identifier: ResourceLocation): Computer {
         return computers[identifier] ?: throw IllegalArgumentException("No computer registered with ID: $identifier")
     }
 }

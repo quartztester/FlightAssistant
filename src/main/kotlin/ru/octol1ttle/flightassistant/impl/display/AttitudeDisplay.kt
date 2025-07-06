@@ -2,8 +2,9 @@ package ru.octol1ttle.flightassistant.impl.display
 
 import kotlin.math.sign
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.RotationAxis
 import ru.octol1ttle.flightassistant.FlightAssistant
@@ -22,7 +23,7 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showAttitude != DisplayOptions.AttitudeDisplayMode.DISABLED
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         with(drawContext) {
             matrices.push()
             matrices.translate(0, 0, -200)
@@ -143,13 +144,13 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
         drawText(pitch.toString(), rightXEnd + 4, if (pitch > 0) y else y - 4, color)
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.attitude"), centerX, centerY - 16, warningColor)
+            drawMiddleAlignedText(Component.translatable("short.flightassistant.attitude"), centerX, centerY - 16, warningColor)
         }
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("attitude")
+        val ID: ResourceLocation = FlightAssistant.id("attitude")
     }
 }

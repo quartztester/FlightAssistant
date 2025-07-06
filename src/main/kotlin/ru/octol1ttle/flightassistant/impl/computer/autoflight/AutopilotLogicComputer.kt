@@ -3,8 +3,8 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.roundToInt
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.computer.Computer
@@ -21,7 +21,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
             is SpeedThrustMode -> ControlInput(
                 computers.thrust.calculateThrustForSpeed(mode.speed) ?: 1.0f,
                 ControlInput.Priority.NORMAL,
-                Text.translatable("mode.flightassistant.thrust.selected_speed", mode.speed.roundToInt()),
+                Component.translatable("mode.flightassistant.thrust.selected_speed", mode.speed.roundToInt()),
                 identifier = ID
             )
             is VerticalTargetThrustMode -> {
@@ -34,9 +34,9 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 return ControlInput(
                     if (useClimbThrust) mode.climbThrust else mode.descendThrust,
                     ControlInput.Priority.NORMAL,
-                    if (useClimbThrust) Text.translatable("mode.flightassistant.thrust.climb") else
-                        if (mode.descendThrust != 0.0f) Text.translatable("mode.flightassistant.thrust.descend")
-                        else Text.translatable("mode.flightassistant.thrust.idle"),
+                    if (useClimbThrust) Component.translatable("mode.flightassistant.thrust.climb") else
+                        if (mode.descendThrust != 0.0f) Component.translatable("mode.flightassistant.thrust.descend")
+                        else Component.translatable("mode.flightassistant.thrust.idle"),
                     identifier = ID
                 )
             }
@@ -51,7 +51,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 ControlInput(
                     mode.pitch,
                     ControlInput.Priority.NORMAL,
-                    Text.translatable("mode.flightassistant.vertical.selected_pitch", "%.1f".format(mode.pitch)),
+                    Component.translatable("mode.flightassistant.vertical.selected_pitch", "%.1f".format(mode.pitch)),
                     active = active,
                     identifier = ID
                 )
@@ -64,14 +64,14 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 var text: Text
                 if (diff >= 0) {
                     finalPitch = computers.thrust.getOptimumClimbPitch()
-                    text = Text.translatable("mode.flightassistant.vertical.selected_altitude.climb", "%.0f".format(mode.altitude))
+                    text = Component.translatable("mode.flightassistant.vertical.selected_altitude.climb", "%.0f".format(mode.altitude))
 
                     val distanceFromNeutral: Float = finalPitch - neutralPitch
                     finalPitch -= distanceFromNeutral * 0.6f * ((200.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
                     finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
                 } else {
                     finalPitch = -35.0f
-                    text = Text.translatable("mode.flightassistant.vertical.selected_altitude.descend", "%.0f".format(mode.altitude))
+                    text = Component.translatable("mode.flightassistant.vertical.selected_altitude.descend", "%.0f".format(mode.altitude))
 
                     val distanceFromNeutral: Float = finalPitch - neutralPitch
                     finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 50.0f).coerceIn(0.0f..1.0f)
@@ -79,7 +79,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 }
 
                 if (abs <= 5.0f) {
-                    text = Text.translatable("mode.flightassistant.vertical.selected_altitude.hold", "%.0f".format(mode.altitude))
+                    text = Component.translatable("mode.flightassistant.vertical.selected_altitude.hold", "%.0f".format(mode.altitude))
                 }
 
                 ControlInput(finalPitch, ControlInput.Priority.NORMAL, text, 1.5f, active, ID)
@@ -95,14 +95,14 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
             is HeadingLateralMode -> ControlInput(
                 mode.heading,
                 ControlInput.Priority.NORMAL,
-                Text.translatable("mode.flightassistant.lateral.selected_heading", "%.0f".format(mode.heading)),
+                Component.translatable("mode.flightassistant.lateral.selected_heading", "%.0f".format(mode.heading)),
                 active = active,
                 identifier = ID
             )
             is CoordinatesLateralMode -> ControlInput(
                 degrees(atan2(-(mode.x - computers.data.position.x), mode.z - computers.data.position.z)).toFloat() + 180.0f,
                 ControlInput.Priority.NORMAL,
-                Text.translatable("mode.flightassistant.lateral.selected_coordinates", "%.0f".format(mode.x), "%.0f".format(mode.z)),
+                Component.translatable("mode.flightassistant.lateral.selected_coordinates", "%.0f".format(mode.x), "%.0f".format(mode.z)),
                 active = active,
                 identifier = ID
             )
@@ -138,6 +138,6 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     data class CoordinatesLateralMode(val x: Double, val z: Double) : LateralMode
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("autopilot_logic")
+        val ID: ResourceLocation = FlightAssistant.id("autopilot_logic")
     }
 }

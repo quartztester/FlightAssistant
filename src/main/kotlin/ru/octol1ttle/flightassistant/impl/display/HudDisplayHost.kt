@@ -4,8 +4,8 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -22,21 +22,21 @@ import ru.octol1ttle.flightassistant.api.util.extensions.primaryColor
 import ru.octol1ttle.flightassistant.config.FAConfig
 
 internal object HudDisplayHost: ModuleController<Display> {
-    private val displays: MutableMap<Identifier, Display> = HashMap()
+    private val displays: MutableMap<ResourceLocation, Display> = HashMap()
 
-    override fun get(identifier: Identifier): Display {
+    override fun get(identifier: ResourceLocation): Display {
         return displays[identifier] ?: throw IllegalArgumentException("No display was found with identifier: $identifier")
     }
 
-    override fun isEnabled(identifier: Identifier): Boolean {
+    override fun isEnabled(identifier: ResourceLocation): Boolean {
         return get(identifier).enabled
     }
 
-    override fun isFaulted(identifier: Identifier): Boolean {
+    override fun isFaulted(identifier: ResourceLocation): Boolean {
         return get(identifier).faulted
     }
 
-    override fun setEnabled(identifier: Identifier, enabled: Boolean): Boolean {
+    override fun setEnabled(identifier: ResourceLocation, enabled: Boolean): Boolean {
         val display: Display = get(identifier)
 
         val oldEnabled: Boolean = display.enabled
@@ -44,15 +44,15 @@ internal object HudDisplayHost: ModuleController<Display> {
         return oldEnabled
     }
 
-    fun countFaults(identifier: Identifier): Int {
+    fun countFaults(identifier: ResourceLocation): Int {
         return get(identifier).faultCount
     }
 
-    override fun identifiers(): Set<Identifier> {
+    override fun identifiers(): Set<ResourceLocation> {
         return displays.keys
     }
 
-    override fun register(identifier: Identifier, module: Display) {
+    override fun register(identifier: ResourceLocation, module: Display) {
         if (FlightAssistant.initComplete) {
             throw IllegalStateException("Initialization is already complete, but trying to register a display with identifier: $identifier")
         }
@@ -86,7 +86,7 @@ internal object HudDisplayHost: ModuleController<Display> {
 
     private fun logRegisterComplete() {
         val namespaces = ArrayList<String>()
-        for (id: Identifier in displays.keys) {
+        for (id: ResourceLocation in displays.keys) {
             if (!namespaces.contains(id.namespace)) {
                 namespaces.add(id.namespace)
             }
@@ -106,18 +106,18 @@ internal object HudDisplayHost: ModuleController<Display> {
         HudFrame.updateDimensions()
         ScreenSpace.updateViewport()
 
-        for ((id: Identifier, display: Display) in displays.filter { entry -> entry.value.allowedByConfig() }) {
+        for ((id: ResourceLocation, display: Display) in displays.filter { entry -> entry.value.allowedByConfig() }) {
             if (FATickCounter.ticksSinceWorldLoad < FATickCounter.worldLoadWaitTime) {
                 with(drawContext) {
-                    drawMiddleAlignedText(Text.translatable("misc.flightassistant.waiting_for_world_load"), centerX, centerY - 16, primaryColor)
-                    drawMiddleAlignedText(Text.translatable("misc.flightassistant.waiting_for_world_load.maximum_time"), centerX, centerY + 8, primaryColor)
+                    drawMiddleAlignedText(Component.translatable("misc.flightassistant.waiting_for_world_load"), centerX, centerY - 16, primaryColor)
+                    drawMiddleAlignedText(Component.translatable("misc.flightassistant.waiting_for_world_load.maximum_time"), centerX, centerY + 8, primaryColor)
                 }
                 return
             }
 
             if (!display.enabled || !RenderMatrices.ready) {
                 try {
-                    display.renderFaulted(drawContext)
+                    display.renderFaulted()
                 } catch (t: Throwable) {
                     FlightAssistant.logger.atError().setCause(t)
                         .log("Exception rendering disabled display with identifier: {}", id)
@@ -126,7 +126,7 @@ internal object HudDisplayHost: ModuleController<Display> {
             }
 
             try {
-                display.render(drawContext)
+                display.render()
                 display.faulted = false
             } catch (t: Throwable) {
                 display.faulted = true

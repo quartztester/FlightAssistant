@@ -1,8 +1,8 @@
 package ru.octol1ttle.flightassistant.impl.alert.fault.computer
 
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
@@ -12,7 +12,7 @@ import ru.octol1ttle.flightassistant.api.util.extensions.drawText
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 
 class ComputerFaultAlert(computers: ComputerView,
-                         private val identifier: Identifier,
+                         private val identifier: ResourceLocation,
                          private val alertText: Text,
                          private val extraTexts: Collection<Text>? = null,
                          override val data: AlertData = AlertData.MASTER_CAUTION
@@ -38,7 +38,7 @@ class ComputerFaultAlert(computers: ComputerView,
 
         i +=
             if (ComputerHost.getFaultCount(identifier) == 1) {
-                drawContext.drawText(Text.translatable("alert.flightassistant.fault.computer.reset"), otherLinesX, y, advisoryColor)
+                drawContext.drawText(Component.translatable("alert.flightassistant.fault.computer.reset"), otherLinesX, y, advisoryColor)
             } else {
                 0
             }

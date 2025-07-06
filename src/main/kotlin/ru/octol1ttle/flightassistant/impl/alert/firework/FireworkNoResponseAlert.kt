@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.alert.firework
 
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
@@ -18,6 +18,6 @@ class FireworkNoResponseAlert(computers: ComputerView) : Alert(computers), ECAMA
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alert.flightassistant.firework.no_response"), firstLineX, firstLineY, warningColor)
+        return drawContext.drawText(Component.translatable("alert.flightassistant.firework.no_response"), firstLineX, firstLineY, warningColor)
     }
 }

@@ -6,13 +6,13 @@ import net.minecraft.client.gui.ParentElement
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.screen.ScreenTexts
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 
 // TODO: REWRITE THIS ABSOLUTE FUCKY SHITTY HORRIBLE GARBAGE YOU CALL "CODE"
-class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.flight_plan")) {
+class FlightPlanScreen : FABaseScreen(Component.translatable("menu.flightassistant.flight_plan")) {
     private lateinit var doneButton: ButtonWidget
     private lateinit var saveButton: ButtonWidget
     private lateinit var discardChangesButton: ButtonWidget
@@ -30,12 +30,12 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
         doneButton = ButtonWidget.builder(ScreenTexts.DONE) { _: ButtonWidget? ->
             this.close()
         }.position(this.width - 100, this.height - 30).width(80).build()
-        saveButton = ButtonWidget.builder(Text.translatable("menu.flightassistant.flight_plan.save")) { _: ButtonWidget? ->
+        saveButton = ButtonWidget.builder(Component.translatable("menu.flightassistant.flight_plan.save")) { _: ButtonWidget? ->
             for (state: FlightPlanState in states) {
                 state.save()
             }
         }.position(this.width - 190, this.height - 30).width(80).build()
-        discardChangesButton = ButtonWidget.builder(Text.translatable("menu.flightassistant.flight_plan.discard_changes")) { _: ButtonWidget? ->
+        discardChangesButton = ButtonWidget.builder(Component.translatable("menu.flightassistant.flight_plan.discard_changes")) { _: ButtonWidget? ->
             for (state: FlightPlanState in states) {
                 state.load()
             }
@@ -90,9 +90,9 @@ class FlightPlanScreen : FABaseScreen(Text.translatable("menu.flightassistant.fl
         val arrivalWaypointWidget = ArrivalWaypointWidget(computers, left, this.height - EnrouteWaypointsListWidget.ITEM_HEIGHT - 5, width, EnrouteWaypointsListWidget.ITEM_HEIGHT, left)
         val waypointsListWidget = EnrouteWaypointsListWidget(computers, width, height, top, bottom, 5)
         //? if >=1.21 {
-        /*waypointsListWidget.x = left
-*///?} else
-        waypointsListWidget.setLeftPos(left)
+        waypointsListWidget.x = left
+//?} else
+        /*waypointsListWidget.setLeftPos(left)*/
 
         if (!loaded) {
             departureWaypointWidget.load()

@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.api.display
 
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 
 /**
@@ -13,6 +13,6 @@ abstract class Display(val computers: ComputerView) {
     var faultCount: Int = 0
 
     abstract fun allowedByConfig(): Boolean
-    abstract fun render(drawContext: DrawContext)
-    abstract fun renderFaulted(drawContext: DrawContext)
+    abstract fun render(guiGraphics: GuiGraphics)
+    abstract fun renderFaulted(guiGraphics: GuiGraphics)
 }

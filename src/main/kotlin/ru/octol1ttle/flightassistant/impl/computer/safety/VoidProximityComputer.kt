@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.computer.safety
 
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -45,7 +45,7 @@ class VoidProximityComputer(computers: ComputerView) : Computer(computers), Pitc
                 (-90.0f + (computers.data.world.bottomY - (computers.data.altitude + computers.data.velocity.y * 20)) / 64.0f * 105.0f).toFloat()
                     .coerceIn(-35.0f..computers.thrust.getOptimumClimbPitch()),
                 ControlInput.Priority.HIGH,
-                Text.translatable("mode.flightassistant.vertical.void_protection")
+                Component.translatable("mode.flightassistant.vertical.void_protection")
             )
         }
 
@@ -54,7 +54,8 @@ class VoidProximityComputer(computers: ComputerView) : Computer(computers), Pitc
 
     override fun getPitchInput(): ControlInput? {
         if (FAConfig.safety.voidAutoPitch && status <= Status.APPROACHING_DAMAGE_ALTITUDE) {
-            return ControlInput(computers.thrust.getOptimumClimbPitch(), ControlInput.Priority.HIGH, Text.translatable("mode.flightassistant.vertical.void_escape"),
+            return ControlInput(
+                computers.thrust.getOptimumClimbPitch(), ControlInput.Priority.HIGH, Component.translatable("mode.flightassistant.vertical.void_escape"),
                 active = status == Status.REACHED_DAMAGE_ALTITUDE && computers.thrust.current > ThrustComputer.TOGA_THRESHOLD && !computers.thrust.noThrustSource)
         }
 
@@ -66,7 +67,7 @@ class VoidProximityComputer(computers: ComputerView) : Computer(computers), Pitc
             return ControlInput(
                 1.0f,
                 ControlInput.Priority.HIGH,
-                Text.translatable("mode.flightassistant.thrust.toga"),
+                Component.translatable("mode.flightassistant.thrust.toga"),
                 active = status == Status.REACHED_DAMAGE_ALTITUDE
             )
         }
@@ -86,6 +87,6 @@ class VoidProximityComputer(computers: ComputerView) : Computer(computers), Pitc
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("void_proximity")
+        val ID: ResourceLocation = FlightAssistant.id("void_proximity")
     }
 }

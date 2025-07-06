@@ -2,8 +2,9 @@ package ru.octol1ttle.flightassistant.impl.display
 
 import kotlin.math.roundToInt
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
@@ -16,7 +17,7 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showSpeedReading || FAConfig.display.showSpeedScale
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         with(drawContext) {
             if (FAConfig.display.showSpeedReading) {
                 renderSpeedReading(HudFrame.leftF, centerYF)
@@ -100,10 +101,10 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
         return true
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
             drawRightAlignedText(
-                Text.translatable("short.flightassistant.speed"),
+                Component.translatable("short.flightassistant.speed"),
                 HudFrame.left, centerY - 5, warningColor
             )
         }
@@ -111,6 +112,6 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
 
     companion object {
         private const val READING_MATRIX_SCALE: Float = 1.5f
-        val ID: Identifier = FlightAssistant.id("speed")
+        val ID: ResourceLocation = FlightAssistant.id("speed")
     }
 }

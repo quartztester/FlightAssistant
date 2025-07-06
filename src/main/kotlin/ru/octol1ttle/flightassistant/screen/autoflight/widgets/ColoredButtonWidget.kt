@@ -5,7 +5,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.tooltip.Tooltip
 import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import net.minecraft.util.math.MathHelper
 
 class ColoredButtonWidget(x: Int, y: Int, width: Int, height: Int, message: Text?, onPress: PressAction?, narrationSupplier: NarrationSupplier?)
@@ -13,10 +13,10 @@ class ColoredButtonWidget(x: Int, y: Int, width: Int, height: Int, message: Text
     var color: Int = 16777215
 
 //? if >=1.21 {
-    /*private val textures: net.minecraft.client.gui.screen.ButtonTextures = net.minecraft.client.gui.screen.ButtonTextures(net.minecraft.util.Identifier.ofVanilla("widget/button"), net.minecraft.util.Identifier.ofVanilla("widget/button_disabled"), net.minecraft.util.Identifier.ofVanilla("widget/button_highlighted"))
+private val textures: net.minecraft.client.gui.screen.ButtonTextures = net.minecraft.client.gui.screen.ButtonTextures(net.minecraft.util.ResourceLocation.ofVanilla("widget/button"), net.minecraft.util.ResourceLocation.ofVanilla("widget/button_disabled"), net.minecraft.util.ResourceLocation.ofVanilla("widget/button_highlighted"))
     override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-*///?} else
-    override fun renderButton(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+//?} else
+        /*override fun renderButton(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {*/
         val minecraftClient: MinecraftClient = MinecraftClient.getInstance()
 //? if >=1.21.4 {
         /*context.drawGuiTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, textures[active, this.isSelected], this.x, this.y, this.getWidth(), this.getHeight(), net.minecraft.util.math.ColorHelper.getWhite(this.alpha))
@@ -25,9 +25,9 @@ class ColoredButtonWidget(x: Int, y: Int, width: Int, height: Int, message: Text
         RenderSystem.enableBlend()
         RenderSystem.enableDepthTest()
 //? if >=1.21 {
-        /*context.drawGuiTexture(textures[active, this.isSelected], this.x, this.y, this.getWidth(), this.getHeight())
-*///?} else
-        context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.x, this.y, this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY())
+        context.drawGuiTexture(textures[active, this.isSelected], this.x, this.y, this.getWidth(), this.getHeight())
+//?} else
+        /*context.drawNineSlicedTexture(WIDGETS_TEXTURE, this.x, this.y, this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY())*/
         context.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f)
 //?}
         val i: Int = if (this.active) color else 10526880

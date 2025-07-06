@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.api.alert
 
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 
 interface ECAMAlert {
     /**
@@ -10,5 +10,5 @@ interface ECAMAlert {
      * @param otherLinesX The X coordinate value that should be used for the second line and onwards.
      * @return the amount of lines rendered
      */
-    fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int
+    fun render(guiGraphics: GuiGraphics, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int
 }

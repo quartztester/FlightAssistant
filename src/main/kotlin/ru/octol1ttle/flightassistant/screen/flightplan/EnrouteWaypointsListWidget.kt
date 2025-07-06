@@ -7,7 +7,7 @@ import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.ElementListWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedText
@@ -19,28 +19,28 @@ import ru.octol1ttle.flightassistant.screen.autoflight.widgets.ThrustModeWidget.
 // TODO: REWRITE THIS ABSOLUTE FUCKY SHITTY HORRIBLE GARBAGE YOU CALL "CODE"
 class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int, height: Int, top: Int, @Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") bottom: Int, val left: Int) : ElementListWidget<EnrouteWaypointsListWidget.AbstractEntry>(
     mc, width, height, top,
-    /*? if <1.21 {*/ bottom, //?}
+    /*? if <1.21 {*/ /*bottom, *///?}
     ITEM_HEIGHT
 ), FlightPlanState {
 
     init {
 //? if <1.21 {
-        setRenderBackground(false)
+        /*setRenderBackground(false)
         setRenderHorizontalShadows(false)
-//?}
+*///?}
 
         rebuildEntries()
     }
 
 //? if >=1.21 {
-    /*override fun getScrollbarX(): Int {
+override fun getScrollbarX(): Int {
         return this.x + this.width - 4
     }
-*///?} else {
-    override fun getScrollbarPositionX(): Int {
+//?} else {
+    /*override fun getScrollbarPositionX(): Int {
     return this.left + this.width + 4
     }
-//?}
+*///?}
 
     override fun getRowWidth(): Int {
         return this.width
@@ -91,7 +91,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             val renderY: Int = y + ITEM_HEIGHT / 2
             context.drawHorizontalLine(x + OFFSET, x + entryWidth - OFFSET * 2, renderY, if (hovered) 0x7FFFFFFF else 0x40FFFFFF)
             if (hovered) {
-                context.drawMiddleAlignedText(Text.translatable("menu.flightassistant.flight_plan.add_waypoint"), x + entryWidth / 2, renderY - 4, 0xFFFFFFFF.toInt())
+                context.drawMiddleAlignedText(Component.translatable("menu.flightassistant.flight_plan.add_waypoint"), x + entryWidth / 2, renderY - 4, 0xFFFFFFFF.toInt())
             }
         }
 
@@ -116,7 +116,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
     }
 
     inner class WaypointEntry(private val state: EnrouteWaypointState, order: Int, x: Int, y: Int, width: Int) : AbstractEntry(x, y, width) {
-        private val displayText: TextWidget = TextWidget(x + 5, y, width / 3, 9, Text.translatable("menu.flightassistant.flight_plan.enroute", order), textRenderer).alignLeft()
+        private val displayText: TextWidget = TextWidget(x + 5, y, width / 3, 9, Component.translatable("menu.flightassistant.flight_plan.enroute", order), textRenderer).alignLeft()
         private val fieldWidth: Int = width / 3 - 4
         private val xField: TextFieldWidget = TextFieldWidget(
             mc.textRenderer, x + width - fieldWidth * 2 - 8, y, fieldWidth, 15, null, Text.empty()
@@ -129,11 +129,11 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
         )
 
         private val speedButton: ButtonWidget = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
+            Component.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
         ) { state.thrustModeType = ButtonType.SelectedSpeed }
             .dimensions(x + width + 15, this@EnrouteWaypointsListWidget.top + 30, fieldWidth, 15).build()
         private val verticalTargetButton: ButtonWidget = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target")
+            Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target")
         ) { state.thrustModeType = ButtonType.SelectedVerticalTarget }
             .dimensions(x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 30, fieldWidth, 15).build()
         private val speedField: TextFieldWidget = TextFieldWidget(
@@ -148,7 +148,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
 
         init {
             xField.text = state.x?.toString() ?: ""
-            xField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_x"))
+            xField.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.target_x"))
             xField.setTextPredicate {
                 val i: Double? = it.toDoubleOrNull()
                 it.isEmpty() || it == "-" || i != null
@@ -156,7 +156,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             xField.setChangedListener { state.x = it.toDoubleOrNull() }
 
             zField.text = state.z?.toString() ?: ""
-            zField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_z"))
+            zField.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.target_z"))
             zField.setTextPredicate {
                 val i: Double? = it.toDoubleOrNull()
                 it.isEmpty() || it == "-" || i != null
@@ -164,7 +164,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             zField.setChangedListener { state.z = it.toDoubleOrNull() }
 
             altitudeField.text = state.altitude?.toString() ?: ""
-            altitudeField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.vertical.target_altitude"))
+            altitudeField.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.vertical.target_altitude"))
             altitudeField.setTextPredicate {
                 val i: Double? = it.toDoubleOrNull()
                 it.isEmpty() || it == "-" || i != null
@@ -172,7 +172,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             altitudeField.setChangedListener { state.altitude = it.toDoubleOrNull() }
 
             speedField.text = state.thrustField1?.toString() ?: ""
-            speedField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.target_speed"))
+            speedField.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.target_speed"))
             speedField.setTextPredicate {
                 val i: Float? = it.toFloatOrNull()
                 it.isEmpty() || i != null && i > 0.0f
@@ -180,7 +180,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             speedField.setChangedListener { state.thrustField1 = it.toFloatOrNull() }
 
             climbThrustField.text = state.thrustField1?.toString() ?: ""
-            climbThrustField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.climb_thrust"))
+            climbThrustField.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.climb_thrust"))
             climbThrustField.setTextPredicate {
                 val i: Float? = it.toFloatOrNull()
                 it.isEmpty() || i != null && i in 0.0f..100.0f
@@ -194,7 +194,7 @@ class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int
             }
 
             descendThrustField.text = state.thrustField2?.toString() ?: ""
-            descendThrustField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.descend_thrust"))
+            descendThrustField.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.descend_thrust"))
             descendThrustField.setTextPredicate {
                 val i: Float? = it.toFloatOrNull()
                 it.isEmpty() || i != null && i in 0.0f..100.0f

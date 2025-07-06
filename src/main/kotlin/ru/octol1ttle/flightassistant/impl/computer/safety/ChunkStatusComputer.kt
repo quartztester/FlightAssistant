@@ -2,7 +2,7 @@ package ru.octol1ttle.flightassistant.impl.computer.safety
 
 import kotlin.math.abs
 import net.minecraft.client.world.ClientChunkManager
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.math.ChunkPos
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
@@ -51,6 +51,6 @@ class ChunkStatusComputer(computers: ComputerView) : Computer(computers) {
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("chunk_status")
+        val ID: ResourceLocation = FlightAssistant.id("chunk_status")
     }
 }

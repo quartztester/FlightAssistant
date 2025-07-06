@@ -2,7 +2,7 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight.base
 
 import kotlin.math.abs
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -64,6 +64,6 @@ class HeadingComputer(computers: ComputerView) : Computer(computers) {
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("heading")
+        val ID: ResourceLocation = FlightAssistant.id("heading")
     }
 }

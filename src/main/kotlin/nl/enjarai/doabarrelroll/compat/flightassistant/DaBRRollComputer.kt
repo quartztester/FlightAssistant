@@ -1,7 +1,7 @@
 package nl.enjarai.doabarrelroll.compat.flightassistant
 
 //? if do-a-barrel-roll {
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import nl.enjarai.doabarrelroll.DoABarrelRoll
 import nl.enjarai.doabarrelroll.api.RollEntity
 import ru.octol1ttle.flightassistant.api.autoflight.roll.RollSource
@@ -29,7 +29,7 @@ class DaBRRollComputer(computers: ComputerView) : Computer(computers), RollSourc
     }
 
     companion object {
-        val ID: Identifier = DoABarrelRoll.id("roll")
+        val ID: ResourceLocation = DoABarrelRoll.id("roll")
     }
 }
 

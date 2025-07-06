@@ -76,14 +76,14 @@ object FAConfig {
                     }
                 }
 *///?} else if >=1.21 {
-                /*if (player.equippedItems.any { stack -> stack.item == net.minecraft.item.Items.ELYTRA }) {
+                if (player.equippedItems.any { stack -> stack.item == net.minecraft.item.Items.ELYTRA }) {
                     return displaysStorage.notFlyingHasElytra
                 }
-*///?} else {
-                if (player.itemsEquipped.any { stack -> stack.item is net.minecraft.item.ElytraItem }) {
+//?} else {
+                /*if (player.itemsEquipped.any { stack -> stack.item is net.minecraft.item.ElytraItem }) {
                     return displaysStorage.notFlyingHasElytra
                 }
-//?}
+*///?}
             }
 
             return displaysStorage.notFlyingNoElytra

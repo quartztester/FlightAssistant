@@ -6,7 +6,7 @@ import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.clearAndAdd
@@ -15,18 +15,18 @@ import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val width: Int) : AbstractParentWidget(), DelayedApplyChanges {
     private val title: TextWidget = TextWidget(
-        x, y, width, 20, Text.translatable("menu.flightassistant.autoflight.thrust"), mc.textRenderer
+        x, y, width, 20, Component.translatable("menu.flightassistant.autoflight.thrust"), mc.textRenderer
     )
     private var newType: ButtonType
 
     init {
-        newType = ThrustModeWidget.ButtonType.entries.single { it.matches(computers.autopilot.thrustMode) }
+        newType = ButtonType.entries.single { it.matches(computers.autopilot.thrustMode) }
 
         initSelectedSpeed()
         initVerticalTarget()
 
         buttons[ButtonType.FlightPlan] = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.thrust.waypoint_thrust")
+            Component.translatable("menu.flightassistant.autoflight.thrust.waypoint_thrust")
         ) { newType = ButtonType.FlightPlan }
             .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
@@ -35,13 +35,13 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         val type = ButtonType.SelectedSpeed
 
         buttons[type] = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
+            Component.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
         ) { newType = type }
             .dimensions(x + 1, y + 20, width / 3 - 1, 15).build()
         val targetSpeedWidget = TextFieldWidget(
             mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Text.empty()
         )
-        targetSpeedWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.selected_speed"))
+        targetSpeedWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.selected_speed"))
         targetSpeedWidget.setTextPredicate {
             val i: Int? = it.toIntOrNull()
             it.isEmpty() || i != null && i > 0
@@ -53,20 +53,20 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         val type = ButtonType.SelectedVerticalTarget
 
         buttons[type] = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target")
+            Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target")
         ) { newType = type }
             .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
         val climbThrustWidget = TextFieldWidget(
             mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Text.empty()
         )
-        climbThrustWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target.climb_thrust"))
+        climbThrustWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target.climb_thrust"))
         configureThrustWidget(climbThrustWidget)
 
         val descendThrustWidget = TextFieldWidget(
             mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Text.empty()
         )
-        descendThrustWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.thrust.vertical_target.descend_thrust"))
+        descendThrustWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target.descend_thrust"))
         configureThrustWidget(descendThrustWidget)
 
         textFields.computeIfAbsent(type) { ArrayList() }.clearAndAdd(climbThrustWidget, descendThrustWidget)

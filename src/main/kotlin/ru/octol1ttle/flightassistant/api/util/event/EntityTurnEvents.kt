@@ -4,12 +4,12 @@ import dev.architectury.event.Event
 import dev.architectury.event.EventFactory
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 
-class ChangeLookDirectionEvents private constructor() {
+class EntityTurnEvents private constructor() {
     companion object {
         @JvmField
-        val PITCH: Event<ChangeLookDirection> = EventFactory.createLoop()
+        val X_ROT: Event<ChangeLookDirection> = EventFactory.createLoop()
         @JvmField
-        val HEADING: Event<ChangeLookDirection> = EventFactory.createLoop()
+        val Y_ROT: Event<ChangeLookDirection> = EventFactory.createLoop()
     }
 
     fun interface ChangeLookDirection {

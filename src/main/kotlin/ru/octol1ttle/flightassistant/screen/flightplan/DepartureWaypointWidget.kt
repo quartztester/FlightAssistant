@@ -5,7 +5,7 @@ import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.ParentElement
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.textRenderer
@@ -14,7 +14,7 @@ import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 // TODO: REWRITE THIS ABSOLUTE FUCKY SHITTY HORRIBLE GARBAGE YOU CALL "CODE"
 class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, val y: Int, val width: Int, val height: Int) : AbstractParentWidget(), FlightPlanState {
-    private val displayText: TextWidget = TextWidget(x + 5, y + 8, width, 9, Text.translatable("menu.flightassistant.flight_plan.departure"), textRenderer).alignLeft()
+    private val displayText: TextWidget = TextWidget(x + 5, y + 8, width, 9, Component.translatable("menu.flightassistant.flight_plan.departure"), textRenderer).alignLeft()
     private val fieldWidth: Int = width / 3 - 4
     private val xField: TextFieldWidget = TextFieldWidget(
         mc.textRenderer, x + width - fieldWidth * 2 - 8, y + 5, fieldWidth, 15, textFields[0], Text.empty()
@@ -37,22 +37,22 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
         textFields[2] = takeoffThrustField
         textFields[3] = thrustReductionAltitudeField
 
-        xField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_x"))
+        xField.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.target_x"))
         xField.setTextPredicate {
             it.isEmpty() || it == "-" || it.toDoubleOrNull() != null
         }
-        zField.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_z"))
+        zField.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.target_z"))
         zField.setTextPredicate {
             it.isEmpty() || it == "-" || it.toDoubleOrNull() != null
         }
 
-        takeoffThrustText = TextWidget(takeoffThrustField.x, takeoffThrustField.y - 12, takeoffThrustField.width, 9, Text.translatable("menu.flightassistant.flight_plan.departure.takeoff_thrust"), textRenderer).alignLeft()
+        takeoffThrustText = TextWidget(takeoffThrustField.x, takeoffThrustField.y - 12, takeoffThrustField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.takeoff_thrust"), textRenderer).alignLeft()
         takeoffThrustField.setTextPredicate {
             val i: Float? = it.toFloatOrNull()
             it.isEmpty() || i != null && i in 0.0f..100.0f
         }
 
-        thrustReductionAltitudeText = TextWidget(thrustReductionAltitudeField.x, thrustReductionAltitudeField.y - 12, thrustReductionAltitudeField.width, 9, Text.translatable("menu.flightassistant.flight_plan.departure.thrust_reduction_altitude"), textRenderer).alignLeft()
+        thrustReductionAltitudeText = TextWidget(thrustReductionAltitudeField.x, thrustReductionAltitudeField.y - 12, thrustReductionAltitudeField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.thrust_reduction_altitude"), textRenderer).alignLeft()
         thrustReductionAltitudeField.setTextPredicate {
             it.isEmpty() || it == "-" || it.toFloatOrNull() != null
         }

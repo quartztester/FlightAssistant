@@ -2,7 +2,7 @@ package nl.enjarai.doabarrelroll.compat.flightassistant
 
 //? if do-a-barrel-roll {
 import kotlin.math.sign
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import nl.enjarai.doabarrelroll.DoABarrelRoll
 import nl.enjarai.doabarrelroll.api.event.ThrustEvents
 import nl.enjarai.doabarrelroll.config.ModConfig
@@ -42,7 +42,7 @@ class DaBRThrustComputer(computers: ComputerView) : Computer(computers), ThrustS
     }
 
     companion object {
-        val ID: Identifier = DoABarrelRoll.id("thrust")
+        val ID: ResourceLocation = DoABarrelRoll.id("thrust")
     }
 }
 

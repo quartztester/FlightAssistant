@@ -1,8 +1,8 @@
 package ru.octol1ttle.flightassistant.impl.display
 
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
@@ -15,7 +15,7 @@ class ElytraDurabilityDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showElytraDurability
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         with(drawContext) {
             val x: Int = (HudFrame.left + (HudFrame.width - HudFrame.height) * 0.25f).toInt()
             val y: Int = HudFrame.bottom + 1
@@ -31,21 +31,21 @@ class ElytraDurabilityDisplay(computers: ComputerView) : Display(computers) {
                 else -> primaryColor
             }
 
-            drawRightAlignedText(Text.translatable("short.flightassistant.elytra"), x - 15, y + 2, color)
+            drawRightAlignedText(Component.translatable("short.flightassistant.elytra"), x - 15, y + 2, color)
             drawBorder(x - 14, y, 29, 11, color)
             drawMiddleAlignedText(text, x, y + 2, color)
         }
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
             val x: Int = (HudFrame.left + (HudFrame.width - HudFrame.height) * 0.25f).toInt()
             val y: Int = HudFrame.bottom + 1
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.elytra_durability"), x, y, warningColor)
+            drawMiddleAlignedText(Component.translatable("short.flightassistant.elytra_durability"), x, y, warningColor)
         }
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("elytra_durability")
+        val ID: ResourceLocation = FlightAssistant.id("elytra_durability")
     }
 }

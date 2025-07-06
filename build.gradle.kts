@@ -44,22 +44,12 @@ repositories {
 }
 
 dependencies {
-    fun modrinth(name: String, dep: Any?) = "maven.modrinth:$name:$dep"
-
     fun ifStable(str: String, action: (String) -> Unit = { modImplementation(it) }) {
         if (isSnapshot) modCompileOnly(str) else action(str)
     }
 
     minecraft("com.mojang:minecraft:${mcVersion}")
-    @Suppress("UnstableApiUsage")
-    mappings(loom.layered {
-        mappings("net.fabricmc:yarn:${mcVersion}+build.${property("deps.yarn_build")}:v2")
-        if (stonecutter.eval(mcVersion, "1.20.6")) {
-            mappings("dev.architectury:yarn-mappings-patch-neoforge:1.20.5+build.3")
-        } else if (stonecutter.eval(mcVersion, ">=1.21")) {
-            mappings("dev.architectury:yarn-mappings-patch-neoforge:1.21+build.4")
-        }
-    })
+    mappings(loom.officialMojangMappings())
     val mixinExtras = "io.github.llamalad7:mixinextras-%s:${property("deps.mixin_extras")}"
     if (isFabric) {
         modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")

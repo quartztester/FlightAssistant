@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.alert.gpws
 
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.CenteredAlert
@@ -36,7 +36,7 @@ class PullUpAlert(computers: ComputerView) : Alert(computers), CenteredAlert {
             if (computers.gpws.groundImpactStatus == GroundProximityComputer.Status.RECOVER
                 || computers.gpws.obstacleImpactStatus == GroundProximityComputer.Status.RECOVER) totalTicks % 10 >= 5
             else totalTicks % 20 >= 10
-        drawContext.drawHighlightedCenteredText(Text.translatable("alert.flightassistant.gpws.pull_up"), drawContext.centerX, y, warningColor, flash)
+        drawContext.drawHighlightedCenteredText(Component.translatable("alert.flightassistant.gpws.pull_up"), drawContext.centerX, y, warningColor, flash)
         return true
     }
 }

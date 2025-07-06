@@ -1,10 +1,10 @@
 package ru.octol1ttle.flightassistant.impl.display
 
 import kotlin.math.roundToInt
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
@@ -18,10 +18,10 @@ class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showRadarAltitude
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         val groundLevel: Double? = computers.data.groundLevel
         if (!computers.data.isCurrentChunkLoaded || groundLevel != null && groundLevel > computers.data.altitude) {
-            renderFaulted(drawContext)
+            renderFaulted()
             return
         }
 
@@ -33,11 +33,11 @@ class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
             val altString: String
             val color: Int
             if (groundLevel != null) {
-                altType = Text.translatable("short.flightassistant.ground")
+                altType = Component.translatable("short.flightassistant.ground")
                 altString = (computers.data.altitude - groundLevel).roundToInt().toString()
                 color = primaryColor
             } else {
-                altType = Text.translatable("short.flightassistant.void")
+                altType = Component.translatable("short.flightassistant.void")
                 altString = (computers.data.altitude - computers.data.voidLevel).roundToInt().toString()
                 color = when (computers.voidProximity.status) {
                     VoidProximityComputer.Status.REACHED_DAMAGE_ALTITUDE -> warningColor
@@ -53,13 +53,13 @@ class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
         }
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
-            drawText(Text.translatable("short.flightassistant.radar_altitude"), HudFrame.right, HudFrame.bottom + 4, warningColor)
+            drawText(Component.translatable("short.flightassistant.radar_altitude"), HudFrame.right, HudFrame.bottom + 4, warningColor)
         }
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("radar_altitude")
+        val ID: ResourceLocation = FlightAssistant.id("radar_altitude")
     }
 }

@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.alert.thrust
 
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.*
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.advisoryColor
@@ -18,8 +18,8 @@ class ReverseThrustNotSupportedAlert(computers: ComputerView) : Alert(computers)
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
         var i = 0
-        i += drawContext.drawText(Text.translatable("alert.flightassistant.thrust.reverse_not_supported"), firstLineX, firstLineY, cautionColor)
-        i += drawContext.drawText(Text.translatable("alert.flightassistant.thrust.reverse_not_supported.set_forward"), otherLinesX, firstLineY + 11, advisoryColor)
+        i += drawContext.drawText(Component.translatable("alert.flightassistant.thrust.reverse_not_supported"), firstLineX, firstLineY, cautionColor)
+        i += drawContext.drawText(Component.translatable("alert.flightassistant.thrust.reverse_not_supported.set_forward"), otherLinesX, firstLineY + 11, advisoryColor)
         return i
     }
 }

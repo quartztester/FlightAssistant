@@ -8,7 +8,7 @@ import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.registry.tag.DamageTypeTags
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.Direction
@@ -133,6 +133,6 @@ class AirDataComputer(computers: ComputerView, private val mc: MinecraftClient) 
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("air_data")
+        val ID: ResourceLocation = FlightAssistant.id("air_data")
     }
 }

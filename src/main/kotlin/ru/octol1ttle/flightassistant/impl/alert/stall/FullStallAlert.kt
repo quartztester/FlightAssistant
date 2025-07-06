@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.alert.stall
 
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.CenteredAlert
@@ -26,7 +26,7 @@ class FullStallAlert(computers: ComputerView) : Alert(computers), CenteredAlert 
     }
 
     override fun render(drawContext: DrawContext, y: Int): Boolean {
-        drawContext.drawHighlightedCenteredText(Text.translatable("alert.flightassistant.stall"), drawContext.centerX, y, warningColor, totalTicks % 20 >= 10)
+        drawContext.drawHighlightedCenteredText(Component.translatable("alert.flightassistant.stall"), drawContext.centerX, y, warningColor, totalTicks % 20 >= 10)
         return true
     }
 }

@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight.base
 
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FAKeyBindings
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
@@ -127,7 +127,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("thrust")
+        val ID: ResourceLocation = FlightAssistant.id("thrust")
         const val TOGA_THRESHOLD: Float = 0.99f
     }
 }

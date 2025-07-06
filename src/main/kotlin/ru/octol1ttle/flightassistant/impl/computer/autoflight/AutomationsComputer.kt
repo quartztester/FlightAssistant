@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import kotlin.math.abs
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -13,7 +13,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegis
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
-import ru.octol1ttle.flightassistant.api.util.event.ChangeLookDirectionEvents
+import ru.octol1ttle.flightassistant.api.util.event.EntityTurnEvents
 
 class AutomationsComputer(computers: ComputerView) : Computer(computers), FlightController {
     var flightDirectors: Boolean = false
@@ -43,7 +43,7 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
                 autoThrustAlert = false
             }
         })
-        ChangeLookDirectionEvents.PITCH.register(ChangeLookDirectionEvents.ChangeLookDirection { pitchDelta, output ->
+        EntityTurnEvents.X_ROT.register(EntityTurnEvents.ChangeLookDirection { pitchDelta, output ->
             if (computers.data.flying && autopilot) {
                 pitchResistance += abs(pitchDelta)
                 if (pitchResistance < 20.0f) {
@@ -55,7 +55,7 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
 
             pitchResistance = 0.0f
         })
-        ChangeLookDirectionEvents.HEADING.register(ChangeLookDirectionEvents.ChangeLookDirection { headingDelta, output ->
+        EntityTurnEvents.Y_ROT.register(EntityTurnEvents.ChangeLookDirection { headingDelta, output ->
             if (computers.data.flying && autopilot) {
                 headingResistance += abs(headingDelta)
                 if (headingResistance < 40.0f) {
@@ -169,6 +169,6 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("automations")
+        val ID: ResourceLocation = FlightAssistant.id("automations")
     }
 }

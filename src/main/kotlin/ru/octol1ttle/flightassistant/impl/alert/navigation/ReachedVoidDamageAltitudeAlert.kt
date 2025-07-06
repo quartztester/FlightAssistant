@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.alert.navigation
 
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.*
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.drawText
@@ -17,6 +17,6 @@ class ReachedVoidDamageAltitudeAlert(computers: ComputerView) : Alert(computers)
     }
 
     override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Text.translatable("alert.flightassistant.navigation.reached_void_damage_altitude"), firstLineX, firstLineY, warningColor)
+        return drawContext.drawText(Component.translatable("alert.flightassistant.navigation.reached_void_damage_altitude"), firstLineX, firstLineY, warningColor)
     }
 }

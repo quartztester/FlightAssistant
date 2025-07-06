@@ -2,16 +2,16 @@ package ru.octol1ttle.flightassistant.api.util.event
 
 import dev.architectury.event.Event
 import dev.architectury.event.EventFactory
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 
-fun interface FixedHudRenderCallback {
+fun interface FixedGuiRenderCallback {
     /**
      * Called when the main HUD is being rendered.
      */
-    fun onRenderHud(context: DrawContext, tickDelta: Float)
+    fun onRenderGui(context: GuiGraphics, partialTick: Float)
 
     companion object {
         @JvmField
-        val EVENT: Event<FixedHudRenderCallback> = EventFactory.createLoop()
+        val EVENT: Event<FixedGuiRenderCallback> = EventFactory.createLoop()
     }
 }

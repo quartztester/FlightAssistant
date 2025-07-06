@@ -7,7 +7,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.FireworkRocketItem
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Hand
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSource
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSourceRegistrationCallback
@@ -99,9 +99,9 @@ class FireworkComputer(computers: ComputerView, private val mc: MinecraftClient)
 
     private fun hasNoExplosions(stack: ItemStack): Boolean {
 //? if >=1.21 {
-        /*return stack.get(net.minecraft.component.DataComponentTypes.FIREWORKS)?.explosions?.isEmpty() != false
-*///?} else
-        return stack.getSubNbt("Fireworks")?.getList("Explosions", net.minecraft.nbt.NbtElement.COMPOUND_TYPE.toInt())?.isEmpty() != false
+        return stack.get(net.minecraft.component.DataComponentTypes.FIREWORKS)?.explosions?.isEmpty() != false
+//?} else
+        /*return stack.getSubNbt("Fireworks")?.getList("Explosions", net.minecraft.nbt.NbtElement.COMPOUND_TYPE.toInt())?.isEmpty() != false*/
     }
 
     private fun tryActivateFirework(player: PlayerEntity) {
@@ -146,6 +146,6 @@ class FireworkComputer(computers: ComputerView, private val mc: MinecraftClient)
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("firework")
+        val ID: ResourceLocation = FlightAssistant.id("firework")
     }
 }

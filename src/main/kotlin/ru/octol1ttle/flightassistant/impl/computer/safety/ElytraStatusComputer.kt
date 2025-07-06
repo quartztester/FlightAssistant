@@ -8,8 +8,8 @@ import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.math.MathHelper
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
@@ -102,16 +102,16 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
     fun formatDurability(units: DisplayOptions.DurabilityUnits, player: PlayerEntity): Text? {
         val active: ItemStack = activeElytra ?: return null
         if (!active.isDamageable) {
-            return Text.translatable("short.flightassistant.infinite")
+            return Component.translatable("short.flightassistant.infinite")
         }
 
         val unbreakingLevel: Int = EnchantmentHelper.getLevel(
 //? if >=1.21.2 {
             /*player.world.registryManager.getOrThrow(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING.value).get()
 *///?} else if >=1.21 {
-            /*player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
-*///?} else
-            Enchantments.UNBREAKING
+            player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
+//?} else
+            /*Enchantments.UNBREAKING*/
             , active
         )
 
@@ -141,9 +141,9 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 //? if >=1.21.2 {
             /*player.world.registryManager.getOrThrow(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING.value).get()
 *///?} else if >=1.21 {
-            /*player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
-*///?} else
-            Enchantments.UNBREAKING
+            player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
+//?} else
+            /*Enchantments.UNBREAKING*/
             , active
         )
         return (active.maxDamage - active.damage - 1) * (unbreakingLevel + 1)
@@ -156,6 +156,6 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("elytra_status")
+        val ID: ResourceLocation = FlightAssistant.id("elytra_status")
     }
 }

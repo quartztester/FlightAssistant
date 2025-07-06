@@ -2,7 +2,7 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight.base
 
 import kotlin.math.abs
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -12,7 +12,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiterRegistrati
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
-import ru.octol1ttle.flightassistant.api.util.event.ChangeLookDirectionEvents
+import ru.octol1ttle.flightassistant.api.util.event.EntityTurnEvents
 import ru.octol1ttle.flightassistant.api.util.extensions.filterNonFaulted
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.requireIn
@@ -31,7 +31,7 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
 
     override fun subscribeToEvents() {
         PitchControllerRegistrationCallback.EVENT.register { it.accept(this) }
-        ChangeLookDirectionEvents.PITCH.register { mcPitchDelta, output ->
+        EntityTurnEvents.X_ROT.register { mcPitchDelta, output ->
             if (canMoveOrBlockPitch()) {
                 val pitchDelta: Float = -mcPitchDelta
 
@@ -156,6 +156,6 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("pitch")
+        val ID: ResourceLocation = FlightAssistant.id("pitch")
     }
 }

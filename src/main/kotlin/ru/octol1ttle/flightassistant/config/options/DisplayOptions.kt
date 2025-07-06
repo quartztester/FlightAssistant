@@ -3,7 +3,7 @@ package ru.octol1ttle.flightassistant.config.options
 import dev.isxander.yacl3.api.NameableEnum
 import dev.isxander.yacl3.config.v2.api.SerialEntry
 import java.awt.Color
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 class DisplayOptions {
     @SerialEntry
@@ -109,30 +109,30 @@ class DisplayOptions {
     enum class AttitudeDisplayMode : NameableEnum {
         HORIZON_AND_LADDER {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.display.attitude.show.horizon_and_ladder")
+                Component.translatable("config.flightassistant.option.display.attitude.show.horizon_and_ladder")
         },
         HORIZON_ONLY {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.display.attitude.show.horizon_only")
+                Component.translatable("config.flightassistant.option.display.attitude.show.horizon_only")
         },
         DISABLED {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.display.attitude.show.disabled")
+                Component.translatable("config.flightassistant.option.display.attitude.show.disabled")
         };
     }
 
     enum class DurabilityUnits : NameableEnum {
         RAW {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.display.elytra_durability.units.raw")
+                Component.translatable("config.flightassistant.option.display.elytra_durability.units.raw")
         },
         PERCENTAGE {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.display.elytra_durability.units.percentage")
+                Component.translatable("config.flightassistant.option.display.elytra_durability.units.percentage")
         },
         TIME {
             override fun getDisplayName(): Text =
-                Text.translatable("config.flightassistant.option.display.elytra_durability.units.time")
+                Component.translatable("config.flightassistant.option.display.elytra_durability.units.time")
         };
     }
 }

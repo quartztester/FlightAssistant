@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.computer.safety
 
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -37,7 +37,7 @@ class StallComputer(computers: ComputerView) : Computer(computers), PitchLimiter
             return ControlInput(
                 1.0f,
                 ControlInput.Priority.HIGHEST,
-                Text.translatable("mode.flightassistant.thrust.toga"),
+                Component.translatable("mode.flightassistant.thrust.toga"),
                 active = status == Status.FULL_STALL
             )
         }
@@ -53,7 +53,7 @@ class StallComputer(computers: ComputerView) : Computer(computers), PitchLimiter
         return ControlInput(
             maximumSafePitch,
             ControlInput.Priority.HIGHEST,
-            Text.translatable("mode.flightassistant.vertical.stall_protection"),
+            Component.translatable("mode.flightassistant.vertical.stall_protection"),
             1.5f,
             FAConfig.safety.stallLimitPitch
         )
@@ -71,6 +71,6 @@ class StallComputer(computers: ComputerView) : Computer(computers), PitchLimiter
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("stall")
+        val ID: ResourceLocation = FlightAssistant.id("stall")
     }
 }

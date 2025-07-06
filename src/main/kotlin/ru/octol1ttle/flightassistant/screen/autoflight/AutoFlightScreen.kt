@@ -5,7 +5,7 @@ import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.screen.ScreenTexts
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import net.minecraft.util.Formatting
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
@@ -16,7 +16,7 @@ import ru.octol1ttle.flightassistant.screen.autoflight.widgets.LateralModeWidget
 import ru.octol1ttle.flightassistant.screen.autoflight.widgets.ThrustModeWidget
 import ru.octol1ttle.flightassistant.screen.autoflight.widgets.VerticalModeWidget
 
-class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.autoflight")) {
+class AutoFlightScreen : FABaseScreen(Component.translatable("menu.flightassistant.autoflight")) {
     private lateinit var flightDirectors: ColoredButtonWidget
     private lateinit var autoThrust: ColoredButtonWidget
     private lateinit var autopilot: ColoredButtonWidget
@@ -31,16 +31,16 @@ class AutoFlightScreen : FABaseScreen(Text.translatable("menu.flightassistant.au
 
         val computers: ComputerView = ComputerHost
 
-        flightDirectors = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.flight_directors")) {
+        flightDirectors = this.addDrawableChild(ColoredButtonWidget.builder(Component.translatable("menu.flightassistant.autoflight.flight_directors")) {
             verticalMode?.applyChanges()
             lateralMode?.applyChanges()
             computers.automations.setFlightDirectors(!computers.automations.flightDirectors)
         }.position(this.centerX - 100, this.centerY + 50).width(200).build())
-        autoThrust = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.auto_thrust")) {
+        autoThrust = this.addDrawableChild(ColoredButtonWidget.builder(Component.translatable("menu.flightassistant.autoflight.auto_thrust")) {
             thrustMode?.applyChanges()
             computers.automations.setAutoThrust(!computers.automations.autoThrust, false)
         }.position(this.centerX - 100, this.centerY + 80).width(95).build())
-        autopilot = this.addDrawableChild(ColoredButtonWidget.builder(Text.translatable("menu.flightassistant.autoflight.autopilot")) {
+        autopilot = this.addDrawableChild(ColoredButtonWidget.builder(Component.translatable("menu.flightassistant.autoflight.autopilot")) {
             verticalMode?.applyChanges()
             lateralMode?.applyChanges()
             computers.automations.setAutoPilot(!computers.automations.autopilot, false)

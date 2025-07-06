@@ -1,8 +1,8 @@
 package ru.octol1ttle.flightassistant.impl.display
 
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import org.joml.Vector3f
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -16,7 +16,7 @@ class FlightPathDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showFlightPathVector
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         with(drawContext) {
             val screenSpaceVec: Vector3f = ScreenSpace.getVector3f(computers.data.velocity, false) ?: return
             val trueX: Float = screenSpaceVec.x
@@ -43,13 +43,13 @@ class FlightPathDisplay(computers: ComputerView) : Display(computers) {
         }
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.flight_path"), centerX, centerY + 16, warningColor)
+            drawMiddleAlignedText(Component.translatable("short.flightassistant.flight_path"), centerX, centerY + 16, warningColor)
         }
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("flight_path")
+        val ID: ResourceLocation = FlightAssistant.id("flight_path")
     }
 }

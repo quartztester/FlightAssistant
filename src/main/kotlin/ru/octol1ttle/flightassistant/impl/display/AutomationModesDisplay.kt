@@ -3,9 +3,10 @@ package ru.octol1ttle.flightassistant.impl.display
 import java.util.Objects
 import kotlin.math.roundToInt
 import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.text.MutableText
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FAKeyBindings
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
@@ -29,7 +30,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showAutomationModes
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         renderThrustMode(drawContext)
         renderPitchMode(drawContext)
         renderInput(drawContext, headingDisplay, computers.heading.activeInput)
@@ -42,7 +43,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
         val input: ControlInput? = computers.thrust.activeInput
         if (input != null) {
             if (FAKeyBindings.isHoldingThrust()) {
-                thrustDisplay.render(drawContext, Text.translatable("mode.flightassistant.thrust.override").setColor(cautionColor), false, cautionColor)
+                thrustDisplay.render(drawContext, Component.translatable("mode.flightassistant.thrust.override").setColor(cautionColor), false, cautionColor)
             } else {
                 thrustDisplay.render(
                     drawContext, input.text, input.active,
@@ -56,8 +57,8 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
         if (computers.thrust.thrustLocked) {
             thrustDisplay.render(
                 drawContext,
-                if (computers.thrust.current > TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.locked_toga").setColor(primaryColor)
-                else Text.translatable("mode.flightassistant.thrust.locked", thrustValueText).setColor(primaryColor),
+                if (computers.thrust.current > TOGA_THRESHOLD) Component.translatable("mode.flightassistant.thrust.locked_toga").setColor(primaryColor)
+                else Component.translatable("mode.flightassistant.thrust.locked", thrustValueText).setColor(primaryColor),
                 false,
                 if (FATickCounter.totalTicks % 20 >= 10) cautionColor else emptyColor
             )
@@ -68,8 +69,8 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
         if (computers.thrust.current != 0.0f) {
             thrustDisplay.render(
                 drawContext,
-                if (computers.thrust.current > TOGA_THRESHOLD) Text.translatable("mode.flightassistant.thrust.manual_toga").setColor(secondaryColor)
-                else Text.translatable("mode.flightassistant.thrust.manual", thrustValueText),
+                if (computers.thrust.current > TOGA_THRESHOLD) Component.translatable("mode.flightassistant.thrust.manual_toga").setColor(secondaryColor)
+                else Component.translatable("mode.flightassistant.thrust.manual", thrustValueText),
                 computers.thrust.current == 0.0f || computers.thrust.current > TOGA_THRESHOLD,
                 if (thrustUnusable) cautionColor else null
             )
@@ -81,7 +82,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
 
     private fun renderPitchMode(drawContext: DrawContext) {
         if (computers.pitch.manualOverride) {
-            pitchDisplay.render(drawContext, Text.translatable("mode.flightassistant.vertical.override").setColor(cautionColor), false, cautionColor)
+            pitchDisplay.render(drawContext, Component.translatable("mode.flightassistant.vertical.override").setColor(cautionColor), false, cautionColor)
             return
         }
         renderInput(drawContext, pitchDisplay, computers.pitch.activeInput)
@@ -98,17 +99,17 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     private fun renderAutomaticsMode(drawContext: DrawContext) {
         val text: MutableText = Text.empty()
         if (computers.automations.flightDirectors) {
-            text.appendWithSeparation(Text.translatable("short.flightassistant.flight_directors"))
+            text.appendWithSeparation(Component.translatable("short.flightassistant.flight_directors"))
         }
         if (computers.automations.autoThrust) {
-            val autoThrustText: MutableText = Text.translatable("short.flightassistant.auto_thrust")
+            val autoThrustText: MutableText = Component.translatable("short.flightassistant.auto_thrust")
             text.appendWithSeparation(
                 if (computers.thrust.activeInput?.identifier == AutopilotLogicComputer.ID) autoThrustText
                 else autoThrustText.setColor(advisoryColor)
             )
         }
         if (computers.automations.autopilot) {
-            text.appendWithSeparation(Text.translatable("short.flightassistant.autopilot"))
+            text.appendWithSeparation(Component.translatable("short.flightassistant.autopilot"))
         }
 
         automationStatusDisplay.render(
@@ -121,17 +122,17 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
         )
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
             val x: Int = centerX
             val y: Int = HudFrame.top - 9
 
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.automation_modes"), x, y, warningColor)
+            drawMiddleAlignedText(Component.translatable("short.flightassistant.automation_modes"), x, y, warningColor)
         }
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("automation_modes")
+        val ID: ResourceLocation = FlightAssistant.id("automation_modes")
         private const val TOTAL_MODES: Float = 5.0f
     }
 

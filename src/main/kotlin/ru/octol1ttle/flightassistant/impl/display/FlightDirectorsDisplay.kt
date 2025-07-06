@@ -1,8 +1,8 @@
 package ru.octol1ttle.flightassistant.impl.display
 
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
@@ -17,12 +17,12 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showFlightDirectors
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         if (!computers.automations.flightDirectors) {
             return
         }
         if (computers.pitch.activeInput?.identifier != AutopilotLogicComputer.ID && computers.heading.activeInput?.identifier != AutopilotLogicComputer.ID) {
-            renderFaulted(drawContext)
+            renderFaulted()
             return
         }
 
@@ -46,13 +46,13 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
         }
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.flight_directors"), centerX, HudFrame.top + 30, warningColor)
+            drawMiddleAlignedText(Component.translatable("short.flightassistant.flight_directors"), centerX, HudFrame.top + 30, warningColor)
         }
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("flight_directors")
+        val ID: ResourceLocation = FlightAssistant.id("flight_directors")
     }
 }

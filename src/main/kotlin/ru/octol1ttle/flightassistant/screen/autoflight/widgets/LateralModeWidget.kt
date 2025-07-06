@@ -6,7 +6,7 @@ import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.clearAndAdd
@@ -15,7 +15,7 @@ import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val width: Int) : AbstractParentWidget(), DelayedApplyChanges {
     private val title: TextWidget = TextWidget(
-        x, y, width, 20, Text.translatable("menu.flightassistant.autoflight.lateral"), mc.textRenderer
+        x, y, width, 20, Component.translatable("menu.flightassistant.autoflight.lateral"), mc.textRenderer
     )
     private var newType: ButtonType
 
@@ -26,7 +26,7 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
         initSelectedCoordinates()
 
         buttons[ButtonType.FlightPlan] = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.lateral.waypoint_coordinates")
+            Component.translatable("menu.flightassistant.autoflight.lateral.waypoint_coordinates")
         ) { newType = ButtonType.FlightPlan }
             .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
@@ -35,13 +35,13 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
         val type = ButtonType.SelectedHeading
 
         buttons[type] = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.lateral.selected_heading")
+            Component.translatable("menu.flightassistant.autoflight.lateral.selected_heading")
         ) { newType = type }
             .dimensions(x + 1, y + 20, width / 3 - 1, 15).build()
         val targetHeadingWidget = TextFieldWidget(
             mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Text.empty()
         )
-        targetHeadingWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.selected_heading.target"))
+        targetHeadingWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.selected_heading.target"))
         targetHeadingWidget.setTextPredicate {
             val i: Int? = it.toIntOrNull()
             it.isEmpty() || i != null && i in 0..360
@@ -53,14 +53,14 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
         val type = ButtonType.SelectedCoordinates
 
         buttons[type] = ButtonWidget.builder(
-            Text.translatable("menu.flightassistant.autoflight.lateral.selected_coordinates")
+            Component.translatable("menu.flightassistant.autoflight.lateral.selected_coordinates")
         ) { newType = type }
             .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
         val xCoordWidget = TextFieldWidget(
             mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Text.empty()
         )
-        xCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_x"))
+        xCoordWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.target_x"))
         xCoordWidget.setTextPredicate {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
@@ -69,7 +69,7 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
         val zCoordWidget = TextFieldWidget(
             mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Text.empty()
         )
-        zCoordWidget.setPlaceholder(Text.translatable("menu.flightassistant.autoflight.lateral.target_z"))
+        zCoordWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.target_z"))
         zCoordWidget.setTextPredicate {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null

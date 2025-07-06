@@ -1,9 +1,9 @@
 package ru.octol1ttle.flightassistant.impl.computer.safety
 
 import net.minecraft.client.sound.SoundManager
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import net.minecraft.util.Hand
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertCategory
@@ -59,73 +59,75 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
 
     private fun registerBuiltin() {
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.alert"))
+            AlertCategory(Component.translatable("alert.flightassistant.alert"))
                 .add(AlertComputerFaultAlert(computers))
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.autoflight"))
-                .add(ComputerFaultAlert(computers, AutomationsComputer.ID, Text.translatable("alert.flightassistant.autoflight.fault")))
-                .add(ComputerFaultAlert(computers, PitchComputer.ID, Text.translatable("alert.flightassistant.autoflight.pitch_fault")))
-                .add(ComputerFaultAlert(computers, HeadingComputer.ID, Text.translatable("alert.flightassistant.autoflight.heading_fault")))
-                .add(ComputerFaultAlert(computers, RollComputer.ID, Text.translatable("alert.flightassistant.autoflight.roll_fault")))
+            AlertCategory(Component.translatable("alert.flightassistant.autoflight"))
+                .add(ComputerFaultAlert(computers, AutomationsComputer.ID, Component.translatable("alert.flightassistant.autoflight.fault")))
+                .add(ComputerFaultAlert(computers, PitchComputer.ID, Component.translatable("alert.flightassistant.autoflight.pitch_fault")))
+                .add(ComputerFaultAlert(computers, HeadingComputer.ID, Component.translatable("alert.flightassistant.autoflight.heading_fault")))
+                .add(ComputerFaultAlert(computers, RollComputer.ID, Component.translatable("alert.flightassistant.autoflight.roll_fault")))
                 .add(AutopilotOffAlert(computers))
                 .add(AutoThrustOffAlert(computers))
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.elytra"))
-                .add(ComputerFaultAlert(computers, ElytraStatusComputer.ID, Text.translatable("alert.flightassistant.elytra.fault")))
+            AlertCategory(Component.translatable("alert.flightassistant.elytra"))
+                .add(ComputerFaultAlert(computers, ElytraStatusComputer.ID, Component.translatable("alert.flightassistant.elytra.fault")))
                 .add(ElytraDurabilityCriticalAlert(computers))
                 .add(ElytraDurabilityLowAlert(computers))
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.fault.hud"))
+            AlertCategory(Component.translatable("alert.flightassistant.fault.hud"))
                 .addAll(HudDisplayHost.identifiers().map { DisplayFaultAlert(computers, it) })
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.firework"))
-                .add(ComputerFaultAlert(computers, FireworkComputer.ID, Text.translatable("alert.flightassistant.firework.fault")))
+            AlertCategory(Component.translatable("alert.flightassistant.firework"))
+                .add(ComputerFaultAlert(computers, FireworkComputer.ID, Component.translatable("alert.flightassistant.firework.fault")))
                 .add(FireworkExplosiveAlert(computers, Hand.MAIN_HAND))
                 .add(FireworkExplosiveAlert(computers, Hand.OFF_HAND))
                 .add(FireworkNoResponseAlert(computers))
                 .add(FireworkSlowResponseAlert(computers))
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.flight_controls"))
-                .add(ComputerFaultAlert(computers, PitchComputer.ID, Text.translatable("alert.flightassistant.flight_controls.pitch_fault"), listOf(
-                    Text.translatable("alert.flightassistant.flight_controls.pitch_fault.use_manual_pitch"),
+            AlertCategory(Component.translatable("alert.flightassistant.flight_controls"))
+                .add(
+                    ComputerFaultAlert(
+                        computers, PitchComputer.ID, Component.translatable("alert.flightassistant.flight_controls.pitch_fault"), listOf(
+                            Component.translatable("alert.flightassistant.flight_controls.pitch_fault.use_manual_pitch"),
                 )))
                 .add(ProtectionsLostAlert(computers))
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.flight_plan"))
-                .add(ComputerFaultAlert(computers, FlightPlanComputer.ID, Text.translatable("alerts.flightassistant.flight_plan.fault")))
+            AlertCategory(Component.translatable("alert.flightassistant.flight_plan"))
+                .add(ComputerFaultAlert(computers, FlightPlanComputer.ID, Component.translatable("alerts.flightassistant.flight_plan.fault")))
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.gpws"))
-                .add(ComputerFaultAlert(computers, GroundProximityComputer.ID, Text.translatable("alert.flightassistant.gpws.fault")))
+            AlertCategory(Component.translatable("alert.flightassistant.gpws"))
+                .add(ComputerFaultAlert(computers, GroundProximityComputer.ID, Component.translatable("alert.flightassistant.gpws.fault")))
                 .add(PullUpAlert(computers))
                 .add(SinkRateAlert(computers))
                 .add(TerrainAheadAlert(computers))
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.navigation"))
-                .add(ComputerFaultAlert(computers, AirDataComputer.ID, Text.translatable("alert.flightassistant.navigation.air_data_fault"), data = AlertData.MASTER_WARNING))
-                .add(ComputerFaultAlert(computers, ChunkStatusComputer.ID, Text.translatable("alert.flightassistant.navigation.chunk_status_fault")))
-                .add(ComputerFaultAlert(computers, VoidProximityComputer.ID, Text.translatable("alert.flightassistant.navigation.void_proximity_fault")))
+            AlertCategory(Component.translatable("alert.flightassistant.navigation"))
+                .add(ComputerFaultAlert(computers, AirDataComputer.ID, Component.translatable("alert.flightassistant.navigation.air_data_fault"), data = AlertData.MASTER_WARNING))
+                .add(ComputerFaultAlert(computers, ChunkStatusComputer.ID, Component.translatable("alert.flightassistant.navigation.chunk_status_fault")))
+                .add(ComputerFaultAlert(computers, VoidProximityComputer.ID, Component.translatable("alert.flightassistant.navigation.void_proximity_fault")))
                 .add(ReachedVoidDamageAltitudeAlert(computers))
                 .add(ApproachingVoidDamageAltitudeAlert(computers))
                 .add(NoChunksLoadedAlert(computers))
                 .add(SlowChunkLoadingAlert(computers))
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.stall"))
-                .add(ComputerFaultAlert(computers, StallComputer.ID, Text.translatable("alert.flightassistant.stall.detection_fault")))
+            AlertCategory(Component.translatable("alert.flightassistant.stall"))
+                .add(ComputerFaultAlert(computers, StallComputer.ID, Component.translatable("alert.flightassistant.stall.detection_fault")))
                 .add(FullStallAlert(computers))
                 .add(ApproachingStallAlert(computers))
         )
         register(
-            AlertCategory(Text.translatable("alert.flightassistant.thrust"))
-                .add(ComputerFaultAlert(computers, ThrustComputer.ID, Text.translatable("alert.flightassistant.thrust.fault")))
+            AlertCategory(Component.translatable("alert.flightassistant.thrust"))
+                .add(ComputerFaultAlert(computers, ThrustComputer.ID, Component.translatable("alert.flightassistant.thrust.fault")))
                 .add(ThrustLockedAlert(computers))
                 .add(NoThrustSourceAlert(computers))
                 .add(ReverseThrustNotSupportedAlert(computers))
@@ -265,6 +267,6 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("alert")
+        val ID: ResourceLocation = FlightAssistant.id("alert")
     }
 }

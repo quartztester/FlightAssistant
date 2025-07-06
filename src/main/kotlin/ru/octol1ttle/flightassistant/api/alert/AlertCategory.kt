@@ -1,13 +1,13 @@
 package ru.octol1ttle.flightassistant.api.alert
 
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 
 /**
  * A class that represents a category of alerts.
  */
-class AlertCategory(val categoryText: Text) {
+class AlertCategory(val categoryText: Component) {
     private val registeredAlerts: MutableList<Alert> = ArrayList()
     val activeAlerts: MutableList<Alert> = ArrayList()
     val ignoredAlerts: MutableList<Alert> = ArrayList()

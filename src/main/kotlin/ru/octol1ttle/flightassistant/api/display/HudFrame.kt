@@ -1,8 +1,8 @@
 package ru.octol1ttle.flightassistant.api.display
 
+import com.mojang.blaze3d.platform.Window
 import kotlin.math.roundToInt
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.util.Window
+import net.minecraft.client.gui.GuiGraphics
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.config.FAConfig
 
@@ -30,12 +30,12 @@ object HudFrame {
         private set
 
     fun updateDimensions() {
-        width = window.scaledWidth * FAConfig.display.frameWidth
-        height = window.scaledHeight * FAConfig.display.frameHeight
+        width = window.guiScaledWidth * FAConfig.display.frameWidth
+        height = window.guiScaledHeight * FAConfig.display.frameHeight
 
-        topF = ((window.scaledHeight - height) * 0.5f)
+        topF = ((window.guiScaledHeight - height) * 0.5f)
         bottomF = topF + height
-        leftF = ((window.scaledWidth - width) * 0.5f)
+        leftF = ((window.guiScaledWidth - width) * 0.5f)
         rightF = leftF + width
 
         top = topF.roundToInt()
@@ -44,7 +44,7 @@ object HudFrame {
         right = rightF.toInt()
     }
 
-    fun scissor(context: DrawContext) {
-        context.enableScissor(left, top, right, bottom + 1)
+    fun scissor(guiGraphics: GuiGraphics) {
+        guiGraphics.enableScissor(left, top, right, bottom + 1)
     }
 }

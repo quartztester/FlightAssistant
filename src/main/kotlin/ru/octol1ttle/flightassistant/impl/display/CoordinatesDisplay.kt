@@ -1,8 +1,8 @@
 package ru.octol1ttle.flightassistant.impl.display
 
 import kotlin.math.roundToInt
-import net.minecraft.client.gui.DrawContext
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
@@ -18,7 +18,7 @@ class CoordinatesDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showCoordinates
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         with(drawContext) {
             val x: Int = HudFrame.left + 10
             val y: Int = HudFrame.bottom - 19
@@ -52,7 +52,7 @@ class CoordinatesDisplay(computers: ComputerView) : Display(computers) {
         return ""
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
             val x: Int = HudFrame.left + 10
             val y: Int = HudFrame.bottom - 19
@@ -63,6 +63,6 @@ class CoordinatesDisplay(computers: ComputerView) : Display(computers) {
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("coordinates")
+        val ID: ResourceLocation = FlightAssistant.id("coordinates")
     }
 }

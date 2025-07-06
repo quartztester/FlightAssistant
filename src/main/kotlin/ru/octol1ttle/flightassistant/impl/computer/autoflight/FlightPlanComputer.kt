@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -29,7 +29,7 @@ class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("flight_plan")
+        val ID: ResourceLocation = FlightAssistant.id("flight_plan")
     }
 
     // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)

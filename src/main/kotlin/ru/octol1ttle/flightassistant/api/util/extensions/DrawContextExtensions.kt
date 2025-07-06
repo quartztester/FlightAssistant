@@ -4,7 +4,7 @@ import java.awt.Color
 import net.minecraft.client.font.TextRenderer
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.config.FAConfig
 

@@ -1,10 +1,10 @@
 package ru.octol1ttle.flightassistant.impl.display
 
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.text.MutableText
 import net.minecraft.text.Style
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertCategory
@@ -23,7 +23,7 @@ class AlertDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showAlerts
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         with(drawContext) {
             val x: Int = HudFrame.left + 10
             var y: Int = HudFrame.top + 5
@@ -69,16 +69,16 @@ class AlertDisplay(computers: ComputerView) : Display(computers) {
         }
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
             val x: Int = HudFrame.left + 10
             val y: Int = HudFrame.top + 5
 
-            drawText(Text.translatable("short.flightassistant.alert"), x, y, warningColor)
+            drawText(Component.translatable("short.flightassistant.alert"), x, y, warningColor)
         }
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("alert")
+        val ID: ResourceLocation = FlightAssistant.id("alert")
     }
 }

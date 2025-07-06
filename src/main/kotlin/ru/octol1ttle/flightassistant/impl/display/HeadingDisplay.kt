@@ -2,8 +2,9 @@ package ru.octol1ttle.flightassistant.impl.display
 
 import kotlin.math.roundToInt
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.text.Text
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.math.MathHelper
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -21,7 +22,7 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
         return FAConfig.display.showHeadingReading || FAConfig.display.showHeadingScale
     }
 
-    override fun render(drawContext: DrawContext) {
+    override fun render(guiGraphics: GuiGraphics) {
         with(drawContext) {
             if (FAConfig.display.showHeadingReading) {
                 renderHeadingReading()
@@ -105,13 +106,13 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
         return true
     }
 
-    override fun renderFaulted(drawContext: DrawContext) {
+    override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(drawContext) {
-            drawMiddleAlignedText(Text.translatable("short.flightassistant.heading"), centerX, HudFrame.bottom + 1, warningColor)
+            drawMiddleAlignedText(Component.translatable("short.flightassistant.heading"), centerX, HudFrame.bottom + 1, warningColor)
         }
     }
 
     companion object {
-        val ID: Identifier = FlightAssistant.id("heading")
+        val ID: ResourceLocation = FlightAssistant.id("heading")
     }
 }
