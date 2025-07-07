@@ -61,7 +61,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 val neutralPitch: Float = computers.thrust.getAltitudeHoldPitch()
 
                 var finalPitch: Float
-                var text: Text
+                var text: Component
                 if (diff >= 0) {
                     finalPitch = computers.thrust.getOptimumClimbPitch()
                     text = Component.translatable("mode.flightassistant.vertical.selected_altitude.climb", "%.0f".format(mode.altitude))

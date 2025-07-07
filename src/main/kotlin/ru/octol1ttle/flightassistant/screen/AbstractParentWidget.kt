@@ -1,6 +1,7 @@
 package ru.octol1ttle.flightassistant.screen
 
 import kotlin.jvm.optionals.getOrNull
+import kotlinx.coroutines.NonCancellable.children
 import net.minecraft.client.gui.*
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder
 
@@ -8,7 +9,7 @@ abstract class AbstractParentWidget : AbstractParentElement(), Drawable, Selecta
     private var hoveredElement: Element? = null
     var forceFocused: Boolean = false
 
-    override fun render(context: DrawContext?, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics?, mouseX: Int, mouseY: Int, delta: Float) {
         for (child: Element in children()) {
             if (child is Drawable) {
                 child.render(context, mouseX, mouseY, delta)

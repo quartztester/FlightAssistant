@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.api.util.extensions
 
-import net.minecraft.client.sound.SoundInstance
-import net.minecraft.client.sound.SoundManager
+import net.minecraft.client.resources.sounds.SoundInstance
+import net.minecraft.client.sounds.SoundManager
 import ru.octol1ttle.flightassistant.api.util.SoundExtensions
 
 fun SoundManager.applyVolume(soundInstance: SoundInstance) {
@@ -16,6 +16,6 @@ fun SoundManager.pause(soundInstance: SoundInstance) {
     (this as SoundExtensions).`flightassistant$pause`(soundInstance)
 }
 
-fun SoundManager.resume(soundInstance: SoundInstance) {
-    (this as SoundExtensions).`flightassistant$resume`(soundInstance)
+fun SoundManager.unpause(soundInstance: SoundInstance) {
+    (this as SoundExtensions).`flightassistant$unpause`(soundInstance)
 }

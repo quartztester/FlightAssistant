@@ -22,33 +22,33 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
             return
         }
         if (computers.pitch.activeInput?.identifier != AutopilotLogicComputer.ID && computers.heading.activeInput?.identifier != AutopilotLogicComputer.ID) {
-            renderFaulted()
+            renderFaulted(guiGraphics)
             return
         }
 
-        with(drawContext) {
+        with(guiGraphics) {
             val halfWidth: Int = (HudFrame.width / 10.0f).toInt()
 
-            matrices.push()
-            matrices.translate(0, 0, -50)
+            pose().pushPose()
+            pose().translate(0, 0, -50)
 
             if (computers.pitch.activeInput?.identifier == AutopilotLogicComputer.ID) {
                 val pitchY: Int = ScreenSpace.getY(computers.pitch.activeInput?.target ?: return, false) ?: return
-                drawHorizontalLine(this.centerX - halfWidth, this.centerX + halfWidth, pitchY, advisoryColor)
+                hLine(this.centerX - halfWidth, this.centerX + halfWidth, pitchY, advisoryColor)
             }
 
             if (computers.heading.activeInput?.identifier == AutopilotLogicComputer.ID) {
                 val headingX: Int = ScreenSpace.getX(computers.heading.activeInput?.target ?: return, false) ?: return
-                drawVerticalLine(headingX, this.centerY - halfWidth, this.centerY + halfWidth, advisoryColor)
+                vLine(headingX, this.centerY - halfWidth, this.centerY + halfWidth, advisoryColor)
             }
 
-            matrices.pop()
+            pose().popPose()
         }
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {
-        with(drawContext) {
-            drawMiddleAlignedText(Component.translatable("short.flightassistant.flight_directors"), centerX, HudFrame.top + 30, warningColor)
+        with(guiGraphics) {
+            drawMiddleAlignedString(Component.translatable("short.flightassistant.flight_directors"), centerX, HudFrame.top + 30, warningColor)
         }
     }
 

@@ -7,12 +7,12 @@ import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 class EntityTurnEvents private constructor() {
     companion object {
         @JvmField
-        val X_ROT: Event<ChangeLookDirection> = EventFactory.createLoop()
+        val X_ROT: Event<EntityTurn> = EventFactory.createLoop()
         @JvmField
-        val Y_ROT: Event<ChangeLookDirection> = EventFactory.createLoop()
+        val Y_ROT: Event<EntityTurn> = EventFactory.createLoop()
     }
 
-    fun interface ChangeLookDirection {
-        fun onChangeLookDirection(delta: Float, output: MutableList<ControlInput>)
+    fun interface EntityTurn {
+        fun onEntityTurn(delta: Float, output: MutableList<ControlInput>)
     }
 }

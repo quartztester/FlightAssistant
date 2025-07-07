@@ -91,19 +91,19 @@ class SafetyOptions {
 
     enum class AlertMode : NameableEnum {
         WARNING_AND_CAUTION {
-            override fun getDisplayName(): Text =
+            override fun getDisplayName(): Component =
                 Component.translatable("config.flightassistant.option.safety.alert_mode.warning_and_caution")
         },
         WARNING {
-            override fun getDisplayName(): Text =
+            override fun getDisplayName(): Component =
                 Component.translatable("config.flightassistant.option.safety.alert_mode.warning")
         },
         CAUTION {
-            override fun getDisplayName(): Text =
+            override fun getDisplayName(): Component =
                 Component.translatable("config.flightassistant.option.safety.alert_mode.caution")
         },
         DISABLED {
-            override fun getDisplayName(): Text =
+            override fun getDisplayName(): Component =
                 Component.translatable("config.flightassistant.option.safety.alert_mode.disabled")
         };
 
@@ -118,15 +118,15 @@ class SafetyOptions {
 
     enum class AlertMethod : NameableEnum {
         SCREEN_AND_AUDIO {
-            override fun getDisplayName(): Text =
+            override fun getDisplayName(): Component =
                 Component.translatable("config.flightassistant.option.safety.alert_method.screen_and_audio")
         },
         AUDIO_ONLY {
-            override fun getDisplayName(): Text =
+            override fun getDisplayName(): Component =
                 Component.translatable("config.flightassistant.option.safety.alert_method.audio_only")
         },
         SCREEN_ONLY {
-            override fun getDisplayName(): Text =
+            override fun getDisplayName(): Component =
                 Component.translatable("config.flightassistant.option.safety.alert_method.screen_only")
         };
 

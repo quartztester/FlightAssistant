@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.api.util
 
-import net.minecraft.util.math.Vec3d
+import net.minecraft.world.phys.Vec3
 import org.jetbrains.annotations.Contract
 import org.joml.Matrix4f
 import org.joml.Vector3f
@@ -26,8 +26,8 @@ object ScreenSpace {
      * Example:
      * <pre>
      * `// Hud render event
-     * Vec3d targetPos = new Vec3d(100, 64, 100); // world space
-     * Vec3d screenSpace = ScreenSpaceRendering.fromWorldSpace(targetPos);
+     * Vec3 targetPos = new Vec3(100, 64, 100); // world space
+     * Vec3 screenSpace = ScreenSpaceRendering.fromWorldSpace(targetPos);
      * if (ScreenSpaceRendering.isVisible(screenSpace)) {
      * // do something with screenSpace.x and .y
      * }
@@ -39,7 +39,7 @@ object ScreenSpace {
      * @throws NullPointerException If `pos` is null
      */
     @Contract(value = "_ -> new", pure = true)
-    private fun fromWorldSpace(deltaPos: Vec3d, useNoRollMatrix: Boolean = true): Vector3f {
+    private fun fromWorldSpace(deltaPos: Vec3, useNoRollMatrix: Boolean = true): Vector3f {
         val displayHeight: Int = mc.window.height
         val target = Vector3f()
 
@@ -58,8 +58,8 @@ object ScreenSpace {
             )
 
         return Vector3f(
-            target.x / mc.window.scaleFactor.toFloat(),
-            (displayHeight - target.y) / mc.window.scaleFactor.toFloat(),
+            target.x / mc.window.guiScale.toFloat(),
+            (displayHeight - target.y) / mc.window.guiScale.toFloat(),
             target.z
         )
     }
@@ -78,7 +78,7 @@ object ScreenSpace {
     }
 
     fun getX(heading: Float, useNoRollMatrix: Boolean = true): Int? {
-        val vec: Vector3f = fromWorldSpace(Vec3d.fromPolar(0.0f, heading - 180.0f), useNoRollMatrix)
+        val vec: Vector3f = fromWorldSpace(Vec3.directionFromRotation(0.0f, heading - 180.0f), useNoRollMatrix)
         if (!isVisible(vec)) {
             return null
         }
@@ -87,7 +87,7 @@ object ScreenSpace {
     }
 
     fun getY(pitch: Float, useNoRollMatrix: Boolean = true): Int? {
-        val vec: Vector3f = fromWorldSpace(Vec3d.fromPolar(-pitch, mc.entityRenderDispatcher.camera.yaw), useNoRollMatrix)
+        val vec: Vector3f = fromWorldSpace(Vec3.directionFromRotation(-pitch, mc.entityRenderDispatcher.camera.yRot), useNoRollMatrix)
         if (!isVisible(vec)) {
             return null
         }
@@ -95,7 +95,7 @@ object ScreenSpace {
         return vec.y.toInt()
     }
 
-    fun getVector3f(deltaPos: Vec3d, useNoRollMatrix: Boolean = true): Vector3f? {
+    fun getVector3f(deltaPos: Vec3, useNoRollMatrix: Boolean = true): Vector3f? {
         val vec: Vector3f = fromWorldSpace(deltaPos, useNoRollMatrix)
         if (!isVisible(vec)) {
             return null

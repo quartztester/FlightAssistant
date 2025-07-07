@@ -1,8 +1,8 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight.base
 
 import kotlin.math.abs
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.player.Player
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -133,7 +133,7 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
         return null
     }
 
-    private fun smoothSetPitch(player: PlayerEntity, current: Float, target: Float, deltaTimeMultiplier: Float) {
+    private fun smoothSetPitch(player: Player, current: Float, target: Float, deltaTimeMultiplier: Float) {
         val diff: Float = target - current
 
         val closeDistanceMultiplier: Float =
@@ -141,11 +141,11 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
             else (1.0f / abs(diff)).coerceAtLeast(1.0f)
 
         val delta: Float = diff * (FATickCounter.timePassed * deltaTimeMultiplier * closeDistanceMultiplier).coerceIn(0.0f..1.0f)
-        player.pitch -= delta
+        player.xRot -= delta
 //? if >=1.21.5 {
         /*player.lastPitch -= delta
 *///?} else
-        player.prevPitch -= delta
+        player.xRotO -= delta
     }
 
     override fun reset() {

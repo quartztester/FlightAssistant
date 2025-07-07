@@ -15,7 +15,7 @@ class DaBRRollComputer(computers: ComputerView) : Computer(computers), RollSourc
     }
 
     override fun getRoll(): Float {
-        return (computers.data.player as RollEntity).`doABarrelRoll$getRoll`(FATickCounter.tickProgress)
+        return (computers.data.player as RollEntity).`doABarrelRoll$getRoll`(FATickCounter.partialTick)
     }
 
     override fun addRoll(diff: Float) {

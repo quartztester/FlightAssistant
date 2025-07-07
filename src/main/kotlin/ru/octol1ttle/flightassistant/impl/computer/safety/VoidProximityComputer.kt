@@ -25,10 +25,10 @@ class VoidProximityComputer(computers: ComputerView) : Computer(computers), Pitc
     }
 
     override fun tick() {
-        status = if (computers.data.groundLevel != null) {
+        status = if (computers.data.groundY != null) {
             Status.ABOVE_GROUND
         } else {
-            val heightAboveDamageAltitude: Double = computers.data.altitude - computers.data.voidLevel
+            val heightAboveDamageAltitude: Double = computers.data.altitude - computers.data.voidY
             if (heightAboveDamageAltitude > 16.0) {
                 Status.CLEAR_OF_DAMAGE_ALTITUDE
             } else if (status != Status.REACHED_DAMAGE_ALTITUDE && heightAboveDamageAltitude > 1.0) {
@@ -42,7 +42,7 @@ class VoidProximityComputer(computers: ComputerView) : Computer(computers), Pitc
     override fun getMinimumPitch(): ControlInput? {
         if (FAConfig.safety.voidLimitPitch && status != Status.ABOVE_GROUND) {
             return ControlInput(
-                (-90.0f + (computers.data.world.bottomY - (computers.data.altitude + computers.data.velocity.y * 20)) / 64.0f * 105.0f).toFloat()
+                (-90.0f + (computers.data.level.bottomY - (computers.data.altitude + computers.data.velocity.y * 20)) / 64.0f * 105.0f).toFloat()
                     .coerceIn(-35.0f..computers.thrust.getOptimumClimbPitch()),
                 ControlInput.Priority.HIGH,
                 Component.translatable("mode.flightassistant.vertical.void_protection")

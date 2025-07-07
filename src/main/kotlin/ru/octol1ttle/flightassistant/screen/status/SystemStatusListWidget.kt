@@ -1,8 +1,8 @@
 package ru.octol1ttle.flightassistant.screen.status
 
 import com.google.common.collect.ImmutableList
-import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.Selectable
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.ElementListWidget
@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
-import ru.octol1ttle.flightassistant.api.util.extensions.textRenderer
+import ru.octol1ttle.flightassistant.api.util.extensions.font
 
 class SystemStatusListWidget(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") bottom: Int, left: Int, controller: ModuleController<*>, baseKey: String)
     : ElementListWidget<SystemStatusListWidget.SystemStatusWidgetEntry>(mc, width, height, top,
@@ -50,16 +50,16 @@ override fun getScrollbarX(): Int {
 
     class SystemStatusWidgetEntry(val x: Int, val y: Int, private val listWidth: Int, val identifier: ResourceLocation, displayNameText: Text, private val controller: ModuleController<*>)
         : Entry<SystemStatusWidgetEntry>() {
-        private val displayName: TextWidget = TextWidget(x, y, this.listWidth / 2, 9, displayNameText, textRenderer).alignLeft()
-        private val faultText: TextWidget = TextWidget(x, y, this.listWidth / 6, 9, FAULT_TEXT, textRenderer)
-        private val offText: TextWidget = TextWidget(x, y, this.listWidth / 6, 9, OFF_TEXT, textRenderer)
+        private val displayName: TextWidget = TextWidget(x, y, this.listWidth / 2, 9, displayNameText, font).alignLeft()
+        private val faultText: TextWidget = TextWidget(x, y, this.listWidth / 6, 9, FAULT_TEXT, font)
+        private val offText: TextWidget = TextWidget(x, y, this.listWidth / 6, 9, OFF_TEXT, font)
         private val toggleButton: ButtonWidget = ButtonWidget.builder(OFF_TEXT) {
             it.message =
                 if (controller.toggleEnabled(identifier)) OFF_TEXT
                 else ON_RESET_TEXT
         }.position(x, y).width(60).build()
 
-        override fun render(context: DrawContext, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+        override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
             val renderY: Int = y + Y_OFFSET
 
             displayName.x = this.x + 10
@@ -73,7 +73,7 @@ override fun getScrollbarX(): Int {
                 else ON_RESET_TEXT
             toggleButton.render(context, mouseX, mouseY, tickDelta)
 
-            offText.x = toggleButton.x - this.listWidth / 12 - textRenderer.getWidth(OFF_TEXT)
+            offText.x = toggleButton.x - this.listWidth / 12 - font.getWidth(OFF_TEXT)
             offText.y = renderY
             offText.setTextColor(
                 if (controller.isEnabled(identifier)) 0x0F0F0F
@@ -81,7 +81,7 @@ override fun getScrollbarX(): Int {
             )
             offText.render(context, mouseX, mouseY, tickDelta)
 
-            faultText.x = offText.x - textRenderer.getWidth(FAULT_TEXT)
+            faultText.x = offText.x - font.getWidth(FAULT_TEXT)
             faultText.y = renderY
             faultText.setTextColor(
                 if (controller.isFaulted(identifier)) cautionColor

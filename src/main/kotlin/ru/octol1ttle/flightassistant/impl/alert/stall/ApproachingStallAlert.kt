@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.alert.stall
 
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
@@ -25,8 +25,8 @@ class ApproachingStallAlert(computers: ComputerView) : Alert(computers), Centere
         return FAConfig.safety.stallAlertMethod
     }
 
-    override fun render(drawContext: DrawContext, y: Int): Boolean {
-        drawContext.drawHighlightedCenteredText(Component.translatable("alert.flightassistant.stall"), drawContext.centerX, y, cautionColor, totalTicks % 40 >= 20)
+    override fun render(guiGraphics: GuiGraphics, y: Int): Boolean {
+        guiGraphics.drawHighlightedCenteredText(Component.translatable("alert.flightassistant.stall"), guiGraphics.centerX, y, cautionColor, totalTicks % 40 >= 20)
         return true
     }
 }

@@ -43,24 +43,24 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
                 autoThrustAlert = false
             }
         })
-        EntityTurnEvents.X_ROT.register(EntityTurnEvents.ChangeLookDirection { pitchDelta, output ->
+        EntityTurnEvents.X_ROT.register(EntityTurnEvents.EntityTurn { pitchDelta, output ->
             if (computers.data.flying && autopilot) {
                 pitchResistance += abs(pitchDelta)
                 if (pitchResistance < 20.0f) {
                     output.add(ControlInput(0.0f, ControlInput.Priority.NORMAL))
-                    return@ChangeLookDirection
+                    return@EntityTurn
                 }
                 setAutoPilot(false, alert = true)
             }
 
             pitchResistance = 0.0f
         })
-        EntityTurnEvents.Y_ROT.register(EntityTurnEvents.ChangeLookDirection { headingDelta, output ->
+        EntityTurnEvents.Y_ROT.register(EntityTurnEvents.EntityTurn { headingDelta, output ->
             if (computers.data.flying && autopilot) {
                 headingResistance += abs(headingDelta)
                 if (headingResistance < 40.0f) {
                     output.add(ControlInput(0.0f, ControlInput.Priority.NORMAL))
-                    return@ChangeLookDirection
+                    return@EntityTurn
                 }
                 setAutoPilot(false, alert = true)
             }

@@ -1,20 +1,17 @@
 package ru.octol1ttle.flightassistant.screen.autoflight
 
-import net.minecraft.client.gui.DrawContext
+import kotlinx.coroutines.NonCancellable.children
 import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.screen.ScreenTexts
 import net.minecraft.network.chat.Component
+import net.minecraft.screen.ScreenTexts
 import net.minecraft.util.Formatting
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
-import ru.octol1ttle.flightassistant.screen.autoflight.widgets.ColoredButtonWidget
-import ru.octol1ttle.flightassistant.screen.autoflight.widgets.DelayedApplyChanges
-import ru.octol1ttle.flightassistant.screen.autoflight.widgets.LateralModeWidget
-import ru.octol1ttle.flightassistant.screen.autoflight.widgets.ThrustModeWidget
-import ru.octol1ttle.flightassistant.screen.autoflight.widgets.VerticalModeWidget
+import ru.octol1ttle.flightassistant.screen.autoflight.widgets.*
 
 class AutoFlightScreen : FABaseScreen(Component.translatable("menu.flightassistant.autoflight")) {
     private lateinit var flightDirectors: ColoredButtonWidget
@@ -67,7 +64,7 @@ class AutoFlightScreen : FABaseScreen(Component.translatable("menu.flightassista
         }
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         flightDirectors.color =
             if (ComputerHost.automations.flightDirectors) Formatting.GREEN.colorValue!!
             else Formatting.RED.colorValue!!

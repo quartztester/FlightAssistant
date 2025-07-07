@@ -1,17 +1,16 @@
 package ru.octol1ttle.flightassistant.impl.display
 
 import kotlin.math.roundToInt
-import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.math.MathHelper
+import net.minecraft.util.Mth
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.extensions.centerX
-import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedText
+import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedString
 import ru.octol1ttle.flightassistant.api.util.extensions.primaryColor
 import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
 import ru.octol1ttle.flightassistant.api.util.findShortestPath
@@ -23,7 +22,7 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
-        with(drawContext) {
+        with(guiGraphics) {
             if (FAConfig.display.showHeadingReading) {
                 renderHeadingReading()
             }
@@ -34,26 +33,26 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
         }
     }
 
-    private fun DrawContext.renderHeadingReading() {
+    private fun GuiGraphics.renderHeadingReading() {
         val x: Int = centerX
         val y: Int = HudFrame.bottom + 1
 
         val headingInt: Int = computers.data.heading.roundToInt()
 
-        drawBorder(x - 11, y, 23, 11, primaryColor)
-        drawMiddleAlignedText("%03d".format(headingInt), x, y + 2, primaryColor)
+        renderOutline(x - 11, y, 23, 11, primaryColor)
+        drawMiddleAlignedString("%03d".format(headingInt), x, y + 2, primaryColor)
     }
 
-    private fun DrawContext.renderHeadingScale(x: Int, y: Int) {
+    private fun GuiGraphics.renderHeadingScale(x: Int, y: Int) {
         val left: Int = (x - HudFrame.height * 0.5f).toInt()
         val right: Int = (x + HudFrame.height * 0.5f).toInt()
 
-        drawHorizontalLine(left, right, y, primaryColor)
-        drawVerticalLine(left, y, y + 20, primaryColor)
-        drawVerticalLine(right, y, y + 20, primaryColor)
+        hLine(left, right, y, primaryColor)
+        vLine(left, y, y + 20, primaryColor)
+        vLine(right, y, y + 20, primaryColor)
 
-        enableScissor(left, 0, x - 12, scaledWindowHeight)
-        val headingRoundedDown: Int = MathHelper.roundDownToMultiple(computers.data.heading.toDouble(), 10)
+        enableScissor(left, 0, x - 12, guiHeight())
+        val headingRoundedDown: Int = Mth.quantize(computers.data.heading.toDouble(), 10)
         for (i: Int in headingRoundedDown downTo -360 step 10) {
             if (!drawHeadingLine(x, y, left, right, i, computers.data.heading, true)) {
                 break
@@ -61,8 +60,8 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
         }
         disableScissor()
 
-        enableScissor(x + 13, 0, right, scaledWindowHeight)
-        val headingRoundedUp: Int = MathHelper.roundUpToMultiple(computers.data.heading.roundToInt(), 10)
+        enableScissor(x + 13, 0, right, guiHeight())
+        val headingRoundedUp: Int = Mth.roundToward(computers.data.heading.roundToInt(), 10)
         for (i: Int in headingRoundedUp..720 step 10) {
             if (!drawHeadingLine(x, y, left, right, i, computers.data.heading, false)) {
                 break
@@ -71,22 +70,22 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
         disableScissor()
     }
 
-    private fun DrawContext.drawHeadingLine(x: Int, y: Int, left: Int, right: Int, heading: Int, currentHeading: Float, isLeft: Boolean): Boolean {
+    private fun GuiGraphics.drawHeadingLine(x: Int, y: Int, left: Int, right: Int, heading: Int, currentHeading: Float, isLeft: Boolean): Boolean {
         val textX: Int = (x + 2 * findShortestPath(currentHeading, heading.toFloat(), 360.0f)).toInt()
         if (textX < left - 100 || textX > right + 100) {
             return false
         }
 
         val wrappedHeading: Int = if (heading > 0) heading % 360 else 360 + heading % 360
-        drawVerticalLine(textX, y, y + 3, primaryColor)
+        vLine(textX, y, y + 3, primaryColor)
         if (wrappedHeading % 30 == 0) {
-            drawMiddleAlignedText((if (wrappedHeading == 0) 360 else wrappedHeading).toString(), textX, y + 4, primaryColor)
+            drawMiddleAlignedString((if (wrappedHeading == 0) 360 else wrappedHeading).toString(), textX, y + 4, primaryColor)
         }
 
         if (wrappedHeading % 90 == 0) {
             disableScissor()
-            enableScissor(left, 0, right, scaledWindowHeight)
-            drawMiddleAlignedText(
+            enableScissor(left, 0, right, guiHeight())
+            drawMiddleAlignedString(
                 when (wrappedHeading) {
                     0, 360 -> "-Z"
                     90 -> "+X"
@@ -97,9 +96,9 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
             )
             disableScissor()
             if (isLeft) {
-                enableScissor(left, 0, x - 12, scaledWindowHeight)
+                enableScissor(left, 0, x - 12, guiHeight())
             } else {
-                enableScissor(x + 13, 0, right, scaledWindowHeight)
+                enableScissor(x + 13, 0, right, guiHeight())
             }
         }
 
@@ -107,8 +106,8 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {
-        with(drawContext) {
-            drawMiddleAlignedText(Component.translatable("short.flightassistant.heading"), centerX, HudFrame.bottom + 1, warningColor)
+        with(guiGraphics) {
+            drawMiddleAlignedString(Component.translatable("short.flightassistant.heading"), centerX, HudFrame.bottom + 1, warningColor)
         }
     }
 

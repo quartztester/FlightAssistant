@@ -2,10 +2,10 @@ package ru.octol1ttle.flightassistant.screen.autoflight.widgets
 
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.narration.NarrationSupplier
 import net.minecraft.client.gui.tooltip.Tooltip
 import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.network.chat.Component
 import net.minecraft.util.math.MathHelper
 
 class ColoredButtonWidget(x: Int, y: Int, width: Int, height: Int, message: Text?, onPress: PressAction?, narrationSupplier: NarrationSupplier?)
@@ -14,9 +14,9 @@ class ColoredButtonWidget(x: Int, y: Int, width: Int, height: Int, message: Text
 
 //? if >=1.21 {
 private val textures: net.minecraft.client.gui.screen.ButtonTextures = net.minecraft.client.gui.screen.ButtonTextures(net.minecraft.util.ResourceLocation.ofVanilla("widget/button"), net.minecraft.util.ResourceLocation.ofVanilla("widget/button_disabled"), net.minecraft.util.ResourceLocation.ofVanilla("widget/button_highlighted"))
-    override fun renderWidget(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
 //?} else
-        /*override fun renderButton(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {*/
+        /*override fun renderButton(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {*/
         val minecraftClient: MinecraftClient = MinecraftClient.getInstance()
 //? if >=1.21.4 {
         /*context.drawGuiTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, textures[active, this.isSelected], this.x, this.y, this.getWidth(), this.getHeight(), net.minecraft.util.math.ColorHelper.getWhite(this.alpha))

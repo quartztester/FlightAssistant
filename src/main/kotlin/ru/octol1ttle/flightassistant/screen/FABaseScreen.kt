@@ -1,9 +1,8 @@
 package ru.octol1ttle.flightassistant.screen
 
 import kotlin.properties.Delegates
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screen.Screen
-import net.minecraft.network.chat.Component
 
 abstract class FABaseScreen(title: Text?) : Screen(title) {
     protected var centerX by Delegates.notNull<Int>()
@@ -14,7 +13,7 @@ abstract class FABaseScreen(title: Text?) : Screen(title) {
         this.centerY = this.height / 2
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         this.renderBackground(context
             /*? if >=1.21 {*/, mouseX, mouseY, delta //?}
         )

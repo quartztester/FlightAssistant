@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.HitResult
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.Vec3
 import net.minecraft.world.Heightmap
 import net.minecraft.world.RaycastContext
 import ru.octol1ttle.flightassistant.FlightAssistant
@@ -44,7 +44,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
             return
         }
 
-        val anyBlocksAbove: Boolean = data.world.getTopY(Heightmap.Type.MOTION_BLOCKING, data.player.blockX, data.player.blockZ) > data.player.y
+        val anyBlocksAbove: Boolean = data.level.getTopY(Heightmap.Type.MOTION_BLOCKING, data.player.blockX, data.player.blockZ) > data.player.y
         val clearThreshold: Float = if (anyBlocksAbove) 7.5f else 15.0f
         val cautionThreshold: Float = if (anyBlocksAbove) 5.0f else 10.0f
         val warningThreshold: Float = if (anyBlocksAbove) 2.5f else 5.0f
@@ -88,17 +88,17 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
             return Float.MAX_VALUE
         }
 
-        val groundLevel: Double? = data.groundLevel
+        val groundLevel: Double? = data.groundY
         val impactLevel: Double =
-            if (groundLevel == null || groundLevel == Double.MAX_VALUE) data.voidLevel.toDouble()
+            if (groundLevel == null || groundLevel == Double.MAX_VALUE) data.voidY.toDouble()
             else groundLevel
         return (max(0.0, data.altitude - impactLevel) / (data.velocity.y * -20.0)).toFloat()
     }
 
     // IDEA: max/min terrain altitude on status display (that's gonna be so fucking cool /srs)
     private fun computeObstacleImpactTime(data: AirDataComputer, lookAheadTime: Float): Float {
-        val end: Vec3d = data.position.add(data.velocity.multiply(lookAheadTime * 20.0, 0.0, lookAheadTime * 20.0))
-        val result: BlockHitResult = data.world.raycast(
+        val end: Vec3 = data.position.add(data.velocity.multiply(lookAheadTime * 20.0, 0.0, lookAheadTime * 20.0))
+        val result: BlockHitResult = data.level.raycast(
             RaycastContext(
                 data.position,
                 end,
@@ -110,8 +110,8 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
         if (result.type != HitResult.Type.BLOCK) {
             return Float.MAX_VALUE
         } else {
-            val otherEnd: Vec3d = data.position.add(data.velocity.multiply(lookAheadTime * 20.0))
-            val otherResult: BlockHitResult = data.world.raycast(
+            val otherEnd: Vec3 = data.position.add(data.velocity.multiply(lookAheadTime * 20.0))
+            val otherResult: BlockHitResult = data.level.raycast(
                 RaycastContext(
                     data.position,
                     otherEnd,
@@ -126,7 +126,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
             }
         }
 
-        val relative: Vec3d = result.pos.subtract(data.position)
+        val relative: Vec3 = result.pos.subtract(data.position)
         return (relative.horizontalLength() / (data.velocity.horizontalLength() * 20.0f)).toFloat()
     }
 

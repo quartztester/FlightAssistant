@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.api.util.extensions
 
-import net.minecraft.entity.LivingEntity
+import net.minecraft.world.entity.LivingEntity
 
 val LivingEntity.fallFlying: Boolean
     get() {

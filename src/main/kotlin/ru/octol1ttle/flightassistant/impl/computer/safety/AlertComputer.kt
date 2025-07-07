@@ -1,9 +1,9 @@
 package ru.octol1ttle.flightassistant.impl.computer.safety
 
-import net.minecraft.client.sound.SoundManager
+import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
-import net.minecraft.util.Hand
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.InteractionHand
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertCategory
@@ -16,7 +16,7 @@ import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.applyVolume
 import ru.octol1ttle.flightassistant.api.util.extensions.getHighestPriority
 import ru.octol1ttle.flightassistant.api.util.extensions.pause
-import ru.octol1ttle.flightassistant.api.util.extensions.resume
+import ru.octol1ttle.flightassistant.api.util.extensions.unpause
 import ru.octol1ttle.flightassistant.impl.alert.AlertSoundInstance
 import ru.octol1ttle.flightassistant.impl.alert.autoflight.AutoThrustOffAlert
 import ru.octol1ttle.flightassistant.impl.alert.autoflight.AutopilotOffAlert
@@ -84,8 +84,8 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
         register(
             AlertCategory(Component.translatable("alert.flightassistant.firework"))
                 .add(ComputerFaultAlert(computers, FireworkComputer.ID, Component.translatable("alert.flightassistant.firework.fault")))
-                .add(FireworkExplosiveAlert(computers, Hand.MAIN_HAND))
-                .add(FireworkExplosiveAlert(computers, Hand.OFF_HAND))
+                .add(FireworkExplosiveAlert(computers, InteractionHand.MAIN_HAND))
+                .add(FireworkExplosiveAlert(computers, InteractionHand.OFF_HAND))
                 .add(FireworkNoResponseAlert(computers))
                 .add(FireworkSlowResponseAlert(computers))
         )
@@ -201,7 +201,7 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
             }
 
             if (force || alertLists[entry.key]?.isEmpty() != false) {
-                entry.value.setRepeat(false, soundManager)
+                entry.value.setLooping(false, soundManager)
                 if (entry.value.fadeOut(FATickCounter.ticksPassed)) {
                     iterator.remove()
                 }
@@ -222,14 +222,14 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
             }
 
             val existing: AlertSoundInstance? = sounds[data]
-            if (existing == null || (!existing.isRepeatable && existing.age > 60)) {
+            if (existing == null || (!existing.isLooping && existing.age > 60)) {
                 soundManager.stop(existing)
 
                 val instance = AlertSoundInstance(computers.data.player, data)
                 sounds[data] = instance
                 if (!anyStartedThisTick) {
                     soundManager.play(instance)
-                } else if (instance.isRepeatable) {
+                } else if (instance.isLooping) {
                     instance.silence()
                     soundManager.play(instance)
                     soundManager.pause(instance)
@@ -245,13 +245,13 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
         for (entry in sounds.entries.sortedBy { it.key.priority }) {
             if (!interrupt) {
                 interrupt = true
-                if (entry.value.isRepeatable) {
-                    soundManager.resume(entry.value)
+                if (entry.value.isLooping) {
+                    soundManager.unpause(entry.value)
                 }
                 continue
             }
 
-            if (entry.value.isRepeatable) {
+            if (entry.value.isLooping) {
                 soundManager.pause(entry.value)
             } else {
                 entry.value.fadeOut(FATickCounter.ticksPassed)

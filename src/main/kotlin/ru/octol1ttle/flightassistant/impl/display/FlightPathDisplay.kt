@@ -17,35 +17,35 @@ class FlightPathDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
-        with(drawContext) {
+        with(guiGraphics) {
             val screenSpaceVec: Vector3f = ScreenSpace.getVector3f(computers.data.velocity, false) ?: return
             val trueX: Float = screenSpaceVec.x
             val trueY: Float = screenSpaceVec.y
 
-            matrices.push()
-            matrices.translate(0, 0, -100)
+            pose().pushPose()
+            pose().translate(0, 0, -100)
             fusedTranslateScale(trueX, trueY, FAConfig.display.flightPathVectorSize)
 
             val bodySideSize = 3
-            drawVerticalLine(-bodySideSize, -bodySideSize, bodySideSize, primaryColor)
-            drawVerticalLine(bodySideSize, -bodySideSize, bodySideSize, primaryColor)
-            drawHorizontalLine(-bodySideSize, bodySideSize, -bodySideSize, primaryColor)
-            drawHorizontalLine(-bodySideSize, bodySideSize, bodySideSize, primaryColor)
+            vLine(-bodySideSize, -bodySideSize, bodySideSize, primaryColor)
+            vLine(bodySideSize, -bodySideSize, bodySideSize, primaryColor)
+            hLine(-bodySideSize, bodySideSize, -bodySideSize, primaryColor)
+            hLine(-bodySideSize, bodySideSize, bodySideSize, primaryColor)
 
             val stabilizerSize = 5
-            drawVerticalLine(0, -bodySideSize - stabilizerSize, -bodySideSize, primaryColor)
+            vLine(0, -bodySideSize - stabilizerSize, -bodySideSize, primaryColor)
 
             val wingSize = 5
-            drawHorizontalLine(-bodySideSize - wingSize, -bodySideSize, 0, primaryColor)
-            drawHorizontalLine(bodySideSize, bodySideSize + wingSize, 0, primaryColor)
+            hLine(-bodySideSize - wingSize, -bodySideSize, 0, primaryColor)
+            hLine(bodySideSize, bodySideSize + wingSize, 0, primaryColor)
 
-            matrices.pop()
+            pose().popPose()
         }
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {
-        with(drawContext) {
-            drawMiddleAlignedText(Component.translatable("short.flightassistant.flight_path"), centerX, centerY + 16, warningColor)
+        with(guiGraphics) {
+            drawMiddleAlignedString(Component.translatable("short.flightassistant.flight_path"), centerX, centerY + 16, warningColor)
         }
     }
 

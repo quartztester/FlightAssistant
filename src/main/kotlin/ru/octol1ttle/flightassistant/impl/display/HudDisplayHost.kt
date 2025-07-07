@@ -1,9 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.display
 
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.set
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
@@ -17,7 +14,7 @@ import ru.octol1ttle.flightassistant.api.util.RenderMatrices
 import ru.octol1ttle.flightassistant.api.util.ScreenSpace
 import ru.octol1ttle.flightassistant.api.util.extensions.centerX
 import ru.octol1ttle.flightassistant.api.util.extensions.centerY
-import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedText
+import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedString
 import ru.octol1ttle.flightassistant.api.util.extensions.primaryColor
 import ru.octol1ttle.flightassistant.config.FAConfig
 
@@ -98,7 +95,7 @@ internal object HudDisplayHost: ModuleController<Display> {
         )
     }
 
-    fun render(drawContext: DrawContext) {
+    fun render(guiGraphics: GuiGraphics) {
         if (!FAConfig.hudEnabled) {
             return
         }
@@ -108,16 +105,16 @@ internal object HudDisplayHost: ModuleController<Display> {
 
         for ((id: ResourceLocation, display: Display) in displays.filter { entry -> entry.value.allowedByConfig() }) {
             if (FATickCounter.ticksSinceWorldLoad < FATickCounter.worldLoadWaitTime) {
-                with(drawContext) {
-                    drawMiddleAlignedText(Component.translatable("misc.flightassistant.waiting_for_world_load"), centerX, centerY - 16, primaryColor)
-                    drawMiddleAlignedText(Component.translatable("misc.flightassistant.waiting_for_world_load.maximum_time"), centerX, centerY + 8, primaryColor)
+                with(guiGraphics) {
+                    drawMiddleAlignedString(Component.translatable("misc.flightassistant.waiting_for_world_load"), centerX, centerY - 16, primaryColor)
+                    drawMiddleAlignedString(Component.translatable("misc.flightassistant.waiting_for_world_load.maximum_time"), centerX, centerY + 8, primaryColor)
                 }
                 return
             }
 
             if (!display.enabled || !RenderMatrices.ready) {
                 try {
-                    display.renderFaulted()
+                    display.renderFaulted(guiGraphics)
                 } catch (t: Throwable) {
                     FlightAssistant.logger.atError().setCause(t)
                         .log("Exception rendering disabled display with identifier: {}", id)
@@ -126,7 +123,7 @@ internal object HudDisplayHost: ModuleController<Display> {
             }
 
             try {
-                display.render()
+                display.render(guiGraphics)
                 display.faulted = false
             } catch (t: Throwable) {
                 display.faulted = true

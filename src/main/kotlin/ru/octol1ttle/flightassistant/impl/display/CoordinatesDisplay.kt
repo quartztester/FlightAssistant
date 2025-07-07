@@ -7,8 +7,8 @@ import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
-import ru.octol1ttle.flightassistant.api.util.extensions.drawText
-import ru.octol1ttle.flightassistant.api.util.extensions.fontHeight
+import ru.octol1ttle.flightassistant.api.util.extensions.drawString
+import ru.octol1ttle.flightassistant.api.util.extensions.lineHeight
 import ru.octol1ttle.flightassistant.api.util.extensions.primaryColor
 import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
 import ru.octol1ttle.flightassistant.config.FAConfig
@@ -19,12 +19,12 @@ class CoordinatesDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
-        with(drawContext) {
+        with(guiGraphics) {
             val x: Int = HudFrame.left + 10
             val y: Int = HudFrame.bottom - 19
 
-            drawText("X: ${computers.data.position.x.roundToInt()}${getDirectionSignX(computers.data.heading)}", x, y, primaryColor)
-            drawText("Z: ${computers.data.position.z.roundToInt()}${getDirectionSignZ(computers.data.heading)}", x, y + fontHeight, primaryColor)
+            drawString("X: ${computers.data.position.x.roundToInt()}${getDirectionSignX(computers.data.heading)}", x, y, primaryColor)
+            drawString("Z: ${computers.data.position.z.roundToInt()}${getDirectionSignZ(computers.data.heading)}", x, y + lineHeight, primaryColor)
         }
     }
 
@@ -53,12 +53,12 @@ class CoordinatesDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {
-        with(drawContext) {
+        with(guiGraphics) {
             val x: Int = HudFrame.left + 10
             val y: Int = HudFrame.bottom - 19
 
-            drawText("X", x, y, warningColor)
-            drawText("Z", x, y + fontHeight, warningColor)
+            drawString("X", x, y, warningColor)
+            drawString("Z", x, y + lineHeight, warningColor)
         }
     }
 

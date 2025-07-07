@@ -21,8 +21,8 @@ public net.minecraft.client.gui.LayeredDraw render(net.minecraft.client.gui.Laye
     }
     //?} else {
     /*@org.spongepowered.asm.mixin.injection.Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;getCurrentGameMode()Lnet/minecraft/world/GameMode;", ordinal = 0))
-    private void render(net.minecraft.client.gui.DrawContext drawContext, float tickDelta, org.spongepowered.asm.mixin.injection.callback.CallbackInfo callbackInfo) {
-        FixedHudRenderCallback.EVENT.invoker().onRenderHud(drawContext, tickDelta);
+    private void render(net.minecraft.client.gui.DrawContext guiGraphics, float tickDelta, org.spongepowered.asm.mixin.injection.callback.CallbackInfo callbackInfo) {
+        FixedHudRenderCallback.EVENT.invoker().onRenderHud(guiGraphics, tickDelta);
     }
 *///?}
 //?}

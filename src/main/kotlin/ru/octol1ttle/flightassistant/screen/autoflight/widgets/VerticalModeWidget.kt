@@ -1,8 +1,10 @@
 package ru.octol1ttle.flightassistant.screen.autoflight.widgets
 
 import java.util.EnumMap
-import net.minecraft.client.gui.DrawContext
+import kotlin.collections.single
+import kotlin.collections.singleOrNull
 import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
@@ -39,7 +41,7 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
         ) { newType = type }
             .dimensions(x + 1, y + 20, width / 3 - 1, 15).build()
         val selectedPitchWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Text.empty()
+            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
         )
         selectedPitchWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.vertical.selected_pitch.target"))
         selectedPitchWidget.setTextPredicate {
@@ -58,7 +60,7 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
             .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
         val selectedAltitudeWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Text.empty()
+            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
         )
         selectedAltitudeWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.vertical.target_altitude"))
         selectedAltitudeWidget.setTextPredicate {
@@ -91,7 +93,7 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
         }
     }
 
-    override fun render(context: DrawContext?, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics?, mouseX: Int, mouseY: Int, delta: Float) {
         for (button in buttons) {
             button.value.active = newType != button.key
         }

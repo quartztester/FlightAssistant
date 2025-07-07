@@ -1,12 +1,12 @@
 package ru.octol1ttle.flightassistant.screen.flightplan
 
-import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.ParentElement
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextWidget
-import net.minecraft.screen.ScreenTexts
 import net.minecraft.network.chat.Component
+import net.minecraft.screen.ScreenTexts
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
@@ -46,7 +46,7 @@ class FlightPlanScreen : FABaseScreen(Component.translatable("menu.flightassista
         this.addDrawableChild(discardChangesButton)
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         doneButton.active = states.all { !it.needsSaving() }
         saveButton.active = !doneButton.active && states.all { it.canSave() }
         discardChangesButton.active = !doneButton.active

@@ -16,11 +16,11 @@ class ElytraDurabilityDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
-        with(drawContext) {
+        with(guiGraphics) {
             val x: Int = (HudFrame.left + (HudFrame.width - HudFrame.height) * 0.25f).toInt()
             val y: Int = HudFrame.bottom + 1
 
-            val text: Text =
+            val text: Component =
                 computers.elytra.formatDurability(FAConfig.display.elytraDurabilityUnits, computers.data.player)
                     ?: return
 
@@ -31,17 +31,17 @@ class ElytraDurabilityDisplay(computers: ComputerView) : Display(computers) {
                 else -> primaryColor
             }
 
-            drawRightAlignedText(Component.translatable("short.flightassistant.elytra"), x - 15, y + 2, color)
-            drawBorder(x - 14, y, 29, 11, color)
-            drawMiddleAlignedText(text, x, y + 2, color)
+            drawRightAlignedString(Component.translatable("short.flightassistant.elytra"), x - 15, y + 2, color)
+            renderOutline(x - 14, y, 29, 11, color)
+            drawMiddleAlignedString(text, x, y + 2, color)
         }
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {
-        with(drawContext) {
+        with(guiGraphics) {
             val x: Int = (HudFrame.left + (HudFrame.width - HudFrame.height) * 0.25f).toInt()
             val y: Int = HudFrame.bottom + 1
-            drawMiddleAlignedText(Component.translatable("short.flightassistant.elytra_durability"), x, y, warningColor)
+            drawMiddleAlignedString(Component.translatable("short.flightassistant.elytra_durability"), x, y, warningColor)
         }
     }
 

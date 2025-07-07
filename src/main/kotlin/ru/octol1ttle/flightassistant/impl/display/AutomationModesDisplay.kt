@@ -2,10 +2,9 @@ package ru.octol1ttle.flightassistant.impl.display
 
 import java.util.Objects
 import kotlin.math.roundToInt
-import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.text.MutableText
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FAKeyBindings
 import ru.octol1ttle.flightassistant.FlightAssistant
@@ -31,32 +30,32 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
-        renderThrustMode(drawContext)
-        renderPitchMode(drawContext)
-        renderInput(drawContext, headingDisplay, computers.heading.activeInput)
-        renderAutomaticsMode(drawContext)
+        renderThrustMode(guiGraphics)
+        renderPitchMode(guiGraphics)
+        renderInput(guiGraphics, headingDisplay, computers.heading.activeInput)
+        renderAutomaticsMode(guiGraphics)
     }
 
-    private fun renderThrustMode(drawContext: DrawContext) {
+    private fun renderThrustMode(guiGraphics: GuiGraphics) {
         val thrustUnusable: Boolean = computers.thrust.noThrustSource || computers.thrust.reverseUnsupported
 
         val input: ControlInput? = computers.thrust.activeInput
         if (input != null) {
             if (FAKeyBindings.isHoldingThrust()) {
-                thrustDisplay.render(drawContext, Component.translatable("mode.flightassistant.thrust.override").setColor(cautionColor), false, cautionColor)
+                thrustDisplay.render(guiGraphics, Component.translatable("mode.flightassistant.thrust.override").setColor(cautionColor), false, cautionColor)
             } else {
                 thrustDisplay.render(
-                    drawContext, input.text, input.active,
+                    guiGraphics, input.text, input.active,
                     if (thrustUnusable || input.active && input.priority < ControlInput.Priority.NORMAL) cautionColor else null
                 )
             }
             return
         }
 
-        val thrustValueText: MutableText = Text.literal(furtherFromZero(computers.thrust.current * 100).toString() + "%").setColor(primaryColor)
+        val thrustValueText: MutableComponent = Component.literal(furtherFromZero(computers.thrust.current * 100).toString() + "%").setColor(primaryColor)
         if (computers.thrust.thrustLocked) {
             thrustDisplay.render(
-                drawContext,
+                guiGraphics,
                 if (computers.thrust.current > TOGA_THRESHOLD) Component.translatable("mode.flightassistant.thrust.locked_toga").setColor(primaryColor)
                 else Component.translatable("mode.flightassistant.thrust.locked", thrustValueText).setColor(primaryColor),
                 false,
@@ -68,7 +67,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
 
         if (computers.thrust.current != 0.0f) {
             thrustDisplay.render(
-                drawContext,
+                guiGraphics,
                 if (computers.thrust.current > TOGA_THRESHOLD) Component.translatable("mode.flightassistant.thrust.manual_toga").setColor(secondaryColor)
                 else Component.translatable("mode.flightassistant.thrust.manual", thrustValueText),
                 computers.thrust.current == 0.0f || computers.thrust.current > TOGA_THRESHOLD,
@@ -77,32 +76,32 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
             return
         }
 
-        thrustDisplay.render(drawContext, null, true)
+        thrustDisplay.render(guiGraphics, null, true)
     }
 
-    private fun renderPitchMode(drawContext: DrawContext) {
+    private fun renderPitchMode(guiGraphics: GuiGraphics) {
         if (computers.pitch.manualOverride) {
-            pitchDisplay.render(drawContext, Component.translatable("mode.flightassistant.vertical.override").setColor(cautionColor), false, cautionColor)
+            pitchDisplay.render(guiGraphics, Component.translatable("mode.flightassistant.vertical.override").setColor(cautionColor), false, cautionColor)
             return
         }
-        renderInput(drawContext, pitchDisplay, computers.pitch.activeInput)
+        renderInput(guiGraphics, pitchDisplay, computers.pitch.activeInput)
     }
 
-    private fun renderInput(drawContext: DrawContext, display: ModeDisplay, input: ControlInput?) {
+    private fun renderInput(guiGraphics: GuiGraphics, display: ModeDisplay, input: ControlInput?) {
         if (input != null) {
-            display.render(drawContext, input.text, input.active, if (input.active && input.priority < ControlInput.Priority.NORMAL) cautionColor else null)
+            display.render(guiGraphics, input.text, input.active, if (input.active && input.priority < ControlInput.Priority.NORMAL) cautionColor else null)
         } else {
-            display.render(drawContext, null, true)
+            display.render(guiGraphics, null, true)
         }
     }
 
-    private fun renderAutomaticsMode(drawContext: DrawContext) {
-        val text: MutableText = Text.empty()
+    private fun renderAutomaticsMode(guiGraphics: GuiGraphics) {
+        val text: MutableComponent = Component.empty()
         if (computers.automations.flightDirectors) {
             text.appendWithSeparation(Component.translatable("short.flightassistant.flight_directors"))
         }
         if (computers.automations.autoThrust) {
-            val autoThrustText: MutableText = Component.translatable("short.flightassistant.auto_thrust")
+            val autoThrustText: MutableComponent = Component.translatable("short.flightassistant.auto_thrust")
             text.appendWithSeparation(
                 if (computers.thrust.activeInput?.identifier == AutopilotLogicComputer.ID) autoThrustText
                 else autoThrustText.setColor(advisoryColor)
@@ -113,7 +112,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
         }
 
         automationStatusDisplay.render(
-            drawContext,
+            guiGraphics,
             if (text.siblings.isNotEmpty()) text else null,
             true,
             if (computers.automations.autopilotAlert) warningColor
@@ -123,11 +122,11 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {
-        with(drawContext) {
+        with(guiGraphics) {
             val x: Int = centerX
             val y: Int = HudFrame.top - 9
 
-            drawMiddleAlignedText(Component.translatable("short.flightassistant.automation_modes"), x, y, warningColor)
+            drawMiddleAlignedString(Component.translatable("short.flightassistant.automation_modes"), x, y, warningColor)
         }
     }
 
@@ -137,10 +136,10 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     }
 
     class ModeDisplay(private val order: Int) {
-        private var lastText: Text? = null
+        private var lastText: Component? = null
         private var textChangedAt: Int = 0
 
-        fun render(drawContext: DrawContext, text: Text?, active: Boolean = true, borderColor: Int? = null) {
+        fun render(guiGraphics: GuiGraphics, text: Component?, active: Boolean = true, borderColor: Int? = null) {
             val farLeft: Int = HudFrame.left - 35
             val farRight: Int = HudFrame.right + 35
             val farWidth: Int = farRight - farLeft
@@ -157,9 +156,9 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
             }
 
             if (text != null) {
-                drawContext.drawMiddleAlignedText(text, (leftX + rightX) / 2, y, if (active) primaryColor else secondaryColor)
+                guiGraphics.drawMiddleAlignedString(text, (leftX + rightX) / 2, y, if (active) primaryColor else secondaryColor)
                 if (borderColor != null || FATickCounter.totalTicks <= textChangedAt + 100) {
-                    drawContext.drawBorder(leftX, y - 2, rightX - leftX, 11, borderColor ?: secondaryColor)
+                    guiGraphics.renderOutline(leftX, y - 2, rightX - leftX, 11, borderColor ?: secondaryColor)
                 }
             }
         }

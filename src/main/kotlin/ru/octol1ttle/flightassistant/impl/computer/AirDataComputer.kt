@@ -3,65 +3,67 @@ package ru.octol1ttle.flightassistant.impl.computer
 import kotlin.math.asin
 import kotlin.math.atan2
 import kotlin.math.max
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.network.ClientPlayerEntity
-import net.minecraft.client.world.ClientWorld
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.registry.tag.DamageTypeTags
+import net.minecraft.client.Minecraft
+import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.client.player.LocalPlayer
+import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.hit.HitResult
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.MathHelper.wrapDegrees
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.RaycastContext
+import net.minecraft.tags.DamageTypeTags
+import net.minecraft.util.Mth.wrapDegrees
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.level.ClipContext
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.FATickCounter.tickProgress
+import ru.octol1ttle.flightassistant.api.util.FATickCounter.partialTick
 import ru.octol1ttle.flightassistant.api.util.RenderMatrices
 import ru.octol1ttle.flightassistant.api.util.degrees
 import ru.octol1ttle.flightassistant.api.util.extensions.fallFlying
 import ru.octol1ttle.flightassistant.api.util.requireIn
 import ru.octol1ttle.flightassistant.config.FAConfig
 
-class AirDataComputer(computers: ComputerView, private val mc: MinecraftClient) : Computer(computers) {
-    val player: ClientPlayerEntity
+class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Computer(computers) {
+    val player: LocalPlayer
         get() = checkNotNull(mc.player)
     val flying: Boolean
         get() = player.fallFlying
-    val world: ClientWorld
-        get() = checkNotNull(mc.world)
+    val level: ClientLevel
+        get() = checkNotNull(mc.level)
 
-    var position: Vec3d = Vec3d.ZERO
+    var position: Vec3 = Vec3.ZERO
         private set
     val altitude: Double
         get() = position.y
-    val voidLevel: Int
-        get() = world.bottomY - 64
-    var groundLevel: Double? = null
-        private set(value) { field = value?.requireIn(world.bottomY.toDouble()..Double.MAX_VALUE) }
+    val voidY: Int
+        get() = level.minBuildHeight - 64
+    var groundY: Double? = null
+        private set(value) {
+            field = value?.requireIn(level.minBuildHeight.toDouble()..Double.MAX_VALUE)
+        }
 
     private val fallDistance: Double
         get() =
-            if (groundLevel == null || groundLevel!! == Double.MAX_VALUE) Double.MAX_VALUE
+            if (groundY == null || groundY!! == Double.MAX_VALUE) Double.MAX_VALUE
 //? if >=1.21.5 {
             /*else max(player.fallDistance, altitude - groundLevel!!)
 *///?} else
-            else max(player.fallDistance.toDouble(), altitude - groundLevel!!)
+            else max(player.fallDistance.toDouble(), altitude - groundY!!)
 
     val fallDistanceSafe: Boolean
-        get() = player.isTouchingWater || fallDistance <= player.safeFallDistance || isInvulnerableTo(player.damageSources.fall())
+        get() = player.isInWater || fallDistance <= player.maxFallDistance || isInvulnerableTo(player.damageSources().fall())
 
-    var velocity: Vec3d = Vec3d.ZERO
+    var velocity: Vec3 = Vec3.ZERO
         private set
-    var forwardVelocity: Vec3d = Vec3d.ZERO
+    var forwardVelocity: Vec3 = Vec3.ZERO
         private set
 
     val pitch: Float
-        get() = -player.pitch.requireIn(-90.0f..90.0f)
+        get() = -player.xRot.requireIn(-90.0f..90.0f)
     val yaw: Float
-        get() = wrapDegrees(player.yaw).requireIn(-180.0f..180.0f)
+        get() = wrapDegrees(player.yRot).requireIn(-180.0f..180.0f)
     val heading: Float
         get() = (yaw + 180.0f).requireIn(0.0f..360.0f)
     var roll: Float = 0.0f
@@ -71,18 +73,18 @@ class AirDataComputer(computers: ComputerView, private val mc: MinecraftClient) 
         get() = degrees(asin(velocity.normalize().y).toFloat())
 
     val isCurrentChunkLoaded: Boolean
-        get() = world.chunkManager.isChunkLoaded(player.chunkPos.x, player.chunkPos.z)
+        get() = level.chunkSource.hasChunk(player.chunkPosition().x, player.chunkPosition().z)
 
     override fun tick() {
-        position = player.getLerpedPos(tickProgress)
-        groundLevel = computeGroundLevel()
-        velocity = player.lerpVelocity(tickProgress)
+        position = player.getPosition(partialTick)
+        groundY = computeGroundLevel()
+        velocity = player.getDeltaMovementLerped(partialTick)
         forwardVelocity = computeForwardVelocity()
         roll = degrees(atan2(-RenderMatrices.worldSpaceMatrix.m10(), RenderMatrices.worldSpaceMatrix.m11()))
     }
 
     fun automationsAllowed(checkFlying: Boolean = true): Boolean {
-        return (!checkFlying || flying) && (FAConfig.global.automationsAllowedInOverlays || (mc.currentScreen == null && mc.overlay == null))
+        return (!checkFlying || flying) && (FAConfig.global.automationsAllowedInOverlays || (mc.screen == null && mc.overlay == null))
     }
 
     fun isInvulnerableTo(source: DamageSource): Boolean {
@@ -93,42 +95,42 @@ class AirDataComputer(computers: ComputerView, private val mc: MinecraftClient) 
         /*return (player as ru.octol1ttle.flightassistant.mixin.EntityInvoker).invokeIsAlwaysInvulnerableTo(source)
 *///?} else
         return player.isInvulnerableTo(source)
-                || player.abilities.invulnerable && !source.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)
-                || player.abilities.allowFlying && source.isIn(DamageTypeTags.IS_FALL)
+                || player.abilities.invulnerable && !source.`is`(DamageTypeTags.BYPASSES_INVULNERABILITY)
+                || player.abilities.mayfly && source.`is`(DamageTypeTags.IS_FALL)
     }
 
     private fun computeGroundLevel(): Double? {
         if (!isCurrentChunkLoaded) {
-            return groundLevel
+            return groundY
         }
 
-        val minY: Double = world.bottomY.toDouble().coerceAtLeast(altitude - 2500)
-        val result: BlockHitResult = world.raycast(
-            RaycastContext(
+        val minY: Double = level.minBuildHeight.toDouble().coerceAtLeast(altitude - 2500)
+        val result: BlockHitResult = level.clip(
+            ClipContext(
                 position,
-                position.withAxis(Direction.Axis.Y, minY),
-                RaycastContext.ShapeType.COLLIDER,
-                RaycastContext.FluidHandling.ANY,
+                position.with(Direction.Axis.Y, minY),
+                ClipContext.Block.COLLIDER,
+                ClipContext.Fluid.ANY,
                 player
             )
         )
         if (result.type == HitResult.Type.MISS) {
-            return if (result.pos.y > world.bottomY) Double.MAX_VALUE else null
+            return if (result.location.y > level.minBuildHeight) Double.MAX_VALUE else null
         }
-        return result.pos.y
+        return result.location.y
     }
 
-    private fun computeForwardVelocity(): Vec3d {
-        val normalizedRotation: Vec3d = player.rotationVector.normalize()
-        val normalizedVelocity: Vec3d = velocity.normalize()
-        return velocity.multiply(normalizedRotation.dotProduct(normalizedVelocity).coerceAtLeast(0.0))
+    private fun computeForwardVelocity(): Vec3 {
+        val normalizedLookAngle: Vec3 = player.lookAngle.normalize()
+        val normalizedVelocity: Vec3 = velocity.normalize()
+        return velocity.scale(normalizedLookAngle.dot(normalizedVelocity).coerceAtLeast(0.0))
     }
 
     override fun reset() {
-        position = Vec3d.ZERO
-        groundLevel = null
-        velocity = Vec3d.ZERO
-        forwardVelocity = Vec3d.ZERO
+        position = Vec3.ZERO
+        groundY = null
+        velocity = Vec3.ZERO
+        forwardVelocity = Vec3.ZERO
         roll = 0.0f
     }
 

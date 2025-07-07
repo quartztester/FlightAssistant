@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.alert.flight_controls
 
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
@@ -8,7 +8,7 @@ import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.advisoryColor
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
-import ru.octol1ttle.flightassistant.api.util.extensions.drawText
+import ru.octol1ttle.flightassistant.api.util.extensions.drawString
 
 class ProtectionsLostAlert(computers: ComputerView) : Alert(computers), ECAMAlert {
     override val priorityOffset: Int = 10
@@ -18,25 +18,25 @@ class ProtectionsLostAlert(computers: ComputerView) : Alert(computers), ECAMAler
         return computers.protections.protectionsLost
     }
 
-    override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
+    override fun render(guiGraphics: GuiGraphics, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
         var i = 0
-        i += drawContext.drawText(Component.translatable("alert.flightassistant.flight_controls.protections_lost"), firstLineX, firstLineY, cautionColor)
+        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost"), firstLineX, firstLineY, cautionColor)
 
         var y: Int = firstLineY + 1
         if (!computers.data.enabled && computers.data.faultCount <= 1) {
             y += 10
-            i += drawContext.drawText(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_air_data"), otherLinesX, y, advisoryColor)
+            i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_air_data"), otherLinesX, y, advisoryColor)
         }
         if (!computers.pitch.enabled && computers.pitch.faultCount <= 1) {
             y += 10
-            i += drawContext.drawText(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_pitch"), otherLinesX, y, advisoryColor)
+            i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_pitch"), otherLinesX, y, advisoryColor)
         }
         y += 10
-        i += drawContext.drawText(Component.translatable("alert.flightassistant.flight_controls.protections_lost.max_pitch"), otherLinesX, y, advisoryColor)
+        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.max_pitch"), otherLinesX, y, advisoryColor)
         y += 10
-        i += drawContext.drawText(Component.translatable("alert.flightassistant.flight_controls.protections_lost.min_pitch"), otherLinesX, y, advisoryColor)
+        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.min_pitch"), otherLinesX, y, advisoryColor)
         y += 10
-        i += drawContext.drawText(Component.translatable("alert.flightassistant.flight_controls.protections_lost.maneuver_with_care"), otherLinesX, y, advisoryColor)
+        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.maneuver_with_care"), otherLinesX, y, advisoryColor)
 
         return i
     }

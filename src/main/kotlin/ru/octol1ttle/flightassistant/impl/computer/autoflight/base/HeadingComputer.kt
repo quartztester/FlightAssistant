@@ -1,8 +1,8 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight.base
 
 import kotlin.math.abs
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.player.Player
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -44,7 +44,7 @@ class HeadingComputer(computers: ComputerView) : Computer(computers) {
         }
     }
 
-    private fun smoothSetHeading(player: PlayerEntity, current: Float, target: Float, deltaTimeMultiplier: Float) {
+    private fun smoothSetHeading(player: Player, current: Float, target: Float, deltaTimeMultiplier: Float) {
         val diff: Float = findShortestPath(current, target, 360.0f)
 
         val closeDistanceMultiplier: Float =
@@ -52,11 +52,11 @@ class HeadingComputer(computers: ComputerView) : Computer(computers) {
             else (1.0f / abs(diff)).coerceAtLeast(1.0f)
 
         val delta: Float = diff * (FATickCounter.timePassed * deltaTimeMultiplier * closeDistanceMultiplier).coerceIn(0.0f..1.0f)
-        player.yaw += delta
+        player.yRot += delta
 //? if >=1.21.5 {
         /*player.lastYaw += delta
 *///?} else
-        player.prevYaw += delta
+        player.yRotO += delta
     }
 
     override fun reset() {

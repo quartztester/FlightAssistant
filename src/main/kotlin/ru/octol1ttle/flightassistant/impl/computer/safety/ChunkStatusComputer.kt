@@ -1,9 +1,9 @@
 package ru.octol1ttle.flightassistant.impl.computer.safety
 
 import kotlin.math.abs
-import net.minecraft.client.world.ClientChunkManager
+import net.minecraft.client.multiplayer.ClientChunkCache
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.math.ChunkPos
+import net.minecraft.world.level.ChunkPos
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -14,13 +14,13 @@ class ChunkStatusComputer(computers: ComputerView) : Computer(computers) {
 
     override fun tick() {
         val chunkPos: ChunkPos = computers.data.player.chunkPos
-        val world: ClientChunkManager = computers.data.world.chunkManager
+        val world: ClientChunkCache = computers.data.level.chunkManager
 
         var unloadedClose = 0
         var unloadedFar = false
         for (x: Int in -3..3) {
             for (z: Int in -3..3) {
-                if (!world.isChunkLoaded(chunkPos.x + x, chunkPos.z + z)) {
+                if (!world.hasChunk(chunkPos.x + x, chunkPos.z + z)) {
                     if (abs(x) <= 1 && abs(z) <= 1) {
                         unloadedClose++
                     } else {

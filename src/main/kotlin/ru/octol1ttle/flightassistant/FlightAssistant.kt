@@ -31,13 +31,13 @@ object FlightAssistant  {
             ComputerHost.sendRegistrationEvent()
             initComplete = true
         }
-        LevelRenderCallback.EVENT.register { tickDelta, camera, projectionMatrix, positionMatrix ->
+        LevelRenderCallback.EVENT.register { partialTick, camera, projectionMatrix, frustumMatrix ->
             FAKeyBindings.checkPressed(ComputerHost)
 
-            ComputerHost.tick(tickDelta)
+            ComputerHost.tick(partialTick)
 
             RenderMatrices.projectionMatrix.set(projectionMatrix)
-            RenderMatrices.worldSpaceMatrix.set(positionMatrix)
+            RenderMatrices.worldSpaceMatrix.set(frustumMatrix)
             RenderMatrices.modelViewMatrix.set(RenderSystem.getModelViewMatrix())
 
             RenderMatrices.worldSpaceNoRollMatrix.set(Matrix4f().apply {

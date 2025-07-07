@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder
 import dev.isxander.yacl3.platform.YACLPlatform
-import net.minecraft.client.network.ClientPlayerEntity
+import net.minecraft.client.player.LocalPlayer
 import ru.octol1ttle.flightassistant.FlightAssistant.MOD_ID
 import ru.octol1ttle.flightassistant.FlightAssistant.id
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
@@ -62,13 +62,13 @@ object FAConfig {
 
     val display: DisplayOptions
         get() {
-            val player: ClientPlayerEntity = checkNotNull(mc.player)
+            val player: LocalPlayer = checkNotNull(mc.player)
 
             if (player.fallFlying) {
                 return displaysStorage.flying
             }
 
-            if (!player.abilities.allowFlying) {
+            if (!player.abilities.mayfly) {
 //? if >=1.21.5 {
                 /*for (slot: net.minecraft.entity.EquipmentSlot in net.minecraft.entity.EquipmentSlot.VALUES) {
                     if (player.getEquippedStack(slot).contains(net.minecraft.component.DataComponentTypes.GLIDER)) {
@@ -76,7 +76,7 @@ object FAConfig {
                     }
                 }
 *///?} else if >=1.21 {
-                if (player.equippedItems.any { stack -> stack.item == net.minecraft.item.Items.ELYTRA }) {
+                if (player.allSlots.any { stack -> stack.item == net.minecraft.world.item.Items.ELYTRA }) {
                     return displaysStorage.notFlyingHasElytra
                 }
 //?} else {

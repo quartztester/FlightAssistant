@@ -1,8 +1,11 @@
 package ru.octol1ttle.flightassistant.screen.autoflight.widgets
 
 import java.util.EnumMap
-import net.minecraft.client.gui.DrawContext
+import kotlin.collections.getOrNull
+import kotlin.collections.single
+import kotlin.collections.singleOrNull
 import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
@@ -39,7 +42,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         ) { newType = type }
             .dimensions(x + 1, y + 20, width / 3 - 1, 15).build()
         val targetSpeedWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Text.empty()
+            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
         )
         targetSpeedWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.selected_speed"))
         targetSpeedWidget.setTextPredicate {
@@ -58,13 +61,13 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
             .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
         val climbThrustWidget = TextFieldWidget(
-            mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Text.empty()
+            mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Component.empty()
         )
         climbThrustWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target.climb_thrust"))
         configureThrustWidget(climbThrustWidget)
 
         val descendThrustWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Text.empty()
+            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Component.empty()
         )
         descendThrustWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target.descend_thrust"))
         configureThrustWidget(descendThrustWidget)
@@ -109,7 +112,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         }
     }
 
-    override fun render(context: DrawContext?, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics?, mouseX: Int, mouseY: Int, delta: Float) {
         for (button in buttons) {
             button.value.active = newType != button.key
         }

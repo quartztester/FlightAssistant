@@ -1,11 +1,10 @@
 package ru.octol1ttle.flightassistant.impl.display
 
 import kotlin.math.roundToInt
-import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.math.MathHelper
+import net.minecraft.util.Mth
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
@@ -19,7 +18,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
-        with(drawContext) {
+        with(guiGraphics) {
             if (FAConfig.display.showAltitudeReading) {
                 renderAltitudeReading(HudFrame.rightF, centerYF)
             }
@@ -29,42 +28,42 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
         }
     }
 
-    private fun DrawContext.renderAltitudeReading(x: Float, y: Float) {
-        matrices.push()
+    private fun GuiGraphics.renderAltitudeReading(x: Float, y: Float) {
+        pose().pushPose()
         fusedTranslateScale(x, y, READING_MATRIX_SCALE)
 
         val altitude: Double = computers.data.altitude
         val text: String = altitude.roundToInt().toString()
 
-        val width: Int = getTextWidth(text) + 5
+        val width: Int = textWidth(text) + 5
         val halfHeight = 6
-        drawBorder(0, -halfHeight, width, halfHeight * 2 - 1, primaryColor)
+        renderOutline(0, -halfHeight, width, halfHeight * 2 - 1, primaryColor)
 
         val textY: Int = -4
-        drawText(text, 3, textY, primaryColor)
+        drawString(text, 3, textY, primaryColor)
 
-        matrices.pop()
+        pose().popPose()
     }
 
-    private fun DrawContext.renderAltitudeScale(x: Int, y: Int) {
+    private fun GuiGraphics.renderAltitudeScale(x: Int, y: Int) {
         val altitude: Double = computers.data.altitude
 
         val minY: Int = HudFrame.top
         val maxY: Int =
-            (y + 2 * (altitude - computers.data.world.bottomY + 1)).toInt().coerceIn(minY - 1..HudFrame.bottom)
+            (y + 2 * (altitude - computers.data.level.minBuildHeight + 1)).toInt().coerceIn(minY - 1..HudFrame.bottom)
 
-        drawVerticalLine(x, minY, maxY, primaryColor)
+        vLine(x, minY, maxY, primaryColor)
 
-        enableScissor(0, minY, scaledWindowWidth, maxY + 1)
+        enableScissor(0, minY, guiWidth(), maxY + 1)
 
         val scissorMaxY: Int = (if (FAConfig.display.showAltitudeReading) y - 6 * READING_MATRIX_SCALE else maxY).toInt()
-        enableScissor(0, minY, scaledWindowWidth, scissorMaxY + 1)
-        drawHorizontalLine(x, x + 30, y, primaryColor)
-        drawHorizontalLine(x, x + 35, minY, primaryColor)
+        enableScissor(0, minY, guiWidth(), scissorMaxY + 1)
+        hLine(x, x + 30, y, primaryColor)
+        hLine(x, x + 35, minY, primaryColor)
         if (maxY < scissorMaxY) {
-            drawHorizontalLine(x, x + 35, maxY, primaryColor)
+            hLine(x, x + 35, maxY, primaryColor)
         }
-        val altitudeRoundedUp: Int = MathHelper.roundUpToMultiple(altitude.roundToInt(), 5)
+        val altitudeRoundedUp: Int = Mth.roundToward(altitude.roundToInt(), 5)
         for (i: Int in altitudeRoundedUp..altitudeRoundedUp + 1000 step 5) {
             if (!drawAltitudeLine(x, y, i, altitude)) {
                 break
@@ -72,10 +71,10 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
         }
         disableScissor()
 
-        enableScissor(0, (if (FAConfig.display.showAltitudeReading) y + 5 * READING_MATRIX_SCALE else minY).toInt(), scaledWindowWidth, maxY + 1)
-        drawHorizontalLine(x, x + 35, maxY, primaryColor)
-        val altitudeRoundedDown: Int = MathHelper.roundDownToMultiple(altitude, 5)
-        for (i: Int in altitudeRoundedDown downTo (altitudeRoundedDown - 1000).coerceAtLeast(computers.data.world.bottomY) step 5) {
+        enableScissor(0, (if (FAConfig.display.showAltitudeReading) y + 5 * READING_MATRIX_SCALE else minY).toInt(), guiWidth(), maxY + 1)
+        hLine(x, x + 35, maxY, primaryColor)
+        val altitudeRoundedDown: Int = Mth.quantize(altitude, 5)
+        for (i: Int in altitudeRoundedDown downTo (altitudeRoundedDown - 1000).coerceAtLeast(computers.data.level.minBuildHeight) step 5) {
             if (!drawAltitudeLine(x, y, i, altitude)) {
                 break
             }
@@ -85,28 +84,28 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
         disableScissor()
 
         if (FAConfig.display.showVerticalSpeed) {
-            enableScissor(0, HudFrame.top, scaledWindowWidth, HudFrame.bottom)
+            enableScissor(0, HudFrame.top, guiWidth(), HudFrame.bottom)
             fill(x - 3, y, x - 1, (y - 2 * (computers.data.velocity.y * 20)).toInt(), secondaryColor)
             disableScissor()
         }
     }
 
-    private fun DrawContext.drawAltitudeLine(x: Int, y: Int, altitude: Int, currentAltitude: Double): Boolean {
+    private fun GuiGraphics.drawAltitudeLine(x: Int, y: Int, altitude: Int, currentAltitude: Double): Boolean {
         val textY: Int = (y + 2 * (currentAltitude - altitude)).toInt()
         if (textY < HudFrame.top - 100 || textY > HudFrame.bottom + 100) {
             return false
         }
-        drawHorizontalLine(x + 5, x, textY, primaryColor)
+        hLine(x + 5, x, textY, primaryColor)
         if (altitude % 20 == 0) {
-            drawText(altitude.toString(), x + 8, textY - 3, primaryColor)
+            drawString(altitude.toString(), x + 8, textY - 3, primaryColor)
         }
 
         return true
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {
-        with(drawContext) {
-            drawText(Component.translatable("short.flightassistant.altitude"), HudFrame.right, centerY - 5, warningColor)
+        with(guiGraphics) {
+            drawString(Component.translatable("short.flightassistant.altitude"), HudFrame.right, centerY - 5, warningColor)
         }
     }
 

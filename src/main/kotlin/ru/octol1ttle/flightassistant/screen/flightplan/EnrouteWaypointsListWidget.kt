@@ -1,7 +1,8 @@
 package ru.octol1ttle.flightassistant.screen.flightplan
 
-import net.minecraft.client.gui.DrawContext
+import kotlinx.coroutines.NonCancellable.children
 import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.Selectable
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.ElementListWidget
@@ -10,8 +11,8 @@ import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedText
-import ru.octol1ttle.flightassistant.api.util.extensions.textRenderer
+import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedString
+import ru.octol1ttle.flightassistant.api.util.extensions.font
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.autoflight.widgets.ThrustModeWidget.ButtonType
@@ -87,11 +88,11 @@ override fun getScrollbarX(): Int {
     abstract class AbstractEntry(val x: Int, val y: Int, val width: Int) : Entry<AbstractEntry>()
 
     inner class AddWaypointButtonEntry(private val order: Int, x: Int, y: Int, width: Int) : AbstractEntry(x, y, width) {
-        override fun render(context: DrawContext, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+        override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
             val renderY: Int = y + ITEM_HEIGHT / 2
-            context.drawHorizontalLine(x + OFFSET, x + entryWidth - OFFSET * 2, renderY, if (hovered) 0x7FFFFFFF else 0x40FFFFFF)
+            context.hLine(x + OFFSET, x + entryWidth - OFFSET * 2, renderY, if (hovered) 0x7FFFFFFF else 0x40FFFFFF)
             if (hovered) {
-                context.drawMiddleAlignedText(Component.translatable("menu.flightassistant.flight_plan.add_waypoint"), x + entryWidth / 2, renderY - 4, 0xFFFFFFFF.toInt())
+                context.drawMiddleAlignedString(Component.translatable("menu.flightassistant.flight_plan.add_waypoint"), x + entryWidth / 2, renderY - 4, 0xFFFFFFFF.toInt())
             }
         }
 
@@ -116,16 +117,16 @@ override fun getScrollbarX(): Int {
     }
 
     inner class WaypointEntry(private val state: EnrouteWaypointState, order: Int, x: Int, y: Int, width: Int) : AbstractEntry(x, y, width) {
-        private val displayText: TextWidget = TextWidget(x + 5, y, width / 3, 9, Component.translatable("menu.flightassistant.flight_plan.enroute", order), textRenderer).alignLeft()
+        private val displayText: TextWidget = TextWidget(x + 5, y, width / 3, 9, Component.translatable("menu.flightassistant.flight_plan.enroute", order), font).alignLeft()
         private val fieldWidth: Int = width / 3 - 4
         private val xField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width - fieldWidth * 2 - 8, y, fieldWidth, 15, null, Text.empty()
+            mc.textRenderer, x + width - fieldWidth * 2 - 8, y, fieldWidth, 15, null, Component.empty()
         )
         private val zField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width - fieldWidth - 4, y, fieldWidth, 15, null, Text.empty()
+            mc.textRenderer, x + width - fieldWidth - 4, y, fieldWidth, 15, null, Component.empty()
         )
         private val altitudeField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top, fieldWidth, 15, null, Text.empty()
+            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top, fieldWidth, 15, null, Component.empty()
         )
 
         private val speedButton: ButtonWidget = ButtonWidget.builder(
@@ -137,13 +138,13 @@ override fun getScrollbarX(): Int {
         ) { state.thrustModeType = ButtonType.SelectedVerticalTarget }
             .dimensions(x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 30, fieldWidth, 15).build()
         private val speedField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Text.empty()
+            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Component.empty()
         )
         private val climbThrustField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Text.empty()
+            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Component.empty()
         )
         private val descendThrustField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Text.empty()
+            mc.textRenderer, x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Component.empty()
         )
 
         init {
@@ -208,7 +209,7 @@ override fun getScrollbarX(): Int {
             }
         }
 
-        override fun render(context: DrawContext, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+        override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
             val renderY: Int = y + OFFSET
 
             displayText.y = renderY + 1

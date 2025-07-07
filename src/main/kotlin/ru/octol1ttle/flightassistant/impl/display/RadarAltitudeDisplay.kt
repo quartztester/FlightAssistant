@@ -2,8 +2,8 @@ package ru.octol1ttle.flightassistant.impl.display
 
 import kotlin.math.roundToInt
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.text.MutableText
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -19,17 +19,17 @@ class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
-        val groundLevel: Double? = computers.data.groundLevel
+        val groundLevel: Double? = computers.data.groundY
         if (!computers.data.isCurrentChunkLoaded || groundLevel != null && groundLevel > computers.data.altitude) {
-            renderFaulted()
+            renderFaulted(guiGraphics)
             return
         }
 
-        with(drawContext) {
+        with(guiGraphics) {
             val x: Int = HudFrame.right
             val y: Int = HudFrame.bottom + 2
 
-            val altType: MutableText
+            val altType: MutableComponent
             val altString: String
             val color: Int
             if (groundLevel != null) {
@@ -38,24 +38,24 @@ class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
                 color = primaryColor
             } else {
                 altType = Component.translatable("short.flightassistant.void")
-                altString = (computers.data.altitude - computers.data.voidLevel).roundToInt().toString()
+                altString = (computers.data.altitude - computers.data.voidY).roundToInt().toString()
                 color = when (computers.voidProximity.status) {
                     VoidProximityComputer.Status.REACHED_DAMAGE_ALTITUDE -> warningColor
                     VoidProximityComputer.Status.APPROACHING_DAMAGE_ALTITUDE -> cautionColor
                     else -> primaryColor
                 }
             }
-            val xOffset: Int = getTextWidth(altType) + 1
+            val xOffset: Int = textWidth(altType) + 1
 
-            drawText(altType, x - xOffset, y + 2, color)
-            drawBorder(x, y, getTextWidth(altString) + 5, 11, color)
-            drawText(altString, x + 3, y + 2, color)
+            drawString(altType, x - xOffset, y + 2, color)
+            renderOutline(x, y, textWidth(altString) + 5, 11, color)
+            drawString(altString, x + 3, y + 2, color)
         }
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {
-        with(drawContext) {
-            drawText(Component.translatable("short.flightassistant.radar_altitude"), HudFrame.right, HudFrame.bottom + 4, warningColor)
+        with(guiGraphics) {
+            drawString(Component.translatable("short.flightassistant.radar_altitude"), HudFrame.right, HudFrame.bottom + 4, warningColor)
         }
     }
 

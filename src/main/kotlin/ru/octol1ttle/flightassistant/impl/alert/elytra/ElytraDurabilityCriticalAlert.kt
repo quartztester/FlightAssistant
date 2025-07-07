@@ -1,12 +1,12 @@
 package ru.octol1ttle.flightassistant.impl.alert.elytra
 
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.extensions.drawText
+import ru.octol1ttle.flightassistant.api.util.extensions.drawString
 import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
 import ru.octol1ttle.flightassistant.config.FAConfig
 
@@ -21,7 +21,7 @@ class ElytraDurabilityCriticalAlert(computers: ComputerView) : Alert(computers),
         return remainingFlightTime < 30
     }
 
-    override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Component.translatable("alert.flightassistant.elytra.critical_durability"), firstLineX, firstLineY, warningColor)
+    override fun render(guiGraphics: GuiGraphics, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
+        return guiGraphics.drawString(Component.translatable("alert.flightassistant.elytra.critical_durability"), firstLineX, firstLineY, warningColor)
     }
 }

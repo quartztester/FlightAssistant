@@ -17,7 +17,7 @@ abstract class EntityTurnMixin {
     @ModifyVariable(method = "turn", at = @At("STORE"), ordinal = 0)
     private float overridePitchChange(float pitchDelta) {
         List<ControlInput> list = new ArrayList<>();
-        EntityTurnEvents.X_ROT.invoker().onChangeLookDirection(pitchDelta, list);
+        EntityTurnEvents.X_ROT.invoker().onEntityTurn(pitchDelta, list);
         return Objects.requireNonNullElse(MixinHandlerKt.onEntityChangePitch(list), pitchDelta);
     }
 
@@ -27,7 +27,7 @@ abstract class EntityTurnMixin {
             headingDelta %= 360.0f;
         }
         List<ControlInput> list = new ArrayList<>();
-        EntityTurnEvents.Y_ROT.invoker().onChangeLookDirection(headingDelta, list);
+        EntityTurnEvents.Y_ROT.invoker().onEntityTurn(headingDelta, list);
         return Objects.requireNonNullElse(MixinHandlerKt.onEntityChangeHeading(list), headingDelta);
     }
 }

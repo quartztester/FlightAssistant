@@ -1,34 +1,34 @@
 package ru.octol1ttle.flightassistant.screen.flightplan
 
-import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.Element
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.ParentElement
 import net.minecraft.client.gui.widget.TextFieldWidget
 import net.minecraft.client.gui.widget.TextWidget
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.extensions.textRenderer
+import ru.octol1ttle.flightassistant.api.util.extensions.font
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 // TODO: REWRITE THIS ABSOLUTE FUCKY SHITTY HORRIBLE GARBAGE YOU CALL "CODE"
 class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, val y: Int, val width: Int, val height: Int) : AbstractParentWidget(), FlightPlanState {
-    private val displayText: TextWidget = TextWidget(x + 5, y + 8, width, 9, Component.translatable("menu.flightassistant.flight_plan.departure"), textRenderer).alignLeft()
+    private val displayText: TextWidget = TextWidget(x + 5, y + 8, width, 9, Component.translatable("menu.flightassistant.flight_plan.departure"), font).alignLeft()
     private val fieldWidth: Int = width / 3 - 4
     private val xField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width - fieldWidth * 2 - 8, y + 5, fieldWidth, 15, textFields[0], Text.empty()
+        mc.textRenderer, x + width - fieldWidth * 2 - 8, y + 5, fieldWidth, 15, textFields[0], Component.empty()
     )
     private val zField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width - fieldWidth - 4, y + 5, fieldWidth, 15, textFields[1], Text.empty()
+        mc.textRenderer, x + width - fieldWidth - 4, y + 5, fieldWidth, 15, textFields[1], Component.empty()
     )
     private var takeoffThrustText: TextWidget
     private val takeoffThrustField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + 15, y + 33, width / 2, 15, textFields[2], Text.empty()
+        mc.textRenderer, x + width + 15, y + 33, width / 2, 15, textFields[2], Component.empty()
     )
     private var thrustReductionAltitudeText: TextWidget
     private val thrustReductionAltitudeField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + 15, y + 66, width / 2, 15, textFields[3], Text.empty()
+        mc.textRenderer, x + width + 15, y + 66, width / 2, 15, textFields[3], Component.empty()
     )
 
     init {
@@ -46,19 +46,19 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
             it.isEmpty() || it == "-" || it.toDoubleOrNull() != null
         }
 
-        takeoffThrustText = TextWidget(takeoffThrustField.x, takeoffThrustField.y - 12, takeoffThrustField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.takeoff_thrust"), textRenderer).alignLeft()
+        takeoffThrustText = TextWidget(takeoffThrustField.x, takeoffThrustField.y - 12, takeoffThrustField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.takeoff_thrust"), font).alignLeft()
         takeoffThrustField.setTextPredicate {
             val i: Float? = it.toFloatOrNull()
             it.isEmpty() || i != null && i in 0.0f..100.0f
         }
 
-        thrustReductionAltitudeText = TextWidget(thrustReductionAltitudeField.x, thrustReductionAltitudeField.y - 12, thrustReductionAltitudeField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.thrust_reduction_altitude"), textRenderer).alignLeft()
+        thrustReductionAltitudeText = TextWidget(thrustReductionAltitudeField.x, thrustReductionAltitudeField.y - 12, thrustReductionAltitudeField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.thrust_reduction_altitude"), font).alignLeft()
         thrustReductionAltitudeField.setTextPredicate {
             it.isEmpty() || it == "-" || it.toFloatOrNull() != null
         }
     }
 
-    override fun render(context: DrawContext?, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphics?, mouseX: Int, mouseY: Int, delta: Float) {
         super.render(context, mouseX, mouseY, delta)
         if (isFocused) {
             context!!.drawBorder(x, y, width, height, 0xFFFFFFFF.toInt())

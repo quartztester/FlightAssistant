@@ -3,14 +3,11 @@ package ru.octol1ttle.flightassistant.impl.computer.safety
 import java.time.Duration
 import kotlin.math.round
 import kotlin.math.roundToInt
-import net.minecraft.enchantment.EnchantmentHelper
-import net.minecraft.enchantment.Enchantments
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.math.MathHelper
+import net.minecraft.util.Mth
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.enchantment.EnchantmentHelper
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -116,17 +113,17 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
         )
 
         return when (units) {
-            DisplayOptions.DurabilityUnits.RAW -> Text.literal((active.maxDamage - active.damage).toString())
-            DisplayOptions.DurabilityUnits.PERCENTAGE -> Text.literal("${round((active.maxDamage - active.damage - 1) * 100 / active.maxDamage.toFloat()).roundToInt()}%")
+            DisplayOptions.DurabilityUnits.RAW -> Component.literal((active.maxDamage - active.damage).toString())
+            DisplayOptions.DurabilityUnits.PERCENTAGE -> Component.literal("${round((active.maxDamage - active.damage - 1) * 100 / active.maxDamage.toFloat()).roundToInt()}%")
             DisplayOptions.DurabilityUnits.TIME -> {
                 val duration: Duration = Duration.ofSeconds(getRemainingFlightTime(player)!!.toLong())
                 val seconds: Int = when (unbreakingLevel) {
                     0 -> duration.toSecondsPart()
-                    1 -> MathHelper.roundDownToMultiple(duration.toSecondsPart().toDouble(), 5)
-                    2 -> MathHelper.roundDownToMultiple(duration.toSecondsPart().toDouble(), 15)
-                    else -> MathHelper.roundDownToMultiple(duration.toSecondsPart().toDouble(), 30)
+                    1 -> Mth.quantize(duration.toSecondsPart().toDouble(), 5)
+                    2 -> Mth.quantize(duration.toSecondsPart().toDouble(), 15)
+                    else -> Mth.quantize(duration.toSecondsPart().toDouble(), 30)
                 }
-                Text.literal("${duration.toMinutesPart()}:${"%02d".format(seconds)}")
+                Component.literal("${duration.toMinutesPart()}:${"%02d".format(seconds)}")
             }
         }
     }

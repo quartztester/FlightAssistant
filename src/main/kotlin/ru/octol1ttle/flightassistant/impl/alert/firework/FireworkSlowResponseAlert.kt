@@ -1,13 +1,13 @@
 package ru.octol1ttle.flightassistant.impl.alert.firework
 
-import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
-import ru.octol1ttle.flightassistant.api.util.extensions.drawText
+import ru.octol1ttle.flightassistant.api.util.extensions.drawString
 
 class FireworkSlowResponseAlert(computers: ComputerView) : Alert(computers), ECAMAlert {
     override val priorityOffset: Int = 50
@@ -17,7 +17,7 @@ class FireworkSlowResponseAlert(computers: ComputerView) : Alert(computers), ECA
         return computers.firework.responseTimes.average() >= 10
     }
 
-    override fun render(drawContext: DrawContext, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
-        return drawContext.drawText(Component.translatable("alert.flightassistant.firework.slow_response"), firstLineX, firstLineY, cautionColor)
+    override fun render(guiGraphics: GuiGraphics, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
+        return guiGraphics.drawString(Component.translatable("alert.flightassistant.firework.slow_response"), firstLineX, firstLineY, cautionColor)
     }
 }

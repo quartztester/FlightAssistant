@@ -1,13 +1,13 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import dev.architectury.event.events.common.InteractionEvent
-import net.minecraft.client.MinecraftClient
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.item.FireworkRocketItem
-import net.minecraft.item.ItemStack
-import net.minecraft.util.Hand
+import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.FireworkRocketItem
+import net.minecraft.world.item.ItemStack
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSource
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSourceRegistrationCallback
@@ -18,7 +18,7 @@ import ru.octol1ttle.flightassistant.api.util.LimitedFIFOQueue
 import ru.octol1ttle.flightassistant.api.util.event.FireworkBoostCallback
 import ru.octol1ttle.flightassistant.config.FAConfig
 
-class FireworkComputer(computers: ComputerView, private val mc: MinecraftClient) : Computer(computers), ThrustSource {
+class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Computer(computers), ThrustSource {
     override val priority: ThrustSource.Priority = ThrustSource.Priority.LOW
     override val supportsReverse: Boolean = false
     override val optimumClimbPitch: Float = 55.0f
@@ -35,8 +35,8 @@ class FireworkComputer(computers: ComputerView, private val mc: MinecraftClient)
     override fun subscribeToEvents() {
         ThrustSourceRegistrationCallback.EVENT.register { it.accept(this) }
         InteractionEvent.RIGHT_CLICK_ITEM.register(InteractionEvent.RightClickItem { player, hand ->
-            val stack: ItemStack = player.getStackInHand(hand)
-            if (!player.world.isClient()) {
+            val stack: ItemStack = player.getItemInHand(hand)
+            if (!player.level().isClientSide()) {
 //? if >=1.21.2 {
                 /*return@RightClickItem net.minecraft.util.ActionResult.PASS
 *///?} else
@@ -77,7 +77,7 @@ class FireworkComputer(computers: ComputerView, private val mc: MinecraftClient)
         safeFireworkCount = 0
         safeFireworkSlot = null
         var lastSlotCount = 0
-        for (slot: Int in 0..<PlayerInventory.getHotbarSize()) {
+        for (slot: Int in 0..<Inventory.getSelectionSize()) {
             val stack: ItemStack = computers.data.player.inventory.getStack(slot)
             if (isFireworkAndSafe(stack)) {
                 safeFireworkCount += stack.count
@@ -89,8 +89,8 @@ class FireworkComputer(computers: ComputerView, private val mc: MinecraftClient)
         }
     }
 
-    fun isEmptyOrSafe(player: PlayerEntity, hand: Hand): Boolean {
-        return hasNoExplosions(player.getStackInHand(hand))
+    fun isEmptyOrSafe(player: Player, hand: InteractionHand): Boolean {
+        return hasNoExplosions(player.getItemInHand(hand))
     }
 
     private fun isFireworkAndSafe(stack: ItemStack): Boolean {
@@ -99,26 +99,26 @@ class FireworkComputer(computers: ComputerView, private val mc: MinecraftClient)
 
     private fun hasNoExplosions(stack: ItemStack): Boolean {
 //? if >=1.21 {
-        return stack.get(net.minecraft.component.DataComponentTypes.FIREWORKS)?.explosions?.isEmpty() != false
+        return stack.get(net.minecraft.core.component.DataComponents.FIREWORKS)?.explosions?.isEmpty() != false
 //?} else
         /*return stack.getSubNbt("Fireworks")?.getList("Explosions", net.minecraft.nbt.NbtElement.COMPOUND_TYPE.toInt())?.isEmpty() != false*/
     }
 
-    private fun tryActivateFirework(player: PlayerEntity) {
+    private fun tryActivateFirework(player: Player) {
         if (FATickCounter.totalTicks < lastActivationTime + 10) {
             return
         }
 
-        if (isFireworkAndSafe(player.offHandStack)) {
-            useFirework(player, Hand.OFF_HAND)
+        if (isFireworkAndSafe(player.offhandItem)) {
+            useFirework(player, InteractionHand.OFF_HAND)
         } else if (safeFireworkSlot != null) {
-            player.inventory.selectedSlot = safeFireworkSlot!!
-            useFirework(player, Hand.MAIN_HAND)
+            player.inventory.selected = safeFireworkSlot!!
+            useFirework(player, InteractionHand.MAIN_HAND)
         }
     }
 
-    private fun useFirework(player: PlayerEntity, hand: Hand) {
-        mc.interactionManager!!.interactItem(player, hand)
+    private fun useFirework(player: Player, hand: InteractionHand) {
+        mc.gameMode!!.useItem(player, hand)
         lastActivationTime = FATickCounter.totalTicks
         waitingForResponse = true
     }
