@@ -2,6 +2,7 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import dev.architectury.event.events.common.InteractionEvent
 import net.minecraft.client.Minecraft
+import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.player.Inventory
@@ -78,7 +79,7 @@ class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Com
         safeFireworkSlot = null
         var lastSlotCount = 0
         for (slot: Int in 0..<Inventory.getSelectionSize()) {
-            val stack: ItemStack = computers.data.player.inventory.getStack(slot)
+            val stack: ItemStack = computers.data.player.inventory.getItem(slot)
             if (isFireworkAndSafe(stack)) {
                 safeFireworkCount += stack.count
                 if (safeFireworkSlot == null || stack.count < lastSlotCount) {
@@ -99,9 +100,9 @@ class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Com
 
     private fun hasNoExplosions(stack: ItemStack): Boolean {
 //? if >=1.21 {
-        return stack.get(net.minecraft.core.component.DataComponents.FIREWORKS)?.explosions?.isEmpty() != false
-//?} else
-        /*return stack.getSubNbt("Fireworks")?.getList("Explosions", net.minecraft.nbt.NbtElement.COMPOUND_TYPE.toInt())?.isEmpty() != false*/
+        /*return stack.get(net.minecraft.core.component.DataComponents.FIREWORKS)?.explosions?.isEmpty() != false
+*///?} else
+        return stack.getTagElement("Fireworks")?.getList("Explosions", Tag.TAG_COMPOUND.toInt())?.isEmpty() != false
     }
 
     private fun tryActivateFirework(player: Player) {

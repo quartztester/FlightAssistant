@@ -3,9 +3,9 @@ package ru.octol1ttle.flightassistant.screen.flightplan
 import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.ParentElement
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.client.gui.widget.TextWidget
+import net.minecraft.client.gui.widget.Button
+import net.minecraft.client.gui.widget.EditBox
+import net.minecraft.client.gui.widget.StringWidget
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -17,55 +17,55 @@ import ru.octol1ttle.flightassistant.screen.autoflight.widgets.ThrustModeWidget
 
 // TODO: REWRITE THIS ABSOLUTE FUCKY SHITTY HORRIBLE GARBAGE YOU CALL "CODE"
 class ArrivalWaypointWidget(private val computers: ComputerView, val x: Int, val y: Int, val width: Int, val height: Int, extraY: Int) : AbstractParentWidget(), FlightPlanState {
-    private val displayText: TextWidget = TextWidget(x + 5, y + 8, width, 9, Component.translatable("menu.flightassistant.flight_plan.arrival"), font).alignLeft()
+    private val displayText: StringWidget = StringWidget(x + 5, y + 8, width, 9, Component.translatable("menu.flightassistant.flight_plan.arrival"), font).alignLeft()
     private val fieldWidth: Int = width / 3 - 4
 
-    private val xField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width - fieldWidth * 2 - 8, y + 5, fieldWidth, 15, textFields[0], Component.empty()
+    private val xField: EditBox = EditBox(
+        mc.font, x + width - fieldWidth * 2 - 8, y + 5, fieldWidth, 15, textFields[0], Component.empty()
     )
-    private val zField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width - fieldWidth - 4, y + 5, fieldWidth, 15, textFields[1], Component.empty()
-    )
-
-    private var landingAltitudeText: TextWidget
-    private val landingAltitudeField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + 15, extraY + 33, fieldWidth, 15, textFields[2], Component.empty()
+    private val zField: EditBox = EditBox(
+        mc.font, x + width - fieldWidth - 4, y + 5, fieldWidth, 15, textFields[1], Component.empty()
     )
 
-    private val speedButton: ButtonWidget = ButtonWidget.builder(
+    private var landingAltitudeText: StringWidget
+    private val landingAltitudeField: EditBox = EditBox(
+        mc.font, x + width + 15, extraY + 33, fieldWidth, 15, textFields[2], Component.empty()
+    )
+
+    private val speedButton: Button = Button.builder(
         Component.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
     ) { isSpeedMode = true }
-        .dimensions(x + width + 15, extraY + 60, fieldWidth, 15).build()
-    private val constantThrustButton: ButtonWidget = ButtonWidget.builder(
+        .bounds(x + width + 15, extraY + 60, fieldWidth, 15).build()
+    private val constantThrustButton: Button = Button.builder(
         Component.translatable("menu.flightassistant.autoflight.thrust.constant_thrust")
     ) { isSpeedMode = false }
-        .dimensions(x + width + fieldWidth + 20, extraY + 60, fieldWidth, 15).build()
-    private val speedField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + 15 + fieldWidth / 2, extraY + 80, fieldWidth, 15, textFields[3], Component.empty()
+        .bounds(x + width + fieldWidth + 20, extraY + 60, fieldWidth, 15).build()
+    private val speedField: EditBox = EditBox(
+        mc.font, x + width + 15 + fieldWidth / 2, extraY + 80, fieldWidth, 15, textFields[3], Component.empty()
     )
-    private val constantThrustField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + 15 + fieldWidth / 2, extraY + 80, fieldWidth, 15, textFields[4], Component.empty()
+    private val constantThrustField: EditBox = EditBox(
+        mc.font, x + width + 15 + fieldWidth / 2, extraY + 80, fieldWidth, 15, textFields[4], Component.empty()
     )
 
-    private var minimumsText: TextWidget
-    private val absoluteMinimumsButton: ButtonWidget = ButtonWidget.builder(
+    private var minimumsText: StringWidget
+    private val absoluteMinimumsButton: Button = Button.builder(
         Component.translatable("menu.flightassistant.flight_plan.arrival.minimums.absolute")
     ) { isAbsoluteMinimums = true }
-        .dimensions(x + width + 15, extraY + 115, fieldWidth, 15).build()
-    private val relativeMinimumsButton: ButtonWidget = ButtonWidget.builder(
+        .bounds(x + width + 15, extraY + 115, fieldWidth, 15).build()
+    private val relativeMinimumsButton: Button = Button.builder(
         Component.translatable("menu.flightassistant.flight_plan.arrival.minimums.relative")
     ) { isAbsoluteMinimums = false }
-        .dimensions(x + width + fieldWidth + 20, extraY + 115, fieldWidth, 15).build()
-    private val absoluteMinimumsField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + 15 + fieldWidth / 2, extraY + 135, fieldWidth, 15, textFields[5], Component.empty()
+        .bounds(x + width + fieldWidth + 20, extraY + 115, fieldWidth, 15).build()
+    private val absoluteMinimumsField: EditBox = EditBox(
+        mc.font, x + width + 15 + fieldWidth / 2, extraY + 135, fieldWidth, 15, textFields[5], Component.empty()
     )
-    private val relativeMinimumsField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + 15 + fieldWidth / 2, extraY + 135, fieldWidth, 15, textFields[6], Component.empty()
+    private val relativeMinimumsField: EditBox = EditBox(
+        mc.font, x + width + 15 + fieldWidth / 2, extraY + 135, fieldWidth, 15, textFields[6], Component.empty()
     )
 
-    private var goAroundAltitudeText: TextWidget
-    private val goAroundAltitudeField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + fieldWidth + 20, extraY + 33, fieldWidth, 15, textFields[7], Component.empty()
+    private var goAroundAltitudeText: StringWidget
+    private val goAroundAltitudeField: EditBox = EditBox(
+        mc.font, x + width + fieldWidth + 20, extraY + 33, fieldWidth, 15, textFields[7], Component.empty()
     )
 
     init {
@@ -88,7 +88,7 @@ class ArrivalWaypointWidget(private val computers: ComputerView, val x: Int, val
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
         }
-        landingAltitudeText = TextWidget(landingAltitudeField.x, landingAltitudeField.y - 12, landingAltitudeField.width, 9, Component.translatable("menu.flightassistant.flight_plan.arrival.landing_altitude"), font).alignLeft()
+        landingAltitudeText = StringWidget(landingAltitudeField.x, landingAltitudeField.y - 12, landingAltitudeField.width, 9, Component.translatable("menu.flightassistant.flight_plan.arrival.landing_altitude"), font).alignLeft()
         landingAltitudeField.setTextPredicate {
             it.isEmpty() || it == "-" || it.toDoubleOrNull() != null
         }
@@ -110,7 +110,7 @@ class ArrivalWaypointWidget(private val computers: ComputerView, val x: Int, val
             }
         }
 
-        minimumsText = TextWidget(absoluteMinimumsButton.x, absoluteMinimumsButton.y - 12, absoluteMinimumsButton.width, 9, Component.translatable("menu.flightassistant.flight_plan.arrival.minimums"), font).alignLeft()
+        minimumsText = StringWidget(absoluteMinimumsButton.x, absoluteMinimumsButton.y - 12, absoluteMinimumsButton.width, 9, Component.translatable("menu.flightassistant.flight_plan.arrival.minimums"), font).alignLeft()
         absoluteMinimumsField.setTextPredicate {
             it.isEmpty() || it == "-" || it.toDoubleOrNull() != null
         }
@@ -119,7 +119,7 @@ class ArrivalWaypointWidget(private val computers: ComputerView, val x: Int, val
             it.isEmpty() || i != null && i > 0.0f
         }
 
-        goAroundAltitudeText = TextWidget(goAroundAltitudeField.x, goAroundAltitudeField.y - 12, goAroundAltitudeField.width, 9, Component.translatable("menu.flightassistant.flight_plan.arrival.go_around_altitude"), font).alignLeft()
+        goAroundAltitudeText = StringWidget(goAroundAltitudeField.x, goAroundAltitudeField.y - 12, goAroundAltitudeField.width, 9, Component.translatable("menu.flightassistant.flight_plan.arrival.go_around_altitude"), font).alignLeft()
         goAroundAltitudeField.setTextPredicate {
             it.isEmpty() || it == "-" || it.toDoubleOrNull() != null
         }
@@ -179,7 +179,7 @@ class ArrivalWaypointWidget(private val computers: ComputerView, val x: Int, val
     }
 
     override fun load() {
-        for (field: TextFieldWidget? in textFields) {
+        for (field: EditBox? in textFields) {
             field?.text = ""
         }
 
@@ -256,7 +256,7 @@ class ArrivalWaypointWidget(private val computers: ComputerView, val x: Int, val
     }
 
     companion object {
-        var textFields: MutableList<TextFieldWidget?> = mutableListOf(null, null, null, null, null, null, null, null)
+        var textFields: MutableList<EditBox?> = mutableListOf(null, null, null, null, null, null, null, null)
         var isSpeedMode: Boolean = true
         var isAbsoluteMinimums: Boolean = true
     }

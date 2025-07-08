@@ -75,15 +75,11 @@ object FAConfig {
                         return displaysStorage.notFlyingHasElytra
                     }
                 }
-*///?} else if >=1.21 {
+*///?} else {
                 if (player.allSlots.any { stack -> stack.item == net.minecraft.world.item.Items.ELYTRA }) {
                     return displaysStorage.notFlyingHasElytra
                 }
-//?} else {
-                /*if (player.itemsEquipped.any { stack -> stack.item is net.minecraft.item.ElytraItem }) {
-                    return displaysStorage.notFlyingHasElytra
-                }
-*///?}
+//?}
             }
 
             return displaysStorage.notFlyingNoElytra

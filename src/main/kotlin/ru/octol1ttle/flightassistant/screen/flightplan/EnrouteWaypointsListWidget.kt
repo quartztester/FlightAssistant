@@ -4,10 +4,10 @@ import kotlinx.coroutines.NonCancellable.children
 import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.Selectable
-import net.minecraft.client.gui.widget.ButtonWidget
+import net.minecraft.client.gui.widget.Button
+import net.minecraft.client.gui.widget.EditBox
 import net.minecraft.client.gui.widget.ElementListWidget
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.client.gui.widget.TextWidget
+import net.minecraft.client.gui.widget.StringWidget
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -20,28 +20,28 @@ import ru.octol1ttle.flightassistant.screen.autoflight.widgets.ThrustModeWidget.
 // TODO: REWRITE THIS ABSOLUTE FUCKY SHITTY HORRIBLE GARBAGE YOU CALL "CODE"
 class EnrouteWaypointsListWidget(private val computers: ComputerView, width: Int, height: Int, top: Int, @Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") bottom: Int, val left: Int) : ElementListWidget<EnrouteWaypointsListWidget.AbstractEntry>(
     mc, width, height, top,
-    /*? if <1.21 {*/ /*bottom, *///?}
+    /*? if <1.21 {*/ bottom, //?}
     ITEM_HEIGHT
 ), FlightPlanState {
 
     init {
 //? if <1.21 {
-        /*setRenderBackground(false)
+        setRenderBackground(false)
         setRenderHorizontalShadows(false)
-*///?}
+//?}
 
         rebuildEntries()
     }
 
 //? if >=1.21 {
-override fun getScrollbarX(): Int {
+/*override fun getScrollbarX(): Int {
         return this.x + this.width - 4
     }
-//?} else {
-    /*override fun getScrollbarPositionX(): Int {
+*///?} else {
+override fun getScrollbarPositionX(): Int {
     return this.left + this.width + 4
     }
-*///?}
+//?}
 
     override fun getRowWidth(): Int {
         return this.width
@@ -117,34 +117,34 @@ override fun getScrollbarX(): Int {
     }
 
     inner class WaypointEntry(private val state: EnrouteWaypointState, order: Int, x: Int, y: Int, width: Int) : AbstractEntry(x, y, width) {
-        private val displayText: TextWidget = TextWidget(x + 5, y, width / 3, 9, Component.translatable("menu.flightassistant.flight_plan.enroute", order), font).alignLeft()
+        private val displayText: StringWidget = StringWidget(x + 5, y, width / 3, 9, Component.translatable("menu.flightassistant.flight_plan.enroute", order), font).alignLeft()
         private val fieldWidth: Int = width / 3 - 4
-        private val xField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width - fieldWidth * 2 - 8, y, fieldWidth, 15, null, Component.empty()
+        private val xField: EditBox = EditBox(
+            mc.font, x + width - fieldWidth * 2 - 8, y, fieldWidth, 15, null, Component.empty()
         )
-        private val zField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width - fieldWidth - 4, y, fieldWidth, 15, null, Component.empty()
+        private val zField: EditBox = EditBox(
+            mc.font, x + width - fieldWidth - 4, y, fieldWidth, 15, null, Component.empty()
         )
-        private val altitudeField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top, fieldWidth, 15, null, Component.empty()
+        private val altitudeField: EditBox = EditBox(
+            mc.font, x + width + 15, this@EnrouteWaypointsListWidget.top, fieldWidth, 15, null, Component.empty()
         )
 
-        private val speedButton: ButtonWidget = ButtonWidget.builder(
+        private val speedButton: Button = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
         ) { state.thrustModeType = ButtonType.SelectedSpeed }
-            .dimensions(x + width + 15, this@EnrouteWaypointsListWidget.top + 30, fieldWidth, 15).build()
-        private val verticalTargetButton: ButtonWidget = ButtonWidget.builder(
+            .bounds(x + width + 15, this@EnrouteWaypointsListWidget.top + 30, fieldWidth, 15).build()
+        private val verticalTargetButton: Button = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target")
         ) { state.thrustModeType = ButtonType.SelectedVerticalTarget }
-            .dimensions(x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 30, fieldWidth, 15).build()
-        private val speedField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Component.empty()
+            .bounds(x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 30, fieldWidth, 15).build()
+        private val speedField: EditBox = EditBox(
+            mc.font, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Component.empty()
         )
-        private val climbThrustField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Component.empty()
+        private val climbThrustField: EditBox = EditBox(
+            mc.font, x + width + 15, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Component.empty()
         )
-        private val descendThrustField: TextFieldWidget = TextFieldWidget(
-            mc.textRenderer, x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Component.empty()
+        private val descendThrustField: EditBox = EditBox(
+            mc.font, x + width + fieldWidth + 20, this@EnrouteWaypointsListWidget.top + 50, fieldWidth, 15, null, Component.empty()
         )
 
         init {

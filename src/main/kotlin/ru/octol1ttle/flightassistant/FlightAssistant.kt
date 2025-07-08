@@ -24,7 +24,7 @@ object FlightAssistant  {
     internal fun init() {
         logger.info("Initializing (stage 1)")
         FAConfig.load()
-        FAKeyBindings.setup()
+        FAKeyMappings.setup()
         ClientLifecycleEvent.CLIENT_STARTED.register {
             logger.info("Initializing (stage 2)")
             HudDisplayHost.sendRegistrationEvent(ComputerHost)
@@ -32,7 +32,7 @@ object FlightAssistant  {
             initComplete = true
         }
         LevelRenderCallback.EVENT.register { partialTick, camera, projectionMatrix, frustumMatrix ->
-            FAKeyBindings.checkPressed(ComputerHost)
+            FAKeyMappings.checkPressed(ComputerHost)
 
             ComputerHost.tick(partialTick)
 
@@ -54,8 +54,8 @@ object FlightAssistant  {
 
     internal fun id(path: String): ResourceLocation {
 //? if >=1.21 {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path)
-//?} else
-        /*return ResourceLocation(MOD_ID, path)*/
+        /*return ResourceLocation.fromNamespaceAndPath(MOD_ID, path)
+*///?} else
+        return ResourceLocation(MOD_ID, path)
     }
 }

@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight.base
 
 import net.minecraft.resources.ResourceLocation
-import ru.octol1ttle.flightassistant.FAKeyBindings
+import ru.octol1ttle.flightassistant.FAKeyMappings
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -48,7 +48,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
         noThrustSource = false
         reverseUnsupported = false
 
-        if (finalInput?.active == true && !FAKeyBindings.isHoldingThrust()) {
+        if (finalInput?.active == true && !FAKeyMappings.isHoldingThrust()) {
             setTarget(finalInput.target, finalInput)
             activeInput = finalInput
             thrustLocked = false

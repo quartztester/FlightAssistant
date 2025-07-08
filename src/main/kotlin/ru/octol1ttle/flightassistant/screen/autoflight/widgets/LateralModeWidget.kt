@@ -1,14 +1,10 @@
 package ru.octol1ttle.flightassistant.screen.autoflight.widgets
 
 import java.util.EnumMap
-import kotlin.collections.getOrNull
-import kotlin.collections.single
-import kotlin.collections.singleOrNull
-import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.client.gui.widget.TextWidget
+import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.components.EditBox
+import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -17,8 +13,8 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComp
 import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val width: Int) : AbstractParentWidget(), DelayedApplyChanges {
-    private val title: TextWidget = TextWidget(
-        x, y, width, 20, Component.translatable("menu.flightassistant.autoflight.lateral"), mc.textRenderer
+    private val title: StringWidget = StringWidget(
+        x, y, width, 20, Component.translatable("menu.flightassistant.autoflight.lateral"), mc.font
     )
     private var newType: ButtonType
 
@@ -28,64 +24,65 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
         initSelectedHeading()
         initSelectedCoordinates()
 
-        buttons[ButtonType.FlightPlan] = ButtonWidget.builder(
+        buttons[ButtonType.FlightPlan] = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.lateral.waypoint_coordinates")
         ) { newType = ButtonType.FlightPlan }
-            .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
+            .bounds(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
 
     private fun initSelectedHeading() {
         val type = ButtonType.SelectedHeading
 
-        buttons[type] = ButtonWidget.builder(
+        buttons[type] = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.lateral.selected_heading")
         ) { newType = type }
-            .dimensions(x + 1, y + 20, width / 3 - 1, 15).build()
-        val targetHeadingWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
+            .bounds(x + 1, y + 20, width / 3 - 1, 15).build()
+        val targetHeadingWidget = EditBox(
+            mc.font, x + width / 4, y + 40, width / 2, 15, editBoxes[type]?.singleOrNull(), Component.empty()
         )
-        targetHeadingWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.selected_heading.target"))
-        targetHeadingWidget.setTextPredicate {
+        targetHeadingWidget.setHint(Component.translatable("menu.flightassistant.autoflight.lateral.selected_heading.target"))
+        targetHeadingWidget.setFilter {
             val i: Int? = it.toIntOrNull()
             it.isEmpty() || i != null && i in 0..360
         }
-        textFields.computeIfAbsent(type) { ArrayList() }.clearAndAdd(targetHeadingWidget)
+        editBoxes.computeIfAbsent(type) { ArrayList() }.clearAndAdd(targetHeadingWidget)
     }
 
     private fun initSelectedCoordinates() {
         val type = ButtonType.SelectedCoordinates
 
-        buttons[type] = ButtonWidget.builder(
+        buttons[type] = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.lateral.selected_coordinates")
         ) { newType = type }
-            .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
+            .bounds(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
-        val xCoordWidget = TextFieldWidget(
-            mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Component.empty()
+        val xCoordWidget = EditBox(
+            mc.font, x + 2, y + 40, width / 2 - 4, 15, editBoxes[type]?.getOrNull(0), Component.empty()
         )
-        xCoordWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.target_x"))
-        xCoordWidget.setTextPredicate {
+        xCoordWidget.setHint(Component.translatable("menu.flightassistant.autoflight.lateral.target_x"))
+        xCoordWidget.setFilter {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
         }
 
-        val zCoordWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Component.empty()
+        val zCoordWidget = EditBox(
+            mc.font, x + width / 2 + 3, y + 40, width / 2 - 4, 15, editBoxes[type]?.getOrNull(1), Component.empty()
         )
-        zCoordWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.lateral.target_z"))
-        zCoordWidget.setTextPredicate {
+        zCoordWidget.setHint(Component.translatable("menu.flightassistant.autoflight.lateral.target_z"))
+        zCoordWidget.setFilter {
             val i: Double? = it.toDoubleOrNull()
             it.isEmpty() || it == "-" || i != null
         }
 
-        textFields.computeIfAbsent(type) { ArrayList() }.clearAndAdd(xCoordWidget, zCoordWidget)
+        editBoxes.computeIfAbsent(type) { ArrayList() }.clearAndAdd(xCoordWidget, zCoordWidget)
     }
+
 
     override fun children(): MutableList<out Element> {
         val list = ArrayList<Element>()
         list.add(title)
         list.addAll(buttons.values)
-        textFields[newType]?.let {
+        editBoxes[newType]?.let {
             list.addAll(it)
         }
         return list
@@ -94,12 +91,12 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
     override fun applyChanges() {
         computers.autopilot.lateralMode = when (val type: ButtonType = newType) {
             ButtonType.SelectedHeading -> {
-                val heading: Float? = textFields[type]!!.single().text.toFloatOrNull()
+                val heading: Float? = editBoxes[type]!!.single().value.toFloatOrNull()
                 if (heading != null) AutopilotLogicComputer.HeadingLateralMode(heading) else computers.autopilot.lateralMode
             }
             ButtonType.SelectedCoordinates -> {
-                val x: Double? = textFields[type]!![0].text.toDoubleOrNull()
-                val z: Double? = textFields[type]!![1].text.toDoubleOrNull()
+                val x: Double? = editBoxes[type]!![0].value.toDoubleOrNull()
+                val z: Double? = editBoxes[type]!![1].value.toDoubleOrNull()
                 if (x != null && z != null) AutopilotLogicComputer.CoordinatesLateralMode(x, z) else computers.autopilot.lateralMode
             }
             ButtonType.FlightPlan -> null
@@ -135,8 +132,8 @@ class LateralModeWidget(val computers: ComputerView, val x: Int, val y: Int, val
     }
 
     companion object {
-        private val buttons: EnumMap<ButtonType, ButtonWidget> = EnumMap(ButtonType::class.java)
-        private val textFields: EnumMap<ButtonType, MutableList<TextFieldWidget>> = EnumMap(ButtonType::class.java)
+        private val buttons: EnumMap<ButtonType, Button> = EnumMap(ButtonType::class.java)
+        private val editBoxes: EnumMap<ButtonType, MutableList<EditBox>> = EnumMap(ButtonType::class.java)
         const val TOTAL_MODES: Float = 3.0f
     }
 }

@@ -4,10 +4,13 @@ import java.time.Duration
 import kotlin.math.round
 import kotlin.math.roundToInt
 import net.minecraft.network.chat.Component
+import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.item.enchantment.Enchantments
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -24,7 +27,7 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
         val data: AirDataComputer = computers.data
         activeElytra = findActiveElytra(data.player)
 
-        if (data.player.isOnGround) {
+        if (data.player.onGround()) {
             syncedFlyingState = null
             return
         }
@@ -38,18 +41,18 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
             return
         }
 
-        if (FAConfig.safety.elytraCloseUnderwater && data.flying && data.player.isSubmergedInWater) {
+        if (FAConfig.safety.elytraCloseUnderwater && data.flying && data.player.isUnderWater) {
             sendSwitchState(data)
         }
 
-        val flying: Boolean = data.flying || data.player.abilities.allowFlying
+        val flying: Boolean = data.flying || data.player.abilities.mayfly
         val hasUsableElytra: Boolean =
 //? if >=1.21.5 {
             /*net.minecraft.entity.EquipmentSlot.VALUES.any { data.player.getEquippedStack(it) == activeElytra && net.minecraft.entity.LivingEntity.canGlideWith(data.player.getEquippedStack(it), it) }
 *///?} else
-            data.player.armorItems.contains(activeElytra)
+            data.player.armorSlots.contains(activeElytra)
                     && activeElytra.canUse()
-        val isInsideBlock: Boolean = !data.player.blockStateAtPos.isAir
+        val isInsideBlock: Boolean = !data.player.blockStateOn.isAir
         val lookingToClutch: Boolean = data.pitch <= -70.0f
         if (FAConfig.safety.elytraAutoOpen && !flying && !data.fallDistanceSafe && hasUsableElytra && !isInsideBlock && !lookingToClutch) {
             sendSwitchState(data)
@@ -58,13 +61,10 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 
     private fun sendSwitchState(data: AirDataComputer) {
         syncedFlyingState = data.flying
-//? if neoforge {
-        /*data.player.networkHandler.send(ClientCommandC2SPacket(data.player, ClientCommandC2SPacket.Mode.START_FALL_FLYING))
-*///?} else
-        data.player.networkHandler.sendPacket(ClientCommandC2SPacket(data.player, ClientCommandC2SPacket.Mode.START_FALL_FLYING))
+        data.player.connection.send(ServerboundPlayerCommandPacket(data.player, ServerboundPlayerCommandPacket.Action.START_FALL_FLYING))
     }
 
-    private fun findActiveElytra(player: PlayerEntity): ItemStack? {
+    private fun findActiveElytra(player: Player): ItemStack? {
 //? if >=1.21.2 {
         /*for (equipmentSlot in net.minecraft.entity.EquipmentSlot.VALUES) {
             val stack: ItemStack = player.getEquippedStack(equipmentSlot)
@@ -73,8 +73,8 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
             }
         }
 *///?} else {
-        for (stack: ItemStack in player.armorItems) {
-            if (stack.item is net.minecraft.item.ElytraItem) {
+        for (stack: ItemStack in player.armorSlots) {
+            if (stack.item is net.minecraft.world.item.ElytraItem) {
                 return stack
             }
         }
@@ -84,11 +84,11 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
         /*for (equipmentSlot in net.minecraft.entity.EquipmentSlot.VALUES) {
             val stack: ItemStack = player.getEquippedStack(equipmentSlot)
 *///?} else
-        for (stack: ItemStack in player.handItems) {
+        for (stack: ItemStack in player.handSlots) {
 //? if >=1.21.2 {
             /*if (stack.contains(net.minecraft.component.DataComponentTypes.GLIDER)) {
 *///?} else
-            if (stack.item is net.minecraft.item.ElytraItem) {
+            if (stack.item is net.minecraft.world.item.ElytraItem) {
                 return stack
             }
         }
@@ -96,25 +96,25 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
         return null
     }
 
-    fun formatDurability(units: DisplayOptions.DurabilityUnits, player: PlayerEntity): Text? {
+    fun formatDurability(units: DisplayOptions.DurabilityUnits, player: Player): Component? {
         val active: ItemStack = activeElytra ?: return null
-        if (!active.isDamageable) {
+        if (!active.isDamageableItem) {
             return Component.translatable("short.flightassistant.infinite")
         }
 
-        val unbreakingLevel: Int = EnchantmentHelper.getLevel(
+        val unbreakingLevel: Int = EnchantmentHelper.getItemEnchantmentLevel(
 //? if >=1.21.2 {
             /*player.world.registryManager.getOrThrow(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING.value).get()
 *///?} else if >=1.21 {
-            player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
-//?} else
-            /*Enchantments.UNBREAKING*/
+            /*player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
+*///?} else
+            Enchantments.UNBREAKING
             , active
         )
 
         return when (units) {
-            DisplayOptions.DurabilityUnits.RAW -> Component.literal((active.maxDamage - active.damage).toString())
-            DisplayOptions.DurabilityUnits.PERCENTAGE -> Component.literal("${round((active.maxDamage - active.damage - 1) * 100 / active.maxDamage.toFloat()).roundToInt()}%")
+            DisplayOptions.DurabilityUnits.RAW -> Component.literal((active.maxDamage - active.damageValue).toString())
+            DisplayOptions.DurabilityUnits.PERCENTAGE -> Component.literal("${round((active.maxDamage - active.damageValue - 1) * 100 / active.maxDamage.toFloat()).roundToInt()}%")
             DisplayOptions.DurabilityUnits.TIME -> {
                 val duration: Duration = Duration.ofSeconds(getRemainingFlightTime(player)!!.toLong())
                 val seconds: Int = when (unbreakingLevel) {
@@ -128,24 +128,23 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
         }
     }
 
-    fun getRemainingFlightTime(@Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") player: PlayerEntity): Int? {
+    fun getRemainingFlightTime(@Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") player: Player): Int? {
         val active: ItemStack = activeElytra ?: return null
-        if (!active.isDamageable) {
+        if (!active.isDamageableItem) {
             return Int.MAX_VALUE
         }
 
-        val unbreakingLevel: Int = EnchantmentHelper.getLevel(
+        val unbreakingLevel: Int = EnchantmentHelper.getItemEnchantmentLevel(
 //? if >=1.21.2 {
             /*player.world.registryManager.getOrThrow(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING.value).get()
 *///?} else if >=1.21 {
-            player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
-//?} else
-            /*Enchantments.UNBREAKING*/
+            /*player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
+*///?} else
+            Enchantments.UNBREAKING
             , active
         )
-        return (active.maxDamage - active.damage - 1) * (unbreakingLevel + 1)
+        return (active.maxDamage - active.damageValue - 1) * (unbreakingLevel + 1)
     }
-
 
     override fun reset() {
         activeElytra = null

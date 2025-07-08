@@ -2,9 +2,10 @@ package ru.octol1ttle.flightassistant.screen
 
 import kotlin.properties.Delegates
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.network.chat.Component
 
-abstract class FABaseScreen(title: Text?) : Screen(title) {
+abstract class FABaseScreen(title: Component?) : Screen(title) {
     protected var centerX by Delegates.notNull<Int>()
     protected var centerY by Delegates.notNull<Int>()
 
@@ -13,12 +14,13 @@ abstract class FABaseScreen(title: Text?) : Screen(title) {
         this.centerY = this.height / 2
     }
 
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        this.renderBackground(context
-            /*? if >=1.21 {*/, mouseX, mouseY, delta //?}
+    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        this.renderBackground(
+            guiGraphics
+            /*? if >=1.21 {*//*, mouseX, mouseY, delta *///?}
         )
-        super.render(context, mouseX, mouseY, delta)
+        super.render(guiGraphics, mouseX, mouseY, delta)
     }
 
-    override fun shouldPause(): Boolean = false
+    override fun isPauseScreen(): Boolean = false
 }

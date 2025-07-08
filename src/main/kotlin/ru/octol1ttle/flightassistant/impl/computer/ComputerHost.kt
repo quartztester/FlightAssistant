@@ -18,7 +18,6 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.PitchComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.RollComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
-import ru.octol1ttle.flightassistant.mixin.ClientLevelRunningNormallyInvoker
 
 internal object ComputerHost : ModuleController<Computer>, ComputerView {
     private val computers: MutableMap<ResourceLocation, Computer> = LinkedHashMap()
@@ -109,7 +108,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
     }
 
     internal fun tick(partialTick: Float) {
-        val paused: Boolean = mc.isPaused /*? if >=1.21 {*/ || !(mc as ClientLevelRunningNormallyInvoker).invokeIsLevelRunningNormally() //?}
+        val paused: Boolean = mc.isPaused /*? if >=1.21 {*/ /*|| !(mc as ru.octol1ttle.flightassistant.mixin.ClientLevelRunningNormallyInvoker).invokeIsLevelRunningNormally() *///?}
         FATickCounter.tick(mc.player!!, partialTick, paused)
         if (paused || FATickCounter.ticksSinceWorldLoad < FATickCounter.worldLoadWaitTime || !FAConfig.global.modEnabled) {
             return

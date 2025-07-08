@@ -6,9 +6,9 @@ import kotlin.collections.single
 import kotlin.collections.singleOrNull
 import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.client.gui.widget.TextWidget
+import net.minecraft.client.gui.widget.Button
+import net.minecraft.client.gui.widget.EditBox
+import net.minecraft.client.gui.widget.StringWidget
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -17,8 +17,8 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComp
 import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val width: Int) : AbstractParentWidget(), DelayedApplyChanges {
-    private val title: TextWidget = TextWidget(
-        x, y, width, 20, Component.translatable("menu.flightassistant.autoflight.thrust"), mc.textRenderer
+    private val title: StringWidget = StringWidget(
+        x, y, width, 20, Component.translatable("menu.flightassistant.autoflight.thrust"), mc.font
     )
     private var newType: ButtonType
 
@@ -28,21 +28,21 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         initSelectedSpeed()
         initVerticalTarget()
 
-        buttons[ButtonType.FlightPlan] = ButtonWidget.builder(
+        buttons[ButtonType.FlightPlan] = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.thrust.waypoint_thrust")
         ) { newType = ButtonType.FlightPlan }
-            .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
+            .bounds(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
 
     private fun initSelectedSpeed() {
         val type = ButtonType.SelectedSpeed
 
-        buttons[type] = ButtonWidget.builder(
+        buttons[type] = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.thrust.selected_speed")
         ) { newType = type }
-            .dimensions(x + 1, y + 20, width / 3 - 1, 15).build()
-        val targetSpeedWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
+            .bounds(x + 1, y + 20, width / 3 - 1, 15).build()
+        val targetSpeedWidget = EditBox(
+            mc.font, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
         )
         targetSpeedWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.selected_speed"))
         targetSpeedWidget.setTextPredicate {
@@ -55,19 +55,19 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
     private fun initVerticalTarget() {
         val type = ButtonType.SelectedVerticalTarget
 
-        buttons[type] = ButtonWidget.builder(
+        buttons[type] = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target")
         ) { newType = type }
-            .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
+            .bounds(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
-        val climbThrustWidget = TextFieldWidget(
-            mc.textRenderer, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Component.empty()
+        val climbThrustWidget = EditBox(
+            mc.font, x + 2, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(0), Component.empty()
         )
         climbThrustWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target.climb_thrust"))
         configureThrustWidget(climbThrustWidget)
 
-        val descendThrustWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Component.empty()
+        val descendThrustWidget = EditBox(
+            mc.font, x + width / 2 + 3, y + 40, width / 2 - 4, 15, textFields[type]?.getOrNull(1), Component.empty()
         )
         descendThrustWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.thrust.vertical_target.descend_thrust"))
         configureThrustWidget(descendThrustWidget)
@@ -75,7 +75,7 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
         textFields.computeIfAbsent(type) { ArrayList() }.clearAndAdd(climbThrustWidget, descendThrustWidget)
     }
 
-    private fun configureThrustWidget(thrustWidget: TextFieldWidget) {
+    private fun configureThrustWidget(thrustWidget: EditBox) {
         thrustWidget.setTextPredicate {
             val i: Int? = it.toIntOrNull()
             it.isEmpty() || i != null && i in 0..100
@@ -141,8 +141,8 @@ class ThrustModeWidget(val computers: ComputerView, val x: Int, val y: Int, val 
     }
 
     companion object {
-        private val buttons: EnumMap<ButtonType, ButtonWidget> = EnumMap(ButtonType::class.java)
-        private val textFields: EnumMap<ButtonType, MutableList<TextFieldWidget>> = EnumMap(ButtonType::class.java)
+        private val buttons: EnumMap<ButtonType, Button> = EnumMap(ButtonType::class.java)
+        private val textFields: EnumMap<ButtonType, MutableList<EditBox>> = EnumMap(ButtonType::class.java)
         const val TOTAL_MODES: Float = 3.0f
     }
 }

@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(Minecraft.class)
 public interface ClientLevelRunningNormallyInvoker {
 //? if >=1.21 {
-@org.spongepowered.asm.mixin.gen.Invoker("isLevelRunningNormally")
+/*@org.spongepowered.asm.mixin.gen.Invoker("isLevelRunningNormally")
 boolean invokeIsLevelRunningNormally();
-    //?}
+    *///?}
 }

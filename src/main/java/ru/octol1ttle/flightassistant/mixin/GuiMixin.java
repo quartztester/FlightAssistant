@@ -9,21 +9,21 @@ import ru.octol1ttle.flightassistant.api.util.event.FixedGuiRenderCallback;
 abstract class GuiMixin {
 //? if fabric {
 //? if >=1.21 {
-@com.llamalad7.mixinextras.injector.ModifyReceiver(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/LayeredDraw;add(Lnet/minecraft/client/gui/LayeredDraw$Layer;)Lnet/minecraft/client/gui/LayeredDraw;", ordinal = 2))
+/*@com.llamalad7.mixinextras.injector.ModifyReceiver(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/LayeredDraw;add(Lnet/minecraft/client/gui/LayeredDraw$Layer;)Lnet/minecraft/client/gui/LayeredDraw;", ordinal = 2))
 public net.minecraft.client.gui.LayeredDraw render(net.minecraft.client.gui.LayeredDraw instance, net.minecraft.client.gui.LayeredDraw.Layer layer) {
     return instance.add((guiGraphics, deltaTracker) -> FixedGuiRenderCallback.EVENT.invoker().onRenderGui(
             guiGraphics,
 //? if >=1.21.5 {
-            /*deltaTracker.getGameTimeDeltaPartialTick(true)
-             *///?} else
+            /^deltaTracker.getGameTimeDeltaPartialTick(true)
+             ^///?} else
             deltaTracker.getGameTimeDeltaPartialTick(true)
         ));
     }
-    //?} else {
-    /*@org.spongepowered.asm.mixin.injection.Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;getCurrentGameMode()Lnet/minecraft/world/GameMode;", ordinal = 0))
-    private void render(net.minecraft.client.gui.DrawContext guiGraphics, float tickDelta, org.spongepowered.asm.mixin.injection.callback.CallbackInfo callbackInfo) {
-        FixedHudRenderCallback.EVENT.invoker().onRenderHud(guiGraphics, tickDelta);
+    *///?} else {
+@org.spongepowered.asm.mixin.injection.Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;getPlayerMode()Lnet/minecraft/world/level/GameType;", ordinal = 0))
+private void render(net.minecraft.client.gui.GuiGraphics guiGraphics, float partialTick, org.spongepowered.asm.mixin.injection.callback.CallbackInfo callbackInfo) {
+    FixedGuiRenderCallback.EVENT.invoker().onRenderGui(guiGraphics, partialTick);
     }
-*///?}
+    //?}
 //?}
 }

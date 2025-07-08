@@ -3,8 +3,8 @@ package ru.octol1ttle.flightassistant.screen.flightplan
 import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.ParentElement
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.client.gui.widget.TextWidget
+import net.minecraft.client.gui.widget.EditBox
+import net.minecraft.client.gui.widget.StringWidget
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -14,21 +14,21 @@ import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 // TODO: REWRITE THIS ABSOLUTE FUCKY SHITTY HORRIBLE GARBAGE YOU CALL "CODE"
 class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, val y: Int, val width: Int, val height: Int) : AbstractParentWidget(), FlightPlanState {
-    private val displayText: TextWidget = TextWidget(x + 5, y + 8, width, 9, Component.translatable("menu.flightassistant.flight_plan.departure"), font).alignLeft()
+    private val displayText: StringWidget = StringWidget(x + 5, y + 8, width, 9, Component.translatable("menu.flightassistant.flight_plan.departure"), font).alignLeft()
     private val fieldWidth: Int = width / 3 - 4
-    private val xField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width - fieldWidth * 2 - 8, y + 5, fieldWidth, 15, textFields[0], Component.empty()
+    private val xField: EditBox = EditBox(
+        mc.font, x + width - fieldWidth * 2 - 8, y + 5, fieldWidth, 15, textFields[0], Component.empty()
     )
-    private val zField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width - fieldWidth - 4, y + 5, fieldWidth, 15, textFields[1], Component.empty()
+    private val zField: EditBox = EditBox(
+        mc.font, x + width - fieldWidth - 4, y + 5, fieldWidth, 15, textFields[1], Component.empty()
     )
-    private var takeoffThrustText: TextWidget
-    private val takeoffThrustField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + 15, y + 33, width / 2, 15, textFields[2], Component.empty()
+    private var takeoffThrustText: StringWidget
+    private val takeoffThrustField: EditBox = EditBox(
+        mc.font, x + width + 15, y + 33, width / 2, 15, textFields[2], Component.empty()
     )
-    private var thrustReductionAltitudeText: TextWidget
-    private val thrustReductionAltitudeField: TextFieldWidget = TextFieldWidget(
-        mc.textRenderer, x + width + 15, y + 66, width / 2, 15, textFields[3], Component.empty()
+    private var thrustReductionAltitudeText: StringWidget
+    private val thrustReductionAltitudeField: EditBox = EditBox(
+        mc.font, x + width + 15, y + 66, width / 2, 15, textFields[3], Component.empty()
     )
 
     init {
@@ -46,13 +46,13 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
             it.isEmpty() || it == "-" || it.toDoubleOrNull() != null
         }
 
-        takeoffThrustText = TextWidget(takeoffThrustField.x, takeoffThrustField.y - 12, takeoffThrustField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.takeoff_thrust"), font).alignLeft()
+        takeoffThrustText = StringWidget(takeoffThrustField.x, takeoffThrustField.y - 12, takeoffThrustField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.takeoff_thrust"), font).alignLeft()
         takeoffThrustField.setTextPredicate {
             val i: Float? = it.toFloatOrNull()
             it.isEmpty() || i != null && i in 0.0f..100.0f
         }
 
-        thrustReductionAltitudeText = TextWidget(thrustReductionAltitudeField.x, thrustReductionAltitudeField.y - 12, thrustReductionAltitudeField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.thrust_reduction_altitude"), font).alignLeft()
+        thrustReductionAltitudeText = StringWidget(thrustReductionAltitudeField.x, thrustReductionAltitudeField.y - 12, thrustReductionAltitudeField.width, 9, Component.translatable("menu.flightassistant.flight_plan.departure.thrust_reduction_altitude"), font).alignLeft()
         thrustReductionAltitudeField.setTextPredicate {
             it.isEmpty() || it == "-" || it.toFloatOrNull() != null
         }
@@ -92,7 +92,7 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
     }
 
     override fun load() {
-        for (field: TextFieldWidget? in textFields) {
+        for (field: EditBox? in textFields) {
             field?.text = ""
         }
 
@@ -125,6 +125,6 @@ class DepartureWaypointWidget(private val computers: ComputerView, val x: Int, v
     }
 
     companion object {
-        var textFields: MutableList<TextFieldWidget?> = mutableListOf(null, null, null, null)
+        var textFields: MutableList<EditBox?> = mutableListOf(null, null, null, null)
     }
 }

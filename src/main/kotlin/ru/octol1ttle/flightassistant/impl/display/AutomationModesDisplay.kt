@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
-import ru.octol1ttle.flightassistant.FAKeyBindings
+import ru.octol1ttle.flightassistant.FAKeyMappings
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -41,7 +41,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
 
         val input: ControlInput? = computers.thrust.activeInput
         if (input != null) {
-            if (FAKeyBindings.isHoldingThrust()) {
+            if (FAKeyMappings.isHoldingThrust()) {
                 thrustDisplay.render(guiGraphics, Component.translatable("mode.flightassistant.thrust.override").setColor(cautionColor), false, cautionColor)
             } else {
                 thrustDisplay.render(

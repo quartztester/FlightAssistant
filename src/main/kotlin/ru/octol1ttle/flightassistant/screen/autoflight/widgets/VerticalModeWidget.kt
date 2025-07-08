@@ -5,9 +5,9 @@ import kotlin.collections.single
 import kotlin.collections.singleOrNull
 import net.minecraft.client.gui.Element
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.widget.ButtonWidget
-import net.minecraft.client.gui.widget.TextFieldWidget
-import net.minecraft.client.gui.widget.TextWidget
+import net.minecraft.client.gui.widget.Button
+import net.minecraft.client.gui.widget.EditBox
+import net.minecraft.client.gui.widget.StringWidget
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
@@ -16,8 +16,8 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComp
 import ru.octol1ttle.flightassistant.screen.AbstractParentWidget
 
 class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, val width: Int) : AbstractParentWidget(), DelayedApplyChanges {
-    private val title: TextWidget = TextWidget(
-        x, y, width, 20, Component.translatable("menu.flightassistant.autoflight.vertical"), mc.textRenderer
+    private val title: StringWidget = StringWidget(
+        x, y, width, 20, Component.translatable("menu.flightassistant.autoflight.vertical"), mc.font
     )
     private var newType: ButtonType
 
@@ -27,21 +27,21 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
         initSelectedPitch()
         initSelectedAltitude()
 
-        buttons[ButtonType.FlightPlan] = ButtonWidget.builder(
+        buttons[ButtonType.FlightPlan] = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.vertical.waypoint_altitude")
         ) { newType = ButtonType.FlightPlan }
-            .dimensions(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
+            .bounds(x + (width * (2 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
     }
 
     private fun initSelectedPitch() {
         val type = ButtonType.SelectedPitch
 
-        buttons[type] = ButtonWidget.builder(
+        buttons[type] = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.vertical.selected_pitch")
         ) { newType = type }
-            .dimensions(x + 1, y + 20, width / 3 - 1, 15).build()
-        val selectedPitchWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
+            .bounds(x + 1, y + 20, width / 3 - 1, 15).build()
+        val selectedPitchWidget = EditBox(
+            mc.font, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
         )
         selectedPitchWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.vertical.selected_pitch.target"))
         selectedPitchWidget.setTextPredicate {
@@ -54,13 +54,13 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
     private fun initSelectedAltitude() {
         val type = ButtonType.SelectedAltitude
 
-        buttons[type] = ButtonWidget.builder(
+        buttons[type] = Button.builder(
             Component.translatable("menu.flightassistant.autoflight.vertical.selected_altitude")
         ) { newType = type }
-            .dimensions(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
+            .bounds(x + (width * (1 / TOTAL_MODES)).toInt() + 1, y + 20, width / 3 - 1, 15).build()
 
-        val selectedAltitudeWidget = TextFieldWidget(
-            mc.textRenderer, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
+        val selectedAltitudeWidget = EditBox(
+            mc.font, x + width / 4, y + 40, width / 2, 15, textFields[type]?.singleOrNull(), Component.empty()
         )
         selectedAltitudeWidget.setPlaceholder(Component.translatable("menu.flightassistant.autoflight.vertical.target_altitude"))
         selectedAltitudeWidget.setTextPredicate {
@@ -122,8 +122,8 @@ class VerticalModeWidget(val computers: ComputerView, val x: Int, val y: Int, va
     }
 
     companion object {
-        private val buttons: EnumMap<ButtonType, ButtonWidget> = EnumMap(ButtonType::class.java)
-        private val textFields: EnumMap<ButtonType, MutableList<TextFieldWidget>> = EnumMap(ButtonType::class.java)
+        private val buttons: EnumMap<ButtonType, Button> = EnumMap(ButtonType::class.java)
+        private val textFields: EnumMap<ButtonType, MutableList<EditBox>> = EnumMap(ButtonType::class.java)
         const val TOTAL_MODES: Float = 3.0f
     }
 }
