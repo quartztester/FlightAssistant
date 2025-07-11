@@ -42,8 +42,13 @@ import ru.octol1ttle.flightassistant.impl.alert.thrust.NoThrustSourceAlert
 import ru.octol1ttle.flightassistant.impl.alert.thrust.ReverseThrustNotSupportedAlert
 import ru.octol1ttle.flightassistant.impl.alert.thrust.ThrustLockedAlert
 import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.*
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.*
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutomationsComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.FireworkComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.HeadingComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.PitchComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.RollComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 
 class AlertComputer(computers: ComputerView, private val soundManager: SoundManager) : Computer(computers) {
@@ -166,7 +171,7 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
 
     override fun tick() {
         updateAlerts()
-        if (computers.data.player.isDead || !computers.data.flying) {
+        if (computers.data.player.isDeadOrDying || !computers.data.flying) {
             tickSoundsAndStopInactive(true)
             return
         }

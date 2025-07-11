@@ -13,8 +13,8 @@ class ChunkStatusComputer(computers: ComputerView) : Computer(computers) {
         private set
 
     override fun tick() {
-        val chunkPos: ChunkPos = computers.data.player.chunkPos
-        val world: ClientChunkCache = computers.data.level.chunkManager
+        val chunkPos: ChunkPos = computers.data.player.chunkPosition()
+        val world: ClientChunkCache = computers.data.level.chunkSource
 
         var unloadedClose = 0
         var unloadedFar = false
@@ -31,12 +31,10 @@ class ChunkStatusComputer(computers: ComputerView) : Computer(computers) {
         }
 
         status =
-            if (!unloadedFar && unloadedClose == 0) {
-                Status.LOADED
-            } else if (status != Status.ALL_UNLOADED && (unloadedFar && unloadedClose in 0..<9)) {
-                Status.SOME_UNLOADED
+            if (unloadedFar || unloadedClose > 0) {
+                if (status == Status.ALL_UNLOADED || (unloadedFar && unloadedClose == 9)) Status.ALL_UNLOADED else Status.SOME_UNLOADED
             } else {
-                Status.ALL_UNLOADED
+                Status.LOADED
             }
     }
 

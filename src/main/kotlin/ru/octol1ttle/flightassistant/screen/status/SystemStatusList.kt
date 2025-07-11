@@ -58,33 +58,32 @@ override fun getScrollbarPosition(): Int {
                 else ON_RESET_TEXT
         }.pos(x, y).width(60).build()
 
-        override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+        override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, partialTick: Float) {
             val renderY: Int = y + Y_OFFSET
 
             this@Entry.displayName.x = this.x + 10
             this@Entry.displayName.y = renderY
-            this@Entry.displayName.render(context, mouseX, mouseY, tickDelta)
+            this@Entry.displayName.render(context, mouseX, mouseY, partialTick)
 
             toggleButton.x = this.x + this.listWidth - toggleButton.width - 10
             toggleButton.y = renderY - toggleButton.height / 4 - 1
             toggleButton.message =
                 if (controller.isEnabled(identifier)) OFF_TEXT
                 else ON_RESET_TEXT
-            toggleButton.render(context, mouseX, mouseY, tickDelta)
+            toggleButton.render(context, mouseX, mouseY, partialTick)
 
             offText.x = toggleButton.x - this.listWidth / 12 - font.width(OFF_TEXT)
             offText.y = renderY
-            offText.color = if (controller.isEnabled(identifier)) 0x0F0F0F
-            else 0xFFFFFF
-            offText.render(context, mouseX, mouseY, tickDelta)
+            @Suppress("UsePropertyAccessSyntax")
+            offText.setColor(if (controller.isEnabled(identifier)) 0x0F0F0F else 0xFFFFFF)
+            offText.render(context, mouseX, mouseY, partialTick)
 
             faultText.x = offText.x - font.width(FAULT_TEXT)
             faultText.y = renderY
-            faultText.color = if (controller.isFaulted(identifier)) cautionColor
-            else 0x0F0F0F
-            faultText.render(context, mouseX, mouseY, tickDelta)
+            @Suppress("UsePropertyAccessSyntax")
+            faultText.setColor(if (controller.isFaulted(identifier)) cautionColor else 0x0F0F0F)
+            faultText.render(context, mouseX, mouseY, partialTick)
         }
-
 
         override fun children(): MutableList<out GuiEventListener> {
             return ImmutableList.of(this@Entry.displayName, faultText, offText, toggleButton)

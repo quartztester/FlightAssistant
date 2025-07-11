@@ -315,9 +315,9 @@ short.flightassistant:
   auto_thrust: А/ТЯГА
   autopilot: АП
   automation_modes: АВТО/РЕЖИМ
-  elytra: Э
+  elytra: ЭЛ
   elytra_durability: ПРЧН/ЭЛ
-  flight_directors: УК
+  flight_directors: УКАЗ
   flight_path: ПУТЬ/П
   ground: ЗЕМЛ
   ground_speed: 'Г/С%s'

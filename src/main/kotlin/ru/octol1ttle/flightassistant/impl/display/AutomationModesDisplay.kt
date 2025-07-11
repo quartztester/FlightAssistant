@@ -98,7 +98,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     private fun renderAutomaticsMode(guiGraphics: GuiGraphics) {
         val text: MutableComponent = Component.empty()
         if (computers.automations.flightDirectors) {
-            text.appendWithSeparation(Component.translatable("short.flightassistant.flight_directors"))
+            text.appendWithSeparation(Component.translatable("short.flightassistant.flight_directors_alt"))
         }
         if (computers.automations.autoThrust) {
             val autoThrustText: MutableComponent = Component.translatable("short.flightassistant.auto_thrust")

@@ -1,4 +1,4 @@
-alert.flightassistant:
+alert.flightassistant: # TODO: get rid of alert categories, more flexible alert sorting & registration
   alert:
     .: ALERT
     fault: SYS FAULT (SOME ALERTS LOST)
@@ -6,7 +6,7 @@ alert.flightassistant:
     .: AUTO FLT
     fault: SYS FAULT
     pitch_fault: PITCH CTL FAULT
-    heading_fault: HDG CTL FAULT
+    heading_fault: HDG CTL FAULT # TODO: it's a yaw controller dumbass
     roll_fault: ROLL CTL FAULT
     autopilot_off:
       .: AP OFF
@@ -27,7 +27,7 @@ alert.flightassistant:
       flightassistant:attitude: ATT DSPL FAULT
       flightassistant:automation_modes: AUTO MODE DSPL FAULT
       flightassistant:coordinates: COORD DSPL FAULT
-      flightassistant:elytra_durability: E/DURA DSPL FAULT
+      flightassistant:elytra_durability: EL/DURA DSPL FAULT
       flightassistant:flight_directors: FLT DIR DSPL FAULT
       flightassistant:flight_path: F/PATH DSPL FAULT
       flightassistant:heading: HDG DSPL FAULT
@@ -259,9 +259,11 @@ menu.flightassistant:
         flightassistant:thrust: Thrust computer
   autoflight: # TODO: move some to short.flightassistant
     .: Auto flight
-    flight_directors: Flight directors
-    auto_thrust: Auto thrust
-    autopilot: Autopilot
+    disabled: 'OFF'
+    enabled: 'ON'
+    flight_directors: 'FLT DIR %s'
+    auto_thrust: 'A/THR %s'
+    autopilot: 'AP %s'
     thrust:
       .: Thrust
       constant_thrust: CONSTANT
@@ -325,10 +327,11 @@ short.flightassistant:
   auto_thrust: A/THR
   autopilot: AP
   automation_modes: AUTO/MODE
-  elytra: E
-  elytra_durability: E/DURA
-  flight_directors: FD
-  flight_path: F/PTH
+  elytra: EL
+  elytra_durability: EL/DURA
+  flight_directors: FLT DIR
+  flight_directors_alt: FD
+  flight_path: F/PATH
   ground: GRND
   ground_speed: 'G/S%s'
   heading: HDG

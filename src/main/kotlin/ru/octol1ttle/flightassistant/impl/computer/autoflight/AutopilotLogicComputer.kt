@@ -11,6 +11,7 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.degrees
 
+// TODO: display selected shit elsewhere, not in the main bar
 class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     var thrustMode: ThrustMode? = SpeedThrustMode(15.0f)
     var verticalMode: VerticalMode? = PitchVerticalMode(0.0f)
@@ -19,7 +20,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     fun computeThrust(): ControlInput? {
         return when (val mode: ThrustMode? = thrustMode ?: computers.plan.getThrustMode()) {
             is SpeedThrustMode -> ControlInput(
-                computers.thrust.calculateThrustForSpeed(mode.speed) ?: 1.0f,
+                computers.thrust.calculateThrustForSpeed(mode.speed) ?: 1.0f, // TODO: smart speed follow
                 ControlInput.Priority.NORMAL,
                 Component.translatable("mode.flightassistant.thrust.selected_speed", mode.speed.roundToInt()),
                 identifier = ID

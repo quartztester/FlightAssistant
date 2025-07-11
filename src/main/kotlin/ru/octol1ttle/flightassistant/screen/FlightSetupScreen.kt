@@ -5,18 +5,17 @@ import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.screen.autoflight.AutoFlightScreen
-import ru.octol1ttle.flightassistant.screen.flightplan.FlightPlanScreen
 import ru.octol1ttle.flightassistant.screen.status.SystemStatusScreen
 
 class FlightSetupScreen : FABaseScreen(Component.translatable("menu.flightassistant")) {
     override fun init() {
         super.init()
 
-        this.addRenderableWidget(StringWidget(0, centerY - 40, this.width, 9, this.title, this.font))
+        this.addRenderableWidget(StringWidget(0, centerY - 40, this.width, this.font.lineHeight, this.title, this.font))
 
-        this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.flight_plan")) {
+        /*this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.flight_plan")) {
             this.minecraft!!.setScreen(FlightPlanScreen())
-        }.pos(this.centerX - 175, this.centerY - 10).width(100).build())
+        }.pos(this.centerX - 175, this.centerY - 10).width(100).build())*/ // TODO
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.system")) {
             this.minecraft!!.setScreen(SystemStatusScreen())
         }.pos(this.centerX + 75, this.centerY - 10).width(100).build())

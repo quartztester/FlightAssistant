@@ -4,11 +4,11 @@ import kotlin.math.max
 import kotlin.math.min
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.hit.HitResult
-import net.minecraft.util.math.Vec3
-import net.minecraft.world.Heightmap
-import net.minecraft.world.RaycastContext
+import net.minecraft.world.level.ClipContext
+import net.minecraft.world.level.levelgen.Heightmap
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -38,13 +38,13 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
 
     override fun tick() {
         val data: AirDataComputer = computers.data
-        if (!data.flying || data.player.isTouchingWater) {
+        if (!data.flying || data.player.isInWater) {
             groundImpactStatus = Status.SAFE
             obstacleImpactStatus = Status.SAFE
             return
         }
 
-        val anyBlocksAbove: Boolean = data.level.getTopY(Heightmap.Type.MOTION_BLOCKING, data.player.blockX, data.player.blockZ) > data.player.y
+        val anyBlocksAbove: Boolean = data.level.getHeight(Heightmap.Types.MOTION_BLOCKING, data.player.blockX, data.player.blockZ) > data.player.y
         val clearThreshold: Float = if (anyBlocksAbove) 7.5f else 15.0f
         val cautionThreshold: Float = if (anyBlocksAbove) 5.0f else 10.0f
         val warningThreshold: Float = if (anyBlocksAbove) 2.5f else 5.0f
@@ -52,7 +52,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
 
         groundImpactTime = computeGroundImpactTime(data).requireIn(0.0f..Float.MAX_VALUE)
         groundImpactStatus =
-            if (data.isInvulnerableTo(data.player.damageSources.fall())) {
+            if (data.isInvulnerableTo(data.player.damageSources().fall())) {
                 Status.SAFE
             } else if (groundImpactStatus == Status.SAFE && (data.velocity.y * 20 > -10 || groundImpactTime > cautionThreshold)) {
                 Status.SAFE
@@ -68,11 +68,11 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
 
         obstacleImpactTime = computeObstacleImpactTime(data, clearThreshold).requireIn(0.0f..Float.MAX_VALUE)
         obstacleImpactStatus =
-            if (data.isInvulnerableTo(data.player.damageSources.flyIntoWall())) {
+            if (data.isInvulnerableTo(data.player.damageSources().flyIntoWall())) {
                 Status.SAFE
-            } else if (obstacleImpactStatus == Status.SAFE && ((data.velocity.horizontalLength() * 10 - 3) < data.player.health * 0.5f || obstacleImpactTime > groundImpactTime * 1.1f || obstacleImpactTime > cautionThreshold)) {
+            } else if (obstacleImpactStatus == Status.SAFE && ((data.velocity.horizontalDistance() * 10 - 3) < data.player.health * 0.5f || obstacleImpactTime > groundImpactTime * 1.1f || obstacleImpactTime > cautionThreshold)) {
                 Status.SAFE
-            } else if ((data.velocity.horizontalLength() * 10 - 3) < data.player.health * 0.25f || obstacleImpactTime > groundImpactTime * 1.5f || obstacleImpactTime > clearThreshold) {
+            } else if ((data.velocity.horizontalDistance() * 10 - 3) < data.player.health * 0.25f || obstacleImpactTime > groundImpactTime * 1.5f || obstacleImpactTime > clearThreshold) {
                 Status.SAFE
             } else if (obstacleImpactStatus >= Status.CAUTION && obstacleImpactTime > warningThreshold) {
                 Status.CAUTION
@@ -98,25 +98,25 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
     // IDEA: max/min terrain altitude on status display (that's gonna be so fucking cool /srs)
     private fun computeObstacleImpactTime(data: AirDataComputer, lookAheadTime: Float): Float {
         val end: Vec3 = data.position.add(data.velocity.multiply(lookAheadTime * 20.0, 0.0, lookAheadTime * 20.0))
-        val result: BlockHitResult = data.level.raycast(
-            RaycastContext(
+        val result: BlockHitResult = data.level.clip(
+            ClipContext(
                 data.position,
                 end,
-                RaycastContext.ShapeType.COLLIDER,
-                RaycastContext.FluidHandling.ANY,
+                ClipContext.Block.COLLIDER,
+                ClipContext.Fluid.ANY,
                 data.player
             )
         )
         if (result.type != HitResult.Type.BLOCK) {
             return Float.MAX_VALUE
         } else {
-            val otherEnd: Vec3 = data.position.add(data.velocity.multiply(lookAheadTime * 20.0))
-            val otherResult: BlockHitResult = data.level.raycast(
-                RaycastContext(
+            val otherEnd: Vec3 = data.position.add(data.velocity.scale(lookAheadTime * 20.0))
+            val otherResult: BlockHitResult = data.level.clip(
+                ClipContext(
                     data.position,
                     otherEnd,
-                    RaycastContext.ShapeType.COLLIDER,
-                    RaycastContext.FluidHandling.ANY,
+                    ClipContext.Block.COLLIDER,
+                    ClipContext.Fluid.ANY,
                     data.player
                 )
             )
@@ -126,8 +126,8 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
             }
         }
 
-        val relative: Vec3 = result.pos.subtract(data.position)
-        return (relative.horizontalLength() / (data.velocity.horizontalLength() * 20.0f)).toFloat()
+        val relative: Vec3 = result.location.subtract(data.position)
+        return (relative.horizontalDistance() / (data.velocity.horizontalDistance() * 20.0f)).toFloat()
     }
 
     override fun getMinimumPitch(): ControlInput? {
