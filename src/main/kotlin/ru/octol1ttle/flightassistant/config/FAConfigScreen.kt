@@ -10,7 +10,7 @@ import ru.octol1ttle.flightassistant.config.options.GlobalOptions
 import ru.octol1ttle.flightassistant.config.options.SafetyOptions
 
 @Suppress("UnusedVariable", "unused") object FAConfigScreen {
-    fun generate(parent: Screen): Screen {
+    fun generate(parent: Screen?): Screen {
         return YetAnotherConfigLib(FlightAssistant.MOD_ID) {
             val global: ConfigCategory by registerGlobalOptions(
                 Component.translatable("config.flightassistant.category.global"),

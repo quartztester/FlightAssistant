@@ -203,6 +203,7 @@ config.flightassistant:
 
 menu.flightassistant:
   .: Flight setup
+  config: Mod configuration
   flight_plan:
     .: Flight plan
     save: Save
@@ -265,36 +266,24 @@ menu.flightassistant:
     auto_thrust: 'A/THR %s'
     autopilot: 'AP %s'
     thrust:
-      .: Thrust
-      constant_thrust: CONSTANT
-      climb_thrust: Climb thrust (%)
-      descend_thrust: Descend thrust (%)
-      target_thrust: Target thrust
-      target_speed: Target speed
-      selected_speed: SPEED
-      vertical_target: VERT
-      waypoint_thrust: F/PLAN
+      mode: 'Thrust mode: '
+      speed: SPEED
+      vertical_profile: V.PROF
+      flight_plan: F-PLAN
     vertical:
-      .: Vertical navigation
-      target_altitude: Target altitude
-      selected_pitch:
-        .: PITCH
-        target: Target pitch
-      selected_altitude: ALT
-      waypoint_altitude: F/PLAN
+      mode: 'Vertical mode: '
+      pitch: PITCH
+      altitude: ALT
+      flight_plan: F-PLAN
     lateral:
-      .: Lateral navigation
-      target_x: X
-      target_z: Z
-      selected_heading:
-        .: HDG
-        target: Target heading
-      selected_coordinates: COORDS
-      waypoint_coordinates: F/PLAN
+      mode: 'Lateral mode: '
+      heading: HDG
+      coordinates: COORDS
+      flight_plan: F-PLAN
 
 mode.flightassistant:
   thrust:
-    override: THR OVRD
+    override: THR OVRD # TODO: single key to override all
     manual: MAN THR %s
     manual_toga: MAN TOGA
     locked: THR LK %s

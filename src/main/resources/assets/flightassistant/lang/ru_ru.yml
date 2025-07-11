@@ -206,7 +206,8 @@ config.flightassistant:
         lock_explosive: Блокировать использование взрывоопасных фейерверков
 
 menu.flightassistant:
-  .: Настройка полёта
+  .: Настройки полёта
+  config: Конфигурация мода
   flight_plan:
     .: План полёта
   system:
