@@ -79,8 +79,8 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 //?}
 
 //? if >=1.21.5 {
-        /*for (equipmentSlot in net.minecraft.entity.EquipmentSlot.VALUES) {
-            val stack: ItemStack = player.getEquippedStack(equipmentSlot)
+        /*for (equipmentSlot in net.minecraft.world.entity.EquipmentSlot.VALUES) {
+            val stack: ItemStack = player.getItemBySlot(equipmentSlot)
 *///?} else
         for (stack: ItemStack in player.handSlots) {
 //? if >=1.21.2 {

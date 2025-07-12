@@ -69,8 +69,8 @@ object FAConfig {
 
             if (!player.abilities.mayfly) {
 //? if >=1.21.5 {
-                /*for (slot: net.minecraft.entity.EquipmentSlot in net.minecraft.entity.EquipmentSlot.VALUES) {
-                    if (player.getEquippedStack(slot).contains(net.minecraft.component.DataComponentTypes.GLIDER)) {
+                /*for (slot: net.minecraft.world.entity.EquipmentSlot in net.minecraft.world.entity.EquipmentSlot.VALUES) {
+                    if (player.getItemBySlot(slot).has(net.minecraft.core.component.DataComponents.GLIDER)) {
                         return displaysStorage.notFlyingHasElytra
                     }
                 }

@@ -101,7 +101,7 @@ class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Com
 //? if >=1.21 {
         /*return stack.get(net.minecraft.core.component.DataComponents.FIREWORKS)?.explosions?.isEmpty() != false
 *///?} else
-        return stack.getTagElement("Fireworks")?.getList("Explosions", Tag.TAG_COMPOUND.toInt())?.isEmpty() != false
+        return stack.getTagElement("Fireworks")?.getList("Explosions", net.minecraft.nbt.Tag.TAG_COMPOUND.toInt())?.isEmpty() != false
     }
 
     private fun tryActivateFirework(player: Player) {
@@ -112,6 +112,9 @@ class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Com
         if (isFireworkAndSafe(player.offhandItem)) {
             useFirework(player, InteractionHand.OFF_HAND)
         } else if (safeFireworkSlot != null) {
+//? if >=1.21.5 {
+            /*player.inventory.selectedSlot = safeFireworkSlot!!
+*///?} else
             player.inventory.selected = safeFireworkSlot!!
             useFirework(player, InteractionHand.MAIN_HAND)
         }

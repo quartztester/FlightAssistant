@@ -142,9 +142,6 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
 
         val delta: Float = diff * (FATickCounter.timePassed * deltaTimeMultiplier * closeDistanceMultiplier).coerceIn(0.0f..1.0f)
         player.xRot -= delta
-//? if >=1.21.5 {
-        /*player.lastPitch -= delta
-*///?} else
         player.xRotO -= delta
     }
 

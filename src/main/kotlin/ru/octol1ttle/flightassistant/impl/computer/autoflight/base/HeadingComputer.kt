@@ -53,9 +53,6 @@ class HeadingComputer(computers: ComputerView) : Computer(computers) {
 
         val delta: Float = diff * (FATickCounter.timePassed * deltaTimeMultiplier * closeDistanceMultiplier).coerceIn(0.0f..1.0f)
         player.yRot += delta
-//? if >=1.21.5 {
-        /*player.lastYaw += delta
-*///?} else
         player.yRotO += delta
     }
 
