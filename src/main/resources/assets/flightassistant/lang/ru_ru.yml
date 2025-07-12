@@ -208,8 +208,6 @@ config.flightassistant:
 menu.flightassistant:
   .: Настройки полёта
   config: Конфигурация мода
-  flight_plan:
-    .: План полёта
   system:
     .: Статус систем
     fault: ОТКАЗ
@@ -248,38 +246,34 @@ menu.flightassistant:
         flightassistant:thrust: Компьютер тяги
   autoflight:
     .: Автополёт
-    flight_directors: Указатели полёта
-    auto_thrust: Автомат тяги
-    autopilot: Автопилот
+    disabled: ВЫКЛ
+    enabled: ВКЛ
+    flight_directors: 'УКАЗ ПОЛ %s'
+    auto_thrust: 'А/ТЯГА %s'
+    autopilot: 'АП %s'
     thrust:
-      .: Тяга
-      selected_speed:
-        .: СКОР
-        target: Целевая скор.
-      vertical_target:
-        .: ВЕРТ
-        climb_thrust: Тяга набора (%)
-        descend_thrust: Тяга снижения (%)
-      waypoint_thrust: ПЛАН/П
+      mode: 'Режим тяги: '
+      speed: СКОР
+      vertical_profile: В.ПРОФ
+      flight_plan: Ф-ПЛАН
     vertical:
-      .: Вертикальная навигация
-      selected_pitch:
-        .: УГОЛ
-        target: Целевой угол
-      selected_altitude:
-        .: ВЫС
-        target: Целевая выс.
-      waypoint_altitude: ПЛАН/П
+      mode: 'Вертикальный режим: '
+      pitch: УГОЛ
+      altitude: ВЫС
+      flight_plan: Ф-ПЛАН
     lateral:
-      .: Горизонтальная навигация
-      selected_heading:
-        .: КУРС
-        target: Целевой курс
-      selected_coordinates:
-        .: КООРД
-        target_x: X
-        target_z: Z
-      waypoint_coordinates: ПЛАН/П
+      mode: 'Горизонтальный режим: '
+      heading: КУРС
+      coordinates: КООРД
+      flight_plan: Ф-ПЛАН
+    target:
+      speed: 'Целевая скорость: '
+      climb_thrust: 'Целевая тяга (%) набора/крейсера: '
+      descend_thrust: 'Целевая тяга (%) снижения: '
+      pitch: 'Целевой угол: '
+      altitude: 'Целевая высота: '
+      heading: 'Целевой курс: '
+      coordinates: 'Целевые координаты: '
 
 mode.flightassistant:
   thrust:
@@ -318,7 +312,8 @@ short.flightassistant:
   automation_modes: АВТО/РЕЖИМ
   elytra: ЭЛ
   elytra_durability: ПРЧН/ЭЛ
-  flight_directors: УКАЗ
+  flight_directors: УКАЗАТ
+  flight_directors_alt: УК
   flight_path: ПУТЬ/П
   ground: ЗЕМЛ
   ground_speed: 'Г/С%s'

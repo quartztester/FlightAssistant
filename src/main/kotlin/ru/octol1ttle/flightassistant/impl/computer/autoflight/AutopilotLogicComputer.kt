@@ -2,7 +2,6 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import kotlin.math.abs
 import kotlin.math.atan2
-import kotlin.math.roundToInt
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
@@ -13,19 +12,20 @@ import ru.octol1ttle.flightassistant.api.util.degrees
 
 // TODO: display selected shit elsewhere, not in the main bar
 class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
-    var thrustMode: ThrustMode? = SpeedThrustMode(15.0f)
+    var thrustMode: ThrustMode? = SpeedThrustMode(15)
     var verticalMode: VerticalMode? = PitchVerticalMode(0.0f)
-    var lateralMode: LateralMode? = HeadingLateralMode(360.0f)
+    var lateralMode: LateralMode? = HeadingLateralMode(360)
 
     fun computeThrust(): ControlInput? {
         return when (val mode: ThrustMode? = thrustMode ?: computers.plan.getThrustMode()) {
             is SpeedThrustMode -> ControlInput(
-                computers.thrust.calculateThrustForSpeed(mode.speed) ?: 1.0f, // TODO: smart speed follow
+                computers.thrust.calculateThrustForSpeed(mode.speed.toFloat()) ?: 1.0f, // TODO: smart speed follow
                 ControlInput.Priority.NORMAL,
-                Component.translatable("mode.flightassistant.thrust.selected_speed", mode.speed.roundToInt()),
+                Component.translatable("mode.flightassistant.thrust.selected_speed", mode.speed),
                 identifier = ID
             )
-            is VerticalTargetThrustMode -> {
+
+            is VerticalProfileThrustMode -> {
                 val verticalMode: VerticalMode? = verticalMode
                 if (verticalMode !is SelectedAltitudeVerticalMode) {
                     return null
@@ -65,14 +65,14 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 var text: Component
                 if (diff >= 0) {
                     finalPitch = computers.thrust.getOptimumClimbPitch()
-                    text = Component.translatable("mode.flightassistant.vertical.selected_altitude.climb", "%.0f".format(mode.altitude))
+                    text = Component.translatable("mode.flightassistant.vertical.selected_altitude.climb", mode.altitude)
 
                     val distanceFromNeutral: Float = finalPitch - neutralPitch
                     finalPitch -= distanceFromNeutral * 0.6f * ((200.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
                     finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
                 } else {
                     finalPitch = -35.0f
-                    text = Component.translatable("mode.flightassistant.vertical.selected_altitude.descend", "%.0f".format(mode.altitude))
+                    text = Component.translatable("mode.flightassistant.vertical.selected_altitude.descend", mode.altitude)
 
                     val distanceFromNeutral: Float = finalPitch - neutralPitch
                     finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 50.0f).coerceIn(0.0f..1.0f)
@@ -80,7 +80,7 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
                 }
 
                 if (abs <= 5.0f) {
-                    text = Component.translatable("mode.flightassistant.vertical.selected_altitude.hold", "%.0f".format(mode.altitude))
+                    text = Component.translatable("mode.flightassistant.vertical.selected_altitude.hold", mode.altitude)
                 }
 
                 ControlInput(finalPitch, ControlInput.Priority.NORMAL, text, 1.5f, active, ID)
@@ -94,16 +94,16 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     fun computeHeading(active: Boolean): ControlInput? {
         return when (val mode: LateralMode? = lateralMode ?: computers.plan.getLateralMode()) {
             is HeadingLateralMode -> ControlInput(
-                mode.heading,
+                mode.heading.toFloat(),
                 ControlInput.Priority.NORMAL,
-                Component.translatable("mode.flightassistant.lateral.selected_heading", "%.0f".format(mode.heading)),
+                Component.translatable("mode.flightassistant.lateral.selected_heading", mode.heading),
                 active = active,
                 identifier = ID
             )
             is CoordinatesLateralMode -> ControlInput(
                 degrees(atan2(-(mode.x - computers.data.position.x), mode.z - computers.data.position.z)).toFloat() + 180.0f,
                 ControlInput.Priority.NORMAL,
-                Component.translatable("mode.flightassistant.lateral.selected_coordinates", "%.0f".format(mode.x), "%.0f".format(mode.z)),
+                Component.translatable("mode.flightassistant.lateral.selected_coordinates", mode.x, mode.z),
                 active = active,
                 identifier = ID
             )
@@ -122,21 +122,18 @@ class AutopilotLogicComputer(computers: ComputerView) : Computer(computers) {
     interface VerticalMode
     interface LateralMode
 
-    data class SpeedThrustMode(val speed: Float) : ThrustMode
-    data class VerticalTargetThrustMode(val climbThrust: Float, val descendThrust: Float) : ThrustMode
+    data class SpeedThrustMode(val speed: Int) : ThrustMode
+    data class VerticalProfileThrustMode(val climbThrust: Float, val descendThrust: Float) : ThrustMode
 
     data class PitchVerticalMode(val pitch: Float) : VerticalMode
 
-    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
-    data class SelectedAltitudeVerticalMode(val altitude: Double) : VerticalMode
+    data class SelectedAltitudeVerticalMode(val altitude: Int) : VerticalMode
 
-    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
-    data class ManagedAltitudeVerticalMode(val altitude: Double) : VerticalMode
+    data class ManagedAltitudeVerticalMode(val altitude: Int) : VerticalMode
 
-    data class HeadingLateralMode(val heading: Float) : LateralMode
+    data class HeadingLateralMode(val heading: Int) : LateralMode
 
-    // TODO: Double? -> Int? (Int can do [-2b, +2b] wtf we don't need doubles)
-    data class CoordinatesLateralMode(val x: Double, val z: Double) : LateralMode
+    data class CoordinatesLateralMode(val x: Int, val z: Int) : LateralMode
 
     companion object {
         val ID: ResourceLocation = FlightAssistant.id("autopilot_logic")

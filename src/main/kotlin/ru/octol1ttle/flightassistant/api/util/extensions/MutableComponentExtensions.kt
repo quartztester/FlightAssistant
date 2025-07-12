@@ -4,9 +4,16 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 
-fun MutableComponent.appendWithSeparation(other: Component) {
+fun MutableComponent.appendWithSeparation(other: Component, separator: String = " ") {
     if (this.siblings.isNotEmpty()) {
-        this.append(" ")
+        this.append(separator)
+    }
+    this.append(other)
+}
+
+fun MutableComponent.appendWithSeparation(other: Component, separator: Component) {
+    if (this.siblings.isNotEmpty()) {
+        this.append(separator)
     }
     this.append(other)
 }

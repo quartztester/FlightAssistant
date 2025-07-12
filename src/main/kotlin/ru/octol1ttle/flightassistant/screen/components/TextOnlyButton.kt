@@ -1,6 +1,7 @@
 package ru.octol1ttle.flightassistant.screen.components
 
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentUtils
@@ -12,14 +13,22 @@ class TextOnlyButton(val baseX: Int, y: Int, text: Component, onPress: OnPress) 
     var color: Int = 0
 
     override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
-        val message: Component = if (this.isHovered) {
-            ComponentUtils.mergeStyles(this.message.copy(), Style.EMPTY.withUnderlined(true))
-        } else {
-            this.message
-        }
+        val message: Component = getMessageComponent(this)
 
         this.width = font.width(message)
         this.x = this.baseX - this.width / 2
         guiGraphics.drawString(font, message, this.x, this.y, this.color or (Mth.ceil(this.alpha * 255.0f) shl 24))
+    }
+
+    companion object {
+        private val UNDERLINED: Style = Style.EMPTY.withUnderlined(true)
+
+        fun getMessageComponent(widget: AbstractWidget): Component {
+            return if (widget.isHoveredOrFocused) {
+                ComponentUtils.mergeStyles(widget.message.copy(), UNDERLINED)
+            } else {
+                widget.message
+            }
+        }
     }
 }

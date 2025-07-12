@@ -6,7 +6,7 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
     .: AUTO FLT
     fault: SYS FAULT
     pitch_fault: PITCH CTL FAULT
-    heading_fault: HDG CTL FAULT # TODO: it's a yaw controller dumbass
+    heading_fault: HDG CTL FAULT # TODO: it's a yaw controller
     roll_fault: ROLL CTL FAULT
     autopilot_off:
       .: AP OFF
@@ -204,24 +204,6 @@ config.flightassistant:
 menu.flightassistant:
   .: Flight setup
   config: Mod configuration
-  flight_plan:
-    .: Flight plan
-    save: Save
-    discard_changes: Discard changes
-    departure:
-      .: Departure
-      takeoff_thrust: Takeoff thrust
-      thrust_reduction_altitude: Thrust reduction altitude
-    arrival:
-      .: Arrival
-      landing_altitude: Landing altitude
-      minimums:
-        .: Minimums
-        absolute: ALT
-        relative: HEIGHT
-      go_around_altitude: Go around altitude
-    add_waypoint: Add waypoint
-    enroute: 'Enroute #%s'
   system:
     .: System status
     fault: FAULT
@@ -258,7 +240,7 @@ menu.flightassistant:
         flightassistant:pitch: Pitch computer
         flightassistant:roll: Roll computer
         flightassistant:thrust: Thrust computer
-  autoflight: # TODO: move some to short.flightassistant
+  autoflight:
     .: Auto flight
     disabled: 'OFF'
     enabled: 'ON'
@@ -280,6 +262,14 @@ menu.flightassistant:
       heading: HDG
       coordinates: COORDS
       flight_plan: F-PLAN
+    target:
+      speed: 'Target speed: '
+      climb_thrust: 'Target climb/cruise thrust %: '
+      descend_thrust: 'Target descend thrust %: '
+      pitch: 'Target pitch: '
+      altitude: 'Target altitude: '
+      heading: 'Target heading: '
+      coordinates: 'Target coordinates: '
 
 mode.flightassistant:
   thrust:

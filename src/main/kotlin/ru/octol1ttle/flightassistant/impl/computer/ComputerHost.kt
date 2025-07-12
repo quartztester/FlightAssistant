@@ -19,6 +19,7 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.RollComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
+// TODO: port ComputerHost.guardedCall
 internal object ComputerHost : ModuleController<Computer>, ComputerView {
     private val computers: MutableMap<ResourceLocation, Computer> = LinkedHashMap()
 

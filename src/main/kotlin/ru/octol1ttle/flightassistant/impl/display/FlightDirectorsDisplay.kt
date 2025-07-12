@@ -30,18 +30,24 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
             val halfWidth: Int = (HudFrame.width / 10.0f).toInt()
 
             pose().pushPose()
-            pose().translate(0, 0, -50)
+            pose().translate(0, 0, -100)
+            enableScissor(HudFrame.left, HudFrame.top, HudFrame.right, HudFrame.bottom)
 
             if (computers.pitch.activeInput?.identifier == AutopilotLogicComputer.ID) {
-                val pitchY: Int = ScreenSpace.getY(computers.pitch.activeInput?.target ?: return, false) ?: return
-                hLine(this.centerX - halfWidth, this.centerX + halfWidth, pitchY, advisoryColor)
+                val pitchY: Int? = ScreenSpace.getY(computers.pitch.activeInput?.target ?: return, false)
+                if (pitchY != null) {
+                    hLine(this.centerX - halfWidth, this.centerX + halfWidth, pitchY, advisoryColor)
+                }
             }
 
             if (computers.heading.activeInput?.identifier == AutopilotLogicComputer.ID) {
-                val headingX: Int = ScreenSpace.getX(computers.heading.activeInput?.target ?: return, false) ?: return
-                vLine(headingX, this.centerY - halfWidth, this.centerY + halfWidth, advisoryColor)
+                val headingX: Int? = ScreenSpace.getX(computers.heading.activeInput?.target ?: return, false)
+                if (headingX != null) {
+                    vLine(headingX, this.centerY - halfWidth, this.centerY + halfWidth, advisoryColor)
+                }
             }
 
+            disableScissor()
             pose().popPose()
         }
     }

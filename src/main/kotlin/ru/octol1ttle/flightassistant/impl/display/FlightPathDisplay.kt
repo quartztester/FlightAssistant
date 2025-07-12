@@ -23,7 +23,7 @@ class FlightPathDisplay(computers: ComputerView) : Display(computers) {
             val trueY: Float = screenSpaceVec.y
 
             pose().pushPose()
-            pose().translate(0, 0, -100)
+            pose().translate(0, 0, -150)
             fusedTranslateScale(trueX, trueY, FAConfig.display.flightPathVectorSize)
 
             val bodySideSize = 3
