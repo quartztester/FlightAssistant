@@ -2,7 +2,6 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import dev.architectury.event.events.common.InteractionEvent
 import net.minecraft.client.Minecraft
-import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.player.Inventory
@@ -39,7 +38,7 @@ class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Com
             val stack: ItemStack = player.getItemInHand(hand)
             if (!player.level().isClientSide()) {
 //? if >=1.21.2 {
-                /*return@RightClickItem net.minecraft.util.ActionResult.PASS
+                /*return@RightClickItem net.minecraft.world.InteractionResult.PASS
 *///?} else
                 return@RightClickItem dev.architectury.event.CompoundEventResult.pass()
 
@@ -47,7 +46,7 @@ class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Com
 
             if (FAConfig.safety.fireworkLockExplosive && !isEmptyOrSafe(player, hand)) {
 //? if >=1.21.2 {
-                /*return@RightClickItem net.minecraft.util.ActionResult.FAIL
+                /*return@RightClickItem net.minecraft.world.InteractionResult.FAIL
 *///?} else
                 return@RightClickItem dev.architectury.event.CompoundEventResult.interruptFalse(stack)
             }
@@ -58,7 +57,7 @@ class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Com
             }
 
 //? if >=1.21.2 {
-            /*return@RightClickItem net.minecraft.util.ActionResult.PASS
+            /*return@RightClickItem net.minecraft.world.InteractionResult.PASS
 *///?} else
             return@RightClickItem dev.architectury.event.CompoundEventResult.pass()
         })

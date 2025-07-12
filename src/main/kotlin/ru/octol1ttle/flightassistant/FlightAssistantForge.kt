@@ -3,7 +3,7 @@ package ru.octol1ttle.flightassistant
 //? if !fabric {
 
 /*//? if neoforge {
-/^import net.minecraft.client.MinecraftClient
+/^import net.minecraft.client.Minecraft
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod
@@ -11,7 +11,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers
 import nl.enjarai.doabarrelroll.compat.flightassistant.DaBRCompatFA
-import ru.octol1ttle.flightassistant.api.util.event.FixedHudRenderCallback
+import ru.octol1ttle.flightassistant.api.util.event.FixedGuiRenderCallback
 import ru.octol1ttle.flightassistant.config.FAConfigScreen
 import thedarkcolour.kotlinforforge.neoforge.KotlinModLoadingContext
 
@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.IEventBus
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
 import nl.enjarai.doabarrelroll.compat.flightassistant.DaBRCompatFA
-import ru.octol1ttle.flightassistant.api.util.event.FixedHudRenderCallback
+import ru.octol1ttle.flightassistant.api.util.event.FixedGuiRenderCallback
 import ru.octol1ttle.flightassistant.config.FAConfigScreen
 import thedarkcolour.kotlinforforge.KotlinModLoadingContext
 
@@ -46,23 +46,23 @@ object FlightAssistantForge {
     }
 
     fun onRegisterKeyMappings(event: RegisterKeyMappingsEvent) {
-        FAKeyBindings.keyBindings.forEach(event::register)
+        FAKeyMappings.keyMappings.forEach(event::register)
     }
 
 //? if neoforge {
     /^fun onRegisterGuiOverlay(event: RegisterGuiLayersEvent) {
-        event.registerBelow(VanillaGuiLayers.HOTBAR, FlightAssistant.id("neoforge_gui")) { context, tickCounter ->
-            if (!MinecraftClient.getInstance().options.hudHidden) {
-                FixedHudRenderCallback.EVENT.invoker().onRenderHud(context, tickCounter.getTickDelta(true))
+        event.registerBelow(VanillaGuiLayers.HOTBAR, FlightAssistant.id("neoforge_gui")) { guiGraphics, deltaTracker ->
+            if (!Minecraft.getInstance().options.hideGui) {
+                FixedGuiRenderCallback.EVENT.invoker().onRenderGui(guiGraphics, deltaTracker.getGameTimeDeltaPartialTick(true))
             }
         }
     }
 ^///?} else {
     fun onRegisterGuiOverlay(event: RegisterGuiOverlaysEvent) {
-        event.registerBelow(VanillaGuiOverlay.HOTBAR.id(), "flightassistant") { gui, context, tickDelta, _, _ ->
-            if (!gui.minecraft.options.hudHidden) {
+        event.registerBelow(VanillaGuiOverlay.HOTBAR.id(), "flightassistant") { gui, graphics, partialTick, _, _ ->
+            if (!gui.minecraft.options.hideGui) {
                 gui.setupOverlayRenderState(true, false)
-                FixedHudRenderCallback.EVENT.invoker().onRenderHud(context, tickDelta)
+                FixedGuiRenderCallback.EVENT.invoker().onRenderGui(graphics, partialTick)
             }
         }
     }

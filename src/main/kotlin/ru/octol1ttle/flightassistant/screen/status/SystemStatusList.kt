@@ -34,15 +34,15 @@ class SystemStatusList(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARA
         }
     }
 
+//? if >=1.21.4 {
+    /*override fun scrollBarX(): Int {
+*///?} else
+    override fun getScrollbarPosition(): Int {
 //? if >=1.21 {
-/*override fun getScrollbarX(): Int {
-        return this.x + this.width - 6
+        /*return this.x + this.width - 6
+*///?} else
+        return this.x0 + this.width - 6
     }
-*///?} else {
-override fun getScrollbarPosition(): Int {
-    return this.x0 + this.width - 6
-    }
-//?}
 
     override fun getRowWidth(): Int {
         return this.width

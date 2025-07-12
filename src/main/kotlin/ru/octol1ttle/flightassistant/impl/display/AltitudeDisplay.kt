@@ -50,7 +50,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
 
         val minY: Int = HudFrame.top
         val maxY: Int =
-            (y + 2 * (altitude - computers.data.level.minBuildHeight + 1)).toInt().coerceIn(minY - 1..HudFrame.bottom)
+            (y + 2 * (altitude - computers.data.level.bottomY + 1)).toInt().coerceIn(minY - 1..HudFrame.bottom)
 
         vLine(x, minY, maxY, primaryColor)
 
@@ -74,7 +74,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
         enableScissor(0, (if (FAConfig.display.showAltitudeReading) y + 5 * READING_MATRIX_SCALE else minY).toInt(), guiWidth(), maxY + 1)
         hLine(x, x + 35, maxY, primaryColor)
         val altitudeRoundedDown: Int = Mth.quantize(altitude, 5)
-        for (i: Int in altitudeRoundedDown downTo (altitudeRoundedDown - 1000).coerceAtLeast(computers.data.level.minBuildHeight) step 5) {
+        for (i: Int in altitudeRoundedDown downTo (altitudeRoundedDown - 1000).coerceAtLeast(computers.data.level.bottomY) step 5) {
             if (!drawAltitudeLine(x, y, i, altitude)) {
                 break
             }

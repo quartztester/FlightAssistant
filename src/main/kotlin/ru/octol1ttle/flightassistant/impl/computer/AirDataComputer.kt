@@ -21,7 +21,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter.partialTick
 import ru.octol1ttle.flightassistant.api.util.RenderMatrices
 import ru.octol1ttle.flightassistant.api.util.degrees
-import ru.octol1ttle.flightassistant.api.util.extensions.fallFlying
+import ru.octol1ttle.flightassistant.api.util.extensions.bottomY
 import ru.octol1ttle.flightassistant.api.util.requireIn
 import ru.octol1ttle.flightassistant.config.FAConfig
 
@@ -29,7 +29,7 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
     val player: LocalPlayer
         get() = checkNotNull(mc.player)
     val flying: Boolean
-        get() = player.fallFlying
+        get() = player.isFallFlying
     val level: ClientLevel
         get() = checkNotNull(mc.level)
 
@@ -38,10 +38,10 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
     val altitude: Double
         get() = position.y
     val voidY: Int
-        get() = level.minBuildHeight - 64
+        get() = level.bottomY - 64
     var groundY: Double? = null
         private set(value) {
-            field = value?.requireIn(level.minBuildHeight.toDouble()..Double.MAX_VALUE)
+            field = value?.requireIn(level.bottomY.toDouble()..Double.MAX_VALUE)
         }
 
     private val fallDistance: Double
@@ -92,7 +92,7 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
             return false
         }
 //? if >=1.21.2 {
-        /*return (player as ru.octol1ttle.flightassistant.mixin.EntityInvoker).invokeIsAlwaysInvulnerableTo(source)
+        /*return (player as ru.octol1ttle.flightassistant.mixin.EntityInvoker).invokeIsInvulnerableToBase(source)
 *///?} else
         return player.isInvulnerableTo(source)
                 || player.abilities.invulnerable && !source.`is`(DamageTypeTags.BYPASSES_INVULNERABILITY)
@@ -104,7 +104,7 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
             return groundY
         }
 
-        val minY: Double = level.minBuildHeight.toDouble().coerceAtLeast(altitude - 2500)
+        val minY: Double = level.bottomY.toDouble().coerceAtLeast(altitude - 2500)
         val result: BlockHitResult = level.clip(
             ClipContext(
                 position,
@@ -115,7 +115,7 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
             )
         )
         if (result.type == HitResult.Type.MISS) {
-            return if (result.location.y > level.minBuildHeight) Double.MAX_VALUE else null
+            return if (result.location.y > level.bottomY) Double.MAX_VALUE else null
         }
         return result.location.y
     }

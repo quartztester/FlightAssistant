@@ -14,7 +14,6 @@ import net.minecraft.world.item.enchantment.Enchantments
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.extensions.canUse
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.config.options.DisplayOptions
 import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
@@ -27,7 +26,7 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
         val data: AirDataComputer = computers.data
         activeElytra = findActiveElytra(data.player)
 
-        if (data.player.onGround()) {
+        if (activeElytra == null || data.player.onGround()) {
             syncedFlyingState = null
             return
         }
@@ -47,11 +46,10 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 
         val flying: Boolean = data.flying || data.player.abilities.mayfly
         val hasUsableElytra: Boolean =
-//? if >=1.21.5 {
-            /*net.minecraft.entity.EquipmentSlot.VALUES.any { data.player.getEquippedStack(it) == activeElytra && net.minecraft.entity.LivingEntity.canGlideWith(data.player.getEquippedStack(it), it) }
+//? if >=1.21.4 {
+            /*net.minecraft.world.entity.EquipmentSlot.VALUES.any { data.player.getItemBySlot(it) == activeElytra && net.minecraft.world.entity.LivingEntity.canGlideUsing(data.player.getItemBySlot(it), it) }
 *///?} else
-            data.player.armorSlots.contains(activeElytra)
-                    && activeElytra.canUse()
+            data.player.armorSlots.contains(activeElytra) && net.minecraft.world.item.ElytraItem.isFlyEnabled(activeElytra)
         val isInsideBlock: Boolean = !data.player.blockStateOn.isAir
         val lookingToClutch: Boolean = data.pitch <= -70.0f
         if (FAConfig.safety.elytraAutoOpen && !flying && !data.fallDistanceSafe && hasUsableElytra && !isInsideBlock && !lookingToClutch) {
@@ -66,9 +64,9 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 
     private fun findActiveElytra(player: Player): ItemStack? {
 //? if >=1.21.2 {
-        /*for (equipmentSlot in net.minecraft.entity.EquipmentSlot.VALUES) {
-            val stack: ItemStack = player.getEquippedStack(equipmentSlot)
-            if (net.minecraft.entity.LivingEntity.canGlideWith(stack, equipmentSlot)) {
+        /*for (equipmentSlot in net.minecraft.world.entity.EquipmentSlot.VALUES) {
+            val stack: ItemStack = player.getItemBySlot(equipmentSlot)
+            if (net.minecraft.world.entity.LivingEntity.canGlideUsing(stack, equipmentSlot)) {
                 return stack
             }
         }
@@ -86,7 +84,7 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 *///?} else
         for (stack: ItemStack in player.handSlots) {
 //? if >=1.21.2 {
-            /*if (stack.contains(net.minecraft.component.DataComponentTypes.GLIDER)) {
+            /*if (stack.has(net.minecraft.core.component.DataComponents.GLIDER)) {
 *///?} else
             if (stack.item is net.minecraft.world.item.ElytraItem) {
                 return stack
@@ -104,9 +102,9 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 
         val unbreakingLevel: Int = EnchantmentHelper.getItemEnchantmentLevel(
 //? if >=1.21.2 {
-            /*player.world.registryManager.getOrThrow(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING.value).get()
+            /*player.level().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).get(Enchantments.UNBREAKING).orElseThrow()
 *///?} else if >=1.21 {
-            /*player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
+            /*player.level().registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getHolder(Enchantments.UNBREAKING).get()
 *///?} else
             Enchantments.UNBREAKING
             , active
@@ -136,9 +134,9 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 
         val unbreakingLevel: Int = EnchantmentHelper.getItemEnchantmentLevel(
 //? if >=1.21.2 {
-            /*player.world.registryManager.getOrThrow(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING.value).get()
+            /*player.level().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).get(Enchantments.UNBREAKING).orElseThrow()
 *///?} else if >=1.21 {
-            /*player.world.registryManager.get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).get()
+            /*player.level().registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getHolder(Enchantments.UNBREAKING).get()
 *///?} else
             Enchantments.UNBREAKING
             , active

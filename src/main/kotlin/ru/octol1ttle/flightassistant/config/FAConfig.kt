@@ -8,7 +8,6 @@ import net.minecraft.client.player.LocalPlayer
 import ru.octol1ttle.flightassistant.FlightAssistant.MOD_ID
 import ru.octol1ttle.flightassistant.FlightAssistant.id
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
-import ru.octol1ttle.flightassistant.api.util.extensions.fallFlying
 import ru.octol1ttle.flightassistant.config.options.DisplayOptions
 import ru.octol1ttle.flightassistant.config.options.DisplayOptionsStorage
 import ru.octol1ttle.flightassistant.config.options.GlobalOptions
@@ -64,7 +63,7 @@ object FAConfig {
         get() {
             val player: LocalPlayer = checkNotNull(mc.player)
 
-            if (player.fallFlying) {
+            if (player.isFallFlying) {
                 return displaysStorage.flying
             }
 

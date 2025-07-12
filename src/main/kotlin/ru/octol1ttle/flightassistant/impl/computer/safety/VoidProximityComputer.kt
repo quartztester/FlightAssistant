@@ -11,6 +11,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiterRegistrati
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.util.extensions.bottomY
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
 
@@ -42,7 +43,7 @@ class VoidProximityComputer(computers: ComputerView) : Computer(computers), Pitc
     override fun getMinimumPitch(): ControlInput? {
         if (FAConfig.safety.voidLimitPitch && status != Status.ABOVE_GROUND) {
             return ControlInput(
-                (-90.0f + (computers.data.level.minBuildHeight - (computers.data.altitude + computers.data.velocity.y * 20)) / 64.0f * 105.0f).toFloat()
+                (-90.0f + (computers.data.level.bottomY - (computers.data.altitude + computers.data.velocity.y * 20)) / 64.0f * 105.0f).toFloat()
                     .coerceIn(-35.0f..computers.thrust.getOptimumClimbPitch()),
                 ControlInput.Priority.HIGH,
                 Component.translatable("mode.flightassistant.vertical.void_protection")

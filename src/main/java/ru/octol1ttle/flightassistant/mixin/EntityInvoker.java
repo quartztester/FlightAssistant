@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.Mixin;
 public interface EntityInvoker {
 //? if >=1.21.2 {
     /*@org.spongepowered.asm.mixin.gen.Invoker
-    boolean invokeIsAlwaysInvulnerableTo(net.minecraft.entity.damage.DamageSource damageSource);
+    boolean invokeIsInvulnerableToBase(net.minecraft.world.damagesource.DamageSource damageSource);
 *///?}
 }
