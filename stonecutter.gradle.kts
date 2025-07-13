@@ -1,9 +1,6 @@
 plugins {
+    kotlin("jvm") version "2.2.0" apply false
     id("dev.kikugie.stonecutter")
-    kotlin("jvm") version "2.1.0" apply false
-    kotlin("plugin.serialization") version "2.1.0" apply false
-    id("co.uzzu.dotenv.gradle") version "4.0.0"
-    id("dev.architectury.loom") version "1.10-SNAPSHOT" apply false
     id("me.modmuss50.mod-publish-plugin") version "0.8.+" apply false
 }
 stonecutter active "1.20.1-fabric" /* [SC] DO NOT EDIT */
@@ -18,9 +15,19 @@ stonecutter registerChiseled tasks.register("chiseledPublishMods", stonecutter.c
     ofTask("publishMods")
 }
 
-stonecutter configureEach {
-    val data = current.project.split('-')
-    val platforms = listOf("fabric", "forge", "neoforge")
-        .map { it to (it == data[1]) }
-    consts(platforms)
+allprojects {
+    repositories {
+        fun strictMaven(url: String, vararg groups: String) = exclusiveContent {
+            forRepository { maven(url) }
+            filter { groups.forEach(::includeGroup) }
+        }
+
+        mavenCentral()
+        strictMaven("https://maven.architectury.dev/", "dev.architectury")
+        strictMaven("https://maven.fabricmc.net/", "net.fabricmc")
+        strictMaven("https://oss.sonatype.org/content/repositories/snapshots", "me.lucko")
+        strictMaven("https://maven.isxander.dev/releases", "dev.isxander", "org.quiltmc.parsers")
+        strictMaven("https://thedarkcolour.github.io/KotlinForForge/", "thedarkcolour")
+        maven("https://maven.neoforged.net/releases")
+    }
 }
