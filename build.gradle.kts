@@ -16,6 +16,23 @@ fun ifFindProperty(name: String, consumer: (prop: String) -> Unit) {
 
 val minecraft = stonecutter.current.project.substringBeforeLast('-')
 
+val modId = prop("mod.id")
+val modName = prop("mod.name")
+val modVersion = prop("mod.version")
+val modGroup = prop("mod.group")
+
+
+// Stonecutter constants for mod loaders.
+// See https://stonecutter.kikugie.dev/stonecutter/guide/comments#condition-constants
+val loader: String = name.split("-")[1]
+stonecutter {
+    consts(
+        "fabric" to (loader == "fabric"),
+        "neoforge" to (loader == "neoforge"),
+        "forge" to (loader == "forge")
+    )
+}
+
 modstitch {
     minecraftVersion = minecraft
 
@@ -74,17 +91,6 @@ modstitch {
     }
 }
 
-// Stonecutter constants for mod loaders.
-// See https://stonecutter.kikugie.dev/stonecutter/guide/comments#condition-constants
-val loader: String = name.split("-")[1]
-stonecutter {
-    consts(
-        "fabric" to (loader == "fabric"),
-        "neoforge" to (loader == "neoforge"),
-        "forge" to (loader == "forge")
-    )
-}
-
 // All dependencies should be specified through modstitch's proxy configuration.
 // Wondering where the "repositories" block is? Go to "stonecutter.gradle.kts"
 // If you want to create proxy configurations for more source sets, such as client source sets,
@@ -128,16 +134,32 @@ dependencies {
     }
 }
 
-/*
-// Variables
-class ModData {
-    val id = property("mod.id").toString()
-    val name = property("mod.name").toString()
-    val version = property("mod.version").toString()
-    val group = property("mod.group").toString()
+yamlang {
+    targetSourceSets.set(mutableListOf(sourceSets["main"]))
+    inputDir.set("assets/${modId}/lang")
 }
 
-val mod = ModData()
+val buildAndCollect = tasks.register<Copy>("buildAndCollect") {
+    group = "build"
+    from(modstitch.finalJarTask.get().archiveFile)
+    into(rootProject.layout.buildDirectory.file("libs/${modVersion}"))
+    dependsOn("build")
+}
+
+if (stonecutter.current.isActive) {
+    rootProject.tasks.register("buildActive") {
+        group = "project"
+        dependsOn(buildAndCollect)
+    }
+
+    rootProject.tasks.register("runActive") {
+        group = "project"
+        dependsOn(tasks.named("runClient"))
+    }
+}
+
+/*
+
 
 val loader = loom.platform.get().name.lowercase()
 val isFabric = loader == "fabric"
@@ -214,11 +236,6 @@ tasks.processResources {
     filesMatching("fabric.mod.json") { expandOrExclude(loader == "fabric", map) }
     filesMatching("META-INF/mods.toml") { expandOrExclude(loader == "forge", map) }
     filesMatching("META-INF/neoforge.mods.toml") { expandOrExclude(loader == "neoforge", map) }
-}
-
-yamlang {
-    targetSourceSets.set(mutableListOf(sourceSets["main"]))
-    inputDir.set("assets/${mod.id}/lang")
 }
 
 // Publishing
