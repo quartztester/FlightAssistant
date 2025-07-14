@@ -5,9 +5,9 @@ license = "LGPLv3"
 issueTrackerURL = "https://github.com/Octol1ttle/FlightAssistant/issues"
 
 [[mods]]
-modId = "flightassistant"
-version = "${version}"
-displayName = "FlightAssistant"
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
 displayURL = "https://modrinth.com/mod/flightassistant"
 authors = ["Octol1ttle", "mctaylors" ]
 description = '''

@@ -228,7 +228,9 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
 
             val existing: AlertSoundInstance? = sounds[data]
             if (existing == null || (!existing.isLooping && existing.age > 60)) {
-                soundManager.stop(existing)
+                if (existing != null) {
+                    soundManager.stop(existing)
+                }
 
                 val instance = AlertSoundInstance(computers.data.player, data)
                 sounds[data] = instance

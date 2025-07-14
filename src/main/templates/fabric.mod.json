@@ -1,8 +1,8 @@
 {
     "schemaVersion": 1,
-    "id": "flightassistant",
-    "version": "${version}",
-    "name": "FlightAssistant",
+    "id": "${mod_id}",
+    "version": "${mod_version}",
+    "name": "${mod_name}",
     "description": "FlightAssistant brings your Elytra flying experience to the next level, all client-side!",
     "authors": [
         "Octol1ttle",

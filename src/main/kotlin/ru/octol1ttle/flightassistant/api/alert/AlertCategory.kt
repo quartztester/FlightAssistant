@@ -41,7 +41,7 @@ class AlertCategory(val categoryText: Component) {
                 }
             } catch (t: Throwable) {
                 computers.alert.alertsFaulted = true
-                FlightAssistant.logger.atError().setCause(t).log("Exception ticking alert of type: {}", alert.javaClass.name)
+                FlightAssistant.logger.error("Exception ticking alert of type: ${alert.javaClass.name}", t)
             }
         }
 

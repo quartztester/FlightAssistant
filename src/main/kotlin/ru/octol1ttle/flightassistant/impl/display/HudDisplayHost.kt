@@ -116,8 +116,7 @@ internal object HudDisplayHost: ModuleController<Display> {
                 try {
                     display.renderFaulted(guiGraphics)
                 } catch (t: Throwable) {
-                    FlightAssistant.logger.atError().setCause(t)
-                        .log("Exception rendering disabled display with identifier: {}", id)
+                    FlightAssistant.logger.error("Exception rendering disabled display with identifier: $id", t)
                 }
                 continue
             }
@@ -129,8 +128,7 @@ internal object HudDisplayHost: ModuleController<Display> {
                 display.faulted = true
                 display.faultCount++
                 display.enabled = false
-                FlightAssistant.logger.atError().setCause(t)
-                    .log("Exception rendering display with identifier: {}", id)
+                FlightAssistant.logger.error("Exception rendering display with identifier: $id", t)
             }
         }
     }

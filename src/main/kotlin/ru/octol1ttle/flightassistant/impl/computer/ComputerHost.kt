@@ -127,8 +127,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
                     computer.enabled = false
                     computer.reset()
 
-                    FlightAssistant.logger.atError().setCause(t)
-                        .log("Exception ticking computer with identifier: {}", id)
+                    FlightAssistant.logger.error("Exception ticking computer with identifier: $id", t)
                 }
             }
         }
