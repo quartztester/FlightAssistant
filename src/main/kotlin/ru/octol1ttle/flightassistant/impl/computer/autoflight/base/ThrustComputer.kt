@@ -40,9 +40,9 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     }
 
     override fun tick() {
-        val thrustSource: ThrustSource? = sources.filterNonFaulted().filter { it.isAvailable() }.minByOrNull { it.priority.value }
+        val thrustSource: ThrustSource? = sources.filterNonFaulted().filter { computers.guardedCall(it, ThrustSource::isAvailable) == true }.minByOrNull { it.priority.value }
 
-        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { it.getThrustInput() }.sortedBy { it.priority.value }
+        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { computers.guardedCall(it, FlightController::getThrustInput) }.sortedBy { it.priority.value }
         val finalInput: ControlInput? = inputs.getActiveHighestPriority().maxByOrNull { it.target }
 
         noThrustSource = false

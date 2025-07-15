@@ -1,5 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.computer
 
+import java.util.function.Function
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
@@ -19,16 +20,19 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.RollComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
-// TODO: port ComputerHost.guardedCall
 internal object ComputerHost : ModuleController<Computer>, ComputerView {
     private val computers: MutableMap<ResourceLocation, Computer> = LinkedHashMap()
 
-    override fun isEnabled(identifier: ResourceLocation): Boolean {
-        return get(identifier).enabled
+    override fun identifiers(): Set<ResourceLocation> {
+        return computers.keys
     }
 
-    override fun isFaulted(identifier: ResourceLocation): Boolean {
-        return get(identifier).faulted
+    override fun get(identifier: ResourceLocation): Computer {
+        return computers[identifier] ?: throw IllegalArgumentException("No computer registered with ID: $identifier")
+    }
+
+    override fun isEnabled(identifier: ResourceLocation): Boolean {
+        return get(identifier).enabled
     }
 
     override fun setEnabled(identifier: ResourceLocation, enabled: Boolean): Boolean {
@@ -41,12 +45,12 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
         return oldEnabled
     }
 
-    fun getFaultCount(identifier: ResourceLocation): Int {
-        return get(identifier).faultCount
+    override fun isFaulted(identifier: ResourceLocation): Boolean {
+        return get(identifier).faulted
     }
 
-    override fun identifiers(): Set<ResourceLocation> {
-        return computers.keys
+    fun getFaultCount(identifier: ResourceLocation): Int {
+        return get(identifier).faultCount
     }
 
     override fun register(identifier: ResourceLocation, module: Computer) {
@@ -121,11 +125,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
                     computer.tick()
                     computer.faulted = false
                 } catch (t: Throwable) {
-                    computer.faulted = true
-                    computer.faultCount++
-
-                    computer.enabled = false
-                    computer.reset()
+                    onComputerFault(computer)
 
                     FlightAssistant.logger.error("Exception ticking computer with identifier: $id", t)
                 }
@@ -133,7 +133,26 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
         }
     }
 
-    override fun get(identifier: ResourceLocation): Computer {
-        return computers[identifier] ?: throw IllegalArgumentException("No computer registered with ID: $identifier")
+    override fun <C, T> guardedCall(computer: C, call: Function<C, T>): T? {
+        try {
+            return call.apply(computer)
+        } catch (t: Throwable) {
+            if (computer !is Computer) return null
+            onComputerFault(computer)
+
+            FlightAssistant.logger.atError().setCause(t).log("Exception invoking guarded call")
+
+            return null
+        }
+    }
+
+    private fun onComputerFault(computer: Computer) {
+        if (computer.faulted) {
+            computer.enabled = false
+        }
+
+        computer.faulted = true
+        computer.faultCount++
+        computer.reset()
     }
 }

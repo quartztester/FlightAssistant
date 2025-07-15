@@ -1,5 +1,6 @@
 package ru.octol1ttle.flightassistant.api.computer
 
+import java.util.function.Function
 import ru.octol1ttle.flightassistant.api.ModuleView
 import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.*
@@ -7,6 +8,8 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.*
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
 interface ComputerView : ModuleView<Computer> {
+    fun <C, T> guardedCall(computer: C, call: Function<C, T>): T?
+
     val data: AirDataComputer
         get() = get(AirDataComputer.ID) as AirDataComputer
 

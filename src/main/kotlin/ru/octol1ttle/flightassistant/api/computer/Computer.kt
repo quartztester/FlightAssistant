@@ -39,6 +39,8 @@ abstract class Computer(val computers: ComputerView) {
 
     /**
      * Called once after all computers have been registered. Subscribe to any events provided by other computers here.
+     * Be careful calling other computers' code here! Depending on where events are invoked, a fault may cause a game crash.
+     * Use [ComputerView.guardedCall] to invoke computers safely or manually guard your call with [ComputerView.isFaulted]
      */
     open fun subscribeToEvents() {}
 

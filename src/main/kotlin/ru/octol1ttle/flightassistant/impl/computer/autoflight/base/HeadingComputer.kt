@@ -25,7 +25,7 @@ class HeadingComputer(computers: ComputerView) : Computer(computers) {
     }
 
     override fun tick() {
-        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { it.getHeadingInput() }.sortedBy { it.priority.value }
+        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { computers.guardedCall(it, FlightController::getHeadingInput) }.sortedBy { it.priority.value }
         if (inputs.isEmpty()) {
             activeInput = null
             return

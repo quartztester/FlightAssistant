@@ -5,16 +5,25 @@ import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 
+// TODO: move min/max pitch here
+// TODO: honestly could move *all* protections here
+// TODO: ...or get rid of this computer entirely?
 class FlightProtectionsComputer(computers: ComputerView) : Computer(computers) {
     var protectionsLost: Boolean = false
         private set
 
     override fun tick() {
-        protectionsLost = this.disabledOrFaulted() || computers.data.disabledOrFaulted() || computers.pitch.disabledOrFaulted()
+        if (!protectionsLost) {
+            protectionsLost = this.disabledOrFaulted() || computers.data.disabledOrFaulted() || computers.pitch.disabledOrFaulted()
+        }
+    }
+
+    fun loseProtections() {
+        protectionsLost = true
     }
 
     override fun reset() {
-        protectionsLost = true
+        protectionsLost = this.disabledOrFaulted()
     }
 
     companion object {

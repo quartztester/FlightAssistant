@@ -26,9 +26,9 @@ class RollComputer(computers: ComputerView) : Computer(computers) {
     }
 
     override fun tick() {
-        val rollSource: RollSource = sources.filterNonFaulted().singleOrNull { it.isActive() } ?: return
+        val rollSource: RollSource = sources.filterNonFaulted().singleOrNull { computers.guardedCall(it, RollSource::isActive) == true } ?: return
 
-        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { it.getRollInput() }.sortedBy { it.priority.value }
+        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { computers.guardedCall(it, FlightController::getRollInput) }.sortedBy { it.priority.value }
         if (inputs.isEmpty()) {
             return
         }

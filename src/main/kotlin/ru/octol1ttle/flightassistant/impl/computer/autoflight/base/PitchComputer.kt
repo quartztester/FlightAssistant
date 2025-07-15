@@ -35,7 +35,11 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
             if (canMoveOrBlockPitch()) {
                 val pitchDelta: Float = -mcPitchDelta
 
-                val oldPitch: Float = computers.data.pitch
+                val oldPitch: Float? = computers.guardedCall(computers.data) { it.pitch }
+                if (oldPitch == null) {
+                    computers.protections.loseProtections()
+                    return@register
+                }
                 val newPitch: Float = oldPitch + pitchDelta
 
                 val min: ControlInput? = this.minimumPitch
@@ -57,7 +61,7 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
     override fun tick() {
         updateSafePitches()
 
-        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { it.getPitchInput() }.sortedBy { it.priority.value }
+        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { computers.guardedCall(it, FlightController::getPitchInput) }.sortedBy { it.priority.value }
         if (inputs.isEmpty()) {
             activeInput = null
             return
