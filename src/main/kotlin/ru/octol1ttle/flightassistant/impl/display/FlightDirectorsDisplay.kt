@@ -29,8 +29,9 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
         with(guiGraphics) {
             val halfWidth: Int = (HudFrame.width / 10.0f).toInt()
 
-            pose().pushPose()
-            pose().translate(0, 0, -100)
+            pose().push()
+//? if <1.21.6
+            pose().translate(0.0f, 0.0f, -100.0f)
             enableScissor(HudFrame.left, HudFrame.top, HudFrame.right, HudFrame.bottom)
 
             if (computers.pitch.activeInput?.identifier == AutopilotLogicComputer.ID) {
@@ -48,7 +49,7 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
             }
 
             disableScissor()
-            pose().popPose()
+            pose().pop()
         }
     }
 

@@ -10,6 +10,14 @@ fun degrees(value: Double): Double {
     return (value * (180.0 / PI))
 }
 
+fun radians(value: Float): Float {
+    return (value * (PI / 180.0)).toFloat()
+}
+
+fun radians(value: Double): Double {
+    return (value * (PI / 180.0))
+}
+
 fun furtherFromZero(value: Float): Int {
     return if (value < 0.0f) {
         floor(value).toInt()

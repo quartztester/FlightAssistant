@@ -23,8 +23,12 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
 
     override fun render(guiGraphics: GuiGraphics) {
         with(guiGraphics) {
-            pose().pushPose()
-            pose().translate(0, 0, -200)
+            pose().push()
+//? if <1.21.6
+            pose().translate(0.0f, 0.0f, -200.0f)
+//? if >=1.21.6 {
+            /*pose().rotateAbout(ru.octol1ttle.flightassistant.api.util.radians(-computers.data.roll), centerXF, centerYF)
+*///?} else
             pose().rotateAround(Axis.ZN.rotationDegrees(computers.data.roll), centerXF, centerYF, 0.0f)
 
             if (FAConfig.display.showAttitude <= DisplayOptions.AttitudeDisplayMode.HORIZON_ONLY) {
@@ -35,7 +39,7 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
                 renderPitchLimits()
             }
 
-            pose().popPose()
+            pose().pop()
         }
     }
 
@@ -101,13 +105,16 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
         }
         while (min >= -180) {
             val y: Int = ScreenSpace.getY(min) ?: break
-            pose().pushPose()
+            pose().push()
 
-            pose().translate(centerX, y, 0) // Rotate around the middle of the arrow
+            pose().translate(centerXF, y.toFloat() /*? if <1.21.6 {*/, 0.0f /*?}*/) // Rotate around the middle of the arrow
+//? if >=1.21.6 {
+            /*pose().rotate(ru.octol1ttle.flightassistant.api.util.radians(180.0f))
+*///?} else
             pose().mulPose(Axis.ZN.rotationDegrees(180.0f)) // Flip upside down
             drawMiddleAlignedString(arrowText, 0, -9, if (minInput?.active == true) warningColor else cautionColor)
 
-            pose().popPose()
+            pose().pop()
             min -= step
         }
 

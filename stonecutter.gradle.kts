@@ -25,12 +25,12 @@ allprojects {
         mavenCentral()
         strictMaven("https://maven.architectury.dev/", "dev.architectury")
         strictMaven("https://maven.fabricmc.net/", "net.fabricmc")
-        strictMaven("https://oss.sonatype.org/content/repositories/snapshots", "me.lucko")
         strictMaven("https://maven.isxander.dev/releases", "dev.isxander", "org.quiltmc.parsers")
         strictMaven("https://thedarkcolour.github.io/KotlinForForge/", "thedarkcolour")
         strictMaven("https://maven.terraformersmc.com/releases/", "com.terraformersmc")
         strictMaven("https://maven.enjarai.dev/releases/", "nl.enjarai")
         maven("https://maven.enjarai.dev/mirrors")
         maven("https://maven.neoforged.net/releases")
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }

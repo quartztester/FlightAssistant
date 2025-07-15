@@ -28,7 +28,7 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
     }
 
     private fun GuiGraphics.renderSpeedReading(x: Float, y: Float) {
-        pose().pushPose()
+        pose().push()
         fusedTranslateScale(x * 1.005f, y, READING_MATRIX_SCALE)
 
         val speed: Double = computers.data.forwardVelocity.length() * 20
@@ -44,7 +44,7 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
         renderOutline(-width, -halfHeight, width, halfHeight * 2 - 1, color)
         drawRightAlignedString(text, -2, textY, color)
 
-        pose().popPose()
+        pose().pop()
     }
 
     private fun GuiGraphics.renderSpeedScale(x: Int, y: Int) {

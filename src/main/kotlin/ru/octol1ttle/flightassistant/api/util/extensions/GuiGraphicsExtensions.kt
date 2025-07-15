@@ -50,8 +50,8 @@ val warningColor: Int
  * Translates this graphics' pose and then scales it.
  */
 fun GuiGraphics.fusedTranslateScale(x: Float, y: Float, scale: Float) {
-    pose().translate(x, y, 0.0f)
-    pose().scale(scale, scale, 1.0f)
+    pose().translate(x, y /*? if <1.21.6 {*/, 0.0f /*?}*/)
+    pose().scale(scale, scale /*? if <1.21.6 {*/, 1.0f /*?}*/)
 }
 
 fun GuiGraphics.hLineDashed(
@@ -113,20 +113,33 @@ fun GuiGraphics.drawMiddleAlignedString(text: Component, x: Int, y: Int, color: 
 }
 
 fun GuiGraphics.drawHighlightedCenteredText(text: Component, x: Int, y: Int, color: Int, highlight: Boolean) {
-    pose().pushPose()
+    pose().push()
 
     if (highlight) {
         val halfWidth: Int = textWidth(text) / 2
         fill(x - halfWidth - 1, y - 1, x + halfWidth + 2, y + 8, color)
-        pose().translate(0, 0, 100)
+//? if <1.21.6
+        pose().translate(0.0f, 0.0f, 100.0f)
         drawMiddleAlignedString(text, x, y, getContrasting(color))
     } else {
         drawMiddleAlignedString(text, x, y, color)
     }
 
-    pose().popPose()
+    pose().pop()
 }
 
-fun PoseStack.translate(x: Int, y: Int, z: Int) {
-    translate(x.toFloat(), y.toFloat(), z.toFloat())
+fun PoseStack.push() {
+    pushPose()
+}
+
+fun PoseStack.pop() {
+    popPose()
+}
+
+fun org.joml.Matrix3x2fStack.push() {
+    pushMatrix()
+}
+
+fun org.joml.Matrix3x2fStack.pop() {
+    popMatrix()
 }

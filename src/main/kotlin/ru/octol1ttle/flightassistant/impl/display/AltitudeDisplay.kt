@@ -29,7 +29,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
     }
 
     private fun GuiGraphics.renderAltitudeReading(x: Float, y: Float) {
-        pose().pushPose()
+        pose().push()
         fusedTranslateScale(x, y, READING_MATRIX_SCALE)
 
         val altitude: Double = computers.data.altitude
@@ -42,7 +42,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
         val textY: Int = -4
         drawString(text, 3, textY, primaryColor)
 
-        pose().popPose()
+        pose().pop()
     }
 
     private fun GuiGraphics.renderAltitudeScale(x: Int, y: Int) {

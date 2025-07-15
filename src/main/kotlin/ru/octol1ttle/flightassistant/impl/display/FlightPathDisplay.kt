@@ -22,8 +22,9 @@ class FlightPathDisplay(computers: ComputerView) : Display(computers) {
             val trueX: Float = screenSpaceVec.x
             val trueY: Float = screenSpaceVec.y
 
-            pose().pushPose()
-            pose().translate(0, 0, -150)
+            pose().push()
+//? if <1.21.6
+            pose().translate(0.0f, 0.0f, -150.0f)
             fusedTranslateScale(trueX, trueY, FAConfig.display.flightPathVectorSize)
 
             val bodySideSize = 3
@@ -39,7 +40,7 @@ class FlightPathDisplay(computers: ComputerView) : Display(computers) {
             hLine(-bodySideSize - wingSize, -bodySideSize, 0, primaryColor)
             hLine(bodySideSize, bodySideSize + wingSize, 0, primaryColor)
 
-            pose().popPose()
+            pose().pop()
         }
     }
 
