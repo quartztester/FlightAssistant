@@ -12,7 +12,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSourceRegistrat
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
-import ru.octol1ttle.flightassistant.api.util.extensions.filterNonFaulted
+import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.requireIn
 
@@ -40,9 +40,9 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     }
 
     override fun tick() {
-        val thrustSource: ThrustSource? = sources.filterNonFaulted().filter { computers.guardedCall(it, ThrustSource::isAvailable) == true }.minByOrNull { it.priority.value }
+        val thrustSource: ThrustSource? = sources.filterWorking().filter { computers.guardedCall(it, ThrustSource::isAvailable) == true }.minByOrNull { it.priority.value }
 
-        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { computers.guardedCall(it, FlightController::getThrustInput) }.sortedBy { it.priority.value }
+        val inputs: List<ControlInput> = controllers.filterWorking().mapNotNull { computers.guardedCall(it, FlightController::getThrustInput) }.sortedBy { it.priority.value }
         val finalInput: ControlInput? = inputs.getActiveHighestPriority().maxByOrNull { it.target }
 
         noThrustSource = false
@@ -91,7 +91,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     }
 
     fun getOptimumClimbPitch(): Float {
-        val thrustSource: ThrustSource? = sources.filterNonFaulted().filter { it.isAvailable() }.minByOrNull { it.priority.value }
+        val thrustSource: ThrustSource? = sources.filterWorking().filter { it.isAvailable() }.minByOrNull { it.priority.value }
         if (thrustSource != null) {
             return thrustSource.optimumClimbPitch
         }
@@ -100,7 +100,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     }
 
     fun getAltitudeHoldPitch(): Float {
-        val thrustSource: ThrustSource? = sources.filterNonFaulted().filter { it.isAvailable() }.minByOrNull { it.priority.value }
+        val thrustSource: ThrustSource? = sources.filterWorking().filter { it.isAvailable() }.minByOrNull { it.priority.value }
         if (thrustSource != null) {
             return thrustSource.altitudeHoldPitch
         }
@@ -109,7 +109,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     }
 
     fun calculateThrustForSpeed(targetSpeed: Float): Float? {
-        val thrustSource: ThrustSource? = sources.filterNonFaulted().filter { it.isAvailable() }.minByOrNull { it.priority.value }
+        val thrustSource: ThrustSource? = sources.filterWorking().filter { it.isAvailable() }.minByOrNull { it.priority.value }
         if (thrustSource != null) {
             return thrustSource.calculateThrustForSpeed(targetSpeed)
         }

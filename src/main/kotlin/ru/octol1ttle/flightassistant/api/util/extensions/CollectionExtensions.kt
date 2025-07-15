@@ -25,10 +25,10 @@ fun List<AlertData>.getHighestPriority(): List<AlertData> {
 }
 
 /**
- * Filters the current list to exclude faulted computers. If a list contains an object that is not a computer, that object remains in the returned list.
+ * Filters the current list to only include working computers (enabled and not faulted). If a list contains an object that is not a computer, that object remains in the returned list.
  */
-fun <T> List<T>.filterNonFaulted(): List<T> {
-    return this.filter { it !is Computer || !it.faulted}
+fun <T> List<T>.filterWorking(): List<T> {
+    return this.filter { it !is Computer || !it.isDisabledOrFaulted() }
 }
 
 fun <E, T : MutableList<E>> T.clearAndAdd(element: E) {

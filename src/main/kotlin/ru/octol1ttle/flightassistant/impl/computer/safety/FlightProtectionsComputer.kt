@@ -14,7 +14,7 @@ class FlightProtectionsComputer(computers: ComputerView) : Computer(computers) {
 
     override fun tick() {
         if (!protectionsLost) {
-            protectionsLost = this.disabledOrFaulted() || computers.data.disabledOrFaulted() || computers.pitch.disabledOrFaulted()
+            protectionsLost = this.isDisabledOrFaulted() || computers.data.isDisabledOrFaulted() || computers.pitch.isDisabledOrFaulted()
         }
     }
 
@@ -23,7 +23,7 @@ class FlightProtectionsComputer(computers: ComputerView) : Computer(computers) {
     }
 
     override fun reset() {
-        protectionsLost = this.disabledOrFaulted()
+        protectionsLost = this.isDisabledOrFaulted()
     }
 
     companion object {

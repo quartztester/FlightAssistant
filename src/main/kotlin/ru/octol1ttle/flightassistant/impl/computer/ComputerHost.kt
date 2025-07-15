@@ -41,6 +41,9 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
         val oldEnabled: Boolean = computer.enabled
         computer.enabled = enabled
         computer.reset()
+        if (!computer.enabled) {
+            computer.faulted = false
+        }
 
         return oldEnabled
     }
@@ -123,7 +126,6 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
             if (computer.enabled) {
                 try {
                     computer.tick()
-                    computer.faulted = false
                 } catch (t: Throwable) {
                     onComputerFault(computer)
 

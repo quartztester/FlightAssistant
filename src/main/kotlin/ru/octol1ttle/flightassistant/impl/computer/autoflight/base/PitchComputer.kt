@@ -13,7 +13,7 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.event.EntityTurnEvents
-import ru.octol1ttle.flightassistant.api.util.extensions.filterNonFaulted
+import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.requireIn
 
@@ -61,7 +61,7 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
     override fun tick() {
         updateSafePitches()
 
-        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { computers.guardedCall(it, FlightController::getPitchInput) }.sortedBy { it.priority.value }
+        val inputs: List<ControlInput> = controllers.filterWorking().mapNotNull { computers.guardedCall(it, FlightController::getPitchInput) }.sortedBy { it.priority.value }
         if (inputs.isEmpty()) {
             activeInput = null
             return
@@ -92,7 +92,7 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
     }
 
     private fun updateSafePitches() {
-        val maximums: List<ControlInput> = limiters.filterNonFaulted().mapNotNull { it.getMaximumPitch() }.sortedBy { it.priority.value }
+        val maximums: List<ControlInput> = limiters.filterWorking().mapNotNull { it.getMaximumPitch() }.sortedBy { it.priority.value }
         maximumPitch = maximums.getActiveHighestPriority().minByOrNull { it.target }
         val max: ControlInput? = maximumPitch
         if (max != null) {
@@ -100,7 +100,7 @@ class PitchComputer(computers: ComputerView) : Computer(computers), FlightContro
             max.deltaTimeMultiplier.requireIn(0.001f..Float.MAX_VALUE)
         }
 
-        val minimums: List<ControlInput> = limiters.filterNonFaulted().mapNotNull { it.getMinimumPitch() }.sortedBy { it.priority.value }
+        val minimums: List<ControlInput> = limiters.filterWorking().mapNotNull { it.getMinimumPitch() }.sortedBy { it.priority.value }
         minimumPitch = minimums.getActiveHighestPriority().maxByOrNull { it.target }
         val min: ControlInput? = minimumPitch
         if (min != null) {

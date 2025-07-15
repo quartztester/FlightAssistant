@@ -84,7 +84,7 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
 
         if (autoThrust) {
             autoThrustAlert = false
-            if (computers.thrust.faulted) {
+            if (computers.thrust.isDisabledOrFaulted()) {
                 setAutoThrust(false, alert = true)
             }
         }
@@ -93,12 +93,12 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
             autopilotAlert = false
 
             val pitchInput: ControlInput? = computers.pitch.activeInput
-            if (computers.pitch.disabledOrFaulted() || pitchInput != null && pitchInput.identifier != AutopilotLogicComputer.ID) {
+            if (computers.pitch.isDisabledOrFaulted() || pitchInput != null && pitchInput.identifier != AutopilotLogicComputer.ID) {
                 setAutoPilot(false, alert = true)
             }
 
             val headingInput: ControlInput? = computers.heading.activeInput
-            if (computers.heading.disabledOrFaulted() || headingInput != null && headingInput.identifier != AutopilotLogicComputer.ID) {
+            if (computers.heading.isDisabledOrFaulted() || headingInput != null && headingInput.identifier != AutopilotLogicComputer.ID) {
                 setAutoPilot(false, alert = true)
             }
         }

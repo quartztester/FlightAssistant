@@ -20,7 +20,7 @@ class DaBRThrustComputer(computers: ComputerView) : Computer(computers), ThrustS
         ThrustEvents.MODIFY_THRUST_INPUT.register({
             computers.thrust.tickTarget(sign(it).toFloat())
 
-            if (!computers.thrust.disabledOrFaulted()) {
+            if (!computers.thrust.isDisabledOrFaulted()) {
                 return@register computers.thrust.current.toDouble()
             }
             return@register it

@@ -11,7 +11,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.roll.RollSourceRegistrationC
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
-import ru.octol1ttle.flightassistant.api.util.extensions.filterNonFaulted
+import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.findShortestPath
 import ru.octol1ttle.flightassistant.api.util.requireIn
@@ -26,9 +26,9 @@ class RollComputer(computers: ComputerView) : Computer(computers) {
     }
 
     override fun tick() {
-        val rollSource: RollSource = sources.filterNonFaulted().singleOrNull { computers.guardedCall(it, RollSource::isActive) == true } ?: return
+        val rollSource: RollSource = sources.filterWorking().singleOrNull { computers.guardedCall(it, RollSource::isActive) == true } ?: return
 
-        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { computers.guardedCall(it, FlightController::getRollInput) }.sortedBy { it.priority.value }
+        val inputs: List<ControlInput> = controllers.filterWorking().mapNotNull { computers.guardedCall(it, FlightController::getRollInput) }.sortedBy { it.priority.value }
         if (inputs.isEmpty()) {
             return
         }

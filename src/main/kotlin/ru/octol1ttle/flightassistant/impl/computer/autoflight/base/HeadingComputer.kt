@@ -10,7 +10,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.heading.HeadingControllerReg
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
-import ru.octol1ttle.flightassistant.api.util.extensions.filterNonFaulted
+import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.findShortestPath
 import ru.octol1ttle.flightassistant.api.util.requireIn
@@ -25,7 +25,7 @@ class HeadingComputer(computers: ComputerView) : Computer(computers) {
     }
 
     override fun tick() {
-        val inputs: List<ControlInput> = controllers.filterNonFaulted().mapNotNull { computers.guardedCall(it, FlightController::getHeadingInput) }.sortedBy { it.priority.value }
+        val inputs: List<ControlInput> = controllers.filterWorking().mapNotNull { computers.guardedCall(it, FlightController::getHeadingInput) }.sortedBy { it.priority.value }
         if (inputs.isEmpty()) {
             activeInput = null
             return

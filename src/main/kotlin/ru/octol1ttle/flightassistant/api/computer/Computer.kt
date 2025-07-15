@@ -10,7 +10,7 @@ abstract class Computer(val computers: ComputerView) {
     var enabled: Boolean = true
 
     /**
-     * Whether or not this computer has faulted. This value is set to false whenever the computer is reset.
+     * Whether or not this computer has faulted. This value is set to false when the computer is turned off.
      */
     var faulted: Boolean = false
 
@@ -19,12 +19,12 @@ abstract class Computer(val computers: ComputerView) {
      */
     var faultCount: Int = 0
 
-    fun disabledOrFaulted(): Boolean {
+    fun isDisabledOrFaulted(): Boolean {
         return !enabled || faulted
     }
 
     /**
-     * Called once per world render
+     * Called once per level render
      *
      * If this method throws an exception or error, it is caught and the computer is considered "faulted".
      * It won't be ticked until it is reset and an alert about the issue will be displayed
@@ -40,7 +40,7 @@ abstract class Computer(val computers: ComputerView) {
     /**
      * Called once after all computers have been registered. Subscribe to any events provided by other computers here.
      * Be careful calling other computers' code here! Depending on where events are invoked, a fault may cause a game crash.
-     * Use [ComputerView.guardedCall] to invoke computers safely or manually guard your call with [ComputerView.isFaulted]
+     * Use [ComputerView.guardedCall] to invoke computers safely or manually guard your call with [Computer.isDisabledOrFaulted]
      */
     open fun subscribeToEvents() {}
 
