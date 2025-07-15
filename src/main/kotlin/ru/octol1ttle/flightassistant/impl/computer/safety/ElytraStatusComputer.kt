@@ -49,7 +49,7 @@ class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
 //? if >=1.21.4 {
             /*net.minecraft.world.entity.EquipmentSlot.VALUES.any { data.player.getItemBySlot(it) == activeElytra && net.minecraft.world.entity.LivingEntity.canGlideUsing(data.player.getItemBySlot(it), it) }
 *///?} else
-            data.player.armorSlots.contains(activeElytra) && net.minecraft.world.item.ElytraItem.isFlyEnabled(activeElytra)
+            data.player.armorSlots.contains(activeElytra) && net.minecraft.world.item.ElytraItem.isFlyEnabled(activeElytra!!)
         val isInsideBlock: Boolean = !data.player.blockStateOn.isAir
         val lookingToClutch: Boolean = data.pitch <= -70.0f
         if (FAConfig.safety.elytraAutoOpen && !flying && !data.fallDistanceSafe && hasUsableElytra && !isInsideBlock && !lookingToClutch) {

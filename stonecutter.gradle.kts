@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "2.2.0" apply false
     id("dev.kikugie.stonecutter")
-    id("me.modmuss50.mod-publish-plugin") version "0.8.+" apply false
+    id("me.modmuss50.mod-publish-plugin") version "0.8.4" apply false
 }
 stonecutter active "1.20.1-fabric" /* [SC] DO NOT EDIT */
 
