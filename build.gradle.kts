@@ -25,10 +25,6 @@ val mod = ModData()
 val minecraft = stonecutter.current.project.substringBeforeLast('-')
 val minecraftVersionRange = prop("mod.mc_version_range")
 
-base { archivesName.set("${mod.id}-$loader") }
-version = "${mod.version}+mc$minecraft"
-group = mod.group
-
 // See https://stonecutter.kikugie.dev/stonecutter/guide/comments#condition-constants
 val loader: String = name.split("-")[1]
 stonecutter {
@@ -39,6 +35,8 @@ stonecutter {
         "do-a-barrel-roll" to hasProperty("deps.dabr")
     )
 }
+
+base { archivesName.set("${mod.id}-$loader") }
 
 modstitch {
     minecraftVersion = minecraft
@@ -55,21 +53,10 @@ modstitch {
         ifFindProperty("deps.parchment") { mappingsVersion = it }
     }
 
-    // This metadata is used to fill out the information inside
-    // the metadata files found in the templates folder.
+    // This metadata is used by Modstitch to annoyingly overwrite some Gradle properties (like "version")
     metadata {
-        modId = mod.id
-        modName = mod.name
-        modVersion = mod.version
-
-        fun <K, V> MapProperty<K, V>.populate(block: MapProperty<K, V>.() -> Unit) {
-            block()
-        }
-
-        replacementProperties.populate {
-            put("mc", minecraftVersionRange)
-            put("mnd", if (loader == "neoforge") "type = \"required\"" else "mandatory = true")
-        }
+        modGroup = mod.group
+        modVersion = "${mod.version}+mc$minecraft"
     }
 
     // Fabric Loom (Fabric)
@@ -93,15 +80,12 @@ modstitch {
         }
 
         // Configures client and server runs for MDG, it is not done by default
-        defaultRuns()
+        defaultRuns(server = false)
 
         // This block configures the `neoforge` extension that MDG exposes by default,
         // you can configure MDG like normal from here
         configureNeoforge {
             runs.all {
-                if (type.get() == "server") {
-                    disableIdeRun()
-                }
                 gameDirectory = layout.projectDirectory.dir("../../run")
             }
         }
@@ -151,6 +135,29 @@ dependencies {
 yamlang {
     targetSourceSets.set(mutableListOf(sourceSets["main"]))
     inputDir.set("assets/${mod.id}/lang")
+}
+
+// Resources
+tasks.processResources {
+    inputs.property("mod_id", mod.id)
+    inputs.property("mod_version", mod.version)
+    inputs.property("mod_name", mod.name)
+    inputs.property("mc", minecraftVersionRange)
+
+    val map = mapOf(
+        "mod_id" to inputs.properties["mod_id"],
+        "mod_version" to inputs.properties["mod_version"],
+        "mod_name" to inputs.properties["mod_name"],
+        "mc" to inputs.properties["mc"],
+        "fml" to if (loader == "neoforge") "1" else "45",
+        "mnd" to if (loader == "neoforge") "type = \"required\"" else "mandatory = true"
+    )
+
+    fun FileCopyDetails.expandOrExclude(expand: Boolean, map: Map<String, *>): Any = if (expand) expand(map) else exclude()
+
+    filesMatching("fabric.mod.json") { expandOrExclude(loader == "fabric", map) }
+    filesMatching("META-INF/mods.toml") { expandOrExclude(loader == "forge", map) }
+    filesMatching("META-INF/neoforge.mods.toml") { expandOrExclude(loader == "neoforge", map) }
 }
 
 // Publishing

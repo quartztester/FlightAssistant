@@ -31,7 +31,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
         private set
     var reverseUnsupported: Boolean = false
         private set
-    var thrustLocked: Boolean = false
+    var thrustLocked: Boolean = false // TODO: what an annoying mechanic
         private set
 
     override fun invokeEvents() {
