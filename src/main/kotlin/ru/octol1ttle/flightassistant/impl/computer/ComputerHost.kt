@@ -23,6 +23,8 @@ import ru.octol1ttle.flightassistant.impl.computer.safety.*
 internal object ComputerHost : ModuleController<Computer>, ComputerView {
     private val computers: MutableMap<ResourceLocation, Computer> = LinkedHashMap()
 
+    override val modulesResettable: Boolean = true
+
     override fun identifiers(): Set<ResourceLocation> {
         return computers.keys
     }
@@ -56,7 +58,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
         return get(identifier).faultCount
     }
 
-    override fun register(identifier: ResourceLocation, module: Computer) {
+    private fun register(identifier: ResourceLocation, module: Computer) {
         if (FlightAssistant.initComplete) {
             throw IllegalStateException("Initialization is already complete, but trying to register a computer with identifier: $identifier")
         }
@@ -142,7 +144,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
             if (computer !is Computer) return null
             onComputerFault(computer)
 
-            FlightAssistant.logger.atError().setCause(t).log("Exception invoking guarded call")
+            FlightAssistant.logger.error("Exception invoking guarded call", t)
 
             return null
         }

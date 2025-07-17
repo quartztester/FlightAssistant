@@ -6,14 +6,14 @@ import org.lwjgl.glfw.GLFW
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.config.FAConfig
-import ru.octol1ttle.flightassistant.screen.FlightSetupScreen
+import ru.octol1ttle.flightassistant.screen.FlightAssistantSetupScreen
 
 object FAKeyMappings {
     internal val keyMappings: MutableList<KeyMapping> = ArrayList()
 
     private lateinit var toggleEnabled: KeyMapping
 
-    private lateinit var openFlightSetup: KeyMapping
+    private lateinit var openFlightAssistantSetup: KeyMapping
 
     private lateinit var autopilotDisconnect: KeyMapping
     private lateinit var manualPitchOverride: KeyMapping
@@ -28,7 +28,7 @@ object FAKeyMappings {
 
     fun setup() {
         toggleEnabled = addKeyMapping("toggle_enabled", -1)
-        openFlightSetup = addKeyMapping("open_flight_setup", GLFW.GLFW_KEY_KP_ENTER)
+        openFlightAssistantSetup = addKeyMapping("open_flightassistant_setup", GLFW.GLFW_KEY_KP_ENTER)
 
         autopilotDisconnect = addKeyMapping("autopilot_disconnect", GLFW.GLFW_KEY_CAPS_LOCK)
         manualPitchOverride = addKeyMapping("manual_pitch_override", GLFW.GLFW_KEY_RIGHT_ALT)
@@ -53,9 +53,9 @@ object FAKeyMappings {
             FAConfig.global.modEnabled = !FAConfig.global.modEnabled
         }
 
-        while (openFlightSetup.consumeClick()) {
+        while (openFlightAssistantSetup.consumeClick()) {
             mc.execute {
-                mc.setScreen(FlightSetupScreen())
+                mc.setScreen(FlightAssistantSetupScreen())
             }
         }
 

@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("dev.isxander.modstitch.base") version "0.5.+"
+    id("dev.isxander.modstitch.base") version "0.5.14-unstable"
     id("me.modmuss50.mod-publish-plugin")
     id("me.fallenbreath.yamlang") version "1.4.+"
 }
@@ -94,9 +94,9 @@ modstitch {
     mixin {
         // You do not need to specify mixins in any mods.json/toml file if this is set to
         // true, it will automatically be generated.
-        addMixinsToModManifest = false
+        addMixinsToModManifest = true
 
-        configs.register("flightassistant.client")
+        configs.register("flightassistant.client") { side = CLIENT }
 
         // Most of the time you wont ever need loader specific mixins.
         // If you do, simply make the mixin file and add it like so for the respective loader:

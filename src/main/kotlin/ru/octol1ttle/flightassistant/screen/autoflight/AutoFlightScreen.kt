@@ -28,11 +28,7 @@ class AutoFlightScreen : FABaseScreen(Component.translatable("menu.flightassista
     override fun init() {
         super.init()
 
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL) { _: Button? ->
-            this.onClose()
-        }.pos(this.width - 100, this.height - 40).width(80).build())
-
-        val baseY: Int = (this.height / 2.5).toInt()
+        val baseY: Int = this.height / 3
 
         flightDirectors = this.addRenderableWidget(
             TextOnlyButton(
@@ -61,6 +57,10 @@ class AutoFlightScreen : FABaseScreen(Component.translatable("menu.flightassista
         lateralCycler = this.addRenderableWidget(CycleTextOnlyButton(lateralMode.x + lateralMode.width, lateralMode.y, AutoFlightScreenState.LateralMode.entries, state.lateralMode) { state.lateralMode = it; refreshEditBoxes() })
 
         refreshEditBoxes()
+
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->
+            this.onClose()
+        }.pos(this.width - 90, this.height - 30).width(80).build())
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
@@ -83,7 +83,7 @@ class AutoFlightScreen : FABaseScreen(Component.translatable("menu.flightassista
         refreshableElements.clear()
 
         val baseX: Int = flightDirectors.baseX - 50
-        var baseY: Int = (this.height / 2.5).toInt() + 48
+        var baseY: Int = this.height / 3 + 48
         val baseWidth = 36
         val baseHeight = 12
 

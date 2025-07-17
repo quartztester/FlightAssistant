@@ -15,9 +15,6 @@ FlightAssistant brings your Elytra flying experience to the next level, all clie
 '''
 logoFile = "assets/flightassistant/icon.png"
 
-[[mixins]]
-config = "flightassistant.client.mixins.json"
-
 [[dependencies.flightassistant]]
 modId = "minecraft"
 ${mnd}

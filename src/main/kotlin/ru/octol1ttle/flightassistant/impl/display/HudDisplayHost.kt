@@ -21,6 +21,8 @@ import ru.octol1ttle.flightassistant.config.FAConfig
 internal object HudDisplayHost: ModuleController<Display> {
     private val displays: MutableMap<ResourceLocation, Display> = HashMap()
 
+    override val modulesResettable: Boolean = false
+
     override fun get(identifier: ResourceLocation): Display {
         return displays[identifier] ?: throw IllegalArgumentException("No display was found with identifier: $identifier")
     }
@@ -49,7 +51,7 @@ internal object HudDisplayHost: ModuleController<Display> {
         return displays.keys
     }
 
-    override fun register(identifier: ResourceLocation, module: Display) {
+    private fun register(identifier: ResourceLocation, module: Display) {
         if (FlightAssistant.initComplete) {
             throw IllegalStateException("Initialization is already complete, but trying to register a display with identifier: $identifier")
         }

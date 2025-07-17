@@ -30,12 +30,6 @@
             }
         ]
     },
-    "mixins": [
-        {
-            "config": "flightassistant.client.mixins.json",
-            "environment": "client"
-        }
-    ],
     "depends": {
         "fabricloader": ">=0.16.3",
         "minecraft": "${mc}",

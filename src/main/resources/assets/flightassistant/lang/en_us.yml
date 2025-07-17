@@ -202,13 +202,16 @@ config.flightassistant:
         lock_explosive: Lock explosive fireworks
 
 menu.flightassistant:
-  .: Flight setup
+  .: FlightAssistant setup screen
   config: Mod configuration
   system:
-    .: System status
+    .: System management
+    manage_computers: Manage computers
+    manage_displays: Manage displays
     fault: FAULT
     'off': 'OFF'
-    on_reset: ON/RESET
+    'off_reset': 'OFF/RESET'
+    'on': 'ON'
     name:
       hud:
         flightassistant:alert: Alert display
@@ -241,7 +244,7 @@ menu.flightassistant:
         flightassistant:roll: Roll computer
         flightassistant:thrust: Thrust computer
   autoflight:
-    .: Auto flight
+    .: Select autoflight modes
     disabled: 'OFF'
     enabled: 'ON'
     flight_directors: 'FLT DIR %s'
@@ -270,7 +273,11 @@ menu.flightassistant:
       altitude: 'Target altitude: '
       heading: 'Target heading: '
       coordinates: 'Target coordinates: '
-
+  fms:
+    .: Flight planning
+    departure: Departure
+    enroute: Enroute
+    arrival: Arrival
 mode.flightassistant:
   thrust:
     override: THR OVRD # TODO: single key to override all
@@ -328,7 +335,7 @@ misc.flightassistant:
 key.flightassistant:
   .: FlightAssistant
   toggle_enabled: Toggle mod enabled
-  open_flight_setup: Open flight setup screen
+  open_flightassistant_setup: Open FlightAssistant setup screen
   autopilot_disconnect: Disconnect autopilot
   manual_pitch_override: Manual pitch override (hold)
   hide_current_alert: Hide currently active alert

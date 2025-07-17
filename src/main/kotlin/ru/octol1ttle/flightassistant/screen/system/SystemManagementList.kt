@@ -1,6 +1,7 @@
-package ru.octol1ttle.flightassistant.screen.status
+package ru.octol1ttle.flightassistant.screen.system
 
 import com.google.common.collect.ImmutableList
+import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
@@ -14,7 +15,7 @@ import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
 import ru.octol1ttle.flightassistant.api.util.extensions.font
 
-class SystemStatusList(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") bottom: Int, left: Int, controller: ModuleController<*>, baseKey: String) : ContainerObjectSelectionList<SystemStatusList.Entry>(
+class SystemManagementList(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") bottom: Int, left: Int, baseKey: String, controller: ModuleController<*>) : ContainerObjectSelectionList<SystemManagementList.Entry>(
     mc, width, height, top,
     /*? if <1.21 {*/ bottom, //?}
     25) {
@@ -24,10 +25,10 @@ class SystemStatusList(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARA
         setRenderTopAndBottom(false)
 //?}
         var y: Int = top + Y_OFFSET
-        for (system: ResourceLocation in controller.identifiers()) {
+        for (module: ResourceLocation in controller.identifiers()) {
             this.addEntry(
                 Entry(
-                    left, y, width, system, Component.translatable("$baseKey.$system"), controller
+                    left, y, width, module, Component.translatable("$baseKey.$module"), controller
                 )
             )
             y += 25
@@ -38,24 +39,19 @@ class SystemStatusList(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARA
     /*override fun scrollBarX(): Int {
 *///?} else
     override fun getScrollbarPosition(): Int {
-//? if >=1.21 {
-        /*return this.x + this.width - 6
-*///?} else
-        return this.x0 + this.width - 6
+        return this.width - 6
     }
 
     override fun getRowWidth(): Int {
         return this.width
     }
 
-    class Entry(val x: Int, val y: Int, private val listWidth: Int, val identifier: ResourceLocation, displayName: Component, private val controller: ModuleController<*>) : ContainerObjectSelectionList.Entry<Entry>() {
+    class Entry(val x: Int, val y: Int, private val listWidth: Int, private val identifier: ResourceLocation, displayName: Component, private val controller: ModuleController<*>) : ContainerObjectSelectionList.Entry<Entry>() {
         private val displayName: StringWidget = StringWidget(x, y, this.listWidth / 2, 9, displayName, font).alignLeft()
         private val faultText: StringWidget = StringWidget(x, y, this.listWidth / 6, 9, FAULT_TEXT, font)
         private val offText: StringWidget = StringWidget(x, y, this.listWidth / 6, 9, OFF_TEXT, font)
         private val toggleButton: Button = Button.builder(OFF_TEXT) {
-            it.message =
-                if (controller.toggleEnabled(identifier)) OFF_TEXT
-                else ON_RESET_TEXT
+            controller.toggleEnabled(identifier)
         }.pos(x, y).width(60).build()
 
         override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, partialTick: Float) {
@@ -68,20 +64,21 @@ class SystemStatusList(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARA
             toggleButton.x = this.x + this.listWidth - toggleButton.width - 10
             toggleButton.y = renderY - toggleButton.height / 4 - 1
             toggleButton.message =
-                if (controller.isEnabled(identifier)) OFF_TEXT
-                else ON_RESET_TEXT
+                if (controller.isEnabled(identifier))
+                    if (controller.modulesResettable) OFF_RESET_TEXT else OFF_TEXT
+                else ON_TEXT
             toggleButton.render(context, mouseX, mouseY, partialTick)
 
             offText.x = toggleButton.x - this.listWidth / 12 - font.width(OFF_TEXT)
             offText.y = renderY
             @Suppress("UsePropertyAccessSyntax")
-            offText.setColor(if (controller.isEnabled(identifier)) 0x0F0F0F else 0xFFFFFF)
+            offText.setColor(if (controller.isEnabled(identifier)) ChatFormatting.DARK_GRAY.color!! else 0xFFFFFF)
             offText.render(context, mouseX, mouseY, partialTick)
 
             faultText.x = offText.x - font.width(FAULT_TEXT)
             faultText.y = renderY
             @Suppress("UsePropertyAccessSyntax")
-            faultText.setColor(if (controller.isFaulted(identifier)) cautionColor else 0x0F0F0F)
+            faultText.setColor(if (controller.isFaulted(identifier)) cautionColor else ChatFormatting.DARK_GRAY.color!!)
             faultText.render(context, mouseX, mouseY, partialTick)
         }
 
@@ -96,7 +93,8 @@ class SystemStatusList(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARA
         companion object {
             val FAULT_TEXT: Component = Component.translatable("menu.flightassistant.system.fault")
             val OFF_TEXT: Component = Component.translatable("menu.flightassistant.system.off")
-            val ON_RESET_TEXT: Component = Component.translatable("menu.flightassistant.system.on_reset")
+            val OFF_RESET_TEXT: Component = Component.translatable("menu.flightassistant.system.off_reset")
+            val ON_TEXT: Component = Component.translatable("menu.flightassistant.system.on")
         }
     }
 
