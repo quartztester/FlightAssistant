@@ -55,6 +55,7 @@ modstitch {
 
     // This metadata is used by Modstitch to annoyingly overwrite some Gradle properties (like "version")
     metadata {
+        modId = mod.id
         modGroup = mod.group
         modVersion = "${mod.version}+mc$minecraft"
     }
