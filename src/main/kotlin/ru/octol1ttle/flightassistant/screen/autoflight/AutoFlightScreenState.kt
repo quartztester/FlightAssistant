@@ -2,10 +2,10 @@ package ru.octol1ttle.flightassistant.screen.autoflight
 
 import dev.isxander.yacl3.api.NameableEnum
 import net.minecraft.network.chat.Component
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComputer
+import ru.octol1ttle.flightassistant.api.autoflight.thrust.SpeedThrustMode
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 
 class AutoFlightScreenState {
-
     var thrustMode: ThrustMode = ThrustMode.SPEED
     var targetSpeed: Int = 15
     var climbThrustPercent: Int = 100
@@ -20,20 +20,20 @@ class AutoFlightScreenState {
     var targetCoordinatesX: Int = 0
     var targetCoordinatesZ: Int = 0
 
-    fun apply(autopilotComputer: AutopilotLogicComputer) {
-        autopilotComputer.thrustMode = when (thrustMode) {
-            ThrustMode.SPEED -> AutopilotLogicComputer.SpeedThrustMode(targetSpeed)
-            ThrustMode.VERTICAL_PROFILE -> AutopilotLogicComputer.VerticalProfileThrustMode(climbThrustPercent / 100.0f, descendThrustPercent / 100.0f)
+    fun apply(autoFlight: AutoFlightComputer) {
+        autoFlight.selectedThrustMode = when (thrustMode) {
+            ThrustMode.SPEED -> SpeedThrustMode(targetSpeed)
+            ThrustMode.VERTICAL_PROFILE -> TODO()
             ThrustMode.FLIGHT_PLAN -> null
         }
-        autopilotComputer.verticalMode = when (verticalMode) {
-            VerticalMode.PITCH -> AutopilotLogicComputer.PitchVerticalMode(targetPitch)
-            VerticalMode.ALTITUDE -> AutopilotLogicComputer.SelectedAltitudeVerticalMode(targetAltitude)
+        autoFlight.selectedVerticalMode = when (verticalMode) {
+            VerticalMode.PITCH -> TODO()
+            VerticalMode.ALTITUDE -> TODO()
             VerticalMode.FLIGHT_PLAN -> null
         }
-        autopilotComputer.lateralMode = when (lateralMode) {
-            LateralMode.HEADING -> AutopilotLogicComputer.HeadingLateralMode(targetHeading)
-            LateralMode.COORDINATES -> AutopilotLogicComputer.CoordinatesLateralMode(targetCoordinatesX, targetCoordinatesZ)
+        autoFlight.selectedLateralMode = when (lateralMode) {
+            LateralMode.HEADING -> TODO()
+            LateralMode.COORDINATES -> TODO()
             LateralMode.FLIGHT_PLAN -> null
         }
     }

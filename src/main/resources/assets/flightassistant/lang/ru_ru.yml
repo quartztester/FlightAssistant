@@ -206,13 +206,16 @@ config.flightassistant:
         lock_explosive: Блокировать использование взрывоопасных фейерверков
 
 menu.flightassistant:
-  .: Настройки полёта
+  .: Настройки FlightAssistant
   config: Конфигурация мода
   system:
-    .: Статус систем
+    .: Управление системами
+    manage_computers: 'Управление компьютерами'
+    manage_displays: 'Управление индикаторами'
     fault: ОТКАЗ
     'off': 'ВЫКЛ'
-    on_reset: ВКЛ/СБРОС
+    'off_reset': 'ВЫКЛ/СБРОС'
+    'on': 'ВКЛ'
     name:
       hud:
         flightassistant:alert: Индикатор предупреждений
@@ -245,7 +248,7 @@ menu.flightassistant:
         flightassistant:roll: Компьютер управления креном
         flightassistant:thrust: Компьютер тяги
   autoflight:
-    .: Автополёт
+    .: Выбрать режимы автополёта
     disabled: ВЫКЛ
     enabled: ВКЛ
     flight_directors: 'УКАЗ ПОЛ %s'
@@ -274,6 +277,17 @@ menu.flightassistant:
       altitude: 'Целевая высота: '
       heading: 'Целевой курс: '
       coordinates: 'Целевые координаты: '
+  fms:
+    .: План полёта
+    departure:
+      .: Вылет
+      takeoff_thrust: 'Взлётная тяга (%): '
+      minimum_climb_speed: 'Минимальная скорость набора: '
+    enroute: Путь
+    arrival: Прибытие
+    discard_changes: Отменить изменения
+    coordinates: 'Координаты: '
+    elevation: 'Высота: '
 
 mode.flightassistant:
   thrust:
@@ -284,9 +298,10 @@ mode.flightassistant:
     locked_toga: БЛОК ВЗЛЕТН
     idle: ТЯГА МАЛ
     toga: ТЯГА ВЗЛЕТН
-    selected_speed: СКОР %s
+    speed: СКОР %s
     climb: ТЯГА НАБОР
     descend: ТЯГА СНИЖ
+    takeoff: ТЯГА ВЫЛЕТ
   vertical:
     override: РУЧН УГОЛ
     void_protection: ПУСТ ЗАЩ
@@ -299,6 +314,7 @@ mode.flightassistant:
       climb: НАБОР %s
       descend: СНИЖ %s
       hold: ВЫС %s
+    speed_reference: СКОР СЛЕД
   lateral:
     selected_heading: КУРС %s
     selected_coordinates: КООРД %s %s

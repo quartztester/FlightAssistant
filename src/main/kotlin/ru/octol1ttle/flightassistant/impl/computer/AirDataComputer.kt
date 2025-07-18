@@ -59,6 +59,8 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
         private set
     var forwardVelocity: Vec3 = Vec3.ZERO
         private set
+    var forwardAcceleration: Vec3 = Vec3.ZERO
+        private set
 
     val pitch: Float
         get() = -player.xRot.requireIn(-90.0f..90.0f)
@@ -79,7 +81,11 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
         position = player.getPosition(partialTick)
         groundY = computeGroundLevel()
         velocity = player.getDeltaMovementLerped(partialTick)
-        forwardVelocity = computeForwardVelocity()
+
+        val newForwardVelocity: Vec3 = computeForwardVelocity()
+        forwardAcceleration = newForwardVelocity.subtract(forwardVelocity)
+        forwardVelocity = newForwardVelocity
+
         roll = degrees(atan2(-RenderMatrices.worldSpaceMatrix.m10(), RenderMatrices.worldSpaceMatrix.m11()))
     }
 
@@ -131,6 +137,7 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
         groundY = null
         velocity = Vec3.ZERO
         forwardVelocity = Vec3.ZERO
+        forwardAcceleration = Vec3.ZERO
         roll = 0.0f
     }
 

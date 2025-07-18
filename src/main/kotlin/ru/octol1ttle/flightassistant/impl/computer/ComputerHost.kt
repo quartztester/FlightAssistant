@@ -10,8 +10,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.config.FAConfig
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutomationsComputer
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FireworkComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.HeadingComputer
@@ -79,8 +78,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
         register(ChunkStatusComputer.ID, ChunkStatusComputer(this))
 
         register(FlightPlanComputer.ID, FlightPlanComputer(this))
-        register(AutomationsComputer.ID, AutomationsComputer(this))
-        register(AutopilotLogicComputer.ID, AutopilotLogicComputer(this))
+        register(AutoFlightComputer.ID, AutoFlightComputer(this))
         register(FireworkComputer.ID, FireworkComputer(this, mc))
         register(PitchComputer.ID, PitchComputer(this))
         register(HeadingComputer.ID, HeadingComputer(this))

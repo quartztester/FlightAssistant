@@ -15,7 +15,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.event.EntityTurnEvents
 
-class AutomationsComputer(computers: ComputerView) : Computer(computers), FlightController {
+class AutoFlightComputer(computers: ComputerView) : Computer(computers), FlightController {
     var flightDirectors: Boolean = false
         private set
 
@@ -30,15 +30,16 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
     private var pitchResistance: Float = 0.0f
     private var headingResistance: Float = 0.0f
 
+    var selectedThrustMode: ThrustMode? = null
+    var selectedVerticalMode: VerticalMode? = null
+    var selectedLateralMode: LateralMode? = null
+
     override fun subscribeToEvents() {
         ThrustControllerRegistrationCallback.EVENT.register { it.accept(this) }
         PitchControllerRegistrationCallback.EVENT.register { it.accept(this) }
         HeadingControllerRegistrationCallback.EVENT.register { it.accept(this) }
         RollControllerRegistrationCallback.EVENT.register { it.accept(this) }
         ThrustChangeCallback.EVENT.register(ThrustChangeCallback { _, _, input ->
-            if (input?.identifier != AutopilotLogicComputer.ID) {
-                setAutoThrust(false, alert = true)
-            }
             if (input == null && autoThrustAlert) {
                 autoThrustAlert = false
             }
@@ -93,12 +94,12 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
             autopilotAlert = false
 
             val pitchInput: ControlInput? = computers.pitch.activeInput
-            if (computers.pitch.isDisabledOrFaulted() || pitchInput != null && pitchInput.identifier != AutopilotLogicComputer.ID) {
+            if (computers.pitch.isDisabledOrFaulted() || pitchInput != null && pitchInput.priority < ControlInput.Priority.NORMAL) {
                 setAutoPilot(false, alert = true)
             }
 
             val headingInput: ControlInput? = computers.heading.activeInput
-            if (computers.heading.isDisabledOrFaulted() || headingInput != null && headingInput.identifier != AutopilotLogicComputer.ID) {
+            if (computers.heading.isDisabledOrFaulted() || headingInput != null && headingInput.priority < ControlInput.Priority.NORMAL) {
                 setAutoPilot(false, alert = true)
             }
         }
@@ -127,7 +128,7 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
             return null
         }
 
-        return computers.autopilot.computeThrust()
+        return selectedThrustMode?.getControlInput(computers) ?: computers.plan.getThrustInput()
     }
 
     override fun getPitchInput(): ControlInput? {
@@ -135,7 +136,7 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
             return null
         }
 
-        return computers.autopilot.computePitch(autopilot)
+        return (selectedVerticalMode?.getControlInput(computers) ?: computers.plan.getPitchInput())?.copy(active = autopilot)
     }
 
     override fun getHeadingInput(): ControlInput? {
@@ -143,7 +144,7 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
             return null
         }
 
-        return computers.autopilot.computeHeading(autopilot)
+        return (selectedLateralMode?.getControlInput(computers) ?: computers.plan.getHeadingInput())?.copy(active = autopilot)
     }
 
     override fun getRollInput(): ControlInput? {
@@ -168,7 +169,15 @@ class AutomationsComputer(computers: ComputerView) : Computer(computers), Flight
         headingResistance = 0.0f
     }
 
+    interface AutoFlightMode {
+        fun getControlInput(computers: ComputerView): ControlInput
+    }
+
+    interface ThrustMode : AutoFlightMode
+    interface VerticalMode : AutoFlightMode
+    interface LateralMode : AutoFlightMode
+
     companion object {
-        val ID: ResourceLocation = FlightAssistant.id("automations")
+        val ID: ResourceLocation = FlightAssistant.id("auto_flight")
     }
 }

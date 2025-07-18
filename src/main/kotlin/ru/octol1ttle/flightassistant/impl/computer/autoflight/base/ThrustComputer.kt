@@ -108,15 +108,6 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
         return 5.0f
     }
 
-    fun calculateThrustForSpeed(targetSpeed: Float): Float? {
-        val thrustSource: ThrustSource? = sources.filterWorking().filter { it.isAvailable() }.minByOrNull { it.priority.value }
-        if (thrustSource != null) {
-            return thrustSource.calculateThrustForSpeed(targetSpeed)
-        }
-
-        return null
-    }
-
     override fun reset() {
         lastChangeAutomatic = false
         current = 0.0f

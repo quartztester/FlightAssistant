@@ -3,6 +3,7 @@ package ru.octol1ttle.flightassistant.screen.autoflight
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
+import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
@@ -28,25 +29,27 @@ class AutoFlightScreen : FABaseScreen(Component.translatable("menu.flightassista
     override fun init() {
         super.init()
 
+        this.addRenderableWidget(StringWidget(0, 7, this.width, 9, this.title, this.font))
+
         val baseY: Int = this.height / 3
 
         flightDirectors = this.addRenderableWidget(
             TextOnlyButton(
                 this.centerX - 80, baseY - 20, Component.translatable("menu.flightassistant.autoflight.flight_directors.disabled")
             ) {
-                computers.automations.setFlightDirectors(!computers.automations.flightDirectors)
+                computers.autoflight.setFlightDirectors(!computers.autoflight.flightDirectors)
             })
         autoThrust = this.addRenderableWidget(
             TextOnlyButton(
                 this.centerX, baseY - 20, Component.translatable("menu.flightassistant.autoflight.auto_thrust.disabled")
             ) {
-                computers.automations.setAutoThrust(!computers.automations.autoThrust, false)
+                computers.autoflight.setAutoThrust(!computers.autoflight.autoThrust, false)
             })
         autopilot = this.addRenderableWidget(
             TextOnlyButton(
                 this.centerX + 80, baseY - 20, Component.translatable("menu.flightassistant.autoflight.autopilot.disabled")
             ) {
-                computers.automations.setAutoPilot(!computers.automations.autopilot, false)
+                computers.autoflight.setAutoPilot(!computers.autoflight.autopilot, false)
             })
 
         val thrustMode: SmartStringWidget = this.addRenderableWidget(SmartStringWidget(flightDirectors.baseX - 50, baseY, Component.translatable("menu.flightassistant.autoflight.thrust.mode")))
@@ -64,15 +67,15 @@ class AutoFlightScreen : FABaseScreen(Component.translatable("menu.flightassista
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        updateButton(flightDirectors, "menu.flightassistant.autoflight.flight_directors", computers.automations.flightDirectors)
-        updateButton(autoThrust, "menu.flightassistant.autoflight.auto_thrust", computers.automations.autoThrust)
-        updateButton(autopilot, "menu.flightassistant.autoflight.autopilot", computers.automations.autopilot)
+        updateButton(flightDirectors, "menu.flightassistant.autoflight.flight_directors", computers.autoflight.flightDirectors)
+        updateButton(autoThrust, "menu.flightassistant.autoflight.auto_thrust", computers.autoflight.autoThrust)
+        updateButton(autopilot, "menu.flightassistant.autoflight.autopilot", computers.autoflight.autopilot)
 
         super.render(guiGraphics, mouseX, mouseY, delta)
     }
 
     override fun onClose() {
-        state.apply(computers.autopilot)
+        state.apply(computers.autoflight)
         super.onClose()
     }
 

@@ -14,11 +14,11 @@ class AutoThrustOffAlert(computers: ComputerView) : Alert(computers), ECAMAlert 
     override val priorityOffset: Int = 20
 
     override fun shouldActivate(): Boolean {
-        return computers.automations.autoThrustAlert
+        return computers.autoflight.autoThrustAlert
     }
 
     override fun onHide() {
-        computers.automations.autoThrustAlert = false
+        computers.autoflight.autoThrustAlert = false
     }
 
     override fun render(guiGraphics: GuiGraphics, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {

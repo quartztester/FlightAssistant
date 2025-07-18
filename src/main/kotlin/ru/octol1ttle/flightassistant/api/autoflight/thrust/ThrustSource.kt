@@ -39,11 +39,6 @@ interface ThrustSource {
     fun tickThrust(currentThrust: Float) {}
 
     /**
-     * Calculates the thrust required to achieve the target speed.
-     */
-    fun calculateThrustForSpeed(targetSpeed: Float): Float
-
-    /**
      * Defines the priority, which determines which thrust source to choose in the case there are multiple sources available ([isAvailable]).
      * In the case there are multiple thrust sources with the same priority, a single thrust source will be ticked. Which one exactly is determined by mod loading order
      */

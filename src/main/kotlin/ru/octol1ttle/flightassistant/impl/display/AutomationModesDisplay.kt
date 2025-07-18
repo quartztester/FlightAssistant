@@ -16,7 +16,6 @@ import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.api.util.furtherFromZero
 import ru.octol1ttle.flightassistant.config.FAConfig
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutopilotLogicComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer.Companion.TOGA_THRESHOLD
 
 class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
@@ -97,17 +96,13 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
 
     private fun renderAutomaticsMode(guiGraphics: GuiGraphics) {
         val text: MutableComponent = Component.empty()
-        if (computers.automations.flightDirectors) {
+        if (computers.autoflight.flightDirectors) {
             text.appendWithSeparation(Component.translatable("short.flightassistant.flight_directors_alt"))
         }
-        if (computers.automations.autoThrust) {
-            val autoThrustText: MutableComponent = Component.translatable("short.flightassistant.auto_thrust")
-            text.appendWithSeparation(
-                if (computers.thrust.activeInput?.identifier == AutopilotLogicComputer.ID) autoThrustText
-                else autoThrustText.setColor(advisoryColor)
-            )
+        if (computers.autoflight.autoThrust) {
+            text.appendWithSeparation(Component.translatable("short.flightassistant.auto_thrust"))
         }
-        if (computers.automations.autopilot) {
+        if (computers.autoflight.autopilot) {
             text.appendWithSeparation(Component.translatable("short.flightassistant.autopilot"))
         }
 
@@ -115,8 +110,8 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
             guiGraphics,
             if (text.siblings.isNotEmpty()) text else null,
             true,
-            if (computers.automations.autopilotAlert) warningColor
-            else if (computers.automations.autoThrustAlert) cautionColor
+            if (computers.autoflight.autopilotAlert) warningColor
+            else if (computers.autoflight.autoThrustAlert) cautionColor
             else null
         )
     }

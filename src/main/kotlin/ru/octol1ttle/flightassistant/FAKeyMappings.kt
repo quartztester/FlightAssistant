@@ -60,10 +60,10 @@ object FAKeyMappings {
         }
 
         while (autopilotDisconnect.consumeClick()) {
-            if (!computers.automations.autopilot && !computers.automations.autopilotAlert) {
-                computers.automations.setFlightDirectors(false)
+            if (!computers.autoflight.autopilot && !computers.autoflight.autopilotAlert) {
+                computers.autoflight.setFlightDirectors(false)
             }
-            computers.automations.setAutoPilot(false, alert = false)
+            computers.autoflight.setAutoPilot(false, alert = false)
         }
         computers.pitch.manualOverride = manualPitchOverride.isDown
 

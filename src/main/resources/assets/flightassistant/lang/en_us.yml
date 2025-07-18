@@ -275,9 +275,16 @@ menu.flightassistant:
       coordinates: 'Target coordinates: '
   fms:
     .: Flight planning
-    departure: Departure
+    departure:
+      .: Departure
+      takeoff_thrust: 'Takeoff thrust %: '
+      minimum_climb_speed: 'Minimum climb speed: '
     enroute: Enroute
     arrival: Arrival
+    discard_changes: Discard changes
+    coordinates: 'Coordinates: '
+    elevation: 'Elevation: '
+
 mode.flightassistant:
   thrust:
     override: THR OVRD # TODO: single key to override all
@@ -287,11 +294,12 @@ mode.flightassistant:
     locked_toga: TOGA LK
     idle: THR IDLE
     toga: THR TOGA
-    selected_speed: SPD %s
+    speed: SPD %s # TODO: don't indicate values on the FMA
     climb: THR CLB
     descend: THR DES
+    takeoff: THR TO # TODO: fix confusion with TOGA somehow
   vertical:
-    override: PITCH OVRD
+    override: PITCH OVRD # TODO: single key to override all
     void_protection: VOID PROT
     void_escape: VOID ESC
     stall_protection: STALL PROT
@@ -302,6 +310,7 @@ mode.flightassistant:
       climb: CLB %s
       descend: DES %s
       hold: ALT %s
+    speed_reference: SPD REF
   lateral:
     selected_heading: HDG %s
     selected_coordinates: COORD %s %s

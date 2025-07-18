@@ -13,21 +13,21 @@ import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
 
 class AutopilotOffAlert(computers: ComputerView) : Alert(computers), ECAMAlert {
     override val data: AlertData
-        get() = if (computers.automations.autopilotAlert) AlertData.FORCE_AUTOPILOT_OFF else AlertData.PLAYER_AUTOPILOT_OFF
+        get() = if (computers.autoflight.autopilotAlert) AlertData.FORCE_AUTOPILOT_OFF else AlertData.PLAYER_AUTOPILOT_OFF
     private var age: Int = 0
     private var wasAutopilot: Boolean = false
 
     override fun shouldActivate(): Boolean {
-        if (computers.automations.autopilotAlert || age > 80) {
+        if (computers.autoflight.autopilotAlert || age > 80) {
             wasAutopilot = false
             age = 0
-            return computers.automations.autopilotAlert
+            return computers.autoflight.autopilotAlert
         }
 
-        if (computers.automations.autopilot) {
+        if (computers.autoflight.autopilot) {
             wasAutopilot = true
         }
-        val autopilotOff: Boolean = wasAutopilot && !computers.automations.autopilot
+        val autopilotOff: Boolean = wasAutopilot && !computers.autoflight.autopilot
         if (autopilotOff) {
             age += FATickCounter.ticksPassed
         }
@@ -36,12 +36,12 @@ class AutopilotOffAlert(computers: ComputerView) : Alert(computers), ECAMAlert {
     }
 
     override fun onHide() {
-        computers.automations.autopilotAlert = false
+        computers.autoflight.autopilotAlert = false
     }
 
     override fun render(guiGraphics: GuiGraphics, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
         var i: Int = guiGraphics.drawString(Component.translatable("alert.flightassistant.autoflight.autopilot_off"), firstLineX, firstLineY, warningColor)
-        if (computers.automations.autopilotAlert) {
+        if (computers.autoflight.autopilotAlert) {
             i += guiGraphics.drawString(Component.translatable("alert.flightassistant.autoflight.autopilot_off.push_to_silence"), otherLinesX, firstLineY + 11, advisoryColor)
         }
 

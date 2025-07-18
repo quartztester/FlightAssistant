@@ -42,7 +42,7 @@ import ru.octol1ttle.flightassistant.impl.alert.thrust.NoThrustSourceAlert
 import ru.octol1ttle.flightassistant.impl.alert.thrust.ReverseThrustNotSupportedAlert
 import ru.octol1ttle.flightassistant.impl.alert.thrust.ThrustLockedAlert
 import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutomationsComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FireworkComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.HeadingComputer
@@ -69,7 +69,7 @@ class AlertComputer(computers: ComputerView, private val soundManager: SoundMana
         )
         register(
             AlertCategory(Component.translatable("alert.flightassistant.autoflight"))
-                .add(ComputerFaultAlert(computers, AutomationsComputer.ID, Component.translatable("alert.flightassistant.autoflight.fault")))
+                .add(ComputerFaultAlert(computers, AutoFlightComputer.ID, Component.translatable("alert.flightassistant.autoflight.fault")))
                 .add(ComputerFaultAlert(computers, PitchComputer.ID, Component.translatable("alert.flightassistant.autoflight.pitch_fault")))
                 .add(ComputerFaultAlert(computers, HeadingComputer.ID, Component.translatable("alert.flightassistant.autoflight.heading_fault")))
                 .add(ComputerFaultAlert(computers, RollComputer.ID, Component.translatable("alert.flightassistant.autoflight.roll_fault")))
