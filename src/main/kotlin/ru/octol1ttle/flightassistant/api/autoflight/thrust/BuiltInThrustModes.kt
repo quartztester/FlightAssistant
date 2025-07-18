@@ -13,8 +13,8 @@ data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
         val currentSpeed: Double = computers.data.forwardVelocity.length() * 20
         val acceleration: Double = computers.data.forwardAcceleration.length() * 20
 
-        val speedCorrection: Double = (target - currentSpeed) * FATickCounter.timePassed.pow(2)
-        val accelerationDamping: Double = -acceleration * FATickCounter.timePassed.pow(4)
+        val speedCorrection: Double = (target - currentSpeed) * FATickCounter.timePassed.pow(1.5f)
+        val accelerationDamping: Double = -acceleration * FATickCounter.timePassed
         return ControlInput(
             (currentThrust + speedCorrection + accelerationDamping).toFloat().coerceIn(0.0f..1.0f),
             ControlInput.Priority.NORMAL,
@@ -25,6 +25,7 @@ data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
 
 data class SpeedReferenceVerticalMode(val targetSpeed: Int) : AutoFlightComputer.VerticalMode {
     override fun getControlInput(computers: ComputerView): ControlInput {
+        // TODO: find a way to fix jittering
         val range: Float = computers.thrust.getOptimumClimbPitch() - computers.thrust.getAltitudeHoldPitch()
         val currentPitch: Float = computers.data.pitch
         val currentSpeed: Double = computers.data.forwardVelocity.length() * 20

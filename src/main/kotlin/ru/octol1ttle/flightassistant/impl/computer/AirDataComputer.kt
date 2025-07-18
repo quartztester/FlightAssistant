@@ -81,11 +81,8 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
         position = player.getPosition(partialTick)
         groundY = computeGroundLevel()
         velocity = player.getDeltaMovementLerped(partialTick)
-
-        val newForwardVelocity: Vec3 = computeForwardVelocity()
-        forwardAcceleration = newForwardVelocity.subtract(forwardVelocity)
-        forwardVelocity = newForwardVelocity
-
+        forwardVelocity = computeForwardVector(velocity)
+        forwardAcceleration = computeForwardVector(player.deltaMovement.subtract(player.getDeltaMovementLerped(0.0f)))
         roll = degrees(atan2(-RenderMatrices.worldSpaceMatrix.m10(), RenderMatrices.worldSpaceMatrix.m11()))
     }
 
@@ -126,10 +123,10 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
         return result.location.y
     }
 
-    private fun computeForwardVelocity(): Vec3 {
+    private fun computeForwardVector(vector: Vec3): Vec3 {
         val normalizedLookAngle: Vec3 = player.lookAngle.normalize()
-        val normalizedVelocity: Vec3 = velocity.normalize()
-        return velocity.scale(normalizedLookAngle.dot(normalizedVelocity).coerceAtLeast(0.0))
+        val normalizedVector: Vec3 = vector.normalize()
+        return vector.scale(normalizedLookAngle.dot(normalizedVector).coerceAtLeast(0.0))
     }
 
     override fun reset() {

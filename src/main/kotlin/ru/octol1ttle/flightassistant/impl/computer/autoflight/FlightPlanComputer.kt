@@ -74,5 +74,5 @@ class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
         CLIMB
     }
 
-    data class DepartureData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val takeoffThrust: Float = 0.0f, val minimumClimbSpeed: Int = 0)
+    data class DepartureData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val takeoffThrust: Float = 1.0f, val minimumClimbSpeed: Int = 15)
 }
