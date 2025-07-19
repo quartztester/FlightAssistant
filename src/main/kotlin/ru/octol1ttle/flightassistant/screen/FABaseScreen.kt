@@ -18,10 +18,12 @@ abstract class FABaseScreen(title: Component?) : Screen(title) {
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+//? if <1.21.6 {
         this.renderBackground(
             guiGraphics
             /*? if >=1.21 {*//*, mouseX, mouseY, delta *///?}
         )
+//?}
         super.render(guiGraphics, mouseX, mouseY, delta)
     }
 
