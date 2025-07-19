@@ -34,7 +34,7 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
             if (pitchInput != null && pitchInput.priority >= ControlInput.Priority.NORMAL) {
                 val pitchY: Int? = ScreenSpace.getY(pitchInput.target, false)
                 if (pitchY != null) {
-                    hLine(this.centerX - halfWidth, this.centerX + halfWidth, pitchY, advisoryColor)
+                    hLine(this.centerX - halfWidth, this.centerX + halfWidth, pitchY, primaryAdvisoryColor)
                 }
             }
 
@@ -42,7 +42,7 @@ class FlightDirectorsDisplay(computers: ComputerView) : Display(computers) {
             if (headingInput != null && headingInput.priority >= ControlInput.Priority.NORMAL) {
                 val headingX: Int? = ScreenSpace.getX(headingInput.target, false)
                 if (headingX != null) {
-                    vLine(headingX, this.centerY - halfWidth, this.centerY + halfWidth, advisoryColor)
+                    vLine(headingX, this.centerY - halfWidth, this.centerY + halfWidth, primaryAdvisoryColor)
                 }
             }
 

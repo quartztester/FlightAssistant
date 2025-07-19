@@ -15,8 +15,12 @@ class DisplayOptions {
     var primaryColor: Color = Color.GREEN
     @SerialEntry
     var secondaryColor: Color = Color.WHITE
+
     @SerialEntry
-    var advisoryColor: Color = Color.CYAN
+    var primaryAdvisoryColor: Color = Color.CYAN
+
+    @SerialEntry
+    var secondaryAdvisoryColor: Color = Color.MAGENTA
 
     @SerialEntry
     var cautionColor: Color = Color.YELLOW

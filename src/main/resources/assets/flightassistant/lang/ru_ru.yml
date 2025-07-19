@@ -112,7 +112,9 @@ config.flightassistant:
         .: Цвета
         primary: Основной цвет
         secondary: Вторичный цвет
-        advisory: Цвет указывающих элементов
+        advisory:
+          primary: Основной цвет указывающих элементов
+          secondary: Вторичный цвет указывающих элементов
         caution: Цвет предупреждения
         warning: Цвет опасности
       attitude:
@@ -240,7 +242,7 @@ menu.flightassistant:
         flightassistant:ground_proximity: Компьютер близости земли
         flightassistant:stall: Компьютер обнаружения сваливания
         flightassistant:void_proximity: Компьютер близости пустоты
-        flightassistant:autoflight: Компьютер автополёта
+        flightassistant:auto_flight: Компьютер автополёта
         flightassistant:firework: Компьютер фейерверков
         flightassistant:flight_plan: Компьютер плана полёта
         flightassistant:heading: Компьютер управления курсом
@@ -310,7 +312,7 @@ mode.flightassistant:
     terrain_protection: ЗЕМЛ ЗАЩ
     terrain_escape: ЗЕМЛ ИЗБЕЖ
     selected_pitch: УГОЛ %s
-    selected_altitude:
+    altitude:
       climb: НАБОР %s
       descend: СНИЖ %s
       hold: ВЫС %s
@@ -323,7 +325,7 @@ short.flightassistant:
   alert: ПРЕДУПР
   altitude: ВЫС
   attitude: ОРИЕНТ
-  auto_thrust: А/ТЯГА
+  auto_thrust: А/Т
   autopilot: АП
   automation_modes: АВТО/РЕЖИМ
   elytra: ЭЛ

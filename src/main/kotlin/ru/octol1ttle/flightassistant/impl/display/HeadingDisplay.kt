@@ -9,12 +9,11 @@ import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
-import ru.octol1ttle.flightassistant.api.util.extensions.centerX
-import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedString
-import ru.octol1ttle.flightassistant.api.util.extensions.primaryColor
-import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
+import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.api.util.findShortestPath
 import ru.octol1ttle.flightassistant.config.FAConfig
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.HeadingLateralMode
 
 class HeadingDisplay(computers: ComputerView) : Display(computers) {
     override fun allowedByConfig(): Boolean {
@@ -26,10 +25,10 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
             if (FAConfig.display.showHeadingReading) {
                 renderHeadingReading()
             }
-
             if (FAConfig.display.showHeadingScale) {
                 renderHeadingScale(centerX, HudFrame.bottom + 1)
             }
+            renderHeadingTarget(centerX, HudFrame.bottom - 8)
         }
     }
 
@@ -103,6 +102,13 @@ class HeadingDisplay(computers: ComputerView) : Display(computers) {
         }
 
         return true
+    }
+
+    private fun GuiGraphics.renderHeadingTarget(x: Int, y: Int) {
+        val active: AutoFlightComputer.LateralMode? = computers.autoflight.activeLateralMode
+        if (computers.autoflight.getHeadingInput() != null && active is HeadingLateralMode) {
+            drawMiddleAlignedString("%03d".format(active.target), x, y, primaryAdvisoryColor)
+        }
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {

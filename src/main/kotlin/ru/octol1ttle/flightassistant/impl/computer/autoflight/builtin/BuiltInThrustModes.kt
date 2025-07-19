@@ -30,7 +30,7 @@ data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
         return ControlInput(
             (currentThrust + speedCorrection + accelerationDamping).toFloat().coerceIn(0.0f..1.0f),
             ControlInput.Priority.NORMAL,
-            Component.translatable("mode.flightassistant.thrust.speed", target)
+            Component.translatable("mode.flightassistant.thrust.speed")
         )
     }
 }

@@ -108,7 +108,9 @@ config.flightassistant:
         .: Colors
         primary: Primary color
         secondary: Secondary color
-        advisory: Advisory color
+        advisory:
+          primary: Primary advisory color
+          secondary: Secondary advisory color
         caution: Caution color
         warning: Warning color
       attitude:
@@ -236,7 +238,7 @@ menu.flightassistant:
         flightassistant:ground_proximity: Ground proximity computer
         flightassistant:stall: Stall computer
         flightassistant:void_proximity: Void proximity computer
-        flightassistant:autoflight: Auto flight computer
+        flightassistant:auto_flight: Auto flight computer
         flightassistant:firework: Firework computer
         flightassistant:flight_plan: Flight plan computer
         flightassistant:heading: Heading computer
@@ -288,13 +290,13 @@ menu.flightassistant:
 mode.flightassistant:
   thrust:
     override: THR OVRD # TODO: single key to override all
-    manual: MAN THR %s
+    manual: MAN THR
     manual_toga: MAN TOGA
-    locked: THR LK %s
+    locked: THR LK
     locked_toga: TOGA LK
     idle: THR IDLE
     toga: THR TOGA
-    speed: SPD %s # TODO: don't indicate values on the FMA
+    speed: SPEED
     climb: THR CLB
     descend: THR DES
     takeoff: THR TO # TODO: fix confusion with TOGA somehow
@@ -305,21 +307,21 @@ mode.flightassistant:
     stall_protection: STALL PROT
     terrain_protection: TERR PROT
     terrain_escape: TERR ESC
-    pitch: PITCH %s
-    selected_altitude:
-      climb: CLB %s
-      descend: DES %s
-      hold: ALT %s
+    pitch: PITCH
+    altitude:
+      climb: CLIMB
+      descend: DESCEND
+      hold: ALT HOLD
     speed_reference: SPD REF
   lateral:
-    heading: HDG %s
-    selected_coordinates: COORD %s %s
+    heading: HDG
+    selected_coordinates: COORDS
 
 short.flightassistant:
   alert: ALERT
   altitude: ALT
   attitude: ATT
-  auto_thrust: A/THR
+  auto_thrust: A/T
   autopilot: AP
   automation_modes: AUTO/MODE
   elytra: EL

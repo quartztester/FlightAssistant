@@ -10,6 +10,9 @@ import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.SpeedReferenceVerticalMode
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.SpeedThrustMode
 
 class SpeedDisplay(computers: ComputerView) : Display(computers) {
     override fun allowedByConfig(): Boolean {
@@ -24,6 +27,7 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
             if (FAConfig.display.showSpeedScale) {
                 renderSpeedScale(HudFrame.left, centerY)
             }
+            renderSpeedTarget(HudFrame.left, HudFrame.top - 9)
         }
     }
 
@@ -98,6 +102,21 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
         }
 
         return true
+    }
+
+    private fun GuiGraphics.renderSpeedTarget(x: Int, y: Int) {
+        val color: Int
+        val active: AutoFlightComputer.ThrustMode? = computers.autoflight.activeThrustMode
+        if (computers.autoflight.getThrustInput() != null && active is SpeedThrustMode) {
+            color = if (active == computers.autoflight.selectedThrustMode) primaryAdvisoryColor else secondaryAdvisoryColor
+            drawRightAlignedString(active.target.toString(), x, y, color)
+        } else {
+            val active: AutoFlightComputer.VerticalMode? = computers.autoflight.activeVerticalMode
+            if (computers.autoflight.getPitchInput() != null && active is SpeedReferenceVerticalMode) {
+                color = if (active == computers.autoflight.selectedVerticalMode) primaryAdvisoryColor else secondaryAdvisoryColor
+                drawRightAlignedString(active.targetSpeed.toString(), x, y, color)
+            }
+        }
     }
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {

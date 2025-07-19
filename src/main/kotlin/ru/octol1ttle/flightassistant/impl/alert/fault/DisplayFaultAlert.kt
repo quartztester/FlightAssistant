@@ -7,9 +7,9 @@ import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.extensions.advisoryColor
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
 import ru.octol1ttle.flightassistant.api.util.extensions.drawString
+import ru.octol1ttle.flightassistant.api.util.extensions.primaryAdvisoryColor
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 
 class DisplayFaultAlert(computers: ComputerView, val identifier: ResourceLocation) : Alert(computers), ECAMAlert {
@@ -25,7 +25,7 @@ class DisplayFaultAlert(computers: ComputerView, val identifier: ResourceLocatio
         i += guiGraphics.drawString(Component.translatable("alert.flightassistant.fault.hud.$identifier"), firstLineX, firstLineY, cautionColor)
         i +=
             if (HudDisplayHost.countFaults(identifier) == 1) {
-                guiGraphics.drawString(Component.translatable("alert.flightassistant.fault.hud.reset"), otherLinesX, firstLineY + 11, advisoryColor)
+                guiGraphics.drawString(Component.translatable("alert.flightassistant.fault.hud.reset"), otherLinesX, firstLineY + 11, primaryAdvisoryColor)
             } else {
                 0
             }

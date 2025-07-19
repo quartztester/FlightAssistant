@@ -119,6 +119,6 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
 
     companion object {
         val ID: ResourceLocation = FlightAssistant.id("thrust")
-        const val TOGA_THRESHOLD: Float = 0.99f
+        const val TOGA_THRESHOLD: Float = 0.99f // TODO: just hardcode it to 1.0f bruh
     }
 }

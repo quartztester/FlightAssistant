@@ -37,8 +37,11 @@ val primaryColor: Int
 val secondaryColor: Int
     get() = FAConfig.display.secondaryColor.rgb
 
-val advisoryColor: Int
-    get() = FAConfig.display.advisoryColor.rgb
+val primaryAdvisoryColor: Int
+    get() = FAConfig.display.primaryAdvisoryColor.rgb
+
+val secondaryAdvisoryColor: Int
+    get() = FAConfig.display.secondaryAdvisoryColor.rgb
 
 val cautionColor: Int
     get() = FAConfig.display.cautionColor.rgb

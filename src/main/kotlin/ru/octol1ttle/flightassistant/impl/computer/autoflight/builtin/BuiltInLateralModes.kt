@@ -22,7 +22,7 @@ data class CoordinatesLateralMode(val targetX: Int, val targetZ: Int) : AutoFlig
         return ControlInput(
             degrees(atan2(-(targetX - computers.data.position.x), targetZ - computers.data.position.z)).toFloat() + 180.0f,
             ControlInput.Priority.NORMAL,
-            Component.translatable("mode.flightassistant.lateral.selected_coordinates", targetX, targetZ)
+            Component.translatable("mode.flightassistant.lateral.selected_coordinates")
         )
     }
 }

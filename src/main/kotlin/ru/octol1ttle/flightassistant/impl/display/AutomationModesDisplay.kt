@@ -22,7 +22,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     private val thrustDisplay: ModeDisplay = ModeDisplay(1)
     private val pitchDisplay: ModeDisplay = ModeDisplay(2)
     private val headingDisplay: ModeDisplay = ModeDisplay(3)
-    private val automationStatusDisplay: ModeDisplay = ModeDisplay(5)
+    private val automationStatusDisplay: ModeDisplay = ModeDisplay(4)
 
     override fun allowedByConfig(): Boolean {
         return FAConfig.display.showAutomationModes
@@ -127,7 +127,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
 
     companion object {
         val ID: ResourceLocation = FlightAssistant.id("automation_modes")
-        private const val TOTAL_MODES: Float = 5.0f
+        private const val TOTAL_MODES: Float = 4.0f
     }
 
     class ModeDisplay(private val order: Int) {
@@ -135,8 +135,8 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
         private var textChangedAt: Int = 0
 
         fun render(guiGraphics: GuiGraphics, text: Component?, active: Boolean = true, borderColor: Int? = null) {
-            val farLeft: Int = HudFrame.left - 35
-            val farRight: Int = HudFrame.right + 35
+            val farLeft: Int = HudFrame.left + 1
+            val farRight: Int = HudFrame.right - 1
             val farWidth: Int = farRight - farLeft
 
             val singleWidth: Int = ((farWidth - (TOTAL_MODES - 1)) / TOTAL_MODES).roundToInt()

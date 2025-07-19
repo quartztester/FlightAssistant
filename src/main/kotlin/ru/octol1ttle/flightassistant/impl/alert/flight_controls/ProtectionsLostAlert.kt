@@ -6,9 +6,9 @@ import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.extensions.advisoryColor
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
 import ru.octol1ttle.flightassistant.api.util.extensions.drawString
+import ru.octol1ttle.flightassistant.api.util.extensions.primaryAdvisoryColor
 
 class ProtectionsLostAlert(computers: ComputerView) : Alert(computers), ECAMAlert {
     override val priorityOffset: Int = 10
@@ -25,18 +25,18 @@ class ProtectionsLostAlert(computers: ComputerView) : Alert(computers), ECAMAler
         var y: Int = firstLineY + 1
         if (!computers.data.enabled && computers.data.faultCount <= 1) {
             y += 10
-            i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_air_data"), otherLinesX, y, advisoryColor)
+            i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_air_data"), otherLinesX, y, primaryAdvisoryColor)
         }
         if (!computers.pitch.enabled && computers.pitch.faultCount <= 1) {
             y += 10
-            i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_pitch"), otherLinesX, y, advisoryColor)
+            i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_pitch"), otherLinesX, y, primaryAdvisoryColor)
         }
         y += 10
-        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.max_pitch"), otherLinesX, y, advisoryColor)
+        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.max_pitch"), otherLinesX, y, primaryAdvisoryColor)
         y += 10
-        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.min_pitch"), otherLinesX, y, advisoryColor)
+        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.min_pitch"), otherLinesX, y, primaryAdvisoryColor)
         y += 10
-        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.maneuver_with_care"), otherLinesX, y, advisoryColor)
+        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.maneuver_with_care"), otherLinesX, y, primaryAdvisoryColor)
 
         return i
     }

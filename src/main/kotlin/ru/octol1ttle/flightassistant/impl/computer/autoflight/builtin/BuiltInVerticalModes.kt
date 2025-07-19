@@ -13,7 +13,7 @@ data class PitchVerticalMode(val target: Float) : AutoFlightComputer.VerticalMod
         return ControlInput(
             target,
             ControlInput.Priority.NORMAL,
-            Component.translatable("mode.flightassistant.vertical.pitch", target.toInt())
+            Component.translatable("mode.flightassistant.vertical.pitch")
         )
     }
 }
@@ -27,7 +27,7 @@ data class SpeedReferenceVerticalMode(val targetSpeed: Int) : AutoFlightComputer
         val acceleration: Double = computers.data.forwardAcceleration * 20
 
         val speedCorrection: Double = (currentSpeed - targetSpeed) * FATickCounter.timePassed.pow(1.5f) * range
-        val accelerationDamping: Double = -acceleration * FATickCounter.timePassed.pow(2.0f) * range
+        val accelerationDamping: Double = acceleration * FATickCounter.timePassed.pow(2.0f) * range
         return ControlInput(
             (currentPitch + speedCorrection + accelerationDamping).toFloat().coerceIn(computers.thrust.getAltitudeHoldPitch()..computers.thrust.getOptimumClimbPitch()),
             ControlInput.Priority.NORMAL,
@@ -46,14 +46,14 @@ data class SelectedAltitudeVerticalMode(val target: Int) : AutoFlightComputer.Ve
         var text: Component
         if (diff >= 0) {
             finalPitch = computers.thrust.getOptimumClimbPitch()
-            text = Component.translatable("mode.flightassistant.vertical.selected_altitude.climb", target)
+            text = Component.translatable("mode.flightassistant.vertical.altitude.climb")
 
             val distanceFromNeutral: Float = finalPitch - neutralPitch
             finalPitch -= distanceFromNeutral * 0.6f * ((200.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
             finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
         } else {
             finalPitch = -35.0f
-            text = Component.translatable("mode.flightassistant.vertical.selected_altitude.descend", target)
+            text = Component.translatable("mode.flightassistant.vertical.altitude.descend")
 
             val distanceFromNeutral: Float = finalPitch - neutralPitch
             finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 50.0f).coerceIn(0.0f..1.0f)
@@ -61,7 +61,7 @@ data class SelectedAltitudeVerticalMode(val target: Int) : AutoFlightComputer.Ve
         }
 
         if (abs <= 5.0f) {
-            text = Component.translatable("mode.flightassistant.vertical.selected_altitude.hold", target)
+            text = Component.translatable("mode.flightassistant.vertical.altitude.hold")
         }
 
         return ControlInput(finalPitch, ControlInput.Priority.NORMAL, text, 1.5f)

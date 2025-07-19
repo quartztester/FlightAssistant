@@ -7,11 +7,10 @@ import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
-import ru.octol1ttle.flightassistant.api.util.extensions.drawString
-import ru.octol1ttle.flightassistant.api.util.extensions.lineHeight
-import ru.octol1ttle.flightassistant.api.util.extensions.primaryColor
-import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
+import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.CoordinatesLateralMode
 
 class CoordinatesDisplay(computers: ComputerView) : Display(computers) {
     override fun allowedByConfig(): Boolean {
@@ -23,8 +22,18 @@ class CoordinatesDisplay(computers: ComputerView) : Display(computers) {
             val x: Int = HudFrame.left + 10
             val y: Int = HudFrame.bottom - 19
 
-            drawString("X: ${computers.hudData.lerpedPosition.x.roundToInt()}${getDirectionSignX(computers.data.heading)}", x, y, primaryColor)
-            drawString("Z: ${computers.hudData.lerpedPosition.z.roundToInt()}${getDirectionSignZ(computers.data.heading)}", x, y + lineHeight, primaryColor)
+            val xText = "X: ${computers.hudData.lerpedPosition.x.roundToInt()}${getDirectionSignX(computers.data.heading)}"
+            val zText = "Z: ${computers.hudData.lerpedPosition.z.roundToInt()}${getDirectionSignZ(computers.data.heading)}"
+            drawString(xText, x, y, primaryColor)
+            drawString(zText, x, y + lineHeight, primaryColor)
+
+            val color: Int
+            val active: AutoFlightComputer.LateralMode? = computers.autoflight.activeLateralMode
+            if (computers.autoflight.getHeadingInput() != null && active is CoordinatesLateralMode) {
+                color = if (active == computers.autoflight.selectedLateralMode) primaryAdvisoryColor else secondaryAdvisoryColor
+                drawString(active.targetX.toString(), x + textWidth(xText) + 3, y, color)
+                drawString(active.targetX.toString(), x + textWidth(zText) + 3, y + lineHeight, color)
+            }
         }
     }
 

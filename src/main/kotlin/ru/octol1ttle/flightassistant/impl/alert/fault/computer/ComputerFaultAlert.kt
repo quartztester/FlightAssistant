@@ -7,8 +7,8 @@ import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.extensions.advisoryColor
 import ru.octol1ttle.flightassistant.api.util.extensions.drawString
+import ru.octol1ttle.flightassistant.api.util.extensions.primaryAdvisoryColor
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 
 class ComputerFaultAlert(computers: ComputerView,
@@ -31,14 +31,14 @@ class ComputerFaultAlert(computers: ComputerView,
 
         if (extraTexts != null) {
             for (text in extraTexts) {
-                i += guiGraphics.drawString(text, otherLinesX, y, advisoryColor)
+                i += guiGraphics.drawString(text, otherLinesX, y, primaryAdvisoryColor)
                 y += 10
             }
         }
 
         i +=
             if (ComputerHost.getFaultCount(identifier) == 1) {
-                guiGraphics.drawString(Component.translatable("alert.flightassistant.fault.computer.reset"), otherLinesX, y, advisoryColor)
+                guiGraphics.drawString(Component.translatable("alert.flightassistant.fault.computer.reset"), otherLinesX, y, primaryAdvisoryColor)
             } else {
                 0
             }

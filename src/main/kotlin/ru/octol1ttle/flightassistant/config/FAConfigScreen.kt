@@ -109,9 +109,14 @@ import ru.octol1ttle.flightassistant.config.options.SafetyOptions
                 binding(current::secondaryColor, defaults.secondaryColor)
                 controller(colorPicker())
             }
-            rootOptions.register("colors.advisory") {
+            rootOptions.register("colors.advisory.primary") {
                 setDisplayName()
-                binding(current::advisoryColor, defaults.advisoryColor)
+                binding(current::primaryAdvisoryColor, defaults.primaryAdvisoryColor)
+                controller(colorPicker())
+            }
+            rootOptions.register("colors.advisory.secondary") {
+                setDisplayName()
+                binding(current::secondaryAdvisoryColor, defaults.secondaryAdvisoryColor)
                 controller(colorPicker())
             }
             rootOptions.register("colors.caution") {
