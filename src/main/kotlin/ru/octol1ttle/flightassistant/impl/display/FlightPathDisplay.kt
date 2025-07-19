@@ -18,7 +18,7 @@ class FlightPathDisplay(computers: ComputerView) : Display(computers) {
 
     override fun render(guiGraphics: GuiGraphics) {
         with(guiGraphics) {
-            val screenSpaceVec: Vector3f = ScreenSpace.getVector3f(computers.data.velocity, false) ?: return
+            val screenSpaceVec: Vector3f = ScreenSpace.getVector3f(computers.hudData.lerpedVelocity, false) ?: return
             val trueX: Float = screenSpaceVec.x
             val trueY: Float = screenSpaceVec.y
 

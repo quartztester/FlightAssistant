@@ -17,6 +17,8 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.HeadingComput
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.PitchComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.RollComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
+import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
+import ru.octol1ttle.flightassistant.impl.computer.data.HudDisplayDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
 internal object ComputerHost : ModuleController<Computer>, ComputerView {
@@ -69,6 +71,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
 
     private fun registerBuiltin() {
         register(AirDataComputer.ID, AirDataComputer(this, mc))
+        register(HudDisplayDataComputer.ID, HudDisplayDataComputer(this, mc))
         register(FlightProtectionsComputer.ID, FlightProtectionsComputer(this))
 
         register(StallComputer.ID, StallComputer(this))

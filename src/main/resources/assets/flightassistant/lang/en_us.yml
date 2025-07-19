@@ -228,6 +228,7 @@ menu.flightassistant:
         flightassistant:velocity_components: G/S & V/S display
       computer:
         flightassistant:air_data: Air data computer
+        flightassistant:hud_display_data: HUD display data computer
         flightassistant:alert: Alert computer
         flightassistant:chunk_status: Chunk status computer
         flightassistant:elytra_status: Elytra status computer
@@ -235,8 +236,7 @@ menu.flightassistant:
         flightassistant:ground_proximity: Ground proximity computer
         flightassistant:stall: Stall computer
         flightassistant:void_proximity: Void proximity computer
-        flightassistant:automations: Automatics computer
-        flightassistant:autopilot_logic: Autopilot logic computer
+        flightassistant:autoflight: Auto flight computer
         flightassistant:firework: Firework computer
         flightassistant:flight_plan: Flight plan computer
         flightassistant:heading: Heading computer

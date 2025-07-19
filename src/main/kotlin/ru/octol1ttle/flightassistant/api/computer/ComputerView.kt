@@ -2,7 +2,6 @@ package ru.octol1ttle.flightassistant.api.computer
 
 import java.util.function.Function
 import ru.octol1ttle.flightassistant.api.ModuleView
-import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FireworkComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
@@ -10,6 +9,8 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.HeadingComput
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.PitchComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.RollComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
+import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
+import ru.octol1ttle.flightassistant.impl.computer.data.HudDisplayDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
 interface ComputerView : ModuleView<Computer> {
@@ -17,6 +18,9 @@ interface ComputerView : ModuleView<Computer> {
 
     val data: AirDataComputer
         get() = get(AirDataComputer.ID) as AirDataComputer
+
+    val hudData: HudDisplayDataComputer
+        get() = get(HudDisplayDataComputer.ID) as HudDisplayDataComputer
 
     val autoflight: AutoFlightComputer
         get() = get(AutoFlightComputer.ID) as AutoFlightComputer

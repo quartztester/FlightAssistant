@@ -23,8 +23,8 @@ class CoordinatesDisplay(computers: ComputerView) : Display(computers) {
             val x: Int = HudFrame.left + 10
             val y: Int = HudFrame.bottom - 19
 
-            drawString("X: ${computers.data.position.x.roundToInt()}${getDirectionSignX(computers.data.heading)}", x, y, primaryColor)
-            drawString("Z: ${computers.data.position.z.roundToInt()}${getDirectionSignZ(computers.data.heading)}", x, y + lineHeight, primaryColor)
+            drawString("X: ${computers.hudData.lerpedPosition.x.roundToInt()}${getDirectionSignX(computers.data.heading)}", x, y, primaryColor)
+            drawString("Z: ${computers.hudData.lerpedPosition.z.roundToInt()}${getDirectionSignZ(computers.data.heading)}", x, y + lineHeight, primaryColor)
         }
     }
 

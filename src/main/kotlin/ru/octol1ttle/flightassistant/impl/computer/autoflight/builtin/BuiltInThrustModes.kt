@@ -21,12 +21,9 @@ data class TakeoffThrustMode(val data: FlightPlanComputer.DepartureData) : AutoF
 
 data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
     override fun getControlInput(computers: ComputerView): ControlInput? {
-        // TODO: this should NOT rely on interpolated values, they are naturally "biased" and they don't change more than once per tick anyway
-        // TODO: this leads to severe overcorrection as the response is "late"
-        // TODO: (reminder that this code runs every LEVEL RENDER not tick)
         val currentThrust: Float = computers.thrust.current
         val currentSpeed: Double = computers.data.forwardVelocity.length() * 20
-        val acceleration: Double = computers.data.forwardAcceleration.length() * 20
+        val acceleration: Double = computers.data.forwardAcceleration * 20
 
         val speedCorrection: Double = (target - currentSpeed) * FATickCounter.timePassed.pow(1.5f)
         val accelerationDamping: Double = -acceleration * FATickCounter.timePassed

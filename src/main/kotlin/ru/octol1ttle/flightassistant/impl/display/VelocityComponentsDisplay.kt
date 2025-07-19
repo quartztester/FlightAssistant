@@ -25,7 +25,7 @@ class VelocityComponentsDisplay(computers: ComputerView) : Display(computers) {
             var y: Int = HudFrame.bottom - 10
 
             if (FAConfig.display.showVerticalSpeed) {
-                val verticalSpeed: Double = computers.data.velocity.y * 20
+                val verticalSpeed: Double = computers.hudData.lerpedVelocity.y * 20
                 drawString(
                     Component.translatable(
                         "short.flightassistant.vertical_speed",
@@ -38,7 +38,7 @@ class VelocityComponentsDisplay(computers: ComputerView) : Display(computers) {
                 drawString(
                     Component.translatable(
                         "short.flightassistant.ground_speed",
-                        ": ${(computers.data.velocity.horizontalDistance() * 20).roundToInt()}"
+                        ": ${(computers.hudData.lerpedVelocity.horizontalDistance() * 20).roundToInt()}"
                     ), x, y, primaryColor
                 )
             }

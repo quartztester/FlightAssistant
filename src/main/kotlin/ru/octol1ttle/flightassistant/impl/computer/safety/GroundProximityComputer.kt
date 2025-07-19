@@ -20,7 +20,7 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.requireIn
 import ru.octol1ttle.flightassistant.config.FAConfig
-import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
+import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
 
 class GroundProximityComputer(computers: ComputerView) : Computer(computers), PitchLimiter, FlightController {
     private var groundImpactTime: Float = Float.MAX_VALUE

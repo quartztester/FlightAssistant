@@ -32,7 +32,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
         pose().push()
         fusedTranslateScale(x, y, READING_MATRIX_SCALE)
 
-        val altitude: Double = computers.data.altitude
+        val altitude: Double = computers.hudData.lerpedAltitude
         val text: String = altitude.roundToInt().toString()
 
         val width: Int = textWidth(text) + 5
@@ -46,7 +46,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
     }
 
     private fun GuiGraphics.renderAltitudeScale(x: Int, y: Int) {
-        val altitude: Double = computers.data.altitude
+        val altitude: Double = computers.hudData.lerpedAltitude
 
         val minY: Int = HudFrame.top
         val maxY: Int =
@@ -85,7 +85,7 @@ class AltitudeDisplay(computers: ComputerView) : Display(computers) {
 
         if (FAConfig.display.showVerticalSpeed) {
             enableScissor(0, HudFrame.top, guiWidth(), HudFrame.bottom)
-            fill(x - 3, y, x - 1, (y - 2 * (computers.data.velocity.y * 20)).toInt(), secondaryColor)
+            fill(x - 3, y, x - 1, (y - 2 * (computers.hudData.lerpedVelocity.y * 20)).toInt(), secondaryColor)
             disableScissor()
         }
     }

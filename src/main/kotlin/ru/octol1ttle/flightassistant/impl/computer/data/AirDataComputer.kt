@@ -1,7 +1,6 @@
-package ru.octol1ttle.flightassistant.impl.computer
+package ru.octol1ttle.flightassistant.impl.computer.data
 
 import kotlin.math.asin
-import kotlin.math.atan2
 import kotlin.math.max
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
@@ -9,7 +8,7 @@ import net.minecraft.client.player.LocalPlayer
 import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.DamageTypeTags
-import net.minecraft.util.Mth.wrapDegrees
+import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.BlockHitResult
@@ -18,8 +17,6 @@ import net.minecraft.world.phys.Vec3
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
-import ru.octol1ttle.flightassistant.api.util.FATickCounter.partialTick
-import ru.octol1ttle.flightassistant.api.util.RenderMatrices
 import ru.octol1ttle.flightassistant.api.util.degrees
 import ru.octol1ttle.flightassistant.api.util.extensions.bottomY
 import ru.octol1ttle.flightassistant.api.util.requireIn
@@ -33,8 +30,8 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
     val level: ClientLevel
         get() = checkNotNull(mc.level)
 
-    var position: Vec3 = Vec3.ZERO
-        private set
+    val position: Vec3
+        get() = player.position()
     val altitude: Double
         get() = position.y
     val voidY: Int
@@ -55,21 +52,19 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
     val fallDistanceSafe: Boolean
         get() = player.isInWater || fallDistance <= player.maxFallDistance || isInvulnerableTo(player.damageSources().fall())
 
-    var velocity: Vec3 = Vec3.ZERO
-        private set
+    val velocity: Vec3
+        get() = player.deltaMovement
     var forwardVelocity: Vec3 = Vec3.ZERO
         private set
-    var forwardAcceleration: Vec3 = Vec3.ZERO
+    var forwardAcceleration: Double = 0.0
         private set
 
     val pitch: Float
         get() = -player.xRot.requireIn(-90.0f..90.0f)
     val yaw: Float
-        get() = wrapDegrees(player.yRot).requireIn(-180.0f..180.0f)
+        get() = Mth.wrapDegrees(player.yRot).requireIn(-180.0f..180.0f)
     val heading: Float
         get() = (yaw + 180.0f).requireIn(0.0f..360.0f)
-    var roll: Float = 0.0f
-        private set(value) { field = value.requireIn(-180.0f..180.0f) }
 
     val flightPitch: Float
         get() = degrees(asin(velocity.normalize().y).toFloat())
@@ -78,12 +73,9 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
         get() = level.chunkSource.hasChunk(player.chunkPosition().x, player.chunkPosition().z)
 
     override fun tick() {
-        position = player.getPosition(partialTick)
         groundY = computeGroundLevel()
-        velocity = player.getDeltaMovementLerped(partialTick)
         forwardVelocity = computeForwardVector(velocity)
-        forwardAcceleration = computeForwardVector(player.deltaMovement.subtract(player.getDeltaMovementLerped(0.0f)))
-        roll = degrees(atan2(-RenderMatrices.worldSpaceMatrix.m10(), RenderMatrices.worldSpaceMatrix.m11()))
+        forwardAcceleration = forwardVelocity.length() - computeForwardVector(player.getDeltaMovementLerped(0.0f)).length()
     }
 
     fun automationsAllowed(checkFlying: Boolean = true): Boolean {
@@ -123,19 +115,16 @@ class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Comp
         return result.location.y
     }
 
-    private fun computeForwardVector(vector: Vec3): Vec3 {
+    fun computeForwardVector(vector: Vec3): Vec3 {
         val normalizedLookAngle: Vec3 = player.lookAngle.normalize()
         val normalizedVector: Vec3 = vector.normalize()
         return vector.scale(normalizedLookAngle.dot(normalizedVector).coerceAtLeast(0.0))
     }
 
     override fun reset() {
-        position = Vec3.ZERO
         groundY = null
-        velocity = Vec3.ZERO
         forwardVelocity = Vec3.ZERO
-        forwardAcceleration = Vec3.ZERO
-        roll = 0.0f
+        forwardAcceleration = 0.0
     }
 
     companion object {

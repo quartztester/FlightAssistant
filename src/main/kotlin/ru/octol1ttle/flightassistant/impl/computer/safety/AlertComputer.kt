@@ -41,7 +41,6 @@ import ru.octol1ttle.flightassistant.impl.alert.stall.FullStallAlert
 import ru.octol1ttle.flightassistant.impl.alert.thrust.NoThrustSourceAlert
 import ru.octol1ttle.flightassistant.impl.alert.thrust.ReverseThrustNotSupportedAlert
 import ru.octol1ttle.flightassistant.impl.alert.thrust.ThrustLockedAlert
-import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FireworkComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
@@ -49,6 +48,7 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.HeadingComput
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.PitchComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.RollComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
+import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 
 class AlertComputer(computers: ComputerView, private val soundManager: SoundManager) : Computer(computers) {

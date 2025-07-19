@@ -27,9 +27,9 @@ class AttitudeDisplay(computers: ComputerView) : Display(computers) {
 //? if <1.21.6
             pose().translate(0.0f, 0.0f, -200.0f)
 //? if >=1.21.6 {
-            /*pose().rotateAbout(ru.octol1ttle.flightassistant.api.util.radians(-computers.data.roll), centerXF, centerYF)
+            /*pose().rotateAbout(ru.octol1ttle.flightassistant.api.util.radians(-computers.hudData.roll), centerXF, centerYF)
 *///?} else
-            pose().rotateAround(Axis.ZN.rotationDegrees(computers.data.roll), centerXF, centerYF, 0.0f)
+            pose().rotateAround(Axis.ZN.rotationDegrees(computers.hudData.roll), centerXF, centerYF, 0.0f)
 
             if (FAConfig.display.showAttitude <= DisplayOptions.AttitudeDisplayMode.HORIZON_ONLY) {
                 renderHorizon()

@@ -16,7 +16,7 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.config.options.DisplayOptions
-import ru.octol1ttle.flightassistant.impl.computer.AirDataComputer
+import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
 
 class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
     private var activeElytra: ItemStack? = null

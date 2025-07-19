@@ -13,7 +13,7 @@ data class PitchVerticalMode(val target: Float) : AutoFlightComputer.VerticalMod
         return ControlInput(
             target,
             ControlInput.Priority.NORMAL,
-            Component.translatable("mode.flightassistant.vertical.pitch")
+            Component.translatable("mode.flightassistant.vertical.pitch", target.toInt())
         )
     }
 }
@@ -24,10 +24,10 @@ data class SpeedReferenceVerticalMode(val targetSpeed: Int) : AutoFlightComputer
         val range: Float = computers.thrust.getOptimumClimbPitch() - computers.thrust.getAltitudeHoldPitch()
         val currentPitch: Float = computers.data.pitch
         val currentSpeed: Double = computers.data.forwardVelocity.length() * 20
-        val acceleration: Double = computers.data.forwardAcceleration.length() * 20
+        val acceleration: Double = computers.data.forwardAcceleration * 20
 
-        val speedCorrection: Double = (currentSpeed - targetSpeed) * FATickCounter.timePassed.pow(2) * range
-        val accelerationDamping: Double = -acceleration * FATickCounter.timePassed.pow(4) * range
+        val speedCorrection: Double = (currentSpeed - targetSpeed) * FATickCounter.timePassed.pow(1.5f) * range
+        val accelerationDamping: Double = -acceleration * FATickCounter.timePassed.pow(2.0f) * range
         return ControlInput(
             (currentPitch + speedCorrection + accelerationDamping).toFloat().coerceIn(computers.thrust.getAltitudeHoldPitch()..computers.thrust.getOptimumClimbPitch()),
             ControlInput.Priority.NORMAL,

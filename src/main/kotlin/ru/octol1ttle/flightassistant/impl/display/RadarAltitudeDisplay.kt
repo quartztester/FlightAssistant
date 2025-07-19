@@ -20,7 +20,7 @@ class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
 
     override fun render(guiGraphics: GuiGraphics) {
         val groundLevel: Double? = computers.data.groundY
-        if (!computers.data.isCurrentChunkLoaded || groundLevel != null && groundLevel > computers.data.altitude) {
+        if (!computers.data.isCurrentChunkLoaded || groundLevel != null && groundLevel > computers.hudData.lerpedAltitude) {
             renderFaulted(guiGraphics)
             return
         }
@@ -34,11 +34,11 @@ class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
             val color: Int
             if (groundLevel != null) {
                 altType = Component.translatable("short.flightassistant.ground")
-                altString = (computers.data.altitude - groundLevel).roundToInt().toString()
+                altString = (computers.hudData.lerpedAltitude - groundLevel).roundToInt().toString()
                 color = primaryColor
             } else {
                 altType = Component.translatable("short.flightassistant.void")
-                altString = (computers.data.altitude - computers.data.voidY).roundToInt().toString()
+                altString = (computers.hudData.lerpedAltitude - computers.data.voidY).roundToInt().toString()
                 color = when (computers.voidProximity.status) {
                     VoidProximityComputer.Status.REACHED_DAMAGE_ALTITUDE -> warningColor
                     VoidProximityComputer.Status.APPROACHING_DAMAGE_ALTITUDE -> cautionColor

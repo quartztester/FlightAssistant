@@ -31,7 +31,7 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
         pose().push()
         fusedTranslateScale(x * 1.005f, y, READING_MATRIX_SCALE)
 
-        val speed: Double = computers.data.forwardVelocity.length() * 20
+        val speed: Double = computers.hudData.lerpedForwardVelocity.length() * 20
         val color: Int =
             if (speed <= 0.0) warningColor
             else primaryColor
@@ -48,7 +48,7 @@ class SpeedDisplay(computers: ComputerView) : Display(computers) {
     }
 
     private fun GuiGraphics.renderSpeedScale(x: Int, y: Int) {
-        val speed: Double = computers.data.forwardVelocity.length() * 20
+        val speed: Double = computers.hudData.lerpedForwardVelocity.length() * 20
         val color: Int =
             if (speed <= 0.0) warningColor
             else primaryColor

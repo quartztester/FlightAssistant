@@ -232,6 +232,7 @@ menu.flightassistant:
         flightassistant:velocity_components: Индикатор Г/С и В/С
       computer:
         flightassistant:air_data: Компьютер данных полёта
+        flightassistant:hud_display_data: Компьютер данных индикаторов HUD
         flightassistant:alert: Компьютер предупреждений
         flightassistant:chunk_status: Компьютер статуса чанков
         flightassistant:elytra_status: Компьютер статуса элитр
@@ -239,8 +240,7 @@ menu.flightassistant:
         flightassistant:ground_proximity: Компьютер близости земли
         flightassistant:stall: Компьютер обнаружения сваливания
         flightassistant:void_proximity: Компьютер близости пустоты
-        flightassistant:automations: Компьютер автоматики
-        flightassistant:autopilot_logic: Компьютер логики автопилота
+        flightassistant:autoflight: Компьютер автополёта
         flightassistant:firework: Компьютер фейерверков
         flightassistant:flight_plan: Компьютер плана полёта
         flightassistant:heading: Компьютер управления курсом
