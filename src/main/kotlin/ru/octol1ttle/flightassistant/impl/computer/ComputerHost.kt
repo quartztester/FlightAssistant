@@ -117,7 +117,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
     }
 
     internal fun tick(partialTick: Float) {
-        val paused: Boolean = mc.isPaused /*? if >=1.21 {*/ /*|| !(mc as ClientLevelRunningNormallyInvoker).invokeIsLevelRunningNormally() *///?}
+        val paused: Boolean = mc.isPaused /*? if >=1.21 {*/ /*|| !(mc as ru.octol1ttle.flightassistant.mixin.ClientLevelRunningNormallyInvoker).invokeIsLevelRunningNormally() *///?}
         FATickCounter.tick(mc.player!!, partialTick, paused)
         if (paused || FATickCounter.ticksSinceWorldLoad < FATickCounter.worldLoadWaitTime || !FAConfig.global.modEnabled) {
             return
