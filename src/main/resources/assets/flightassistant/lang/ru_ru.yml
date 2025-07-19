@@ -294,13 +294,13 @@ menu.flightassistant:
 mode.flightassistant:
   thrust:
     override: РУЧН ТЯГА
-    manual: РУЧН ТЯГА %s
+    manual: РУЧН ТЯГА
     manual_toga: РУЧН ВЗЛЕТН
-    locked: БЛОК ТЯГА %s
+    locked: БЛОК ТЯГА
     locked_toga: БЛОК ВЗЛЕТН
     idle: ТЯГА МАЛ
     toga: ТЯГА ВЗЛЕТН
-    speed: СКОР %s
+    speed: СКОР
     climb: ТЯГА НАБОР
     descend: ТЯГА СНИЖ
     takeoff: ТЯГА ВЫЛЕТ
@@ -311,15 +311,15 @@ mode.flightassistant:
     stall_protection: СВАЛ ЗАЩ
     terrain_protection: ЗЕМЛ ЗАЩ
     terrain_escape: ЗЕМЛ ИЗБЕЖ
-    selected_pitch: УГОЛ %s
+    selected_pitch: УГОЛ
     altitude:
-      climb: НАБОР %s
-      descend: СНИЖ %s
-      hold: ВЫС %s
+      climb: НАБОР
+      descend: СНИЖ
+      hold: ВЫС
     speed_reference: СКОР СЛЕД
   lateral:
-    selected_heading: КУРС %s
-    selected_coordinates: КООРД %s %s
+    selected_heading: КУРС
+    selected_coordinates: КООРД
 
 short.flightassistant:
   alert: ПРЕДУПР
