@@ -47,8 +47,8 @@ class AutoFlightComputer(computers: ComputerView) : Computer(computers), FlightC
         HeadingControllerRegistrationCallback.EVENT.register { it.accept(this) }
         RollControllerRegistrationCallback.EVENT.register { it.accept(this) }
         ThrustChangeCallback.EVENT.register(ThrustChangeCallback { _, _, input ->
-            if (input == null && autoThrustAlert) {
-                autoThrustAlert = false
+            if (input == null) {
+                setAutoThrust(false, alert = false)
             }
         })
         EntityTurnEvents.X_ROT.register(EntityTurnEvents.EntityTurn { pitchDelta, output ->

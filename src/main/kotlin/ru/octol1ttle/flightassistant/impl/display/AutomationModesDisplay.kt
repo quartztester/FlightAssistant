@@ -14,9 +14,7 @@ import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.*
-import ru.octol1ttle.flightassistant.api.util.furtherFromZero
 import ru.octol1ttle.flightassistant.config.FAConfig
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer.Companion.TOGA_THRESHOLD
 
 class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
     private val thrustDisplay: ModeDisplay = ModeDisplay(1)
@@ -51,12 +49,11 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
             return
         }
 
-        val thrustValueText: MutableComponent = Component.literal(furtherFromZero(computers.thrust.current * 100).toString() + "%").setColor(primaryColor)
         if (computers.thrust.thrustLocked) {
             thrustDisplay.render(
                 guiGraphics,
-                if (computers.thrust.current > TOGA_THRESHOLD) Component.translatable("mode.flightassistant.thrust.locked_toga").setColor(primaryColor)
-                else Component.translatable("mode.flightassistant.thrust.locked", thrustValueText).setColor(primaryColor),
+                if (computers.thrust.current == 1.0f) Component.translatable("mode.flightassistant.thrust.locked_toga").setColor(primaryColor)
+                else Component.translatable("mode.flightassistant.thrust.locked").setColor(primaryColor),
                 false,
                 if (FATickCounter.totalTicks % 20 >= 10) cautionColor else emptyColor
             )
@@ -67,10 +64,9 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
         if (computers.thrust.current != 0.0f) {
             thrustDisplay.render(
                 guiGraphics,
-                if (computers.thrust.current > TOGA_THRESHOLD) Component.translatable("mode.flightassistant.thrust.manual_toga").setColor(secondaryColor)
-                else Component.translatable("mode.flightassistant.thrust.manual", thrustValueText),
-                computers.thrust.current == 0.0f || computers.thrust.current > TOGA_THRESHOLD,
-                if (thrustUnusable) cautionColor else null
+                if (computers.thrust.current == 1.0f) Component.translatable("mode.flightassistant.thrust.manual_toga").setColor(secondaryColor)
+                else Component.translatable("mode.flightassistant.thrust.manual"),
+                false, if (thrustUnusable) cautionColor else secondaryColor
             )
             return
         }

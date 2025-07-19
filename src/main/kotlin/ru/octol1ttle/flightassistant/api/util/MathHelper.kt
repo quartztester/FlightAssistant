@@ -1,6 +1,6 @@
 package ru.octol1ttle.flightassistant.api.util
 
-import kotlin.math.*
+import kotlin.math.PI
 
 fun degrees(value: Float): Float {
     return (value * (180.0f / PI)).toFloat()
@@ -16,14 +16,6 @@ fun radians(value: Float): Float {
 
 fun radians(value: Double): Double {
     return (value * (PI / 180.0))
-}
-
-fun furtherFromZero(value: Float): Int {
-    return if (value < 0.0f) {
-        floor(value).toInt()
-    } else {
-        ceil(value).toInt()
-    }
 }
 
 fun Float.requireFinite(): Float {
