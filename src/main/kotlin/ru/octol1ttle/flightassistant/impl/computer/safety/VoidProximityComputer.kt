@@ -13,7 +13,6 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
 import ru.octol1ttle.flightassistant.api.util.extensions.bottomY
 import ru.octol1ttle.flightassistant.config.FAConfig
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
 
 class VoidProximityComputer(computers: ComputerView) : Computer(computers), PitchLimiter, FlightController {
     var status: Status = Status.ABOVE_GROUND
@@ -57,7 +56,8 @@ class VoidProximityComputer(computers: ComputerView) : Computer(computers), Pitc
         if (FAConfig.safety.voidAutoPitch && status <= Status.APPROACHING_DAMAGE_ALTITUDE) {
             return ControlInput(
                 computers.thrust.getOptimumClimbPitch(), ControlInput.Priority.HIGH, Component.translatable("mode.flightassistant.vertical.void_escape"),
-                active = status == Status.REACHED_DAMAGE_ALTITUDE && computers.thrust.current > ThrustComputer.TOGA_THRESHOLD && !computers.thrust.noThrustSource)
+                active = status == Status.REACHED_DAMAGE_ALTITUDE && computers.thrust.current == 1.0f && !computers.thrust.noThrustSource
+            )
         }
 
         return null
