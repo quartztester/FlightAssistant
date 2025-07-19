@@ -4,13 +4,13 @@ import kotlin.math.abs
 import kotlin.math.pow
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 
 data class TakeoffThrustMode(val data: FlightPlanComputer.DepartureData) : AutoFlightComputer.ThrustMode {
-    override fun getControlInput(computers: ComputerView): ControlInput? {
+    override fun getControlInput(computers: ComputerBus): ControlInput? {
         return ControlInput(
             data.takeoffThrust,
             ControlInput.Priority.NORMAL,
@@ -20,7 +20,7 @@ data class TakeoffThrustMode(val data: FlightPlanComputer.DepartureData) : AutoF
 }
 
 data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
-    override fun getControlInput(computers: ComputerView): ControlInput? {
+    override fun getControlInput(computers: ComputerBus): ControlInput? {
         val currentThrust: Float = computers.thrust.current
         val currentSpeed: Double = computers.data.forwardVelocity.length() * 20
         val acceleration: Double = computers.data.forwardAcceleration * 20
@@ -36,7 +36,7 @@ data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
 }
 
 data class VerticalProfileThrustMode(val climbThrust: Float, val descendThrust: Float) : AutoFlightComputer.ThrustMode {
-    override fun getControlInput(computers: ComputerView): ControlInput? {
+    override fun getControlInput(computers: ComputerBus): ControlInput? {
         val verticalMode: AutoFlightComputer.VerticalMode? = computers.autoflight.activeVerticalMode
         if (verticalMode !is SelectedAltitudeVerticalMode) {
             return null

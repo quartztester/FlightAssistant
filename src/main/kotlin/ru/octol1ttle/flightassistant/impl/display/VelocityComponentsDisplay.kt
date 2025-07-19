@@ -5,28 +5,25 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
-import ru.octol1ttle.flightassistant.api.util.extensions.drawString
-import ru.octol1ttle.flightassistant.api.util.extensions.lineHeight
-import ru.octol1ttle.flightassistant.api.util.extensions.primaryColor
-import ru.octol1ttle.flightassistant.api.util.extensions.warningColor
+import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
 
-class VelocityComponentsDisplay(computers: ComputerView) : Display(computers) {
+class VelocityComponentsDisplay(computers: ComputerBus) : Display(computers) {
     override fun allowedByConfig(): Boolean {
         return FAConfig.display.showGroundSpeed || FAConfig.display.showVerticalSpeed
     }
 
     override fun render(guiGraphics: GuiGraphics) {
         with(guiGraphics) {
-            val x: Int = HudFrame.right - 45
+            val x: Int = HudFrame.right - 5
             var y: Int = HudFrame.bottom - 10
 
             if (FAConfig.display.showVerticalSpeed) {
                 val verticalSpeed: Double = computers.hudData.lerpedVelocity.y * 20
-                drawString(
+                drawRightAlignedString(
                     Component.translatable(
                         "short.flightassistant.vertical_speed",
                         ": ${verticalSpeed.roundToInt()}"
@@ -35,7 +32,7 @@ class VelocityComponentsDisplay(computers: ComputerView) : Display(computers) {
                 y -= lineHeight
             }
             if (FAConfig.display.showGroundSpeed) {
-                drawString(
+                drawRightAlignedString(
                     Component.translatable(
                         "short.flightassistant.ground_speed",
                         ": ${(computers.hudData.lerpedVelocity.horizontalDistance() * 20).roundToInt()}"

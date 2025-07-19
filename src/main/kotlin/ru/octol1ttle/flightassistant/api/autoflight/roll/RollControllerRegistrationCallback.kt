@@ -5,6 +5,7 @@ import dev.architectury.event.EventFactory
 import java.util.function.Consumer
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
 
+@Deprecated("Respond to ComputerQueries instead")
 fun interface RollControllerRegistrationCallback {
     /**
      * Called during [ru.octol1ttle.flightassistant.api.computer.Computer.invokeEvents].

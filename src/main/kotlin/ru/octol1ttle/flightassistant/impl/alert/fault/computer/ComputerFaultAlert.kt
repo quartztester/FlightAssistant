@@ -6,12 +6,13 @@ import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.extensions.drawString
 import ru.octol1ttle.flightassistant.api.util.extensions.primaryAdvisoryColor
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 
-class ComputerFaultAlert(computers: ComputerView,
+class ComputerFaultAlert(
+    computers: ComputerBus,
                          private val identifier: ResourceLocation,
                          private val alertText: Component,
                          private val extraTexts: Collection<Component>? = null,

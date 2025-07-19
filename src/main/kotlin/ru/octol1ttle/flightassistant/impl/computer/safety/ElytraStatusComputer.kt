@@ -13,12 +13,12 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.config.options.DisplayOptions
 import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
 
-class ElytraStatusComputer(computers: ComputerView) : Computer(computers) {
+class ElytraStatusComputer(computers: ComputerBus) : Computer(computers) {
     private var activeElytra: ItemStack? = null
     private var syncedFlyingState: Boolean? = null
 

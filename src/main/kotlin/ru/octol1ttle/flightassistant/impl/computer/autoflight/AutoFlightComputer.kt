@@ -11,11 +11,11 @@ import ru.octol1ttle.flightassistant.api.autoflight.roll.RollControllerRegistrat
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustChangeCallback
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.event.EntityTurnEvents
 
-class AutoFlightComputer(computers: ComputerView) : Computer(computers), FlightController {
+class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightController {
     var flightDirectors: Boolean = false
         private set
 
@@ -177,7 +177,7 @@ class AutoFlightComputer(computers: ComputerView) : Computer(computers), FlightC
     }
 
     interface AutoFlightMode {
-        fun getControlInput(computers: ComputerView): ControlInput?
+        fun getControlInput(computers: ComputerBus): ControlInput?
     }
 
     interface ThrustMode : AutoFlightMode

@@ -8,14 +8,14 @@ import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
 import ru.octol1ttle.flightassistant.api.autoflight.heading.HeadingControllerRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.findShortestPath
 import ru.octol1ttle.flightassistant.api.util.requireIn
 
-class HeadingComputer(computers: ComputerView) : Computer(computers) {
+class HeadingComputer(computers: ComputerBus) : Computer(computers) {
     private val controllers: MutableList<FlightController> = ArrayList()
     var activeInput: ControlInput? = null
         private set

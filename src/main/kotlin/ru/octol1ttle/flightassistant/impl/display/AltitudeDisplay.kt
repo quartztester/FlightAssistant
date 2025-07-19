@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import ru.octol1ttle.flightassistant.FlightAssistant
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.extensions.*
@@ -14,7 +14,7 @@ import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.SelectedAltitudeVerticalMode
 
-class AltitudeDisplay(computers: ComputerView) : Display(computers) {
+class AltitudeDisplay(computers: ComputerBus) : Display(computers) {
     override fun allowedByConfig(): Boolean {
         return FAConfig.display.showAltitudeReading || FAConfig.display.showAltitudeScale
     }

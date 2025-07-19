@@ -1,5 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight.base
 
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FAKeyMappings
 import ru.octol1ttle.flightassistant.FlightAssistant
@@ -10,13 +11,15 @@ import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegis
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSource
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSourceRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
+import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.requireIn
+import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
 
-class ThrustComputer(computers: ComputerView) : Computer(computers) {
+class ThrustComputer(computers: ComputerBus) : Computer(computers) {
     private val sources: MutableList<ThrustSource> = ArrayList()
     private val controllers: MutableList<FlightController> = ArrayList()
 
@@ -40,7 +43,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     }
 
     override fun tick() {
-        val thrustSource: ThrustSource? = sources.filterWorking().filter { computers.guardedCall(it, ThrustSource::isAvailable) == true }.minByOrNull { it.priority.value }
+        val thrustSource: ThrustSource? = getThrustSource()
 
         val inputs: List<ControlInput> = controllers.filterWorking().mapNotNull { computers.guardedCall(it, FlightController::getThrustInput) }.sortedBy { it.priority.value }
         val finalInput: ControlInput? = inputs.getActiveHighestPriority().maxByOrNull { it.target }
@@ -75,6 +78,10 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
         }
     }
 
+    fun getThrustSource(): ThrustSource? {
+        return sources.filterWorking().filter { computers.guardedCall(it, ThrustSource::isAvailable) == true }.minByOrNull { it.priority.value }
+    }
+
     fun setTarget(target: Float, input: ControlInput? = null) {
         val oldThrust: Float = current
         if (oldThrust != target || input == null) {
@@ -91,7 +98,7 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     }
 
     fun getOptimumClimbPitch(): Float {
-        val thrustSource: ThrustSource? = sources.filterWorking().filter { it.isAvailable() }.minByOrNull { it.priority.value }
+        val thrustSource: ThrustSource? = getThrustSource()
         if (thrustSource != null) {
             return thrustSource.optimumClimbPitch
         }
@@ -100,12 +107,19 @@ class ThrustComputer(computers: ComputerView) : Computer(computers) {
     }
 
     fun getAltitudeHoldPitch(): Float {
-        val thrustSource: ThrustSource? = sources.filterWorking().filter { it.isAvailable() }.minByOrNull { it.priority.value }
+        val thrustSource: ThrustSource? = getThrustSource()
         if (thrustSource != null) {
             return thrustSource.altitudeHoldPitch
         }
 
         return 5.0f
+    }
+
+    override fun <Response> processQuery(query: ComputerQuery<Response>) {
+        if (query is StatusDisplay.StatusMessageQuery) {
+            // TODO: show actual thrust output and requested thrust (both by user and autoflight)
+            query.respond(Component.translatable("status.flightassistant.thrust", "%.1f".format(current * 100) + "%"))
+        }
     }
 
     override fun reset() {

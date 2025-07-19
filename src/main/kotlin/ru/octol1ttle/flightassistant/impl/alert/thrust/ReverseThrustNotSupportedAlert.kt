@@ -5,12 +5,12 @@ import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
 import ru.octol1ttle.flightassistant.api.util.extensions.drawString
 import ru.octol1ttle.flightassistant.api.util.extensions.primaryAdvisoryColor
 
-class ReverseThrustNotSupportedAlert(computers: ComputerView) : Alert(computers), ECAMAlert {
+class ReverseThrustNotSupportedAlert(computers: ComputerBus) : Alert(computers), ECAMAlert {
     override val priorityOffset: Int = 40
     override val data: AlertData = AlertData.MASTER_CAUTION
 

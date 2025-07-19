@@ -13,8 +13,10 @@ import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.data.HudDisplayDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
-interface ComputerView : ModuleView<Computer> {
+interface ComputerBus : ModuleView<Computer> {
     fun <C, T> guardedCall(computer: C, call: Function<C, T>): T?
+    fun dispatchEvent(event: ComputerEvent)
+    fun <Response> dispatchQuery(query: ComputerQuery<Response>): Collection<Response>
 
     val data: AirDataComputer
         get() = get(AirDataComputer.ID) as AirDataComputer

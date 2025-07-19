@@ -9,10 +9,10 @@ import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiter
 import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiterRegistrationCallback
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.config.FAConfig
 
-class StallComputer(computers: ComputerView) : Computer(computers), PitchLimiter, FlightController {
+class StallComputer(computers: ComputerBus) : Computer(computers), PitchLimiter, FlightController {
     var status: Status = Status.SAFE
         private set
     private var maximumSafePitch: Float = 90.0f

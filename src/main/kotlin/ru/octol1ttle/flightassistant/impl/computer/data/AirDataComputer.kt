@@ -16,13 +16,13 @@ import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.degrees
 import ru.octol1ttle.flightassistant.api.util.extensions.bottomY
 import ru.octol1ttle.flightassistant.api.util.requireIn
 import ru.octol1ttle.flightassistant.config.FAConfig
 
-class AirDataComputer(computers: ComputerView, private val mc: Minecraft) : Computer(computers) {
+class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Computer(computers) {
     val player: LocalPlayer
         get() = checkNotNull(mc.player)
     val flying: Boolean

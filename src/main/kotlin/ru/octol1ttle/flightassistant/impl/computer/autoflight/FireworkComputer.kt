@@ -2,6 +2,7 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import dev.architectury.event.events.common.InteractionEvent
 import net.minecraft.client.Minecraft
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.player.Inventory
@@ -12,13 +13,15 @@ import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSource
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSourceRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
+import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.LimitedFIFOQueue
 import ru.octol1ttle.flightassistant.api.util.event.FireworkBoostCallback
 import ru.octol1ttle.flightassistant.config.FAConfig
+import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
 
-class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Computer(computers), ThrustSource {
+class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Computer(computers), ThrustSource {
     override val priority: ThrustSource.Priority = ThrustSource.Priority.LOW
     override val supportsReverse: Boolean = false
     override val optimumClimbPitch: Float = 55.0f
@@ -74,18 +77,26 @@ class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Com
             waitingForResponse = false
         }
 
-        safeFireworkCount = 0
         safeFireworkSlot = null
         var lastSlotCount = 0
         for (slot: Int in 0..<Inventory.getSelectionSize()) {
             val stack: ItemStack = computers.data.player.inventory.getItem(slot)
             if (isFireworkAndSafe(stack)) {
-                safeFireworkCount += stack.count
                 if (safeFireworkSlot == null || stack.count < lastSlotCount) {
                     safeFireworkSlot = slot
                     lastSlotCount = stack.count
                 }
             }
+        }
+
+        safeFireworkCount = 0
+        for (stack: ItemStack in computers.data.player.inventory.items) {
+            if (isFireworkAndSafe(stack)) {
+                safeFireworkCount += stack.count
+            }
+        }
+        if (isFireworkAndSafe(computers.data.player.offhandItem)) {
+            safeFireworkCount += computers.data.player.offhandItem.count
         }
     }
 
@@ -127,12 +138,18 @@ class FireworkComputer(computers: ComputerView, private val mc: Minecraft) : Com
     }
 
     override fun isAvailable(): Boolean {
-        return safeFireworkCount > 0
+        return safeFireworkSlot != null
     }
 
     override fun tickThrust(currentThrust: Float) {
         if (currentThrust > computers.data.forwardVelocity.length() * 20.0f / 30.0f) {
             tryActivateFirework(computers.data.player)
+        }
+    }
+
+    override fun <Response> processQuery(query: ComputerQuery<Response>) {
+        if (query is StatusDisplay.StatusMessageQuery && computers.thrust.getThrustSource() == this) {
+            query.respond(Component.translatable("status.flightassistant.firework_count", safeFireworkCount))
         }
     }
 

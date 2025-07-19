@@ -10,13 +10,13 @@ import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertCategory
 import ru.octol1ttle.flightassistant.api.alert.CenteredAlert
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
 
-class AlertDisplay(computers: ComputerView) : Display(computers) {
+class AlertDisplay(computers: ComputerBus) : Display(computers) {
     private val withUnderline: Style = Style.EMPTY.withUnderlined(true)
 
     override fun allowedByConfig(): Boolean {
@@ -25,7 +25,7 @@ class AlertDisplay(computers: ComputerView) : Display(computers) {
 
     override fun render(guiGraphics: GuiGraphics) {
         with(guiGraphics) {
-            val x: Int = HudFrame.left + 10
+            val x: Int = HudFrame.left + 5
             var y: Int = HudFrame.top + 5
 
             var renderedCentered = false
@@ -71,7 +71,7 @@ class AlertDisplay(computers: ComputerView) : Display(computers) {
 
     override fun renderFaulted(guiGraphics: GuiGraphics) {
         with(guiGraphics) {
-            val x: Int = HudFrame.left + 10
+            val x: Int = HudFrame.left + 5
             val y: Int = HudFrame.top + 5
 
             drawString(Component.translatable("short.flightassistant.alert"), x, y, warningColor)

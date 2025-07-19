@@ -5,7 +5,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.ModuleController
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudDisplayRegistrationCallback
 import ru.octol1ttle.flightassistant.api.display.HudFrame
@@ -62,7 +62,7 @@ internal object HudDisplayHost: ModuleController<Display> {
         displays[identifier] = module
     }
 
-    private fun registerBuiltin(computers: ComputerView) {
+    private fun registerBuiltin(computers: ComputerBus) {
         register(AlertDisplay.ID, AlertDisplay(computers))
         register(AltitudeDisplay.ID, AltitudeDisplay(computers))
         register(AttitudeDisplay.ID, AttitudeDisplay(computers))
@@ -74,10 +74,11 @@ internal object HudDisplayHost: ModuleController<Display> {
         register(HeadingDisplay.ID, HeadingDisplay(computers))
         register(RadarAltitudeDisplay.ID, RadarAltitudeDisplay(computers))
         register(SpeedDisplay.ID, SpeedDisplay(computers))
+        register(StatusDisplay.ID, StatusDisplay(computers))
         register(VelocityComponentsDisplay.ID, VelocityComponentsDisplay(computers))
     }
 
-    internal fun sendRegistrationEvent(computers: ComputerView) {
+    internal fun sendRegistrationEvent(computers: ComputerBus) {
         registerBuiltin(computers)
         HudDisplayRegistrationCallback.EVENT.invoker().register(computers, this::register)
         logRegisterComplete()

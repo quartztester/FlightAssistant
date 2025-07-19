@@ -10,7 +10,7 @@ fun interface ComputerRegistrationCallback {
      * Called when the client has started, after all built-in computers have been initialized.
      * Register your custom computers in this event using the provided function
      */
-    fun register(computers: ComputerView, registerFunction: BiConsumer<ResourceLocation, Computer>)
+    fun register(computers: ComputerBus, registerFunction: BiConsumer<ResourceLocation, Computer>)
 
     companion object {
         @JvmField

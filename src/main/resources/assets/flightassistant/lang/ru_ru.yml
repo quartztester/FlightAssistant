@@ -37,6 +37,7 @@ alert.flightassistant:
       flightassistant:heading: ОТКАЗ ИНД КУРСА
       flightassistant:radar_altitude: ОТКАЗ ИНД Р/ВЫС
       flightassistant:speed: ОТКАЗ ИНД СКОР
+      flightassistant:status: ОТКАЗ ИНД СТАТУС
       flightassistant:velocity_components: ОТКАЗ ИНД Г/С И В/C
   firework:
     .: ФРВК
@@ -339,8 +340,13 @@ short.flightassistant:
   infinite: БЕСК
   radar_altitude: Р/ВЫС
   speed: СКОР
+  status: СТАТУС
   vertical_speed: 'В/С%s'
   void: ПУСТ
+
+status.flightassistant:
+  thrust: 'ТЯГА: %s'
+  firework_count: 'ЧИСЛ ФРВК: %s'
 
 misc.flightassistant:
   waiting_for_world_load:

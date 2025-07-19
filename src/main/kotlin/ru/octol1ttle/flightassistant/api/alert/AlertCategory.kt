@@ -2,7 +2,7 @@ package ru.octol1ttle.flightassistant.api.alert
 
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FlightAssistant
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 
 /**
  * A class that represents a category of alerts.
@@ -28,7 +28,7 @@ class AlertCategory(val categoryText: Component) {
         return this
     }
 
-    fun updateActiveAlerts(computers: ComputerView) {
+    fun updateActiveAlerts(computers: ComputerBus) {
         for (alert: Alert in registeredAlerts) {
             try {
                 if (alert.shouldActivate()) {

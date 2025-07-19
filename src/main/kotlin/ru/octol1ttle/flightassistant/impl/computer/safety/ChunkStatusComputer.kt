@@ -6,9 +6,9 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.ChunkPos
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 
-class ChunkStatusComputer(computers: ComputerView) : Computer(computers) {
+class ChunkStatusComputer(computers: ComputerBus) : Computer(computers) {
     var status: Status = Status.LOADED
         private set
 

@@ -8,9 +8,9 @@ import nl.enjarai.doabarrelroll.api.event.ThrustEvents
 import nl.enjarai.doabarrelroll.config.ModConfig
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustSource
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 
-class DaBRThrustComputer(computers: ComputerView) : Computer(computers), ThrustSource {
+class DaBRThrustComputer(computers: ComputerBus) : Computer(computers), ThrustSource {
     override val priority: ThrustSource.Priority = ThrustSource.Priority.HIGH
     override val supportsReverse: Boolean = true
     override val optimumClimbPitch: Float = 30.0f

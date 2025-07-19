@@ -33,6 +33,7 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
       flightassistant:heading: HDG DSPL FAULT
       flightassistant:radar_altitude: R/ALT DSPL FAULT
       flightassistant:speed: SPD DSPL FAULT
+      flightassistant:status: STATUS DSPL FAULT
       flightassistant:velocity_components: G/S & V/S DSPL FAULT
   firework:
     .: FRWK
@@ -335,8 +336,13 @@ short.flightassistant:
   infinite: INFN
   radar_altitude: R/ALT
   speed: SPD
+  status: STATUS
   vertical_speed: 'V/S%s'
   void: VOID
+
+status.flightassistant:
+  thrust: 'THR: %s'
+  firework_count: 'FRWK CNT: %s'
 
 misc.flightassistant:
   waiting_for_world_load:

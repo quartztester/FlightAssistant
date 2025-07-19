@@ -4,7 +4,7 @@ import kotlin.math.roundToInt
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.extensions.*
@@ -12,14 +12,14 @@ import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.CoordinatesLateralMode
 
-class CoordinatesDisplay(computers: ComputerView) : Display(computers) {
+class CoordinatesDisplay(computers: ComputerBus) : Display(computers) {
     override fun allowedByConfig(): Boolean {
         return FAConfig.display.showCoordinates
     }
 
     override fun render(guiGraphics: GuiGraphics) {
         with(guiGraphics) {
-            val x: Int = HudFrame.left + 10
+            val x: Int = HudFrame.left + 5
             val y: Int = HudFrame.bottom - 19
 
             val xText = "X: ${computers.hudData.lerpedPosition.x.roundToInt()}${getDirectionSignX(computers.data.heading)}"

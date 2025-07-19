@@ -4,11 +4,11 @@ import kotlin.math.abs
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.SpeedReferenceVerticalMode
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.TakeoffThrustMode
 
-class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
+class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     private var currentPhase: FlightPhase = FlightPhase.ON_GROUND
     var departureData: DepartureData = DepartureData()
 

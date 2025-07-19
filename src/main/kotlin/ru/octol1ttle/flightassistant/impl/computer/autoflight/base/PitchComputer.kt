@@ -10,14 +10,14 @@ import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchControllerRegistr
 import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiter
 import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiterRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.event.EntityTurnEvents
 import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.requireIn
 
-class PitchComputer(computers: ComputerView) : Computer(computers), FlightController {
+class PitchComputer(computers: ComputerBus) : Computer(computers), FlightController {
     private val limiters: MutableList<PitchLimiter> = ArrayList()
     private val controllers: MutableList<FlightController> = ArrayList()
     internal var manualOverride: Boolean = false

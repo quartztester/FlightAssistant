@@ -9,14 +9,14 @@ import ru.octol1ttle.flightassistant.api.autoflight.roll.RollControllerRegistrat
 import ru.octol1ttle.flightassistant.api.autoflight.roll.RollSource
 import ru.octol1ttle.flightassistant.api.autoflight.roll.RollSourceRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.findShortestPath
 import ru.octol1ttle.flightassistant.api.util.requireIn
 
-class RollComputer(computers: ComputerView) : Computer(computers) {
+class RollComputer(computers: ComputerBus) : Computer(computers) {
     private val sources: MutableList<RollSource> = ArrayList()
     private val controllers: MutableList<FlightController> = ArrayList()
 

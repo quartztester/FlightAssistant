@@ -10,7 +10,7 @@ import ru.octol1ttle.flightassistant.api.alert.AlertCategory
 import ru.octol1ttle.flightassistant.api.alert.AlertCategoryRegistrationCallback
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.ChangeTrackingArrayList
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.applyVolume
@@ -51,7 +51,7 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustCompute
 import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 
-class AlertComputer(computers: ComputerView, private val soundManager: SoundManager) : Computer(computers) {
+class AlertComputer(computers: ComputerBus, private val soundManager: SoundManager) : Computer(computers) {
     internal var alertsFaulted: Boolean = false
     val categories: MutableList<AlertCategory> = ArrayList()
     private val alertLists: HashMap<AlertData, ChangeTrackingArrayList<Alert>> = HashMap()

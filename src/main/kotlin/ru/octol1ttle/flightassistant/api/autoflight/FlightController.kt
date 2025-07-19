@@ -4,6 +4,7 @@ package ru.octol1ttle.flightassistant.api.autoflight
  * Represents a flight controller that can provide thrust, pitch, heading or roll inputs. Implementing all methods is optional.
  * @see [ControlInput]
  */
+@Deprecated("Dispatch ComputerQueries instead")
 interface FlightController {
     fun getThrustInput(): ControlInput? {
         return null

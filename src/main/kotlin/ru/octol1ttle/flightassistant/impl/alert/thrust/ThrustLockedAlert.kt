@@ -5,12 +5,12 @@ import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.alert.Alert
 import ru.octol1ttle.flightassistant.api.alert.AlertData
 import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
 import ru.octol1ttle.flightassistant.api.util.extensions.drawString
 import ru.octol1ttle.flightassistant.api.util.extensions.primaryAdvisoryColor
 
-class ThrustLockedAlert(computers: ComputerView) : Alert(computers), ECAMAlert {
+class ThrustLockedAlert(computers: ComputerBus) : Alert(computers), ECAMAlert {
     override val data: AlertData = AlertData.THRUST_LOCKED
 
     override fun shouldActivate(): Boolean {

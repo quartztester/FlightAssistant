@@ -6,10 +6,10 @@ import nl.enjarai.doabarrelroll.DoABarrelRoll
 import nl.enjarai.doabarrelroll.api.RollEntity
 import ru.octol1ttle.flightassistant.api.autoflight.roll.RollSource
 import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 
-class DaBRRollComputer(computers: ComputerView) : Computer(computers), RollSource {
+class DaBRRollComputer(computers: ComputerBus) : Computer(computers), RollSource {
     override fun isActive(): Boolean {
         return (computers.data.player as RollEntity).`doABarrelRoll$isRolling`()
     }

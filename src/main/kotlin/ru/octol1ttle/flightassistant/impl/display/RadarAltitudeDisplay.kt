@@ -6,14 +6,14 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.safety.VoidProximityComputer
 
-class RadarAltitudeDisplay(computers: ComputerView) : Display(computers) {
+class RadarAltitudeDisplay(computers: ComputerBus) : Display(computers) {
     override fun allowedByConfig(): Boolean {
         return FAConfig.display.showRadarAltitude
     }

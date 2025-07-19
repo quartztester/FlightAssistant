@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.KeyMapping
 import org.lwjgl.glfw.GLFW
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.screen.FlightAssistantSetupScreen
 
@@ -48,7 +48,7 @@ object FAKeyMappings {
         return keyBinding
     }
 
-    fun checkPressed(computers: ComputerView) {
+    fun checkPressed(computers: ComputerBus) {
         while (toggleEnabled.consumeClick()) {
             FAConfig.global.modEnabled = !FAConfig.global.modEnabled
         }

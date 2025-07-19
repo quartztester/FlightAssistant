@@ -5,13 +5,13 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import org.joml.Vector3f
 import ru.octol1ttle.flightassistant.FlightAssistant
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.util.ScreenSpace
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
 
-class FlightPathDisplay(computers: ComputerView) : Display(computers) {
+class FlightPathDisplay(computers: ComputerBus) : Display(computers) {
     override fun allowedByConfig(): Boolean {
         return FAConfig.display.showFlightPathVector
     }

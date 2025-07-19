@@ -5,9 +5,7 @@ import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.ModuleController
-import ru.octol1ttle.flightassistant.api.computer.Computer
-import ru.octol1ttle.flightassistant.api.computer.ComputerRegistrationCallback
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.*
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
@@ -21,7 +19,7 @@ import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.data.HudDisplayDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
-internal object ComputerHost : ModuleController<Computer>, ComputerView {
+internal object ComputerHost : ModuleController<Computer>, ComputerBus {
     private val computers: MutableMap<ResourceLocation, Computer> = LinkedHashMap()
 
     override val modulesResettable: Boolean = true
@@ -119,7 +117,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
     }
 
     internal fun tick(partialTick: Float) {
-        val paused: Boolean = mc.isPaused /*? if >=1.21 {*/ /*|| !(mc as ru.octol1ttle.flightassistant.mixin.ClientLevelRunningNormallyInvoker).invokeIsLevelRunningNormally() *///?}
+        val paused: Boolean = mc.isPaused /*? if >=1.21 {*/ /*|| !(mc as ClientLevelRunningNormallyInvoker).invokeIsLevelRunningNormally() *///?}
         FATickCounter.tick(mc.player!!, partialTick, paused)
         if (paused || FATickCounter.ticksSinceWorldLoad < FATickCounter.worldLoadWaitTime || !FAConfig.global.modEnabled) {
             return
@@ -149,6 +147,20 @@ internal object ComputerHost : ModuleController<Computer>, ComputerView {
 
             return null
         }
+    }
+
+    override fun dispatchEvent(event: ComputerEvent) {
+        for (computer: Computer in computers.values) {
+            computer.processEvent(event)
+        }
+    }
+
+    override fun <Response> dispatchQuery(query: ComputerQuery<Response>): Collection<Response> {
+        for (computer: Computer in computers.values) {
+            computer.processQuery(query)
+        }
+
+        return query.responses
     }
 
     private fun onComputerFault(computer: Computer) {

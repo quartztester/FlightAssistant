@@ -4,11 +4,11 @@ import kotlin.properties.Delegates
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 
 abstract class FABaseScreen(title: Component?) : Screen(title) {
-    protected val computers: ComputerView = ComputerHost
+    protected val computers: ComputerBus = ComputerHost
     protected var centerX by Delegates.notNull<Int>()
     protected var centerY by Delegates.notNull<Int>()
 

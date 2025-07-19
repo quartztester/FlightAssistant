@@ -4,12 +4,12 @@ import kotlin.math.abs
 import kotlin.math.pow
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 
 data class PitchVerticalMode(val target: Float) : AutoFlightComputer.VerticalMode {
-    override fun getControlInput(computers: ComputerView): ControlInput? {
+    override fun getControlInput(computers: ComputerBus): ControlInput? {
         return ControlInput(
             target,
             ControlInput.Priority.NORMAL,
@@ -19,7 +19,7 @@ data class PitchVerticalMode(val target: Float) : AutoFlightComputer.VerticalMod
 }
 
 data class SpeedReferenceVerticalMode(val targetSpeed: Int) : AutoFlightComputer.VerticalMode {
-    override fun getControlInput(computers: ComputerView): ControlInput? {
+    override fun getControlInput(computers: ComputerBus): ControlInput? {
         // TODO: find a way to fix jittering
         val range: Float = computers.thrust.getOptimumClimbPitch() - computers.thrust.getAltitudeHoldPitch()
         val currentPitch: Float = computers.data.pitch
@@ -37,7 +37,7 @@ data class SpeedReferenceVerticalMode(val targetSpeed: Int) : AutoFlightComputer
 }
 
 data class SelectedAltitudeVerticalMode(val target: Int) : AutoFlightComputer.VerticalMode {
-    override fun getControlInput(computers: ComputerView): ControlInput? {
+    override fun getControlInput(computers: ComputerBus): ControlInput? {
         val diff: Float = (target - computers.data.altitude).toFloat()
         val abs: Float = abs(diff)
         val neutralPitch: Float = computers.thrust.getAltitudeHoldPitch()

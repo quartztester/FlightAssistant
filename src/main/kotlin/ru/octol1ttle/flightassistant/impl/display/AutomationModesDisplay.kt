@@ -9,14 +9,14 @@ import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FAKeyMappings
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
 
-class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
+class AutomationModesDisplay(computers: ComputerBus) : Display(computers) {
     private val thrustDisplay: ModeDisplay = ModeDisplay(1)
     private val pitchDisplay: ModeDisplay = ModeDisplay(2)
     private val headingDisplay: ModeDisplay = ModeDisplay(3)
@@ -139,7 +139,7 @@ class AutomationModesDisplay(computers: ComputerView) : Display(computers) {
             val leftX: Int = farLeft + (singleWidth + 1) * (order - 1)
             val rightX: Int = if (order == TOTAL_MODES.toInt()) farRight + 1 else leftX + singleWidth
 
-            val y: Int = HudFrame.top - 10
+            val y: Int = HudFrame.top - 9
 
             if (active && !Objects.equals(text, lastText)) {
                 textChangedAt = FATickCounter.totalTicks

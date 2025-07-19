@@ -73,6 +73,9 @@ class DisplayOptions {
     var showAlerts: Boolean = true
 
     @SerialEntry
+    var showStatusMessages: Boolean = true
+
+    @SerialEntry
     var showAutomationModes: Boolean = true
     @SerialEntry
     var showFlightDirectors: Boolean = true
@@ -105,6 +108,7 @@ class DisplayOptions {
         this.showGroundSpeed = false
         this.showVerticalSpeed = false
         this.showAlerts = false
+        this.showStatusMessages = false
         this.showAutomationModes = false
         this.showFlightDirectors = false
         return this

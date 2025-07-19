@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
-import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.ScreenSpace
@@ -18,7 +18,7 @@ import ru.octol1ttle.flightassistant.config.options.DisplayOptions
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.PitchVerticalMode
 
-class AttitudeDisplay(computers: ComputerView) : Display(computers) {
+class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
     override fun allowedByConfig(): Boolean {
         return FAConfig.display.showAttitude != DisplayOptions.AttitudeDisplayMode.DISABLED
     }
