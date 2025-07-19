@@ -1,7 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.computer.safety
 
 import kotlin.math.max
-import kotlin.math.min
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.ClipContext
@@ -18,6 +17,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiterRegistrati
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.api.util.inverseMin
 import ru.octol1ttle.flightassistant.api.util.requireIn
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
@@ -133,7 +133,7 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
     override fun getMinimumPitch(): ControlInput? {
         if (groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateLimitPitch || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleLimitPitch) {
             return ControlInput(
-                computers.data.pitch.coerceAtMost(0.0f),
+                computers.data.pitch.coerceAtMost(computers.thrust.getAltitudeHoldPitch()),
                 ControlInput.Priority.HIGH,
                 Component.translatable("mode.flightassistant.vertical.terrain_protection")
             )
@@ -159,15 +159,12 @@ class GroundProximityComputer(computers: ComputerView) : Computer(computers), Pi
 
     override fun getPitchInput(): ControlInput? {
         if (groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateAutoPitch || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleAutoPitch) {
-            val minImpactTime: Float = min(groundImpactTime, obstacleImpactTime)
-            if (minImpactTime == 0.0f) {
-                return null
-            }
+            val deltaTimeMultiplier: Float = inverseMin(groundImpactTime, obstacleImpactTime) ?: return null
             return ControlInput(
                 90.0f,
                 ControlInput.Priority.HIGH,
                 Component.translatable("mode.flightassistant.vertical.terrain_escape"),
-                1.0f / minImpactTime,
+                deltaTimeMultiplier,
                 active = groundImpactStatus == Status.RECOVER && FAConfig.safety.sinkRateAutoPitch || obstacleImpactStatus == Status.RECOVER && FAConfig.safety.obstacleAutoPitch
             )
         }

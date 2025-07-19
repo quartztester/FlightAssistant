@@ -1,6 +1,7 @@
 package ru.octol1ttle.flightassistant.api.util
 
 import kotlin.math.PI
+import kotlin.math.min
 
 fun degrees(value: Float): Float {
     return (value * (180.0f / PI)).toFloat()
@@ -65,4 +66,18 @@ fun findShortestPath(from: Float, to: Float, valueRange: Float): Float {
     }
 
     return diff
+}
+
+fun inverseMin(a: Float, b: Float): Float? {
+    if (a == 0.0f && b == 0.0f) {
+        return null
+    }
+    if (a == 0.0f) {
+        return 1.0f / b
+    }
+    if (b == 0.0f) {
+        return 1.0f / a
+    }
+
+    return 1.0f / min(a, b)
 }
