@@ -34,6 +34,13 @@ class AutoFlightComputer(computers: ComputerView) : Computer(computers), FlightC
     var selectedVerticalMode: VerticalMode? = null
     var selectedLateralMode: LateralMode? = null
 
+    val activeThrustMode: ThrustMode?
+        get() = selectedThrustMode ?: computers.plan.getThrustMode()
+    val activeVerticalMode: VerticalMode?
+        get() = selectedVerticalMode ?: computers.plan.getVerticalMode()
+    val activeLateralMode: LateralMode?
+        get() = selectedLateralMode ?: computers.plan.getLateralMode()
+
     override fun subscribeToEvents() {
         ThrustControllerRegistrationCallback.EVENT.register { it.accept(this) }
         PitchControllerRegistrationCallback.EVENT.register { it.accept(this) }
@@ -128,7 +135,7 @@ class AutoFlightComputer(computers: ComputerView) : Computer(computers), FlightC
             return null
         }
 
-        return selectedThrustMode?.getControlInput(computers) ?: computers.plan.getThrustInput()
+        return activeThrustMode?.getControlInput(computers)
     }
 
     override fun getPitchInput(): ControlInput? {
@@ -136,7 +143,7 @@ class AutoFlightComputer(computers: ComputerView) : Computer(computers), FlightC
             return null
         }
 
-        return (selectedVerticalMode?.getControlInput(computers) ?: computers.plan.getPitchInput())?.copy(active = autopilot)
+        return activeVerticalMode?.getControlInput(computers)?.copy(active = autopilot)
     }
 
     override fun getHeadingInput(): ControlInput? {
@@ -144,7 +151,7 @@ class AutoFlightComputer(computers: ComputerView) : Computer(computers), FlightC
             return null
         }
 
-        return (selectedLateralMode?.getControlInput(computers) ?: computers.plan.getHeadingInput())?.copy(active = autopilot)
+        return activeLateralMode?.getControlInput(computers)?.copy(active = autopilot)
     }
 
     override fun getRollInput(): ControlInput? {
@@ -170,7 +177,7 @@ class AutoFlightComputer(computers: ComputerView) : Computer(computers), FlightC
     }
 
     interface AutoFlightMode {
-        fun getControlInput(computers: ComputerView): ControlInput
+        fun getControlInput(computers: ComputerView): ControlInput?
     }
 
     interface ThrustMode : AutoFlightMode

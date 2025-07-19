@@ -1,13 +1,12 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import kotlin.math.abs
-import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
-import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
-import ru.octol1ttle.flightassistant.api.autoflight.thrust.SpeedReferenceVerticalMode
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerView
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.SpeedReferenceVerticalMode
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.TakeoffThrustMode
 
 class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
     private var currentPhase: FlightPhase = FlightPhase.ON_GROUND
@@ -32,30 +31,21 @@ class FlightPlanComputer(computers: ComputerView) : Computer(computers) {
         return FlightPhase.UNKNOWN
     }
 
-    fun getThrustInput(): ControlInput? {
+    fun getThrustMode(): AutoFlightComputer.ThrustMode? {
         return when (currentPhase) {
-            FlightPhase.TAKEOFF -> ControlInput(
-                departureData.takeoffThrust,
-                ControlInput.Priority.NORMAL,
-                Component.translatable("mode.flightassistant.thrust.takeoff"),
-                identifier = ID
-            )
-
+            FlightPhase.TAKEOFF -> TakeoffThrustMode(departureData)
             else -> null
         }
     }
 
-    fun getPitchInput(): ControlInput? {
+    fun getVerticalMode(): AutoFlightComputer.VerticalMode? {
         return when (currentPhase) {
-            FlightPhase.TAKEOFF -> {
-                SpeedReferenceVerticalMode(departureData.minimumClimbSpeed).getControlInput(computers)
-            }
-
+            FlightPhase.TAKEOFF -> SpeedReferenceVerticalMode(departureData.minimumClimbSpeed)
             else -> null
         }
     }
 
-    fun getHeadingInput(): ControlInput? {
+    fun getLateralMode(): AutoFlightComputer.LateralMode? {
         return null
     }
 

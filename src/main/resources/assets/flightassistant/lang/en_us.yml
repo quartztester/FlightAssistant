@@ -305,14 +305,14 @@ mode.flightassistant:
     stall_protection: STALL PROT
     terrain_protection: TERR PROT
     terrain_escape: TERR ESC
-    selected_pitch: PITCH %s
+    pitch: PITCH %s
     selected_altitude:
       climb: CLB %s
       descend: DES %s
       hold: ALT %s
     speed_reference: SPD REF
   lateral:
-    selected_heading: HDG %s
+    heading: HDG %s
     selected_coordinates: COORD %s %s
 
 short.flightassistant:

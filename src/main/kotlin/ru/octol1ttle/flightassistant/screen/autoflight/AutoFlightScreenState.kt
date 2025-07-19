@@ -2,8 +2,8 @@ package ru.octol1ttle.flightassistant.screen.autoflight
 
 import dev.isxander.yacl3.api.NameableEnum
 import net.minecraft.network.chat.Component
-import ru.octol1ttle.flightassistant.api.autoflight.thrust.SpeedThrustMode
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.*
 
 class AutoFlightScreenState {
     var thrustMode: ThrustMode = ThrustMode.SPEED
@@ -23,17 +23,17 @@ class AutoFlightScreenState {
     fun apply(autoFlight: AutoFlightComputer) {
         autoFlight.selectedThrustMode = when (thrustMode) {
             ThrustMode.SPEED -> SpeedThrustMode(targetSpeed)
-            ThrustMode.VERTICAL_PROFILE -> TODO()
+            ThrustMode.VERTICAL_PROFILE -> VerticalProfileThrustMode(climbThrustPercent / 100.0f, descendThrustPercent / 100.0f)
             ThrustMode.FLIGHT_PLAN -> null
         }
         autoFlight.selectedVerticalMode = when (verticalMode) {
-            VerticalMode.PITCH -> TODO()
-            VerticalMode.ALTITUDE -> TODO()
+            VerticalMode.PITCH -> PitchVerticalMode(targetPitch)
+            VerticalMode.ALTITUDE -> SelectedAltitudeVerticalMode(targetAltitude)
             VerticalMode.FLIGHT_PLAN -> null
         }
         autoFlight.selectedLateralMode = when (lateralMode) {
-            LateralMode.HEADING -> TODO()
-            LateralMode.COORDINATES -> TODO()
+            LateralMode.HEADING -> HeadingLateralMode(targetHeading)
+            LateralMode.COORDINATES -> CoordinatesLateralMode(targetCoordinatesX, targetCoordinatesZ)
             LateralMode.FLIGHT_PLAN -> null
         }
     }
