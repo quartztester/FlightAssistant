@@ -154,6 +154,7 @@ config.flightassistant:
         .: Miscellaneous
         coordinates: Show coordinates
         alerts: Show alerts
+        status_messages: Show status messages
         automation_modes: Show automation modes
         flight_directors: Show flight directors
     safety:

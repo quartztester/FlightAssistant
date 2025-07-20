@@ -71,7 +71,6 @@ class DisplayOptions {
 
     @SerialEntry
     var showAlerts: Boolean = true
-
     @SerialEntry
     var showStatusMessages: Boolean = true
 

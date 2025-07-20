@@ -239,6 +239,11 @@ import ru.octol1ttle.flightassistant.config.options.SafetyOptions
                 binding(current::showAlerts, defaults.showAlerts)
                 controller(tickBox())
             }
+            rootOptions.register("misc.status_messages") {
+                setDisplayName()
+                binding(current::showStatusMessages, defaults.showStatusMessages)
+                controller(tickBox())
+            }
             rootOptions.register("misc.automation_modes") {
                 setDisplayName()
                 binding(current::showAutomationModes, defaults.showAutomationModes)
