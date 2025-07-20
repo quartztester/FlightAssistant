@@ -90,7 +90,12 @@ class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Comp
         }
 
         safeFireworkCount = 0
-        for (stack: ItemStack in computers.data.player.inventory.items) {
+        for (stack: ItemStack in
+//? if >=1.21.5 {
+        /*computers.data.player.inventory.nonEquipmentItems
+*///?} else
+        computers.data.player.inventory.items
+        ) {
             if (isFireworkAndSafe(stack)) {
                 safeFireworkCount += stack.count
             }
