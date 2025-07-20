@@ -39,10 +39,10 @@ class FlightAssistantSetupScreen : FABaseScreen(Component.translatable("menu.fli
         }.pos(this.centerX - 160, this.centerY + 20).width(100).build())
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.enroute")) {
             //this.minecraft!!.setScreen(FlightPlanScreen())
-        }.pos(this.centerX - 50, this.centerY + 20).width(100).build())
+        }.pos(this.centerX - 50, this.centerY + 20).width(100).build()).active = false
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.arrival")) {
             //this.minecraft!!.setScreen(FlightPlanScreen())
-        }.pos(this.centerX + 60, this.centerY + 20).width(100).build())
+        }.pos(this.centerX + 60, this.centerY + 20).width(100).build()).active = false
 
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.config")) {
             this.minecraft!!.setScreen(FAConfigScreen.generate(null))
