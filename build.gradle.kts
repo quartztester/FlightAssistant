@@ -1,6 +1,3 @@
-import jdk.tools.jlink.resources.plugins
-import org.gradle.api.file.FileCopyDetails
-
 plugins {
     kotlin("jvm")
     id("dev.isxander.modstitch.base") version "0.5.14-unstable"
