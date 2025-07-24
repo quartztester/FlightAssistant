@@ -68,14 +68,14 @@ object FAConfig {
             }
 
             if (!player.abilities.mayfly) {
-//? if >=1.21.5 {
+//? if >=1.21.2 {
                 /*for (slot: net.minecraft.world.entity.EquipmentSlot in net.minecraft.world.entity.EquipmentSlot.VALUES) {
                     if (player.getItemBySlot(slot).has(net.minecraft.core.component.DataComponents.GLIDER)) {
                         return displaysStorage.notFlyingHasElytra
                     }
                 }
 *///?} else {
-                if (player.allSlots.any { stack -> stack.item == net.minecraft.world.item.Items.ELYTRA }) {
+                if (player.allSlots.any { stack -> stack.item is net.minecraft.world.item.ElytraItem }) {
                     return displaysStorage.notFlyingHasElytra
                 }
 //?}

@@ -1,3 +1,6 @@
+import jdk.tools.jlink.resources.plugins
+import org.gradle.api.file.FileCopyDetails
+
 plugins {
     kotlin("jvm")
     id("dev.isxander.modstitch.base") version "0.5.14-unstable"
@@ -167,7 +170,7 @@ publishMods {
     val curseforgeToken = findProperty("curseforgeToken")
     dryRun = modrinthToken == null || curseforgeToken == null
 
-    file = modstitch.finalJarTask.get().archiveFile
+    file = modstitch.finalJarTask.flatMap { it.archiveFile }
     //additionalFiles.from(modstitch.namedJarTask.get().archiveFile)
 
     displayName = "${mod.name} ${mod.version} for ${loader.replaceFirstChar { it.uppercase() }} ${property("mod.mc_title")}"
