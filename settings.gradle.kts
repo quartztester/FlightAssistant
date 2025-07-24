@@ -30,7 +30,7 @@ stonecutter {
         fun mc(version: String, vararg loaders: String) {
             for (it in loaders) vers("$version-$it", version)
         }
-        mc("1.20.1", "fabric", "forge")
+        mc("1.20.1", "fabric"/*, "forge"*/)
         mc("1.21.1", "fabric", "neoforge")
         mc("1.21.4", "fabric")
         mc("1.21.5", "fabric")

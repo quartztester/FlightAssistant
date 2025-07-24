@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("dev.isxander.modstitch.base") version "0.5.14-unstable"
+    id("dev.isxander.modstitch.base") version "0.6.2-unstable"
     id("me.modmuss50.mod-publish-plugin")
     id("me.fallenbreath.yamlang") version "1.4.+"
 }
@@ -42,7 +42,7 @@ modstitch {
     minecraftVersion = minecraft
 
     val j21: Boolean = stonecutter.eval(minecraft, ">=1.20.6")
-    javaTarget = if (j21) 21 else 17
+    javaVersion = if (j21) 21 else 17
     kotlin {
         jvmToolchain(if (j21) 21 else 17)
     }
@@ -75,17 +75,15 @@ modstitch {
 
     // ModDevGradle (NeoForge, Forge, Forgelike)
     moddevgradle {
-        enable {
-            ifFindProperty("deps.forge") { forgeVersion = it }
-            ifFindProperty("deps.neoforge") { neoForgeVersion = it }
-        }
+        ifFindProperty("deps.forge") { forgeVersion = it }
+        ifFindProperty("deps.neoforge") { neoForgeVersion = it }
 
         // Configures client and server runs for MDG, it is not done by default
         defaultRuns(server = false)
 
         // This block configures the `neoforge` extension that MDG exposes by default,
         // you can configure MDG like normal from here
-        configureNeoforge {
+        configureNeoForge {
             runs.all {
                 gameDirectory = layout.projectDirectory.dir("../../run")
             }
@@ -114,7 +112,7 @@ modstitch {
 dependencies {
     modstitch.loom {
         ifFindProperty("deps.fapi") {
-            modstitchModLocalRuntime("net.fabricmc.fabric-api:fabric-api:$it")
+            modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:$it")
         }
         modstitchModImplementation("net.fabricmc:fabric-language-kotlin:${property("deps.flk")}+kotlin.2.1.0")
         modstitchModImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")
@@ -167,7 +165,9 @@ publishMods {
     val curseforgeToken = findProperty("curseforgeToken")
     dryRun = modrinthToken == null || curseforgeToken == null
 
-    file = modstitch.finalJarTask.flatMap { it.archiveFile }
+    modstitch.onEnable {
+        file = modstitch.finalJarTask.flatMap { it.archiveFile }
+    }
     //additionalFiles.from(modstitch.namedJarTask.get().archiveFile)
 
     displayName = "${mod.name} ${mod.version} for ${loader.replaceFirstChar { it.uppercase() }} ${property("mod.mc_title")}"
