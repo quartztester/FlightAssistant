@@ -95,7 +95,7 @@ modstitch {
         // true, it will automatically be generated.
         addMixinsToModManifest = true
 
-        configs.register("flightassistant.client") { side = CLIENT }
+        configs.register(mod.id) { side = CLIENT }
 
         // Most of the time you wont ever need loader specific mixins.
         // If you do, simply make the mixin file and add it like so for the respective loader:
@@ -138,13 +138,16 @@ yamlang {
 
 // Resources
 tasks.processResources {
+    inputs.property("loader", loader)
     inputs.property("mod_id", mod.id)
     inputs.property("mod_version", mod.version)
     inputs.property("mod_name", mod.name)
     inputs.property("mc", minecraftVersionRange)
 
+    val loader = inputs.properties["loader"]
+    val modId = inputs.properties["mod_id"]
     val map = mapOf(
-        "mod_id" to inputs.properties["mod_id"],
+        "mod_id" to modId,
         "mod_version" to inputs.properties["mod_version"],
         "mod_name" to inputs.properties["mod_name"],
         "mc" to inputs.properties["mc"],
@@ -157,6 +160,9 @@ tasks.processResources {
     filesMatching("fabric.mod.json") { expandOrExclude(loader == "fabric", map) }
     filesMatching("META-INF/mods.toml") { expandOrExclude(loader == "forge", map) }
     filesMatching("META-INF/neoforge.mods.toml") { expandOrExclude(loader == "neoforge", map) }
+    filesMatching("${modId}.mixins.json") { expand(mapOf("refmap" to if (loader == "forge") """
+       ,"refmap": "${modId}.refmap.json"
+    """.trimIndent() else ""))}
 }
 
 // Publishing
