@@ -37,6 +37,8 @@ stonecutter {
 }
 
 base { archivesName.set("${mod.id}-$loader") }
+group = mod.group
+version = "${mod.version}+mc$minecraft"
 
 modstitch {
     minecraftVersion = minecraft
@@ -53,11 +55,28 @@ modstitch {
         ifFindProperty("deps.parchment") { mappingsVersion = it }
     }
 
-    // This metadata is used by Modstitch to annoyingly overwrite some Gradle properties (like "version")
     metadata {
+        overwriteProjectVersionAndGroup = false
+
         modId = mod.id
-        modGroup = mod.group
-        modVersion = "${mod.version}+mc$minecraft"
+        modName = mod.name
+        modVersion = mod.version
+
+        fun <K, V> MapProperty<K, V>.populate(block: MapProperty<K, V>.() -> Unit) {
+            block()
+        }
+
+        val refmapString = """
+        ,"refmap": "${modId}.refmap.json"
+        """
+        replacementProperties.populate {
+            // You can put any other replacement properties/metadata here that
+            // modstitch doesn't initially support. Some examples below.
+            put("mc", minecraftVersionRange)
+            put("fml", if (loader == "neoforge") "1" else "45")
+            put("mnd", if (loader == "neoforge") "type = \"required\"" else "mandatory = true")
+            put("refmap", if (loader == "forge") refmapString else "")
+        }
     }
 
     // Fabric Loom (Fabric)
@@ -134,35 +153,6 @@ dependencies {
 yamlang {
     targetSourceSets.set(mutableListOf(sourceSets["main"]))
     inputDir.set("assets/${mod.id}/lang")
-}
-
-// Resources
-tasks.processResources {
-    inputs.property("loader", loader)
-    inputs.property("mod_id", mod.id)
-    inputs.property("mod_version", mod.version)
-    inputs.property("mod_name", mod.name)
-    inputs.property("mc", minecraftVersionRange)
-
-    val loader = inputs.properties["loader"]
-    val modId = inputs.properties["mod_id"]
-    val map = mapOf(
-        "mod_id" to modId,
-        "mod_version" to inputs.properties["mod_version"],
-        "mod_name" to inputs.properties["mod_name"],
-        "mc" to inputs.properties["mc"],
-        "fml" to if (loader == "neoforge") "1" else "45",
-        "mnd" to if (loader == "neoforge") "type = \"required\"" else "mandatory = true"
-    )
-
-    fun FileCopyDetails.expandOrExclude(expand: Boolean, map: Map<String, *>): Any = if (expand) expand(map) else exclude()
-
-    filesMatching("fabric.mod.json") { expandOrExclude(loader == "fabric", map) }
-    filesMatching("META-INF/mods.toml") { expandOrExclude(loader == "forge", map) }
-    filesMatching("META-INF/neoforge.mods.toml") { expandOrExclude(loader == "neoforge", map) }
-    filesMatching("${modId}.mixins.json") { expand(mapOf("refmap" to if (loader == "forge") """
-       ,"refmap": "${modId}.refmap.json"
-    """.trimIndent() else ""))}
 }
 
 // Publishing

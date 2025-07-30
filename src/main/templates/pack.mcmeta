@@ -1,6 +1,6 @@
 {
     "pack": {
-        "description": "FlightAssistant",
+        "description": "${mod_name} resources",
         "pack_format": 15
     }
 }
