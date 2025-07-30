@@ -118,7 +118,9 @@ class ThrustComputer(computers: ComputerBus) : Computer(computers) {
     override fun <Response> processQuery(query: ComputerQuery<Response>) {
         if (query is StatusDisplay.StatusMessageQuery) {
             // TODO: show actual thrust output and requested thrust (both by user and autoflight)
-            query.respond(Component.translatable("status.flightassistant.thrust", "%.1f".format(current * 100) + "%"))
+            if (getThrustSource() != null || current != 0.0f) {
+                query.respond(Component.translatable("status.flightassistant.thrust", "%.1f".format(current * 100) + "%"))
+            }
         }
     }
 

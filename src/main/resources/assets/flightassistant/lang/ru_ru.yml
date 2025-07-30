@@ -296,8 +296,10 @@ menu.flightassistant:
 mode.flightassistant:
   thrust:
     override: РУЧН ТЯГА
-    manual: РУЧН ТЯГА
-    manual_toga: РУЧН ВЗЛЕТН
+    manual:
+      .: РУЧН ТЯГА
+      reverse: РУЧН РЕВ
+      toga: РУЧН ВЗЛЕТН
     locked: БЛОК ТЯГА
     locked_toga: БЛОК ВЗЛЕТН
     idle: ТЯГА МАЛ

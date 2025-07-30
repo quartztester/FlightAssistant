@@ -292,8 +292,10 @@ menu.flightassistant:
 mode.flightassistant:
   thrust:
     override: THR OVRD # TODO: single key to override all
-    manual: MAN THR
-    manual_toga: MAN TOGA
+    manual:
+      .: MAN THR
+      reverse: MAN REV
+      toga: MAN TOGA
     locked: THR LK
     locked_toga: TOGA LK
     idle: THR IDLE

@@ -15,7 +15,7 @@ import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
 interface ComputerBus : ModuleView<Computer> {
     fun <C, T> guardedCall(computer: C, call: Function<C, T>): T?
-    fun dispatchEvent(event: ComputerEvent)
+    fun <Event : ComputerEvent> dispatchEvent(event: Event)
     fun <Response> dispatchQuery(query: ComputerQuery<Response>): Collection<Response>
 
     val data: AirDataComputer

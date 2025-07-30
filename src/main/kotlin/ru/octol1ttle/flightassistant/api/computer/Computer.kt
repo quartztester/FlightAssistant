@@ -40,7 +40,7 @@ abstract class Computer(val computers: ComputerBus) {
     /**
      * Called when another computer dispatches a ComputerEvent.
      */
-    open fun processEvent(event: ComputerEvent) {}
+    open fun <Event : ComputerEvent> processEvent(event: Event) {}
 
     /**
      * Called when another computer dispatches a ComputerQuery.

@@ -64,7 +64,8 @@ class AutomationModesDisplay(computers: ComputerBus) : Display(computers) {
         if (computers.thrust.current != 0.0f) {
             thrustDisplay.render(
                 guiGraphics,
-                if (computers.thrust.current == 1.0f) Component.translatable("mode.flightassistant.thrust.manual_toga").setColor(secondaryColor)
+                if (computers.thrust.current == 1.0f) Component.translatable("mode.flightassistant.thrust.manual.toga").setColor(secondaryColor)
+                else if (computers.thrust.current < 0.0f) Component.translatable("mode.flightassistant.thrust.manual.reverse")
                 else Component.translatable("mode.flightassistant.thrust.manual"),
                 false, if (thrustUnusable) cautionColor else secondaryColor
             )
