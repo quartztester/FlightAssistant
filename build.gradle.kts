@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("dev.isxander.modstitch.base") version "0.6.2-unstable"
+    id("dev.isxander.modstitch.base") version "0.6.3-unstable"
     id("me.modmuss50.mod-publish-plugin")
     id("me.fallenbreath.yamlang") version "1.4.+"
 }
@@ -56,8 +56,6 @@ modstitch {
     }
 
     metadata {
-        overwriteProjectVersionAndGroup = false
-
         modId = mod.id
         modName = mod.name
         modVersion = mod.version
@@ -66,9 +64,7 @@ modstitch {
             block()
         }
 
-        val refmapString = """
-        ,"refmap": "${modId}.refmap.json"
-        """
+        val refmapString = ",\"refmap\": \"${mod.id}.refmap.json\""
         replacementProperties.populate {
             // You can put any other replacement properties/metadata here that
             // modstitch doesn't initially support. Some examples below.
@@ -77,6 +73,8 @@ modstitch {
             put("mnd", if (loader == "neoforge") "type = \"required\"" else "mandatory = true")
             put("refmap", if (loader == "forge") refmapString else "")
         }
+
+        overwriteProjectVersionAndGroup = false
     }
 
     // Fabric Loom (Fabric)
@@ -223,18 +221,3 @@ if (stonecutter.current.isActive) {
         dependsOn(tasks.named("runClient"))
     }
 }
-
-/*
-dependencies {
-    val mixinExtras = "io.github.llamalad7:mixinextras-%s:${property("deps.mixin_extras")}"
-    if (isFabric) {
-    } else {
-        if (loader == "forge") {
-            compileOnly(annotationProcessor(mixinExtras.format("common"))!!)
-            include(implementation(mixinExtras.format("forge"))!!)
-        }
-        "forgeRuntimeLibrary"("org.quiltmc.parsers:json:0.2.1")
-        "forgeRuntimeLibrary"("org.quiltmc.parsers:gson:0.2.1")
-    }
-}
-*/
