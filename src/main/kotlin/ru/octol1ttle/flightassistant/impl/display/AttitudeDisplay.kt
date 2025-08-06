@@ -24,6 +24,10 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
+        if (computers.hudData.isViewMirrored) {
+            return
+        }
+
         with(guiGraphics) {
             pose().push()
 //? if <1.21.6

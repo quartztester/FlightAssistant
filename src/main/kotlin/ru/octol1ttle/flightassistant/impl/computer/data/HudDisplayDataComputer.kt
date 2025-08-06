@@ -17,6 +17,9 @@ class HudDisplayDataComputer(computers: ComputerBus, private val mc: Minecraft) 
     val player: LocalPlayer
         get() = checkNotNull(mc.player)
 
+    val isViewMirrored: Boolean
+        get() = mc.options.cameraType.isMirrored
+
     var lerpedPosition: Vec3 = Vec3.ZERO
         private set
     var lerpedVelocity: Vec3 = Vec3.ZERO
