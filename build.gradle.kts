@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm")
     id("dev.isxander.modstitch.base") version "0.7.0-unstable"
     id("me.modmuss50.mod-publish-plugin")
-    id("me.fallenbreath.yamlang") version "1.4.1"
+    id("me.fallenbreath.yamlang") version "1.4.2"
 }
 
 fun prop(name: String) : String {
