@@ -1,6 +1,6 @@
 pluginManagement {
     repositories {
-        mavenLocal()
+        maven("https://jitpack.io")
 
         gradlePluginPortal()
         mavenCentral()
@@ -17,6 +17,12 @@ pluginManagement {
         // Stonecutter
         maven("https://maven.kikugie.dev/releases")
         maven("https://maven.kikugie.dev/snapshots")
+    }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "me.fallenbreath.yamlang") useModule("com.github.Octol1ttle:yamlang:f0b7468")
+        }
     }
 }
 
