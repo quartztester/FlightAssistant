@@ -9,6 +9,7 @@ import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 import ru.octol1ttle.flightassistant.screen.autoflight.AutoFlightScreen
 import ru.octol1ttle.flightassistant.screen.fms.DepartureScreen
+import ru.octol1ttle.flightassistant.screen.fms.EnrouteScreen
 import ru.octol1ttle.flightassistant.screen.system.SystemManagementScreen
 
 class FlightAssistantSetupScreen : FABaseScreen(Component.translatable("menu.flightassistant")) {
@@ -38,7 +39,7 @@ class FlightAssistantSetupScreen : FABaseScreen(Component.translatable("menu.fli
             this.minecraft!!.setScreen(DepartureScreen())
         }.pos(this.centerX - 160, this.centerY + 20).width(100).build())
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.enroute")) {
-            //this.minecraft!!.setScreen(FlightPlanScreen())
+            this.minecraft!!.setScreen(EnrouteScreen())
         }.pos(this.centerX - 50, this.centerY + 20).width(100).build()).active = false
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.arrival")) {
             //this.minecraft!!.setScreen(FlightPlanScreen())

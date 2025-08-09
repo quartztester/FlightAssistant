@@ -20,8 +20,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
+            .gradle/configuration-cache
+            .gradle/loom-cache
             ~/.gradle/caches
-            ~/.gradle/loom-cache
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
           restore-keys: |
@@ -40,7 +41,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew chiseledBuildAndCollect --stacktrace
+        run: ./gradlew buildAndCollect --stacktrace
 
       - name: Extract current branch name and version
         shell: bash

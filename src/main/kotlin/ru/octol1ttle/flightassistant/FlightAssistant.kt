@@ -15,7 +15,7 @@ import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 
-object FlightAssistant  {
+object FlightAssistant {
     const val MOD_ID: String = "flightassistant"
     internal val mc: Minecraft = Minecraft.getInstance()
     internal val logger: Logger = LoggerFactory.getLogger("FlightAssistant")

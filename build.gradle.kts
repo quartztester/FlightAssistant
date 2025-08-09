@@ -28,12 +28,10 @@ val minecraftVersionRange = prop("mod.mc_version_range")
 // See https://stonecutter.kikugie.dev/stonecutter/guide/comments#condition-constants
 val loader: String = name.split("-")[1]
 stonecutter {
-    consts(
-        "fabric" to (loader == "fabric"),
-        "neoforge" to (loader == "neoforge"),
-        "forge" to (loader == "forge"),
-        "do-a-barrel-roll" to hasProperty("deps.dabr")
-    )
+    constants {
+        match(loader, "fabric", "neoforge", "forge")
+        put("do-a-barrel-roll", hasProperty("deps.dabr"))
+    }
 }
 
 base { archivesName.set("${mod.id}-$loader") }
@@ -128,9 +126,7 @@ modstitch {
 // use the modstitch.createProxyConfigurations(sourceSets["client"]) function.
 dependencies {
     modstitch.loom {
-        ifFindProperty("deps.fapi") {
-            modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:$it")
-        }
+        modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fapi")}")
         modstitchModImplementation("net.fabricmc:fabric-language-kotlin:${property("deps.flk")}+kotlin.2.1.0")
         modstitchModImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")
     }
