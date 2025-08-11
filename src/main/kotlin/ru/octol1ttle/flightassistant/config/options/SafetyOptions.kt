@@ -15,7 +15,7 @@ class SafetyOptions {
     var elytraDurabilityAlertMode: AlertMode = AlertMode.WARNING_AND_CAUTION
     @SerialEntry
     var elytraAutoOpen: Boolean = true
-    @SerialEntry
+    @SerialEntry @Deprecated("Functionality not possible in vanilla")
     var elytraCloseUnderwater: Boolean = true
 
     @SerialEntry
@@ -67,6 +67,8 @@ class SafetyOptions {
         this.alertVolume = 0.0f
 
         this.elytraDurabilityAlertMode = AlertMode.DISABLED
+        this.elytraAutoOpen = false
+        this.elytraCloseUnderwater = false
 
         this.stallAlertMode = AlertMode.DISABLED
         this.stallLimitPitch = false
@@ -79,12 +81,14 @@ class SafetyOptions {
 
         this.sinkRateAlertMode = AlertMode.DISABLED
         this.sinkRateLimitPitch = false
+        this.sinkRateAutoThrust = false
         this.sinkRateAutoPitch = false
 
         this.obstacleAlertMode = AlertMode.DISABLED
         this.obstacleLimitPitch = false
         this.obstacleAutoPitch = false
 
+        this.fireworkExplosiveAlert = false
         this.fireworkLockExplosive = false
         return this
     }
