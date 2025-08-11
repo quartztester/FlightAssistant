@@ -23,10 +23,11 @@ alert.flightassistant:
     critical_durability: КРИТ ПРОЧНОСТЬ
   fault:
     computer:
-      reset: ' -СИСТЕМА: ВКЛ/СБРОС'
+      reset: ' -СИСТЕМА: ВЫКЛ ЗАТЕМ ВКЛ'
     hud:
       .: HUD
-      reset: ' -ИНДИК: ВКЛ/СБРОС'
+      data: ОТКАЗ ДАНН ИНД
+      reset: ' -ИНДИК: ВЫКЛ ЗАТЕМ ВКЛ'
       flightassistant:altitude: ОТКАЗ ИНД ВЫС
       flightassistant:attitude: ОТКАЗ ИНД ОРИЕНТ
       flightassistant:automation_modes: ОТКАЗ ИНД АВТО РЕЖИМ
@@ -54,8 +55,9 @@ alert.flightassistant:
       use_manual_pitch: ' -РУЧН УПР УГЛ НАКЛ: ИСПОЛЬЗ'
     protections_lost:
       .: ЗАЩИТЫ ПОТЕРЯНЫ
-      enable_air_data: ' -КОМП ДАННЫХ ПОЛЕТА: ВКЛ/СБРОС'
-      enable_pitch: ' -КОМП УГЛА НАКЛ: ВКЛ/СБРОС'
+      enable_air_data: ' -КОМП ДАННЫХ ПОЛЕТА: ВЫКЛ ЗАТЕМ ВКЛ'
+      enable_pitch: ' -КОМП УГЛА НАКЛ: ВЫКЛ ЗАТЕМ ВКЛ'
+      enable_prot_sys: ' -КОМП ЗАЩИТ: ВЫКЛ ЗАТЕМ ВКЛ'
       max_pitch: ' МАКС УГОЛ НАКЛ: 55* ВВЕРХ'
       min_pitch: ' МИН УГОЛ НАКЛ: 35* ВНИЗ'
       maneuver_with_care: ' МАНЕВРИРУЙ С ОСТОРОЖНОСТЬЮ'
@@ -233,6 +235,7 @@ menu.flightassistant:
         flightassistant:heading: Индикатор курса
         flightassistant:radar_altitude: Радиовысотомер
         flightassistant:speed: Индикатор скорости
+        flightassistant:status: Индикатор статуса
         flightassistant:velocity_components: Индикатор Г/С и В/С
       computer:
         flightassistant:air_data: Компьютер данных полёта

@@ -49,6 +49,7 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.PitchComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.RollComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer
 import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
+import ru.octol1ttle.flightassistant.impl.computer.data.HudDisplayDataComputer
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 
 class AlertComputer(computers: ComputerBus, private val soundManager: SoundManager) : Computer(computers) {
@@ -84,6 +85,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
         )
         register(
             AlertCategory(Component.translatable("alert.flightassistant.fault.hud"))
+                .add(ComputerFaultAlert(computers, HudDisplayDataComputer.ID, Component.translatable("alert.flightassistant.fault.hud.data")))
                 .addAll(HudDisplayHost.identifiers().map { DisplayFaultAlert(computers, it) })
         )
         register(

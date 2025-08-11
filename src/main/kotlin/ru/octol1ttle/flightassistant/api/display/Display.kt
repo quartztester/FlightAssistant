@@ -9,8 +9,11 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerBus
  */
 abstract class Display(val computers: ComputerBus) {
     var enabled: Boolean = true
+        internal set
     var faulted: Boolean = false
+        internal set
     var faultCount: Int = 0
+        internal set
 
     abstract fun allowedByConfig(): Boolean
     abstract fun render(guiGraphics: GuiGraphics)

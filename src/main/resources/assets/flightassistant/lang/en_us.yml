@@ -19,10 +19,11 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
     critical_durability: CRIT DURABILITY
   fault:
     computer:
-      reset: ' -SYSTEM: ON/RESET'
+      reset: ' -SYSTEM: OFF THEN ON'
     hud:
       .: HUD
-      reset: ' -DISPLAY: ON/RESET'
+      reset: ' -DISPLAY: OFF THEN ON'
+      data: DATA SYS FAULT
       flightassistant:altitude: ALT DSPL FAULT
       flightassistant:attitude: ATT DSPL FAULT
       flightassistant:automation_modes: AUTO MODE DSPL FAULT
@@ -50,8 +51,9 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
       use_manual_pitch: ' -MAN PITCH OVRD: USE'
     protections_lost:
       .: PROTECT LOST
-      enable_air_data: ' -AIR DATA: ON/RESET'
-      enable_pitch: ' -PITCH SYS: ON/RESET'
+      enable_air_data: ' -AIR DATA: OFF THEN ON'
+      enable_pitch: ' -PITCH SYS: OFF THEN ON'
+      enable_prot_sys: ' -PROT SYS: OFF THEN ON'
       max_pitch: ' MAX PITCH: 55* UP'
       min_pitch: ' MIN PITCH: 35* DOWN'
       maneuver_with_care: ' MANEUVER WITH CARE'
@@ -229,6 +231,7 @@ menu.flightassistant:
         flightassistant:heading: Heading display
         flightassistant:radar_altitude: Radar altitude display
         flightassistant:speed: Speed display
+        flightassistant:status: Status display
         flightassistant:velocity_components: G/S & V/S display
       computer:
         flightassistant:air_data: Air data computer

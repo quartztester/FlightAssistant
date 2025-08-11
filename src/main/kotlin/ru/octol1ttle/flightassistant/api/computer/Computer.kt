@@ -8,16 +8,19 @@ abstract class Computer(val computers: ComputerBus) {
      * Whether or not this computer is enabled. Disabled computers do not tick.
      */
     var enabled: Boolean = true
+        internal set
 
     /**
      * Whether or not this computer has faulted. This value is set to false when the computer is turned off.
      */
     var faulted: Boolean = false
+        internal set
 
     /**
      * The amount of times this computer has faulted.
      */
     var faultCount: Int = 0
+        internal set
 
     fun isDisabledOrFaulted(): Boolean {
         return !enabled || faulted

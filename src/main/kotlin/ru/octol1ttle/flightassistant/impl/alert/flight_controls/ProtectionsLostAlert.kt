@@ -23,13 +23,17 @@ class ProtectionsLostAlert(computers: ComputerBus) : Alert(computers), ECAMAlert
         i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost"), firstLineX, firstLineY, cautionColor)
 
         var y: Int = firstLineY + 1
-        if (!computers.data.enabled && computers.data.faultCount <= 1) {
+        if (computers.data.isDisabledOrFaulted() && computers.data.faultCount <= 1) {
             y += 10
             i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_air_data"), otherLinesX, y, primaryAdvisoryColor)
         }
-        if (!computers.pitch.enabled && computers.pitch.faultCount <= 1) {
+        if (computers.pitch.isDisabledOrFaulted() && computers.pitch.faultCount <= 1) {
             y += 10
             i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_pitch"), otherLinesX, y, primaryAdvisoryColor)
+        }
+        if (computers.protections.faultCount <= 1) {
+            y += 10
+            i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.enable_prot_sys"), otherLinesX, y, primaryAdvisoryColor)
         }
         y += 10
         i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_controls.protections_lost.max_pitch"), otherLinesX, y, primaryAdvisoryColor)
