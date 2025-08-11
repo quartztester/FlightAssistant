@@ -10,7 +10,7 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 
 data class TakeoffThrustMode(val data: FlightPlanComputer.DepartureData) : AutoFlightComputer.ThrustMode {
-    override fun getControlInput(computers: ComputerBus): ControlInput? {
+    override fun getControlInput(computers: ComputerBus): ControlInput {
         return ControlInput(
             data.takeoffThrust,
             ControlInput.Priority.NORMAL,
@@ -20,7 +20,7 @@ data class TakeoffThrustMode(val data: FlightPlanComputer.DepartureData) : AutoF
 }
 
 data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
-    override fun getControlInput(computers: ComputerBus): ControlInput? {
+    override fun getControlInput(computers: ComputerBus): ControlInput {
         val currentThrust: Float = computers.thrust.current
         val currentSpeed: Double = computers.data.forwardVelocity.length() * 20
         val acceleration: Double = computers.data.forwardAcceleration * 20

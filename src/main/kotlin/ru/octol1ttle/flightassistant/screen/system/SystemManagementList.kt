@@ -10,40 +10,23 @@ import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
-import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
 import ru.octol1ttle.flightassistant.api.util.extensions.font
+import ru.octol1ttle.flightassistant.screen.components.FABaseList
 
-class SystemManagementList(width: Int, height: Int, top: Int, @Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") bottom: Int, left: Int, baseKey: String, controller: ModuleController<*>) : ContainerObjectSelectionList<SystemManagementList.Entry>(
-    mc, width, height, top,
-    /*? if <1.21 {*/ bottom, //?}
-    25) {
+class SystemManagementList(width: Int, height: Int, y0: Int, y1: Int, baseKey: String, controller: ModuleController<*>)
+    : FABaseList<SystemManagementList.Entry>(width, height, y0, y1, ITEM_HEIGHT) {
     init {
-//? if <1.21 {
-        setRenderBackground(false)
-        setRenderTopAndBottom(false)
-//?}
-        var y: Int = top + Y_OFFSET
+        var y: Int = y0 + Y_OFFSET
         for (module: ResourceLocation in controller.identifiers()) {
             this.addEntry(
                 Entry(
-                    left, y, width, module, Component.translatable("$baseKey.$module"), controller
+                    x0, y, width, module, Component.translatable("$baseKey.$module"), controller
                 )
             )
-            y += 25
+            y += ITEM_HEIGHT
         }
-    }
-
-//? if >=1.21.4 {
-    /*override fun scrollBarX(): Int {
-*///?} else
-    override fun getScrollbarPosition(): Int {
-        return this.width - 6
-    }
-
-    override fun getRowWidth(): Int {
-        return this.width
     }
 
     class Entry(val x: Int, val y: Int, private val listWidth: Int, private val identifier: ResourceLocation, displayName: Component, private val controller: ModuleController<*>) : ContainerObjectSelectionList.Entry<Entry>() {
@@ -54,12 +37,12 @@ class SystemManagementList(width: Int, height: Int, top: Int, @Suppress("UNUSED_
             controller.toggleEnabled(identifier)
         }.pos(x, y).width(60).build()
 
-        override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, partialTick: Float) {
+        override fun render(guiGraphics: GuiGraphics, index: Int, top: Int, left: Int, width: Int, height: Int, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
             val renderY: Int = y + Y_OFFSET
 
             this@Entry.displayName.x = this.x + 10
             this@Entry.displayName.y = renderY
-            this@Entry.displayName.render(context, mouseX, mouseY, partialTick)
+            this@Entry.displayName.render(guiGraphics, mouseX, mouseY, partialTick)
 
             toggleButton.x = this.x + this.listWidth - toggleButton.width - 10
             toggleButton.y = renderY - toggleButton.height / 4 - 1
@@ -67,26 +50,24 @@ class SystemManagementList(width: Int, height: Int, top: Int, @Suppress("UNUSED_
                 if (controller.isEnabled(identifier))
                     if (controller.modulesResettable) OFF_RESET_TEXT else OFF_TEXT
                 else ON_TEXT
-            toggleButton.render(context, mouseX, mouseY, partialTick)
+            toggleButton.render(guiGraphics, mouseX, mouseY, partialTick)
 
             offText.x = toggleButton.x - this.listWidth / 12 - font.width(OFF_TEXT)
             offText.y = renderY
-            @Suppress("UsePropertyAccessSyntax")
             offText.setColor(if (controller.isEnabled(identifier)) ChatFormatting.DARK_GRAY.color!! else 0xFFFFFF)
-            offText.render(context, mouseX, mouseY, partialTick)
+            offText.render(guiGraphics, mouseX, mouseY, partialTick)
 
             faultText.x = offText.x - font.width(FAULT_TEXT)
             faultText.y = renderY
-            @Suppress("UsePropertyAccessSyntax")
             faultText.setColor(if (controller.isFaulted(identifier)) cautionColor else ChatFormatting.DARK_GRAY.color!!)
-            faultText.render(context, mouseX, mouseY, partialTick)
+            faultText.render(guiGraphics, mouseX, mouseY, partialTick)
         }
 
-        override fun children(): MutableList<out GuiEventListener> {
+        override fun children(): List<GuiEventListener> {
             return ImmutableList.of(this@Entry.displayName, faultText, offText, toggleButton)
         }
 
-        override fun narratables(): MutableList<out NarratableEntry> {
+        override fun narratables(): List<NarratableEntry> {
             return ImmutableList.of(this@Entry.displayName, faultText, offText, toggleButton)
         }
 
@@ -99,6 +80,7 @@ class SystemManagementList(width: Int, height: Int, top: Int, @Suppress("UNUSED_
     }
 
     companion object {
-        const val Y_OFFSET: Int = 5
+        private const val Y_OFFSET: Int = 5
+        private const val ITEM_HEIGHT: Int = 25
     }
 }

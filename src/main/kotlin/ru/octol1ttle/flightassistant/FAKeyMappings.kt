@@ -30,7 +30,7 @@ object FAKeyMappings {
         toggleEnabled = addKeyMapping("toggle_enabled", -1)
         openFlightAssistantSetup = addKeyMapping("open_flightassistant_setup", GLFW.GLFW_KEY_KP_ENTER)
 
-        autopilotDisconnect = addKeyMapping("autopilot_disconnect", GLFW.GLFW_KEY_CAPS_LOCK)
+        autopilotDisconnect = addKeyMapping("autopilot_disconnect", GLFW.GLFW_KEY_CAPS_LOCK) // TODO: replace with "Toggle FD", "Toggle A/T", "Toggle AP"
         manualPitchOverride = addKeyMapping("manual_pitch_override", GLFW.GLFW_KEY_RIGHT_ALT)
 
         hideCurrentAlert = addKeyMapping("hide_current_alert", GLFW.GLFW_KEY_KP_0)

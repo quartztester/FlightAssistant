@@ -8,8 +8,8 @@ import ru.octol1ttle.flightassistant.config.FAConfigScreen
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 import ru.octol1ttle.flightassistant.screen.autoflight.AutoFlightScreen
-import ru.octol1ttle.flightassistant.screen.fms.DepartureScreen
-import ru.octol1ttle.flightassistant.screen.fms.EnrouteScreen
+import ru.octol1ttle.flightassistant.screen.fms.departure.DepartureScreen
+import ru.octol1ttle.flightassistant.screen.fms.enroute.EnrouteScreen
 import ru.octol1ttle.flightassistant.screen.system.SystemManagementScreen
 
 class FlightAssistantSetupScreen : FABaseScreen(Component.translatable("menu.flightassistant")) {

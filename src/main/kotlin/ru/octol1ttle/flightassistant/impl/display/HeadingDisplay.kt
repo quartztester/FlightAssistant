@@ -86,10 +86,10 @@ class HeadingDisplay(computers: ComputerBus) : Display(computers) {
             enableScissor(left, 0, right, guiHeight())
             drawMiddleAlignedString(
                 when (wrappedHeading) {
-                    0, 360 -> "-Z"
-                    90 -> "+X"
-                    180 -> "+Z"
-                    270 -> "-X"
+                    0, 360 -> "Z-"
+                    90 -> "X+"
+                    180 -> "Z+"
+                    270 -> "X-"
                     else -> throw IllegalArgumentException("Degree range out of bounds: $heading")
                 }, textX, y + 12, primaryColor
             )

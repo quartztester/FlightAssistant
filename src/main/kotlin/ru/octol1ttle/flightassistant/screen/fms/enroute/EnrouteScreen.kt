@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.screen.fms
+package ru.octol1ttle.flightassistant.screen.fms.enroute
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -7,7 +7,7 @@ import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 
-class EnrouteScreen : FABaseScreen(Component.translatable("menu.flightassistant.fms.departure")) {
+class EnrouteScreen : FABaseScreen(Component.translatable("menu.flightassistant.fms.enroute")) {
     private lateinit var discardChanges: Button
 
     override fun init() {
@@ -22,7 +22,7 @@ class EnrouteScreen : FABaseScreen(Component.translatable("menu.flightassistant.
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->
             lastState = state.copy()
-            state.apply(computers.plan)
+            state.save(computers.plan)
             this.onClose()
         }.pos(this.width - 90, this.height - 30).width(80).build())
     }

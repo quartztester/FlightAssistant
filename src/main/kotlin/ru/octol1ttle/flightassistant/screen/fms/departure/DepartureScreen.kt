@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.screen.fms
+package ru.octol1ttle.flightassistant.screen.fms.departure
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -43,13 +43,13 @@ class DepartureScreen : FABaseScreen(Component.translatable("menu.flightassistan
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->
             lastState = state.copy()
-            state.apply(computers.plan)
+            state.save(computers.plan)
             this.onClose()
         }.pos(this.width - 90, this.height - 30).width(80).build())
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        discardChanges.active = !state.equals(lastState)
+        discardChanges.active = state != lastState
 
         super.render(guiGraphics, mouseX, mouseY, delta)
     }
