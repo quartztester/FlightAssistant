@@ -92,12 +92,8 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
     internal fun sendRegistrationEvent() {
         registerBuiltin()
         ComputerRegistrationCallback.EVENT.invoker().register(this, this::register)
-        for (computer: Computer in computers.values) {
-            computer.subscribeToEvents()
-        }
-        for (computer: Computer in computers.values) {
-            computer.invokeEvents()
-        }
+        computers.values.forEach(Computer::subscribeToEvents)
+        computers.values.forEach(Computer::invokeEvents)
 
         logRegisterComplete()
     }

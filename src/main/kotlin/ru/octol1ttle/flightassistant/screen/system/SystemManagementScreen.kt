@@ -15,9 +15,7 @@ class SystemManagementScreen(title: Component, private val baseKey: String, priv
 
         val top = 20
         val bottom: Int = this.height - 40
-        val height: Int = bottom - top
-
-        this.addRenderableWidget(SystemManagementList(this.width, height, top, bottom, baseKey, controller))
+        this.addRenderableWidget(SystemManagementList(top, bottom, this.width, baseKey, controller))
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->
             this.onClose()

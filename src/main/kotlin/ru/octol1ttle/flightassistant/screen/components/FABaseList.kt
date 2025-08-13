@@ -4,8 +4,7 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 
 abstract class FABaseList<E : ContainerObjectSelectionList.Entry<E>>
-    (width: Int, height: Int, y0: Int, @Suppress("UNUSED_PARAMETER", "KotlinRedundantDiagnosticSuppress") y1: Int, itemHeight: Int)
-    : ContainerObjectSelectionList<E>(mc, width, height, y0, /*? if <1.21 {*/ y1, /*?}*/ itemHeight) {
+    (y0: Int, y1: Int, width: Int, itemHeight: Int) : ContainerObjectSelectionList<E>(mc, width, y1 - y0, y0, /*? if <1.21 {*/ y1, /*?}*/ itemHeight) {
     init {
 //? if <1.21 {
         setRenderBackground(false)

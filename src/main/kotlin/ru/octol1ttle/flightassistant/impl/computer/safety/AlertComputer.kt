@@ -189,9 +189,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
 
         categories.sortBy { it.getHighestPriority() ?: Int.MAX_VALUE }
 
-        for (list: ChangeTrackingArrayList<Alert> in alertLists.values) {
-            list.startTracking()
-        }
+        alertLists.values.forEach(ChangeTrackingArrayList<*>::startTracking)
 
         for (alert: Alert in categories.flatMap { it.activeAlerts } ) {
             alertLists.computeIfAbsent(alert.data) { return@computeIfAbsent ChangeTrackingArrayList<Alert>() }.add(alert)

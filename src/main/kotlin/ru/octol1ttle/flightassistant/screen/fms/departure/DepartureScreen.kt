@@ -55,7 +55,7 @@ class DepartureScreen : FABaseScreen(Component.translatable("menu.flightassistan
     }
 
     companion object {
-        var lastState: DepartureScreenState = DepartureScreenState()
-        var state: DepartureScreenState = DepartureScreenState()
+        private var lastState: DepartureScreenState = DepartureScreenState()
+        private var state: DepartureScreenState = DepartureScreenState()
     }
 }

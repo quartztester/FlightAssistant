@@ -335,6 +335,7 @@ short.flightassistant:
   auto_thrust: А/Т
   autopilot: АП
   automation_modes: АВТО/РЕЖИМ
+  distance: ДИСТ
   elytra: ЭЛ
   elytra_durability: ПРЧН/ЭЛ
   flight_directors: УКАЗАТ
@@ -347,6 +348,7 @@ short.flightassistant:
   radar_altitude: Р/ВЫС
   speed: СКОР
   status: СТАТУС
+  time: ВРЕМ
   vertical_speed: 'В/С%s'
   void: ПУСТ
 

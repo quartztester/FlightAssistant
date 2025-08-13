@@ -28,7 +28,7 @@ class CycleTextOnlyButton<E : NameableEnum>(x: Int, y: Int, private val entries:
         val message: Component = TextOnlyButton.getMessageComponent(this)
 
         this.width = font.width(message)
-        guiGraphics.drawString(font, message, this.x, this.y, 0xFFFFFFFF.toInt())
+        guiGraphics.drawString(font, message, this.x, this.y, ChatFormatting.WHITE.color!!)
     }
 
     override fun onPress() {
