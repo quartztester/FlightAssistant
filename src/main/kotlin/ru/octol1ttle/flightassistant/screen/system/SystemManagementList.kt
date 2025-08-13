@@ -34,7 +34,7 @@ class SystemManagementList(width: Int, height: Int, y0: Int, y1: Int, baseKey: S
         }.pos(x, y).width(60).build()
 
         override fun render(guiGraphics: GuiGraphics, index: Int, top: Int, left: Int, width: Int, height: Int, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
-            val renderY: Int = y + Y_OFFSET
+            val renderY: Int = top + Y_OFFSET
 
             this@Entry.displayName.x = this.x + 10
             this@Entry.displayName.y = renderY
