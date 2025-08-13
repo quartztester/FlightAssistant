@@ -20,11 +20,7 @@ class SystemManagementList(width: Int, height: Int, y0: Int, y1: Int, baseKey: S
     init {
         var y: Int = y0 + Y_OFFSET
         for (module: ResourceLocation in controller.identifiers()) {
-            this.addEntry(
-                Entry(
-                    x0, y, width, module, Component.translatable("$baseKey.$module"), controller
-                )
-            )
+            this.addEntry(Entry(0, y, width, module, Component.translatable("$baseKey.$module"), controller))
             y += ITEM_HEIGHT
         }
     }

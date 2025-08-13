@@ -202,7 +202,7 @@ publishMods {
 val buildAndCollect = tasks.register<Copy>("buildAndCollect") {
     group = "build"
     from(modstitch.finalJarTask.get().archiveFile)
-    into(rootProject.layout.buildDirectory.file("libs/${mod.version}"))
+    into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
     dependsOn("build")
 }
 

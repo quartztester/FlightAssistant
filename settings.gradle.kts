@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        mavenLocal()
         maven("https://jitpack.io")
 
         gradlePluginPortal()
@@ -27,7 +28,7 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.7.6"
+    id("dev.kikugie.stonecutter") version "0.7.8"
 }
 
 stonecutter {
@@ -36,7 +37,7 @@ stonecutter {
 
     create(rootProject) {
         fun mc(version: String, vararg loaders: String) {
-            for (it in loaders) vers("$version-$it", version)
+            for (it in loaders) version("$version-$it", version)
         }
         mc("1.20.1", "fabric", "forge")
         mc("1.21.1", "fabric", "neoforge")
