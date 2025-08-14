@@ -19,7 +19,7 @@ class EnrouteScreenState(
         return this.waypoints.size == other.waypoints.size && this.waypoints.all { other.waypoints.contains(it) }
     }
 
-    data class Waypoint(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val altitude: Int = 0, val speed: Int = 0) {
+    data class Waypoint(var coordinatesX: Int = 0, var coordinatesZ: Int = 0, var altitude: Int = 0, var speed: Int = 0) {
         fun toEnrouteWaypoint() {
             TODO()
         }

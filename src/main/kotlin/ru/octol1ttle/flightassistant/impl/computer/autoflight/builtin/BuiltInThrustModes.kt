@@ -21,6 +21,7 @@ data class TakeoffThrustMode(val data: FlightPlanComputer.DepartureData) : AutoF
 
 data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
     override fun getControlInput(computers: ComputerBus): ControlInput {
+        // TODO: runs every frame but velocity changes only every tick
         val currentThrust: Float = computers.thrust.current
         val currentSpeed: Double = computers.data.forwardVelocity.length() * 20
         val acceleration: Double = computers.data.forwardAcceleration * 20

@@ -95,7 +95,7 @@ class AutoFlightScreen(parent: Screen) : FABaseScreen(parent, Component.translat
             AutoFlightScreenState.ThrustMode.SPEED -> {
                 val string: SmartStringWidget = this.addRenderableWidget(SmartStringWidget(baseX, baseY, Component.translatable("menu.flightassistant.autoflight.target.speed")))
                 refreshableElements.add(string)
-                refreshableElements.add(this.addRenderableWidget(TypeStrictEditBox(string.x + string.width, string.y - 2, baseWidth, baseHeight, state.targetSpeed, { state.targetSpeed = it }, String::toIntOrNullWithFallback, { it >= 0 })))
+                refreshableElements.add(this.addRenderableWidget(TypeStrictEditBox(string.x + string.width, string.y - 2, baseWidth, baseHeight, state.targetSpeed, { state.targetSpeed = it }, String::toIntOrNullWithFallback) { it >= 0 }))
                 baseY += 16
             }
 

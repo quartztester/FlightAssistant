@@ -27,7 +27,7 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
             this.addRenderableWidget(SmartStringWidget((this.width * (max(0.4f, i.toFloat()) / optimumColumnsSize)).toInt(), Y0, component).setColor(ChatFormatting.GRAY.color!!))
         }
 
-        this.addRenderableWidget(EnrouteWaypointsList(0, Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize))
+        this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize))
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
             state = lastState.copy()
@@ -55,7 +55,7 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         private const val Y0: Int = 30
 
         private val COLUMNS: Array<Component> = arrayOf(literal("#"), literal("X"), literal("Z"), translatable("short.flightassistant.altitude"), translatable("short.flightassistant.speed"), translatable("short.flightassistant.distance"), translatable("short.flightassistant.time"))
-        private const val HOVERING_COLUMNS_MARGIN: Float = 1.5f
+        private const val HOVERING_COLUMNS_MARGIN: Float = 0.75f
 
         private var lastState: EnrouteScreenState = EnrouteScreenState()
         private var state: EnrouteScreenState = EnrouteScreenState()

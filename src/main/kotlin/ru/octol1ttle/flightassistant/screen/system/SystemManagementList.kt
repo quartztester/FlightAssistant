@@ -1,7 +1,5 @@
 package ru.octol1ttle.flightassistant.screen.system
 
-import com.google.common.collect.ImmutableList
-import com.ibm.icu.lang.UCharacter.GraphemeClusterBreak.T
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -31,8 +29,9 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
             controller.toggleEnabled(identifier)
         }.pos(xOffset, 0).width(60).build()
 
+        val children = listOf(this.displayName, faultText, offText, toggleButton)
+
         override fun render(guiGraphics: GuiGraphics, index: Int, top: Int, left: Int, width: Int, height: Int, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
-            T
             displayName.x = this.xOffset
             displayName.y = top
             displayName.render(guiGraphics, mouseX, mouseY, partialTick)
@@ -57,11 +56,11 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
         }
 
         override fun children(): List<GuiEventListener> {
-            return ImmutableList.of(this.displayName, faultText, offText, toggleButton)
+            return children
         }
 
         override fun narratables(): List<NarratableEntry> {
-            return ImmutableList.of(this.displayName, faultText, offText, toggleButton)
+            return children
         }
 
         companion object {
