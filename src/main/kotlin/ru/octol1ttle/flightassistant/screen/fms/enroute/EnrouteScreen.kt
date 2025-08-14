@@ -10,11 +10,14 @@ import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Component.literal
 import net.minecraft.network.chat.Component.translatable
+import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedString
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 
 class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatable("menu.flightassistant.fms.enroute")) {
     private lateinit var discardChanges: Button
+    private lateinit var save: Button
+    private lateinit var done: Button
 
     override fun init() {
         super.init()
@@ -27,28 +30,38 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
             this.addRenderableWidget(SmartStringWidget((this.width * (max(0.4f, i.toFloat()) / optimumColumnsSize)).toInt(), Y0, component).setColor(ChatFormatting.GRAY.color!!))
         }
 
-        this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize))
+        val list: EnrouteWaypointsList = this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize, state) { !state.equals(lastState) })
+
+        this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.enroute.add_waypoint")) {
+            state.waypoints.add(EnrouteScreenState.Waypoint())
+            list.rebuildEntries()
+        }.bounds(this.centerX - 50, this.height - Y0 * 2 + 5, 100, 20).build())
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
             state = lastState.copy()
             this.rebuildWidgets()
-        }.pos(this.width - 200, this.height - 30).width(100).build())
+        }.pos(this.width - 290, this.height - 30).width(100).build())
 
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->
+        save = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.save")) { _: Button? ->
+            lastState = state.copy()
+        }.pos(this.width - 180, this.height - 30).width(80).build())
+
+        done = this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->
             this.onClose()
         }.pos(this.width - 90, this.height - 30).width(80).build())
     }
 
-    override fun onClose() {
-        lastState = state.copy()
-        state.save(computers.plan)
-        super.onClose()
-    }
-
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        discardChanges.active = !state.equals(lastState)
+        save.active = !state.equals(lastState)
+        discardChanges.active = save.active
+        done.active = !save.active
 
         super.render(guiGraphics, mouseX, mouseY, delta)
+
+        if (save.active) {
+            val text: Component = Component.translatable("menu.flightassistant.fms.enroute.unsaved_changes")
+            guiGraphics.drawMiddleAlignedString(text, this.width / 4, 7, ChatFormatting.YELLOW.color!!, true)
+        }
     }
 
     companion object {

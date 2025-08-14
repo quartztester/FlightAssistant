@@ -290,8 +290,15 @@ menu.flightassistant:
       .: Вылет
       takeoff_thrust: 'Взлётная тяга (%): '
       minimum_climb_speed: 'Минимальная скорость набора: '
-    enroute: Путь
+    enroute:
+      .: Маршрут
+      add_waypoint: Добавить точку
+      direct_to:
+        .: Прямо-на
+        unsaved_changes: Невозможно использовать Прямо-на, так как есть несохранённые изменения!
+      unsaved_changes: НЕСОХРАНЕН ИЗМЕНЕНИЯ
     arrival: Прибытие
+    save: Сохранить
     discard_changes: Отменить изменения
     coordinates: 'Координаты: '
     elevation: 'Высота: '

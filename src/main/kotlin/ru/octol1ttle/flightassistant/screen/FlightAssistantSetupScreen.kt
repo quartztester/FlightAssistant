@@ -37,24 +37,24 @@ class FlightAssistantSetupScreen : FABaseScreen(null, Component.translatable("me
 
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.autoflight")) {
             this.minecraft!!.setScreen(AutoFlightScreen(this))
-        }.pos(this.centerX - 75, this.centerY - 30).width(150).build())
+        }.pos(this.centerX - 80, this.centerY - 30).width(160).build())
 
         this.addRenderableWidget(StringWidget(0, this.centerY + 5, this.width, this.font.lineHeight, Component.translatable("menu.flightassistant.fms"), this.font))
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.departure")) {
             this.minecraft!!.setScreen(DepartureScreen(this))
-        }.pos(this.centerX - 160, this.centerY + 20).width(100).build())
+        }.pos(this.centerX - 130, this.centerY + 20).width(80).build())
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.enroute")) {
             this.minecraft!!.setScreen(EnrouteScreen(this))
-        }.pos(this.centerX - 50, this.centerY + 20).width(100).build()).active = Platform.isDevelopmentEnvironment()
+        }.pos(this.centerX - 40, this.centerY + 20).width(80).build()).active = Platform.isDevelopmentEnvironment()
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.arrival")) {
             //this.minecraft!!.setScreen(FlightPlanScreen())
-        }.pos(this.centerX + 60, this.centerY + 20).width(100).build()).active = Platform.isDevelopmentEnvironment()
+        }.pos(this.centerX + 50, this.centerY + 20).width(80).build()).active = Platform.isDevelopmentEnvironment()
 
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.config")) {
             this.minecraft!!.setScreen(FAConfigScreen.generate(this))
-        }.pos(10, this.height - 30).width(100).build())
+        }.pos(10, this.height - 30).width(120).build())
 
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL) { _: Button? ->
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->
             this.onClose()
         }.pos(this.width - 90, this.height - 30).width(80).build())
     }

@@ -78,24 +78,24 @@ fun textWidth(text: String): Int {
     return font.width(text)
 }
 
-fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int) {
-    drawString(font, text, x, y, color, false)
+fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+    drawString(font, text, x, y, color, shadow)
 }
 
-fun GuiGraphics.drawRightAlignedString(text: String, x: Int, y: Int, color: Int) {
-    drawString(font, text, x - font.width(text), y, color, false)
+fun GuiGraphics.drawRightAlignedString(text: String, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+    drawString(font, text, x - font.width(text), y, color, shadow)
 }
 
-fun GuiGraphics.drawMiddleAlignedString(text: String, x: Int, y: Int, color: Int) {
-    drawString(font, text, x - font.width(text) / 2 + 1, y, color, false)
+fun GuiGraphics.drawMiddleAlignedString(text: String, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+    drawString(font, text, x - font.width(text) / 2 + 1, y, color, shadow)
 }
 
 fun textWidth(formattedText: FormattedText): Int {
     return font.width(formattedText)
 }
 
-fun GuiGraphics.drawString(text: Component, x: Int, y: Int, color: Int): Int {
-    drawString(font, text, x, y, color, false)
+fun GuiGraphics.drawString(text: Component, x: Int, y: Int, color: Int, shadow: Boolean = false): Int {
+    drawString(font, text, x, y, color, shadow)
     return 1
 }
 
@@ -107,15 +107,15 @@ private fun getContrasting(original: Int): Int {
     return if (luma > 0.5) Color.BLACK.rgb else Color.WHITE.rgb
 }
 
-fun GuiGraphics.drawRightAlignedString(text: Component, x: Int, y: Int, color: Int) {
-    drawString(font, text, x - textWidth(text), y, color, false)
+fun GuiGraphics.drawRightAlignedString(text: Component, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+    drawString(font, text, x - textWidth(text), y, color, shadow)
 }
 
-fun GuiGraphics.drawMiddleAlignedString(text: Component, x: Int, y: Int, color: Int) {
-    drawString(font, text, x - textWidth(text) / 2 + 1, y, color, false)
+fun GuiGraphics.drawMiddleAlignedString(text: Component, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+    drawString(font, text, x - textWidth(text) / 2 + 1, y, color, shadow)
 }
 
-fun GuiGraphics.drawHighlightedCenteredText(text: Component, x: Int, y: Int, color: Int, highlight: Boolean) {
+fun GuiGraphics.drawHighlightedCenteredText(text: Component, x: Int, y: Int, color: Int, highlight: Boolean, shadow: Boolean = false) {
     pose().push()
 
     if (highlight) {
@@ -123,9 +123,9 @@ fun GuiGraphics.drawHighlightedCenteredText(text: Component, x: Int, y: Int, col
         fill(x - halfWidth - 1, y - 1, x + halfWidth + 2, y + 8, color)
 //? if <1.21.6
         pose().translate(0.0f, 0.0f, 100.0f)
-        drawMiddleAlignedString(text, x, y, getContrasting(color))
+        drawMiddleAlignedString(text, x, y, getContrasting(color), shadow)
     } else {
-        drawMiddleAlignedString(text, x, y, color)
+        drawMiddleAlignedString(text, x, y, color, shadow)
     }
 
     pose().pop()
