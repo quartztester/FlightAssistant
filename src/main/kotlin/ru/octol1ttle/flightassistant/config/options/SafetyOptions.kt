@@ -36,6 +36,7 @@ class SafetyOptions {
     @SerialEntry
     var voidAutoPitch: Boolean = true
 
+    // TODO: Early/Medium/Late setting for GPWS reaction
     @SerialEntry
     var sinkRateAlertMode: AlertMode = AlertMode.WARNING_AND_CAUTION
     @SerialEntry

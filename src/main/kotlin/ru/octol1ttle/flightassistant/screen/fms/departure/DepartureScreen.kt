@@ -3,6 +3,7 @@ package ru.octol1ttle.flightassistant.screen.fms.departure
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.util.extensions.toIntOrNullWithFallback
@@ -10,7 +11,7 @@ import ru.octol1ttle.flightassistant.screen.FABaseScreen
 import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 import ru.octol1ttle.flightassistant.screen.components.TypeStrictEditBox
 
-class DepartureScreen : FABaseScreen(Component.translatable("menu.flightassistant.fms.departure")) {
+class DepartureScreen(parent: Screen) : FABaseScreen(parent, Component.translatable("menu.flightassistant.fms.departure")) {
     private lateinit var discardChanges: Button
 
     override fun init() {
@@ -18,8 +19,8 @@ class DepartureScreen : FABaseScreen(Component.translatable("menu.flightassistan
 
         this.addRenderableWidget(StringWidget(0, 7, this.width, 9, this.title, this.font))
 
-        val baseX: Int = this.width / 5
-        val baseY: Int = this.height / 4
+        val baseX: Int = this.width / 3
+        val baseY: Int = this.height / 3
         val baseWidth = 36
         val baseHeight = 12
 
@@ -42,10 +43,14 @@ class DepartureScreen : FABaseScreen(Component.translatable("menu.flightassistan
         }.pos(this.width - 200, this.height - 30).width(100).build())
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->
-            lastState = state.copy()
-            state.save(computers.plan)
             this.onClose()
         }.pos(this.width - 90, this.height - 30).width(80).build())
+    }
+
+    override fun onClose() {
+        lastState = state.copy()
+        state.save(computers.plan)
+        super.onClose()
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.events.GuiEventListener
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.util.extensions.toFloatOrNullWithFallback
@@ -15,7 +16,7 @@ import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 import ru.octol1ttle.flightassistant.screen.components.TextOnlyButton
 import ru.octol1ttle.flightassistant.screen.components.TypeStrictEditBox
 
-class AutoFlightScreen : FABaseScreen(Component.translatable("menu.flightassistant.autoflight")) {
+class AutoFlightScreen(parent: Screen) : FABaseScreen(parent, Component.translatable("menu.flightassistant.autoflight")) {
     private lateinit var flightDirectors: TextOnlyButton
     private lateinit var autoThrust: TextOnlyButton
     private lateinit var autopilot: TextOnlyButton

@@ -192,7 +192,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
         alertLists.values.forEach(ChangeTrackingArrayList<*>::startTracking)
 
         for (alert: Alert in categories.flatMap { it.activeAlerts } ) {
-            alertLists.computeIfAbsent(alert.data) { return@computeIfAbsent ChangeTrackingArrayList<Alert>() }.add(alert)
+            alertLists.computeIfAbsent(alert.data) { return@computeIfAbsent ChangeTrackingArrayList() }.add(alert)
         }
     }
 
@@ -200,7 +200,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
         val iterator = sounds.entries.iterator()
         while (iterator.hasNext()) {
             val entry = iterator.next()
-            for (i: Int in 1..FATickCounter.ticksPassed) {
+            repeat(FATickCounter.ticksPassed) {
                 entry.value.tick()
                 soundManager.applyVolume(entry.value)
             }

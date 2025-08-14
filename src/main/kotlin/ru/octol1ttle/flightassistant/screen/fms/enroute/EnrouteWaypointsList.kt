@@ -12,7 +12,7 @@ import ru.octol1ttle.flightassistant.screen.components.FABaseList
 
 class EnrouteWaypointsList(xOffset: Int, y0: Int, y1: Int, width: Int, columns: Float) : FABaseList<EnrouteWaypointsList.Entry>(y0, y1, width, ITEM_HEIGHT) {
     init {
-        for (i: Int in 0..Random.nextInt(1..69)) {
+        repeat(Random.nextInt(1..69)) {
             addEntry(Entry(xOffset, columns, EnrouteScreenState.Waypoint(Random.nextInt(-30_000_000..30_000_000), Random.nextInt(-30_000_000..30_000_000), Random.nextInt(62..620), Random.nextInt(0..420))))
         }
     }

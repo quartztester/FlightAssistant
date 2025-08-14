@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 
-abstract class FABaseScreen(title: Component?) : Screen(title) {
+abstract class FABaseScreen(val parent: Screen?, title: Component) : Screen(title) {
     protected val computers: ComputerBus = ComputerHost
     protected var centerX by Delegates.notNull<Int>()
     protected var centerY by Delegates.notNull<Int>()
@@ -25,6 +25,10 @@ abstract class FABaseScreen(title: Component?) : Screen(title) {
         )
 //?}
         super.render(guiGraphics, mouseX, mouseY, delta)
+    }
+
+    override fun onClose() {
+        this.minecraft!!.setScreen(parent)
     }
 
     override fun isPauseScreen(): Boolean = false

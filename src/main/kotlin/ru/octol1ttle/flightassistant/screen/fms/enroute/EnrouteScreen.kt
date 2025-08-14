@@ -1,11 +1,11 @@
 package ru.octol1ttle.flightassistant.screen.fms.enroute
 
 import kotlin.math.max
-import kotlin.math.min
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Component.literal
@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component.translatable
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 
-class EnrouteScreen : FABaseScreen(Component.translatable("menu.flightassistant.fms.enroute")) {
+class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatable("menu.flightassistant.fms.enroute")) {
     private lateinit var discardChanges: Button
 
     override fun init() {
@@ -35,10 +35,14 @@ class EnrouteScreen : FABaseScreen(Component.translatable("menu.flightassistant.
         }.pos(this.width - 200, this.height - 30).width(100).build())
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->
-            lastState = state.copy()
-            state.save(computers.plan)
             this.onClose()
         }.pos(this.width - 90, this.height - 30).width(80).build())
+    }
+
+    override fun onClose() {
+        lastState = state.copy()
+        state.save(computers.plan)
+        super.onClose()
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
@@ -48,7 +52,6 @@ class EnrouteScreen : FABaseScreen(Component.translatable("menu.flightassistant.
     }
 
     companion object {
-        private const val X0: Int = 15
         private const val Y0: Int = 30
 
         private val COLUMNS: Array<Component> = arrayOf(literal("#"), literal("X"), literal("Z"), translatable("short.flightassistant.altitude"), translatable("short.flightassistant.speed"), translatable("short.flightassistant.distance"), translatable("short.flightassistant.time"))

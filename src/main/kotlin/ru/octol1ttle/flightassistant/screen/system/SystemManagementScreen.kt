@@ -2,12 +2,13 @@ package ru.octol1ttle.flightassistant.screen.system
 
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.StringWidget
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 
-class SystemManagementScreen(title: Component, private val baseKey: String, private val controller: ModuleController<*>) : FABaseScreen(title) {
+class SystemManagementScreen(parent: Screen, title: Component, private val baseKey: String, private val controller: ModuleController<*>) : FABaseScreen(parent, title) {
     override fun init() {
         super.init()
 
