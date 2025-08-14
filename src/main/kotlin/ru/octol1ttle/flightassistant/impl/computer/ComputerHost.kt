@@ -132,9 +132,9 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
         }
     }
 
-    override fun <C, T> guardedCall(computer: C, call: Function<C, T>): T? {
+    override fun <C, T> guardedCall(computer: C, call: (C) -> T): T? {
         try {
-            return call.apply(computer)
+            return call(computer)
         } catch (t: Throwable) {
             if (computer !is Computer) return null
             onComputerFault(computer)
@@ -148,7 +148,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
     override fun <Event : ComputerEvent> dispatchEvent(event: Event) {
         for (computer: Computer in computers.values) {
             if (!computer.isDisabledOrFaulted()) {
-                computer.processEvent(event)
+                guardedCall(computer) { it.processEvent(event) }
             }
         }
     }
@@ -156,7 +156,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
     override fun <Response> dispatchQuery(query: ComputerQuery<Response>): Collection<Response> {
         for (computer: Computer in computers.values) {
             if (!computer.isDisabledOrFaulted()) {
-                computer.processQuery(query)
+                guardedCall(computer) { it.processQuery(query) }
             }
         }
 

@@ -1,6 +1,5 @@
 package ru.octol1ttle.flightassistant.api.computer
 
-import java.util.function.Function
 import ru.octol1ttle.flightassistant.api.ModuleView
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FireworkComputer
@@ -14,7 +13,7 @@ import ru.octol1ttle.flightassistant.impl.computer.data.HudDisplayDataComputer
 import ru.octol1ttle.flightassistant.impl.computer.safety.*
 
 interface ComputerBus : ModuleView<Computer> {
-    fun <C, T> guardedCall(computer: C, call: Function<C, T>): T?
+    fun <C, T> guardedCall(computer: C, call: (C) -> T): T?
     fun <Event : ComputerEvent> dispatchEvent(event: Event)
     fun <Response> dispatchQuery(query: ComputerQuery<Response>): Collection<Response>
 
