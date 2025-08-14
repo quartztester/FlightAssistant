@@ -45,9 +45,9 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Pit
         }
 
         val anyBlocksAbove: Boolean = data.level.getHeight(Heightmap.Types.MOTION_BLOCKING, data.player.blockX, data.player.blockZ) > data.player.y
-        val clearThreshold: Float = if (anyBlocksAbove) 7.5f else 15.0f
-        val cautionThreshold: Float = if (anyBlocksAbove) 5.0f else 10.0f
-        val warningThreshold: Float = if (anyBlocksAbove) 2.5f else 5.0f
+        val clearThreshold: Float = if (anyBlocksAbove) 7.5f else 10.0f
+        val cautionThreshold: Float = if (anyBlocksAbove) 3.0f else 7.5f
+        val warningThreshold: Float = if (anyBlocksAbove) 1.5f else 3.0f
         val recoverThreshold: Float = if (anyBlocksAbove) 0.5f else 0.75f
 
         groundImpactTime = computeGroundImpactTime(data).requireIn(0.0f..Float.MAX_VALUE)

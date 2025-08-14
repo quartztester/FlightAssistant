@@ -18,7 +18,7 @@ class TerrainAheadAlert(computers: ComputerBus) : Alert(computers), CenteredAler
     override val data: AlertData = AlertData.TERRAIN_AHEAD
 
     override fun shouldActivate(): Boolean {
-        return computers.gpws.obstacleImpactStatus == GroundProximityComputer.Status.CAUTION
+        return FAConfig.safety.obstacleAlertMode.caution() && computers.gpws.obstacleImpactStatus == GroundProximityComputer.Status.CAUTION
     }
 
     override fun getAlertMethod(): SafetyOptions.AlertMethod {

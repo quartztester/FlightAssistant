@@ -18,7 +18,7 @@ class SinkRateAlert(computers: ComputerBus) : Alert(computers), CenteredAlert {
     override val data: AlertData = AlertData.SINK_RATE
 
     override fun shouldActivate(): Boolean {
-        return computers.gpws.groundImpactStatus == GroundProximityComputer.Status.CAUTION
+        return FAConfig.safety.sinkRateAlertMode.caution() && computers.gpws.groundImpactStatus == GroundProximityComputer.Status.CAUTION
     }
 
     override fun getAlertMethod(): SafetyOptions.AlertMethod {
