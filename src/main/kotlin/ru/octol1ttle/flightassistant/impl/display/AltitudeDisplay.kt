@@ -27,7 +27,9 @@ class AltitudeDisplay(computers: ComputerBus) : Display(computers) {
             if (FAConfig.display.showAltitudeScale) {
                 renderAltitudeScale(HudFrame.right, centerY)
             }
-            renderAltitudeTarget(HudFrame.right + 2, HudFrame.top - 9)
+            if (FAConfig.display.showAutomationModes) {
+                renderAltitudeTarget(HudFrame.right + 2, HudFrame.top - 9)
+            }
         }
     }
 

@@ -27,7 +27,9 @@ class SpeedDisplay(computers: ComputerBus) : Display(computers) {
             if (FAConfig.display.showSpeedScale) {
                 renderSpeedScale(HudFrame.left, centerY)
             }
-            renderSpeedTarget(HudFrame.left, HudFrame.top - 9)
+            if (FAConfig.display.showAutomationModes) {
+                renderSpeedTarget(HudFrame.left, HudFrame.top - 9)
+            }
         }
     }
 

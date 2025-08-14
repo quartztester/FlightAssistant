@@ -29,7 +29,7 @@ class CoordinatesDisplay(computers: ComputerBus) : Display(computers) {
 
             val color: Int
             val active: AutoFlightComputer.LateralMode? = computers.autoflight.activeLateralMode
-            if (computers.autoflight.getHeadingInput() != null && active is CoordinatesLateralMode) {
+            if (FAConfig.display.showAutomationModes && computers.autoflight.getHeadingInput() != null && active is CoordinatesLateralMode) {
                 color = if (active == computers.autoflight.selectedLateralMode) primaryAdvisoryColor else secondaryAdvisoryColor
                 drawString(active.targetX.toString(), x + textWidth(xText) + 3, y, color)
                 drawString(active.targetX.toString(), x + textWidth(zText) + 3, y + lineHeight, color)

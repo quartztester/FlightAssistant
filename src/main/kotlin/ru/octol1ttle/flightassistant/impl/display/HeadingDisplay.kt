@@ -28,7 +28,9 @@ class HeadingDisplay(computers: ComputerBus) : Display(computers) {
             if (FAConfig.display.showHeadingScale) {
                 renderHeadingScale(centerX, HudFrame.bottom + 1)
             }
-            renderHeadingTarget(centerX, HudFrame.bottom - 8)
+            if (FAConfig.display.showAutomationModes) {
+                renderHeadingTarget(centerX, HudFrame.bottom - 8)
+            }
         }
     }
 

@@ -21,6 +21,7 @@ class DaBRThrustComputer(computers: ComputerBus) : Computer(computers), ThrustSo
             computers.thrust.tickTarget(sign(it).toFloat())
 
             if (!computers.thrust.isDisabledOrFaulted()) {
+                // TODO: config option *sigh*
                 return@register computers.thrust.current.toDouble()
             }
             return@register it

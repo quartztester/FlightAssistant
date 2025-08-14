@@ -46,7 +46,9 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
             }
 
             pose().pop()
-            renderPitchTarget(centerX - 6, centerY - 10)
+            if (FAConfig.display.showAutomationModes) {
+                renderPitchTarget(centerX - 6, centerY - 10)
+            }
         }
     }
 

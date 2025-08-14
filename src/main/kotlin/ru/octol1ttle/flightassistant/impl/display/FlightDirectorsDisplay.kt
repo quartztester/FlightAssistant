@@ -10,12 +10,9 @@ import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.ScreenSpace
 import ru.octol1ttle.flightassistant.api.util.extensions.*
-import ru.octol1ttle.flightassistant.config.FAConfig
 
 class FlightDirectorsDisplay(computers: ComputerBus) : Display(computers) {
-    override fun allowedByConfig(): Boolean {
-        return FAConfig.display.showFlightDirectors
-    }
+    override fun allowedByConfig(): Boolean = true
 
     override fun render(guiGraphics: GuiGraphics) {
         if (!computers.autoflight.flightDirectors) {

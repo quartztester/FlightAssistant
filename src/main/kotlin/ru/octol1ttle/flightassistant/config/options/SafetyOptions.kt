@@ -32,7 +32,7 @@ class SafetyOptions {
     @SerialEntry
     var voidLimitPitch: Boolean = true
     @SerialEntry
-    var voidAutoThrust: Boolean = true
+    var voidAutoThrust: Boolean = true // TODO: merge to AutoRecover since these settings rely on each other
     @SerialEntry
     var voidAutoPitch: Boolean = true
 
@@ -53,7 +53,7 @@ class SafetyOptions {
     @SerialEntry
     var obstacleAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
     @SerialEntry
-    var obstacleLimitPitch: Boolean = false
+    var obstacleLimitPitch: Boolean = false // TODO: remove, limiting pitch is often dangerous, especially in the Nether
     @SerialEntry
     var obstacleAutoThrust: Boolean = true
     @SerialEntry

@@ -15,13 +15,10 @@ class DisplayOptions {
     var primaryColor: Color = Color.GREEN
     @SerialEntry
     var secondaryColor: Color = Color.WHITE
-
     @SerialEntry
     var primaryAdvisoryColor: Color = Color.CYAN
-
     @SerialEntry
     var secondaryAdvisoryColor: Color = Color.MAGENTA
-
     @SerialEntry
     var cautionColor: Color = Color.YELLOW
     @SerialEntry
@@ -73,11 +70,8 @@ class DisplayOptions {
     var showAlerts: Boolean = true
     @SerialEntry
     var showStatusMessages: Boolean = true
-
     @SerialEntry
     var showAutomationModes: Boolean = true
-    @SerialEntry
-    var showFlightDirectors: Boolean = true
 
     internal fun setMinimal(): DisplayOptions {
         this.showAttitude = AttitudeDisplayMode.DISABLED
@@ -88,7 +82,6 @@ class DisplayOptions {
         this.showRadarAltitude = false
         this.showFlightPathVector = false
         this.showVerticalSpeed = false
-        this.showFlightDirectors = false
         return this
     }
 
@@ -109,7 +102,6 @@ class DisplayOptions {
         this.showAlerts = false
         this.showStatusMessages = false
         this.showAutomationModes = false
-        this.showFlightDirectors = false
         return this
     }
 
