@@ -81,6 +81,11 @@ modstitch {
 
         // Configure loom like normal in this block.
         configureLoom {
+            @Suppress("UnstableApiUsage")
+            mixin {
+                useLegacyMixinAp = false
+            }
+
             runConfigs.all {
                 ideConfigGenerated(environment == "client")
                 runDir("../../run")
