@@ -48,7 +48,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Pit
         val clearThreshold: Float = if (anyBlocksAbove) 7.5f else 10.0f
         val cautionThreshold: Float = if (anyBlocksAbove) 3.0f else 7.5f
         val warningThreshold: Float = if (anyBlocksAbove) 1.5f else 3.0f
-        val recoverThreshold: Float = if (anyBlocksAbove) 0.5f else 0.75f
+        val recoverThreshold = 0.75f
 
         groundImpactTime = computeGroundImpactTime(data).requireIn(0.0f..Float.MAX_VALUE)
         groundImpactStatus =
