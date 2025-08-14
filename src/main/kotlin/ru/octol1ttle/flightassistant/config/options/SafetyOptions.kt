@@ -86,6 +86,7 @@ class SafetyOptions {
 
         this.obstacleAlertMode = AlertMode.DISABLED
         this.obstacleLimitPitch = false
+        this.obstacleAutoThrust = false
         this.obstacleAutoPitch = false
 
         this.fireworkExplosiveAlert = false
