@@ -27,7 +27,7 @@ class EnrouteScreenState(
         return true
     }
 
-    data class Waypoint(var special: FlightPlanComputer.EnrouteWaypoint.Special? = null, var coordinatesX: Int = 0, var coordinatesZ: Int = 0, var altitude: Int = 0, var speed: Int = 0) {
+    data class Waypoint(var coordinatesX: Int = 0, var coordinatesZ: Int = 0, var altitude: Int = 0, var speed: Int = 0, var active: FlightPlanComputer.EnrouteWaypoint.Active? = null) {
         fun toEnrouteWaypoint() {
             TODO()
         }

@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Component.literal
 import net.minecraft.network.chat.Component.translatable
 import ru.octol1ttle.flightassistant.api.util.extensions.drawMiddleAlignedString
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 
@@ -33,13 +34,13 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         val list: EnrouteWaypointsList = this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize, state))
 
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.enroute.add_waypoint")) {
-            state.waypoints.add(EnrouteScreenState.Waypoint())
+            state.waypoints.add(EnrouteScreenState.Waypoint(active = if (state.waypoints.isEmpty()) FlightPlanComputer.EnrouteWaypoint.Active.TARGET else null))
             list.rebuildEntries()
         }.bounds(this.centerX - 50, this.height - Y0 * 2 + 5, 100, 20).build())
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
             state = lastState.copy()
-            list.rebuildEntries()
+            this.rebuildWidgets()
         }.pos(this.width - 290, this.height - 30).width(100).build())
 
         save = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.save")) { _: Button? ->

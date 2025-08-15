@@ -30,9 +30,9 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
         private val altitudeEditBox = TypeStrictEditBox(0, 0, columnWidth.toInt(), font.lineHeight, state.altitude, { state.altitude = it }, String::toIntOrNullWithFallback)
         private val speedEditBox = TypeStrictEditBox(0, 0, columnWidth.toInt(), font.lineHeight, state.speed, { state.speed = it }, String::toIntOrNullWithFallback) { it >= 0 }
 
-        private val directToButton = Button.builder(Component.literal("⏭")) {
-            list.state.waypoints.forEach { it.special = null }
-            this.state.special = FlightPlanComputer.EnrouteWaypoint.Special.TARGET
+        private val directToButton = Button.builder(Component.literal(DIRECT_TO_SYMBOL)) {
+            list.state.waypoints.forEach { it.active = null }
+            this.state.active = FlightPlanComputer.EnrouteWaypoint.Active.TARGET
         }.size(12, 12).build()
         private val moveUpButton = Button.builder(Component.literal("↑")) {
             list.state.waypoints.swap(index, index - 1)
@@ -55,6 +55,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
         override fun render(guiGraphics: GuiGraphics, index: Int, top: Int, left: Int, width: Int, height: Int, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
             this.index = index
             this.hovering = hovering
+            this.directToButton.active = getActiveSymbol() != DIRECT_TO_SYMBOL
             this.directToButton.tooltip = Tooltip.create(DIRECT_TO_TOOLTIP_TEXT)
             if (index == 0) {
                 this.moveUpButton.active = false
@@ -65,11 +66,9 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
 
             val indexX: Int = (width * (0.4f / this.columns)).toInt()
             guiGraphics.drawString((index + 1).toString(), indexX, top, ChatFormatting.WHITE.color!!, true)
-            if (state.special != null) {
-                guiGraphics.drawString(
-                    if (state.special == FlightPlanComputer.EnrouteWaypoint.Special.TARGET) "→" else "◉",
-                    indexX - 15, top, primaryAdvisoryColor, true
-                )
+            val activeSymbol: String? = getActiveSymbol()
+            if (activeSymbol != null) {
+                guiGraphics.drawString(activeSymbol, indexX - 15, top, primaryAdvisoryColor, true)
             }
 
             children().filterIsInstance<TypeStrictEditBox<*>>().forEachIndexed { i, editBox ->
@@ -86,6 +85,17 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
                 buttonX += button.width + 3
                 button.y = top
                 button.render(guiGraphics, mouseX, mouseY, partialTick)
+            }
+        }
+
+        private fun getActiveSymbol(): String? {
+            val active: FlightPlanComputer.EnrouteWaypoint.Active = state.active ?: return null
+            return when (active) {
+                FlightPlanComputer.EnrouteWaypoint.Active.ORIGIN -> "→"
+                FlightPlanComputer.EnrouteWaypoint.Active.TARGET -> {
+                    if (list.state.waypoints.any { it.active == FlightPlanComputer.EnrouteWaypoint.Active.ORIGIN }) "▶"
+                    else DIRECT_TO_SYMBOL
+                }
             }
         }
 
@@ -107,6 +117,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
 
     companion object {
         private const val ITEM_HEIGHT: Int = 12
+        private const val DIRECT_TO_SYMBOL: String = "⏭"
         private val DIRECT_TO_TOOLTIP_TEXT: Component = Component.translatable("menu.flightassistant.fms.enroute.direct_to")
     }
 }
