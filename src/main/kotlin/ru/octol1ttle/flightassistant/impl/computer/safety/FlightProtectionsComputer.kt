@@ -10,16 +10,11 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 // TODO: ...or get rid of this computer entirely?
 class FlightProtectionsComputer(computers: ComputerBus) : Computer(computers) {
     var protectionsLost: Boolean = false
-        private set
 
     override fun tick() {
-        if (!protectionsLost) {
-            protectionsLost = this.isDisabledOrFaulted() || computers.data.isDisabledOrFaulted() || computers.pitch.isDisabledOrFaulted()
+        if (protectionsLost || this.isDisabledOrFaulted() || computers.data.isDisabledOrFaulted() || computers.pitch.isDisabledOrFaulted()) {
+            this.faulted = true
         }
-    }
-
-    fun loseProtections() {
-        protectionsLost = true
     }
 
     override fun reset() {

@@ -37,7 +37,7 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
 
                 val oldPitch: Float? = computers.guardedCall(computers.data) { it.pitch }
                 if (oldPitch == null) {
-                    computers.protections.loseProtections()
+                    computers.protections.protectionsLost = true
                     return@register
                 }
                 val newPitch: Float = oldPitch + pitchDelta
