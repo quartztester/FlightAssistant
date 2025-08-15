@@ -56,7 +56,8 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
             this.index = index
             this.hovering = hovering
             this.directToButton.active = getActiveSymbol() != DIRECT_TO_SYMBOL
-            this.directToButton.tooltip = Tooltip.create(DIRECT_TO_TOOLTIP_TEXT)
+            @Suppress("UsePropertyAccessSyntax")
+            this.directToButton.setTooltip(Tooltip.create(DIRECT_TO_TOOLTIP_TEXT))
             if (index == 0) {
                 this.moveUpButton.active = false
             }

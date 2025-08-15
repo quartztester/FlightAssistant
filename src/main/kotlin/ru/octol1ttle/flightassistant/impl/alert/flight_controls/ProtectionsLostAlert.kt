@@ -15,7 +15,7 @@ class ProtectionsLostAlert(computers: ComputerBus) : Alert(computers), ECAMAlert
     override val data: AlertData = AlertData.MASTER_CAUTION
 
     override fun shouldActivate(): Boolean {
-        return computers.protections.protectionsLost
+        return computers.protections.isDisabledOrFaulted()
     }
 
     override fun render(guiGraphics: GuiGraphics, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {

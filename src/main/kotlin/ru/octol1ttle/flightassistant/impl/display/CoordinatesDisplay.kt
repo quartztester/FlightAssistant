@@ -10,7 +10,7 @@ import ru.octol1ttle.flightassistant.api.display.HudFrame
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.CoordinatesLateralMode
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.DirectCoordinatesLateralMode
 
 class CoordinatesDisplay(computers: ComputerBus) : Display(computers) {
     override fun allowedByConfig(): Boolean {
@@ -29,7 +29,7 @@ class CoordinatesDisplay(computers: ComputerBus) : Display(computers) {
 
             val color: Int
             val active: AutoFlightComputer.LateralMode? = computers.autoflight.activeLateralMode
-            if (FAConfig.display.showAutomationModes && computers.autoflight.getHeadingInput() != null && active is CoordinatesLateralMode) {
+            if (FAConfig.display.showAutomationModes && computers.autoflight.getHeadingInput() != null && active is DirectCoordinatesLateralMode) {
                 color = if (active == computers.autoflight.selectedLateralMode) primaryAdvisoryColor else secondaryAdvisoryColor
                 drawString(active.targetX.toString(), x + textWidth(xText) + 3, y, color)
                 drawString(active.targetX.toString(), x + textWidth(zText) + 3, y + lineHeight, color)

@@ -45,6 +45,7 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
 
         save = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.save")) { _: Button? ->
             lastState = state.copy()
+            state.save(computers.plan)
             list.rebuildEntries()
         }.pos(this.width - 180, this.height - 30).width(80).build())
 

@@ -33,7 +33,7 @@ class AutoFlightScreenState {
         }
         autoFlight.selectedLateralMode = when (lateralMode) {
             LateralMode.HEADING -> HeadingLateralMode(targetHeading)
-            LateralMode.COORDINATES -> CoordinatesLateralMode(targetCoordinatesX, targetCoordinatesZ)
+            LateralMode.COORDINATES -> DirectCoordinatesLateralMode(targetCoordinatesX, targetCoordinatesZ)
             LateralMode.FLIGHT_PLAN -> null
         }
     }
