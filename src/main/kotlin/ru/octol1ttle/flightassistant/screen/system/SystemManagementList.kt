@@ -27,7 +27,7 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
         private val offText: StringWidget = StringWidget(xOffset, 0, this.listWidth / 6, 9, OFF_TEXT, font)
         private val toggleButton: Button = Button.builder(OFF_TEXT) {
             controller.toggleEnabled(identifier)
-        }.pos(xOffset, 0).width(60).build()
+        }.pos(xOffset, 0).size(60, 18).build()
 
         val children = listOf(this.displayName, faultText, offText, toggleButton)
 
@@ -72,6 +72,6 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
     }
 
     companion object {
-        private const val ITEM_HEIGHT: Int = 25
+        private const val ITEM_HEIGHT: Int = 20
     }
 }
