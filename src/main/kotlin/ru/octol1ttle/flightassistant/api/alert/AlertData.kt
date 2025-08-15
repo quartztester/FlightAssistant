@@ -4,12 +4,12 @@ import net.minecraft.sounds.SoundEvent
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.config.FAConfig
 
-class AlertData(val priority: Int, val soundEvent: SoundEvent, val looping: LoopType, val colorSupplier: () -> Int) {
+class AlertData(@Deprecated("Waiting for an enhanced priority system (.defineOrder, .before, .after)") val priority: Int, val soundEvent: SoundEvent, val looping: LoopType, val colorSupplier: () -> Int) {
     companion object {
         private fun soundEvent(name: String): SoundEvent {
             return SoundEvent.createVariableRangeEvent(FlightAssistant.id(name))
         }
-        
+
         val FULL_STALL =
             AlertData(
                 0,
@@ -40,33 +40,39 @@ class AlertData(val priority: Int, val soundEvent: SoundEvent, val looping: Loop
                 soundEvent("terrain_ahead"),
                 LoopType.CONSTANT_VOLUME
             ) { FAConfig.display.cautionColor.rgb }
-        val FORCE_AUTOPILOT_OFF =
+        val DONT_SINK =
             AlertData(
                 500,
+                soundEvent("dont_sink"),
+                LoopType.CONSTANT_VOLUME
+            ) { FAConfig.display.cautionColor.rgb }
+        val FORCE_AUTOPILOT_OFF =
+            AlertData(
+                600,
                 soundEvent("autopilot_off"),
                 LoopType.CONSTANT_VOLUME
             ) { FAConfig.display.warningColor.rgb }
         val PLAYER_AUTOPILOT_OFF =
             AlertData(
-                500,
+                600,
                 soundEvent("autopilot_off"),
                 LoopType.NONE
             ) { FAConfig.display.warningColor.rgb }
         val MASTER_WARNING =
             AlertData(
-                600,
+                700,
                 soundEvent("master_warning"),
                 LoopType.FADE_OUT
             ) { FAConfig.display.warningColor.rgb }
         val THRUST_LOCKED =
             AlertData(
-                700,
+                800,
                 soundEvent("thrust_locked"),
                 LoopType.CONSTANT_VOLUME
             ) { FAConfig.display.cautionColor.rgb }
         val MASTER_CAUTION =
             AlertData(
-                800,
+                900,
                 soundEvent("master_caution"),
                 LoopType.NONE
             ) { FAConfig.display.cautionColor.rgb }

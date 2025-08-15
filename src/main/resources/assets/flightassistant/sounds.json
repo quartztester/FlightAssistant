@@ -9,6 +9,11 @@
             "flightassistant:autopilot_off"
         ]
     },
+    "dont_sink": {
+        "sounds": [
+            "flightassistant:dont_sink"
+        ]
+    },
     "full_stall": {
         "sounds": [
             "flightassistant:full_stall"

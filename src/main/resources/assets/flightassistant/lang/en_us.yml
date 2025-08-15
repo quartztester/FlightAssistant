@@ -60,9 +60,11 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
   flight_plan:
     .: F/PLAN
     fault: SYS FAULT
+    departure_elevation_disagree: DEPART ELEV DISAGREE
   gpws:
     .: GPWS
     fault: FAULT
+    dont_sink: DON'T SINK
     sink_rate: SINK RATE
     terrain_ahead: TERRAIN AHEAD
     pull_up: PULL UP
@@ -327,7 +329,8 @@ mode.flightassistant:
     speed_reference: SPD REF
   lateral:
     heading: HDG
-    selected_coordinates: COORDS
+    direct_coordinates: DIR NAV
+    track_navigation: TRK NAV
 
 # TODO: stop using this
 short.flightassistant:
@@ -357,6 +360,10 @@ short.flightassistant:
 status.flightassistant:
   thrust: 'THR: %s'
   firework_count: 'FRWK CNT: %s'
+  flight_phase:
+    on_ground: ON GROUND
+    takeoff: TAKEOFF
+    climb: CLIMB
 
 misc.flightassistant:
   waiting_for_world_load:

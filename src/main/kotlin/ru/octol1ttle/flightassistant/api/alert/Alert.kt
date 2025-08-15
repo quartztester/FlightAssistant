@@ -16,6 +16,7 @@ abstract class Alert(val computers: ComputerBus) {
      * An offset for the priority of this alert, relative to the priority defined by the [data].
      * A negative offset means this alert will be more important than others in its category
      */
+    @Deprecated("Severely overcomplicates things")
     open val priorityOffset: Int = 0
 
     val priority: Int

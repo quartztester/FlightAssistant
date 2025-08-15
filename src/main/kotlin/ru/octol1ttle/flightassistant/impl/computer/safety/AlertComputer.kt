@@ -29,6 +29,8 @@ import ru.octol1ttle.flightassistant.impl.alert.firework.FireworkExplosiveAlert
 import ru.octol1ttle.flightassistant.impl.alert.firework.FireworkNoResponseAlert
 import ru.octol1ttle.flightassistant.impl.alert.firework.FireworkSlowResponseAlert
 import ru.octol1ttle.flightassistant.impl.alert.flight_controls.ProtectionsLostAlert
+import ru.octol1ttle.flightassistant.impl.alert.flight_plan.DepartureElevationDisagreeAlert
+import ru.octol1ttle.flightassistant.impl.alert.gpws.DontSinkAlert
 import ru.octol1ttle.flightassistant.impl.alert.gpws.PullUpAlert
 import ru.octol1ttle.flightassistant.impl.alert.gpws.SinkRateAlert
 import ru.octol1ttle.flightassistant.impl.alert.gpws.TerrainAheadAlert
@@ -108,6 +110,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
         register(
             AlertCategory(Component.translatable("alert.flightassistant.flight_plan"))
                 .add(ComputerFaultAlert(computers, FlightPlanComputer.ID, Component.translatable("alerts.flightassistant.flight_plan.fault")))
+                .add(DepartureElevationDisagreeAlert(computers))
         )
         register(
             AlertCategory(Component.translatable("alert.flightassistant.gpws"))
@@ -115,6 +118,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
                 .add(PullUpAlert(computers))
                 .add(SinkRateAlert(computers))
                 .add(TerrainAheadAlert(computers))
+                .add(DontSinkAlert(computers))
         )
         register(
             AlertCategory(Component.translatable("alert.flightassistant.navigation"))

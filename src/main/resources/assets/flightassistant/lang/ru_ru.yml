@@ -64,9 +64,11 @@ alert.flightassistant:
   flight_plan:
     .: ПЛАН/П
     fault: ОТКАЗ СИСТ
+    departure_elevation_disagree: НЕСОГЛ ВЫС ВЫЛЕТА
   gpws:
     .: GPWS
     fault: ОТКАЗ
+    dont_sink: НЕ ПАДАЙ
     sink_rate: СКОР. СНИЖЕНИЯ
     terrain_ahead: ЗЕМЛЯ ВПЕРЕДИ
     pull_up: ТЯНИ ВВЕРХ
