@@ -12,14 +12,22 @@ class EnrouteScreenState(
     }
 
     fun copy(): EnrouteScreenState {
-        return EnrouteScreenState(ArrayList(this.waypoints))
+        return EnrouteScreenState(this.waypoints.map { it.copy() }.toMutableList())
     }
 
     fun equals(other: EnrouteScreenState): Boolean {
-        return this.waypoints.size == other.waypoints.size && this.waypoints.all { other.waypoints.contains(it) }
+        if (this.waypoints.size != other.waypoints.size) {
+            return false
+        }
+        this.waypoints.forEachIndexed { i, waypoint ->
+            if (other.waypoints[i] != waypoint) {
+                return false
+            }
+        }
+        return true
     }
 
-    data class Waypoint(var coordinatesX: Int = 0, var coordinatesZ: Int = 0, var altitude: Int = 0, var speed: Int = 0) {
+    data class Waypoint(var special: FlightPlanComputer.EnrouteWaypoint.Special? = null, var coordinatesX: Int = 0, var coordinatesZ: Int = 0, var altitude: Int = 0, var speed: Int = 0) {
         fun toEnrouteWaypoint() {
             TODO()
         }

@@ -10,12 +10,14 @@ import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.util.extensions.drawString
 import ru.octol1ttle.flightassistant.api.util.extensions.font
+import ru.octol1ttle.flightassistant.api.util.extensions.primaryAdvisoryColor
 import ru.octol1ttle.flightassistant.api.util.extensions.swap
 import ru.octol1ttle.flightassistant.api.util.extensions.toIntOrNullWithFallback
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.components.FABaseList
 import ru.octol1ttle.flightassistant.screen.components.TypeStrictEditBox
 
-class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val state: EnrouteScreenState, val hasUnsavedChanges: () -> Boolean) : FABaseList<EnrouteWaypointsList.Entry>(y0, y1, width, ITEM_HEIGHT) {
+class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val state: EnrouteScreenState) : FABaseList<EnrouteWaypointsList.Entry>(y0, y1, width, ITEM_HEIGHT) {
     init {
         rebuildEntries()
     }
@@ -29,6 +31,8 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
         private val speedEditBox = TypeStrictEditBox(0, 0, columnWidth.toInt(), font.lineHeight, state.speed, { state.speed = it }, String::toIntOrNullWithFallback) { it >= 0 }
 
         private val directToButton = Button.builder(Component.literal("⏭")) {
+            list.state.waypoints.forEach { it.special = null }
+            this.state.special = FlightPlanComputer.EnrouteWaypoint.Special.TARGET
         }.size(12, 12).build()
         private val moveUpButton = Button.builder(Component.literal("↑")) {
             list.state.waypoints.swap(index, index - 1)
@@ -51,12 +55,22 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
         override fun render(guiGraphics: GuiGraphics, index: Int, top: Int, left: Int, width: Int, height: Int, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
             this.index = index
             this.hovering = hovering
-            this.directToButton.active = !list.hasUnsavedChanges()
-            this.directToButton.tooltip = Tooltip.create(if (this.directToButton.active) DIRECT_TO_TOOLTIP_TEXT else UNSAVED_CHANGES_TOOLTIP_TEXT)
-            if (index == 0) this.moveUpButton.active = false
-            if (index == list.children().size - 1) this.moveDownButton.active = false
+            this.directToButton.tooltip = Tooltip.create(DIRECT_TO_TOOLTIP_TEXT)
+            if (index == 0) {
+                this.moveUpButton.active = false
+            }
+            if (index == list.children().size - 1) {
+                this.moveDownButton.active = false
+            }
 
-            guiGraphics.drawString((index + 1).toString(), (width * (0.4f / this.columns)).toInt(), top, ChatFormatting.WHITE.color!!)
+            val indexX: Int = (width * (0.4f / this.columns)).toInt()
+            guiGraphics.drawString((index + 1).toString(), indexX, top, ChatFormatting.WHITE.color!!, true)
+            if (state.special != null) {
+                guiGraphics.drawString(
+                    if (state.special == FlightPlanComputer.EnrouteWaypoint.Special.TARGET) "→" else "◉",
+                    indexX - 15, top, primaryAdvisoryColor, true
+                )
+            }
 
             children().filterIsInstance<TypeStrictEditBox<*>>().forEachIndexed { i, editBox ->
                 @Suppress("UsePropertyAccessSyntax")
@@ -94,6 +108,5 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
     companion object {
         private const val ITEM_HEIGHT: Int = 12
         private val DIRECT_TO_TOOLTIP_TEXT: Component = Component.translatable("menu.flightassistant.fms.enroute.direct_to")
-        private val UNSAVED_CHANGES_TOOLTIP_TEXT: Component = Component.translatable("menu.flightassistant.fms.enroute.direct_to.unsaved_changes")
     }
 }

@@ -65,4 +65,11 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     }
 
     data class DepartureData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val takeoffThrust: Float = 1.0f, val minimumClimbSpeed: Int = 15)
+    data class EnrouteWaypoint(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val altitude: Int = 0, val speed: Int = 0, val special: Special? = null) {
+        enum class Special { // TODO: i dont' like this i don't like this i don't tlikth tis
+            ORIGIN_REGULAR,
+            ORIGIN_PLAYER_POSITION,
+            TARGET
+        }
+    }
 }

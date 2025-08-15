@@ -289,9 +289,7 @@ menu.flightassistant:
     enroute:
       .: Enroute
       add_waypoint: Add waypoint
-      direct_to:
-        .: Direct-to
-        unsaved_changes: Cannot use Direct-to because there are unsaved changes!
+      direct_to: Direct-to
       unsaved_changes: UNSAVED CHANGES
     arrival: Arrival
     save: Save

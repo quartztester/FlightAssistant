@@ -30,7 +30,7 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
             this.addRenderableWidget(SmartStringWidget((this.width * (max(0.4f, i.toFloat()) / optimumColumnsSize)).toInt(), Y0, component).setColor(ChatFormatting.GRAY.color!!))
         }
 
-        val list: EnrouteWaypointsList = this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize, state) { !state.equals(lastState) })
+        val list: EnrouteWaypointsList = this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize, state))
 
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.enroute.add_waypoint")) {
             state.waypoints.add(EnrouteScreenState.Waypoint())
@@ -39,11 +39,12 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
             state = lastState.copy()
-            this.rebuildWidgets()
+            list.rebuildEntries()
         }.pos(this.width - 290, this.height - 30).width(100).build())
 
         save = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.save")) { _: Button? ->
             lastState = state.copy()
+            list.rebuildEntries()
         }.pos(this.width - 180, this.height - 30).width(80).build())
 
         done = this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE) { _: Button? ->

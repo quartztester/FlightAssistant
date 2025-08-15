@@ -293,9 +293,7 @@ menu.flightassistant:
     enroute:
       .: Маршрут
       add_waypoint: Добавить точку
-      direct_to:
-        .: Прямо-на
-        unsaved_changes: Невозможно использовать Прямо-на, так как есть несохранённые изменения!
+      direct_to: Прямо-на
       unsaved_changes: НЕСОХРАНЕН ИЗМЕНЕНИЯ
     arrival: Прибытие
     save: Сохранить
