@@ -4,6 +4,7 @@ import kotlin.math.atan2
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
@@ -33,10 +34,39 @@ class HudDisplayDataComputer(computers: ComputerBus, private val mc: Minecraft) 
     val roll: Float
         get() = degrees(atan2(-RenderMatrices.worldSpaceMatrix.m10(), RenderMatrices.worldSpaceMatrix.m11())).requireIn(-180.0f..180.0f)
 
+    private var lastPitchInputTarget: Float? = null
+    private var lastHeadingInputTarget: Float? = null
+
+    var lerpedPitchInputTarget: Float? = null
+        private set
+    var lerpedHeadingInputTarget: Float? = null
+        private set
+
     override fun tick() {
         lerpedPosition = player.getPosition(FATickCounter.partialTick)
         lerpedVelocity = player.getDeltaMovementLerped(FATickCounter.partialTick)
         lerpedForwardVelocity = computers.data.computeForwardVector(lerpedVelocity)
+
+        val pitchInputTarget: Float? = computers.pitch.activeInput?.target
+        if (pitchInputTarget != null) {
+            lerpedPitchInputTarget =
+                if (lastPitchInputTarget != null) Mth.lerp(FATickCounter.timePassed, lastPitchInputTarget!!, pitchInputTarget)
+                else pitchInputTarget
+        } else {
+            lerpedPitchInputTarget = null
+        }
+        lastPitchInputTarget = pitchInputTarget
+
+        val headingInputTarget: Float? = computers.heading.activeInput?.target
+        if (headingInputTarget != null) {
+            lerpedHeadingInputTarget =
+                if (lastHeadingInputTarget != null) Mth.lerp(FATickCounter.timePassed, lastHeadingInputTarget!!, headingInputTarget)
+                else headingInputTarget
+        } else {
+            lerpedHeadingInputTarget = null
+        }
+
+        lastHeadingInputTarget = headingInputTarget
     }
 
     override fun reset() {

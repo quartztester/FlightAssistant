@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin
+package ru.octol1ttle.flightassistant.impl.computer.autoflight.modes
 
 import kotlin.math.abs
 import kotlin.math.pow
@@ -19,14 +19,14 @@ data class TakeoffThrustMode(val data: FlightPlanComputer.DepartureData) : AutoF
     }
 }
 
-data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
+data class SpeedThrustMode(override val targetSpeed: Int) : AutoFlightComputer.ThrustMode, AutoFlightComputer.FollowsSpeedMode {
     override fun getControlInput(computers: ComputerBus): ControlInput {
         // TODO: runs every frame but velocity changes only every tick
         val currentThrust: Float = computers.thrust.current
-        val currentSpeed: Double = computers.data.forwardVelocity.length() * 20
-        val acceleration: Double = computers.data.forwardAcceleration * 20
+        val currentSpeed: Double = computers.data.forwardVelocityPerSecond.length()
+        val acceleration: Double = computers.data.forwardAcceleration * 20.0
 
-        val speedCorrection: Double = (target - currentSpeed) * FATickCounter.timePassed.pow(1.5f)
+        val speedCorrection: Double = (targetSpeed - currentSpeed) * FATickCounter.timePassed.pow(1.5f)
         val accelerationDamping: Double = -acceleration * FATickCounter.timePassed
         return ControlInput(
             (currentThrust + speedCorrection + accelerationDamping).toFloat().coerceIn(0.0f..1.0f),
@@ -39,11 +39,11 @@ data class SpeedThrustMode(val target: Int) : AutoFlightComputer.ThrustMode {
 data class VerticalProfileThrustMode(val climbThrust: Float, val descendThrust: Float) : AutoFlightComputer.ThrustMode {
     override fun getControlInput(computers: ComputerBus): ControlInput? {
         val verticalMode: AutoFlightComputer.VerticalMode? = computers.autoflight.activeVerticalMode
-        if (verticalMode !is SelectedAltitudeVerticalMode) {
+        if (verticalMode !is AutoFlightComputer.FollowsAltitudeMode) {
             return null
         }
-        val nearTarget: Boolean = abs(verticalMode.target - computers.data.altitude) <= 5.0f
-        val useClimbThrust: Boolean = nearTarget || verticalMode.target > computers.data.altitude
+        val nearTarget: Boolean = abs(verticalMode.targetAltitude - computers.data.altitude) <= 5.0f
+        val useClimbThrust: Boolean = nearTarget || verticalMode.targetAltitude > computers.data.altitude
         return ControlInput(
             if (useClimbThrust) climbThrust else descendThrust,
             ControlInput.Priority.NORMAL,

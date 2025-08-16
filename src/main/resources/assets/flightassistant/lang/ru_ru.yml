@@ -327,9 +327,13 @@ mode.flightassistant:
     terrain_escape: ЗЕМЛ ИЗБЕЖ
     selected_pitch: УГОЛ
     altitude:
-      climb: НАБОР
-      descend: СНИЖ
       hold: ВЫС
+      open:
+        climb: СВ НАБОР
+        descend: СВ СНИЖ
+      managed:
+        climb: НАБОР
+        descend: СНИЖ
     speed_reference: СКОР СЛЕД
   lateral:
     selected_heading: КУРС

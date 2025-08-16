@@ -109,7 +109,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
         )
         register(
             AlertCategory(Component.translatable("alert.flightassistant.flight_plan"))
-                .add(ComputerFaultAlert(computers, FlightPlanComputer.ID, Component.translatable("alerts.flightassistant.flight_plan.fault")))
+                .add(ComputerFaultAlert(computers, FlightPlanComputer.ID, Component.translatable("alert.flightassistant.flight_plan.fault")))
                 .add(DepartureElevationDisagreeAlert(computers))
         )
         register(

@@ -19,6 +19,7 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.degrees
 import ru.octol1ttle.flightassistant.api.util.extensions.bottomY
+import ru.octol1ttle.flightassistant.api.util.extensions.perSecond
 import ru.octol1ttle.flightassistant.api.util.requireIn
 import ru.octol1ttle.flightassistant.config.FAConfig
 
@@ -54,7 +55,11 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
 
     val velocity: Vec3
         get() = player.deltaMovement
+    val velocityPerSecond: Vec3
+        get() = player.deltaMovement.perSecond()
     var forwardVelocity: Vec3 = Vec3.ZERO
+        private set
+    var forwardVelocityPerSecond: Vec3 = Vec3.ZERO
         private set
     var forwardAcceleration: Double = 0.0
         private set
@@ -75,6 +80,7 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
     override fun tick() {
         groundY = computeGroundLevel()
         forwardVelocity = computeForwardVector(velocity)
+        forwardVelocityPerSecond = forwardVelocity.perSecond()
         forwardAcceleration = forwardVelocity.length() - computeForwardVector(player.getDeltaMovementLerped(0.0f)).length()
     }
 

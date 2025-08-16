@@ -1,5 +1,7 @@
 package ru.octol1ttle.flightassistant.screen.fms.enroute
 
+import java.time.Duration
+import kotlin.math.roundToLong
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -8,21 +10,19 @@ import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.network.chat.Component
-import ru.octol1ttle.flightassistant.api.util.extensions.drawString
-import ru.octol1ttle.flightassistant.api.util.extensions.font
-import ru.octol1ttle.flightassistant.api.util.extensions.primaryAdvisoryColor
-import ru.octol1ttle.flightassistant.api.util.extensions.swap
-import ru.octol1ttle.flightassistant.api.util.extensions.toIntOrNullWithFallback
+import org.joml.Vector2d
+import ru.octol1ttle.flightassistant.api.computer.ComputerBus
+import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.components.FABaseList
 import ru.octol1ttle.flightassistant.screen.components.TypeStrictEditBox
 
-class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val state: EnrouteScreenState) : FABaseList<EnrouteWaypointsList.Entry>(y0, y1, width, ITEM_HEIGHT) {
+class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val computers: ComputerBus, val state: EnrouteScreenState) : FABaseList<EnrouteWaypointsList.Entry>(y0, y1, width, ITEM_HEIGHT) {
     init {
         rebuildEntries()
     }
 
-    class Entry(val width: Int, val columns: Float, val state: EnrouteScreenState.Waypoint, val list: EnrouteWaypointsList) : ContainerObjectSelectionList.Entry<Entry>() {
+    class Entry(val width: Int, val columns: Float, val computers: ComputerBus, val state: EnrouteScreenState.Waypoint, val list: EnrouteWaypointsList) : ContainerObjectSelectionList.Entry<Entry>() {
         private val columnWidth: Float = width / this.columns
 
         private val xEditBox = TypeStrictEditBox(0, 0, columnWidth.toInt(), font.lineHeight, state.coordinatesX, { state.coordinatesX = it }, String::toIntOrNullWithFallback)
@@ -47,14 +47,27 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
             list.rebuildEntries()
         }.size(12, 12).build()
 
-        private var index: Int = 0
-        private var hovering: Boolean = false
         val children = listOf(xEditBox, zEditBox, altitudeEditBox, speedEditBox)
         val childrenWhenHovering = listOf(xEditBox, zEditBox, altitudeEditBox, speedEditBox, directToButton, moveUpButton, moveDownButton, deleteButton)
+
+        private var index: Int = 0
+        private var hovering: Boolean = false
+
+        private var lastFlightPlanActive: FlightPlanComputer.EnrouteWaypoint.Active? = state.active
 
         override fun render(guiGraphics: GuiGraphics, index: Int, top: Int, left: Int, width: Int, height: Int, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
             this.index = index
             this.hovering = hovering
+
+            val flightPlanWaypoint: FlightPlanComputer.EnrouteWaypoint? = computers.plan.enrouteData.find { it.copy(active = null) == this.state.toEnrouteWaypoint().copy(active = null) }
+            if (flightPlanWaypoint != null) {
+                val flightPlanActive: FlightPlanComputer.EnrouteWaypoint.Active? = flightPlanWaypoint.active
+                if (flightPlanActive != lastFlightPlanActive) {
+                    this.state.active = flightPlanActive
+                }
+                this.lastFlightPlanActive = flightPlanActive
+            }
+
             this.directToButton.active = getActiveSymbol() != DIRECT_TO_SYMBOL
             @Suppress("UsePropertyAccessSyntax")
             this.directToButton.setTooltip(Tooltip.create(DIRECT_TO_TOOLTIP_TEXT))
@@ -80,12 +93,22 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
                 editBox.render(guiGraphics, mouseX, mouseY, partialTick)
             }
 
-            var buttonX: Int = (columnWidth * (if (columns <= 7) columns - 1.25f else 6.75f)).toInt()
+            val hasExtraSpace: Boolean = columns > 7
+            var buttonX: Int = (columnWidth * (if (hasExtraSpace) 6.75f else columns - 1.25f)).toInt()
             children().filterIsInstance<Button>().forEach { button ->
                 button.x = buttonX
                 buttonX += button.width + 3
                 button.y = top
                 button.render(guiGraphics, mouseX, mouseY, partialTick)
+            }
+
+            val distance: Double = Vector2d.distance(state.coordinatesX.toDouble(), state.coordinatesZ.toDouble(), computers.data.position.x, computers.data.position.z)
+            guiGraphics.drawString(distance.roundToLong().toString(), (columnWidth * 5).toInt(), top, whiteColor, true)
+
+            if (hasExtraSpace) {
+                val duration: Duration = Duration.ofSeconds((distance / computers.data.velocityPerSecond.horizontalDistance()).roundToLong())
+                val string: String = if (computers.data.flying) "${duration.toMinutesPart()}:${"%02d".format(duration.toSecondsPart())}" else "--:--"
+                guiGraphics.drawString(string, (columnWidth * 6).toInt(), top, whiteColor, true)
             }
         }
 
@@ -112,7 +135,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
     fun rebuildEntries() {
         this.clearEntries()
         for (waypoint: EnrouteScreenState.Waypoint in state.waypoints) {
-            addEntry(Entry(this.width, this.columns, waypoint, this))
+            addEntry(Entry(this.width, this.columns, this.computers, waypoint, this))
         }
     }
 

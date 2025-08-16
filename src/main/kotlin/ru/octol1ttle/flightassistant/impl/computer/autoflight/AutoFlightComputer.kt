@@ -180,6 +180,27 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
         fun getControlInput(computers: ComputerBus): ControlInput?
     }
 
+    interface FollowsSpeedMode : AutoFlightMode {
+        val targetSpeed: Int
+    }
+
+    interface FollowsPitchMode : AutoFlightMode {
+        val targetPitch: Float
+    }
+
+    interface FollowsAltitudeMode : AutoFlightMode {
+        val targetAltitude: Int
+    }
+
+    interface FollowsHeadingMode : AutoFlightMode {
+        val targetHeading: Int
+    }
+
+    interface FollowsCoordinatesMode : AutoFlightMode {
+        val targetX: Int
+        val targetZ: Int
+    }
+
     interface ThrustMode : AutoFlightMode
     interface VerticalMode : AutoFlightMode
     interface LateralMode : AutoFlightMode

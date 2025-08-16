@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation
  * @param active If the input is active, it will be satisfied. Otherwise, this input serves as a notification
  * @param identifier The identifier of this input
  */
-data class ControlInput(val target: Float, val priority: Priority, val text: Component? = null, val deltaTimeMultiplier: Float = 1.0f, val active: Boolean = true, @Deprecated("") val identifier: ResourceLocation? = null) {
+data class ControlInput(val target: Float, val priority: Priority, val text: Component? = null, val deltaTimeMultiplier: Float = 1.0f, val active: Boolean = true, @Deprecated("Unused") val identifier: ResourceLocation? = null) {
     enum class Priority(val value: Int) {
         HIGHEST(0),
         HIGH(1),

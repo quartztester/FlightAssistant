@@ -147,7 +147,7 @@ class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Comp
     }
 
     override fun tickThrust(currentThrust: Float) {
-        if (currentThrust > computers.data.forwardVelocity.length() * 20.0f / 30.0f) {
+        if (currentThrust > computers.data.forwardVelocityPerSecond.length() / 30.0f) {
             tryActivateFirework(computers.data.player)
         }
     }

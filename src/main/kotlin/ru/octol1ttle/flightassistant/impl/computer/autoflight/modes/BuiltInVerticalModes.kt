@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin
+package ru.octol1ttle.flightassistant.impl.computer.autoflight.modes
 
 import kotlin.math.abs
 import kotlin.math.pow
@@ -8,22 +8,22 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 
-data class PitchVerticalMode(val target: Float) : AutoFlightComputer.VerticalMode {
-    override fun getControlInput(computers: ComputerBus): ControlInput? {
+data class PitchVerticalMode(override val targetPitch: Float) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsPitchMode {
+    override fun getControlInput(computers: ComputerBus): ControlInput {
         return ControlInput(
-            target,
+            targetPitch,
             ControlInput.Priority.NORMAL,
             Component.translatable("mode.flightassistant.vertical.pitch")
         )
     }
 }
 
-data class SpeedReferenceVerticalMode(val targetSpeed: Int) : AutoFlightComputer.VerticalMode {
-    override fun getControlInput(computers: ComputerBus): ControlInput? {
+data class SpeedReferenceVerticalMode(override val targetSpeed: Int) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsSpeedMode {
+    override fun getControlInput(computers: ComputerBus): ControlInput {
         // TODO: find a way to fix jittering
         val range: Float = computers.thrust.getOptimumClimbPitch() - computers.thrust.getAltitudeHoldPitch()
         val currentPitch: Float = computers.data.pitch
-        val currentSpeed: Double = computers.data.forwardVelocity.length() * 20
+        val currentSpeed: Double = computers.data.forwardVelocityPerSecond.length()
         val acceleration: Double = computers.data.forwardAcceleration * 20
 
         val speedCorrection: Double = (currentSpeed - targetSpeed) * FATickCounter.timePassed.pow(1.5f) * range
@@ -36,9 +36,9 @@ data class SpeedReferenceVerticalMode(val targetSpeed: Int) : AutoFlightComputer
     }
 }
 
-data class SelectedAltitudeVerticalMode(val target: Int) : AutoFlightComputer.VerticalMode {
-    override fun getControlInput(computers: ComputerBus): ControlInput? {
-        val diff: Float = (target - computers.data.altitude).toFloat()
+data class SelectedAltitudeVerticalMode(override val targetAltitude: Int) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsAltitudeMode {
+    override fun getControlInput(computers: ComputerBus): ControlInput {
+        val diff: Float = (targetAltitude - computers.data.altitude).toFloat()
         val abs: Float = abs(diff)
         val neutralPitch: Float = computers.thrust.getAltitudeHoldPitch()
 
@@ -46,14 +46,14 @@ data class SelectedAltitudeVerticalMode(val target: Int) : AutoFlightComputer.Ve
         var text: Component
         if (diff >= 0) {
             finalPitch = computers.thrust.getOptimumClimbPitch()
-            text = Component.translatable("mode.flightassistant.vertical.altitude.climb")
+            text = Component.translatable("mode.flightassistant.vertical.altitude.open.climb")
 
             val distanceFromNeutral: Float = finalPitch - neutralPitch
             finalPitch -= distanceFromNeutral * 0.6f * ((200.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
             finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 100.0f).coerceIn(0.0f..1.0f)
         } else {
             finalPitch = -35.0f
-            text = Component.translatable("mode.flightassistant.vertical.altitude.descend")
+            text = Component.translatable("mode.flightassistant.vertical.altitude.open.descend")
 
             val distanceFromNeutral: Float = finalPitch - neutralPitch
             finalPitch -= distanceFromNeutral * 0.4f * ((100.0f - abs) / 50.0f).coerceIn(0.0f..1.0f)

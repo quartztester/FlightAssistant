@@ -26,10 +26,10 @@ class StallComputer(computers: ComputerBus) : Computer(computers), PitchLimiter,
         val angleOfAttack: Float = computers.data.pitch - computers.data.flightPitch
         status =
             if (computers.data.flying && !computers.data.fallDistanceSafe && angleOfAttack > 90.0f)
-                if (status == Status.FULL_STALL || computers.data.velocity.y * 20 <= -10) Status.FULL_STALL else Status.APPROACHING_STALL
+                if (status == Status.FULL_STALL || computers.data.velocityPerSecond.y <= -10) Status.FULL_STALL else Status.APPROACHING_STALL
             else Status.SAFE
 
-        maximumSafePitch = (computers.data.flightPitch + 90.0).coerceAtMost(computers.data.forwardVelocity.length() * 20.0 * 3.0 + 45.0).toFloat()
+        maximumSafePitch = (computers.data.flightPitch + 90.0).coerceAtMost(computers.data.forwardVelocityPerSecond.length() * 3.0 + 45.0).toFloat()
     }
 
     override fun getThrustInput(): ControlInput? {

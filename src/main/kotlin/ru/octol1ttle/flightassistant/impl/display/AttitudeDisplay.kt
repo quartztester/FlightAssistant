@@ -16,7 +16,6 @@ import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.config.options.DisplayOptions
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.builtin.PitchVerticalMode
 
 class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
     override fun allowedByConfig(): Boolean {
@@ -160,8 +159,8 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
 
     private fun GuiGraphics.renderPitchTarget(x: Int, y: Int) {
         val active: AutoFlightComputer.VerticalMode? = computers.autoflight.activeVerticalMode
-        if (computers.autoflight.getPitchInput() != null && active is PitchVerticalMode) {
-            drawRightAlignedString("%.1f".format(active.target), x, y, primaryAdvisoryColor)
+        if (computers.autoflight.getPitchInput() != null && active is AutoFlightComputer.FollowsPitchMode) {
+            drawRightAlignedString("%.1f".format(active.targetPitch), x, y, primaryAdvisoryColor)
         }
     }
 

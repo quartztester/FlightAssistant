@@ -27,9 +27,10 @@ class FlightDirectorsDisplay(computers: ComputerBus) : Display(computers) {
             pose().translate(0.0f, 0.0f, -100.0f)
             enableScissor(HudFrame.left, HudFrame.top, HudFrame.right, HudFrame.bottom)
 
+            // TODO: stop using ScreenSpace
             val pitchInput: ControlInput? = computers.pitch.activeInput
             if (pitchInput != null && pitchInput.priority >= ControlInput.Priority.NORMAL) {
-                val pitchY: Int? = ScreenSpace.getY(pitchInput.target, false)
+                val pitchY: Int? = ScreenSpace.getY(computers.hudData.lerpedPitchInputTarget!!, false)
                 if (pitchY != null) {
                     hLine(this.centerX - halfWidth, this.centerX + halfWidth, pitchY, primaryAdvisoryColor)
                 }
@@ -37,7 +38,7 @@ class FlightDirectorsDisplay(computers: ComputerBus) : Display(computers) {
 
             val headingInput: ControlInput? = computers.heading.activeInput
             if (headingInput != null && headingInput.priority >= ControlInput.Priority.NORMAL) {
-                val headingX: Int? = ScreenSpace.getX(headingInput.target, false)
+                val headingX: Int? = ScreenSpace.getX(computers.hudData.lerpedHeadingInputTarget!!, false)
                 if (headingX != null) {
                     vLine(headingX, this.centerY - halfWidth, this.centerY + halfWidth, primaryAdvisoryColor)
                 }

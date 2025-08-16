@@ -55,7 +55,7 @@ abstract class Computer(val computers: ComputerBus) {
      * Be careful calling other computers' code here! Depending on where events are invoked, a fault may cause a game crash.
      * Use [ComputerBus.guardedCall] to invoke computers safely or manually guard your call with [Computer.isDisabledOrFaulted]
      */
-    @Deprecated("Use ComputerBus.dispatchEvent and Computer.processEvent instead. For non-computer events, register them in initializers")
+    @Deprecated("Use ComputerBus.dispatchEvent and Computer.processEvent instead")
     open fun subscribeToEvents() {}
 
     /**

@@ -8,6 +8,7 @@ import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
+import org.joml.Vector2d
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -54,9 +55,9 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Pit
         groundImpactStatus =
             if (data.isInvulnerableTo(data.player.damageSources().fall())) {
                 Status.SAFE
-            } else if (groundImpactStatus == Status.SAFE && (data.velocity.y * 20 > -10 || groundImpactTime > cautionThreshold)) {
+            } else if (groundImpactStatus == Status.SAFE && (data.velocityPerSecond.y > -10 || groundImpactTime > cautionThreshold)) {
                 Status.SAFE
-            } else if (data.fallDistanceSafe || data.velocity.y * 20 > -7.5 || groundImpactTime > clearThreshold) {
+            } else if (data.fallDistanceSafe || data.velocityPerSecond.y > -7.5 || groundImpactTime > clearThreshold) {
                 Status.SAFE
             } else if (groundImpactStatus >= Status.CAUTION && groundImpactTime > warningThreshold) {
                 Status.CAUTION
@@ -97,7 +98,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Pit
 
     // IDEA: max/min terrain altitude on status display (that's gonna be so fucking cool /srs)
     private fun computeObstacleImpactTime(data: AirDataComputer, lookAheadTime: Float): Float {
-        val end: Vec3 = data.position.add(data.velocity.multiply(lookAheadTime * 20.0, 0.0, lookAheadTime * 20.0))
+        val end: Vec3 = data.position.add(data.velocityPerSecond.multiply(lookAheadTime.toDouble(), 0.0, lookAheadTime.toDouble()))
         val result: BlockHitResult = data.level.clip(
             ClipContext(
                 data.position,
@@ -110,7 +111,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Pit
         if (result.type != HitResult.Type.BLOCK) {
             return Float.MAX_VALUE
         } else {
-            val otherEnd: Vec3 = data.position.add(data.velocity.scale(lookAheadTime * 20.0))
+            val otherEnd: Vec3 = data.position.add(data.velocityPerSecond.scale(lookAheadTime.toDouble()))
             val otherResult: BlockHitResult = data.level.clip(
                 ClipContext(
                     data.position,
@@ -126,8 +127,8 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Pit
             }
         }
 
-        val relative: Vec3 = result.location.subtract(data.position)
-        return (relative.horizontalDistance() / (data.velocity.horizontalDistance() * 20.0f)).toFloat()
+        val distance: Double = Vector2d.distance(data.position.x, data.position.z, result.location.x, result.location.z)
+        return (distance / data.velocityPerSecond.horizontalDistance()).toFloat()
     }
 
     override fun getMinimumPitch(): ControlInput? {

@@ -1,6 +1,5 @@
 package ru.octol1ttle.flightassistant.impl.computer
 
-import java.util.function.Function
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
@@ -120,7 +119,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
         }
 
         for ((id: ResourceLocation, computer: Computer) in computers) {
-            if (computer.enabled) {
+            if (!computer.isDisabledOrFaulted()) {
                 try {
                     computer.tick()
                 } catch (t: Throwable) {
@@ -132,6 +131,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
         }
     }
 
+    @Deprecated("Will be private")
     override fun <C, T> guardedCall(computer: C, call: (C) -> T): T? {
         try {
             return call(computer)
@@ -164,10 +164,6 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
     }
 
     private fun onComputerFault(computer: Computer) {
-        if (computer.faulted) {
-            computer.enabled = false
-        }
-
         computer.faulted = true
         computer.faultCount++
         computer.reset()

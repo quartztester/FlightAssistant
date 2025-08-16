@@ -31,7 +31,7 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
             this.addRenderableWidget(SmartStringWidget((this.width * (max(0.4f, i.toFloat()) / optimumColumnsSize)).toInt(), Y0, component).setColor(ChatFormatting.GRAY.color!!))
         }
 
-        val list: EnrouteWaypointsList = this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize, state))
+        val list: EnrouteWaypointsList = this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize, computers, state))
 
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.enroute.add_waypoint")) {
             state.waypoints.add(EnrouteScreenState.Waypoint(active = if (state.waypoints.isEmpty()) FlightPlanComputer.EnrouteWaypoint.Active.TARGET else null))
@@ -39,12 +39,11 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         }.bounds(this.centerX - 50, this.height - Y0 * 2 + 5, 100, 20).build())
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
-            state = lastState.copy()
+            state = EnrouteScreenState.load(computers.plan)
             this.rebuildWidgets()
         }.pos(this.width - 290, this.height - 30).width(100).build())
 
         save = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.save")) { _: Button? ->
-            lastState = state.copy()
             state.save(computers.plan)
             list.rebuildEntries()
         }.pos(this.width - 180, this.height - 30).width(80).build())
@@ -55,13 +54,14 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        save.active = !state.equals(lastState)
-        discardChanges.active = save.active
-        done.active = !save.active
+        val hasUnsavedChanges: Boolean = !state.equals(EnrouteScreenState.load(computers.plan))
+        save.active = hasUnsavedChanges
+        discardChanges.active = hasUnsavedChanges
+        done.active = !hasUnsavedChanges
 
         super.render(guiGraphics, mouseX, mouseY, delta)
 
-        if (save.active) {
+        if (hasUnsavedChanges) {
             val text: Component = Component.translatable("menu.flightassistant.fms.enroute.unsaved_changes")
             guiGraphics.drawMiddleAlignedString(text, this.width / 4, 7, ChatFormatting.YELLOW.color!!, true)
         }
@@ -69,11 +69,9 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
 
     companion object {
         private const val Y0: Int = 30
-
-        private val COLUMNS: Array<Component> = arrayOf(literal("#"), literal("X"), literal("Z"), translatable("short.flightassistant.altitude"), translatable("short.flightassistant.speed"), translatable("short.flightassistant.distance"), translatable("short.flightassistant.time"))
         private const val HOVERING_COLUMNS_MARGIN: Float = 0.75f
+        private val COLUMNS: Array<Component> = arrayOf(literal("#"), literal("X"), literal("Z"), translatable("short.flightassistant.altitude"), translatable("short.flightassistant.speed"), translatable("short.flightassistant.distance"), translatable("short.flightassistant.time"))
 
-        private var lastState: EnrouteScreenState = EnrouteScreenState()
         private var state: EnrouteScreenState = EnrouteScreenState()
     }
 }

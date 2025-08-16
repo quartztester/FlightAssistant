@@ -323,9 +323,13 @@ mode.flightassistant:
     terrain_escape: TERR ESC
     pitch: PITCH
     altitude:
-      climb: CLIMB
-      descend: DESCEND
       hold: ALT HOLD
+      open:
+        climb: OP CLB
+        descend: OP DES
+      managed:
+        climb: CLIMB
+        descend: DESCEND
     speed_reference: SPD REF
   lateral:
     heading: HDG
