@@ -23,14 +23,22 @@ class EnrouteScreenState(
     }
 
     data class Waypoint(var coordinatesX: Int = 0, var coordinatesZ: Int = 0, var altitude: Int = 0, var speed: Int = 0, var active: FlightPlanComputer.EnrouteWaypoint.Active? = null) {
+        constructor(waypoint: FlightPlanComputer.EnrouteWaypoint) : this(waypoint.coordinatesX, waypoint.coordinatesZ, waypoint.altitude, waypoint.speed, waypoint.active) {
+            this.flightPlanWaypoint = waypoint
+        }
+
+        var flightPlanWaypoint: FlightPlanComputer.EnrouteWaypoint? = null
+
         fun toEnrouteWaypoint(): FlightPlanComputer.EnrouteWaypoint {
-            return FlightPlanComputer.EnrouteWaypoint(coordinatesX, coordinatesZ, altitude, speed, active)
+            val enrouteWaypoint = FlightPlanComputer.EnrouteWaypoint(coordinatesX, coordinatesZ, altitude, speed, active)
+            this.flightPlanWaypoint = enrouteWaypoint
+            return enrouteWaypoint
         }
     }
 
     companion object {
         fun load(flightPlan: FlightPlanComputer): EnrouteScreenState {
-            return EnrouteScreenState(flightPlan.enrouteData.map { Waypoint(it.coordinatesX, it.coordinatesZ, it.altitude, it.speed, it.active) }.toMutableList())
+            return EnrouteScreenState(flightPlan.enrouteData.map { Waypoint(it) }.toMutableList())
         }
     }
 }

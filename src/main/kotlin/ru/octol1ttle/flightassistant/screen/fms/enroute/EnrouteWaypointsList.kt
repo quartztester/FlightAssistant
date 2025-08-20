@@ -10,7 +10,6 @@ import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.network.chat.Component
-import org.joml.Vector2d
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
@@ -59,7 +58,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
             this.index = index
             this.hovering = hovering
 
-            val flightPlanWaypoint: FlightPlanComputer.EnrouteWaypoint? = computers.plan.enrouteData.find { it.copy(active = null) == this.state.toEnrouteWaypoint().copy(active = null) }
+            val flightPlanWaypoint: FlightPlanComputer.EnrouteWaypoint? = state.flightPlanWaypoint
             if (flightPlanWaypoint != null) {
                 val flightPlanActive: FlightPlanComputer.EnrouteWaypoint.Active? = flightPlanWaypoint.active
                 if (flightPlanActive != lastFlightPlanActive) {
@@ -102,7 +101,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
                 button.render(guiGraphics, mouseX, mouseY, partialTick)
             }
 
-            val distance: Double = Vector2d.distance(state.coordinatesX.toDouble(), state.coordinatesZ.toDouble(), computers.data.position.x, computers.data.position.z)
+            val distance: Double = distance2d(state.coordinatesX, state.coordinatesZ, computers.data.x, computers.data.z)
             guiGraphics.drawString(distance.roundToLong().toString(), (columnWidth * 5).toInt(), top, whiteColor, true)
 
             if (hasExtraSpace) {

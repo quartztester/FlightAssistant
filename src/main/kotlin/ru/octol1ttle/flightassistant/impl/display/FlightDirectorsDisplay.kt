@@ -1,5 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.display
 
+import com.mojang.math.Axis
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
@@ -25,22 +26,26 @@ class FlightDirectorsDisplay(computers: ComputerBus) : Display(computers) {
             pose().push()
 //? if <1.21.6
             pose().translate(0.0f, 0.0f, -100.0f)
+//? if >=1.21.6 {
+            /*pose().rotateAbout(ru.octol1ttle.flightassistant.api.util.radians(-computers.hudData.roll), centerXF, centerYF)
+*///?} else
+            pose().rotateAround(Axis.ZN.rotationDegrees(computers.hudData.roll), centerXF, centerYF, 0.0f)
+
             enableScissor(HudFrame.left, HudFrame.top, HudFrame.right, HudFrame.bottom)
 
-            // TODO: stop using ScreenSpace
+            val pitchTarget: Float? = computers.hudData.lerpedPitchInputTarget
             val pitchInput: ControlInput? = computers.pitch.activeInput
-            if (pitchInput != null && pitchInput.priority >= ControlInput.Priority.NORMAL) {
-                val pitchY: Int? = ScreenSpace.getY(computers.hudData.lerpedPitchInputTarget!!, false)
-                if (pitchY != null) {
-                    hLine(this.centerX - halfWidth, this.centerX + halfWidth, pitchY, primaryAdvisoryColor)
+            if (pitchTarget != null && pitchInput != null && pitchInput.priority >= ControlInput.Priority.NORMAL) {
+                ScreenSpace.getY(pitchTarget)?.let {
+                    hLine(this.centerX - halfWidth, this.centerX + halfWidth, it.coerceIn(HudFrame.top..<HudFrame.bottom), primaryAdvisoryColor)
                 }
             }
 
+            val headingTarget: Float? = computers.hudData.lerpedHeadingInputTarget
             val headingInput: ControlInput? = computers.heading.activeInput
-            if (headingInput != null && headingInput.priority >= ControlInput.Priority.NORMAL) {
-                val headingX: Int? = ScreenSpace.getX(computers.hudData.lerpedHeadingInputTarget!!, false)
-                if (headingX != null) {
-                    vLine(headingX, this.centerY - halfWidth, this.centerY + halfWidth, primaryAdvisoryColor)
+            if (headingTarget != null && headingInput != null && headingInput.priority >= ControlInput.Priority.NORMAL) {
+                ScreenSpace.getX(headingTarget)?.let {
+                    vLine(it.coerceIn(HudFrame.left..<HudFrame.right), this.centerY - halfWidth, this.centerY + halfWidth, primaryAdvisoryColor)
                 }
             }
 

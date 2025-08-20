@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.api.autoflight.thrust
 
 /**
- * Defines a source of thrust to be used by the [ru.octol1ttle.flightassistant.impl.computer.autoflight.ThrustComputer]
+ * Defines a source of thrust to be used by the [ru.octol1ttle.flightassistant.impl.computer.autoflight.base.ThrustComputer]
  */
 interface ThrustSource {
     /**

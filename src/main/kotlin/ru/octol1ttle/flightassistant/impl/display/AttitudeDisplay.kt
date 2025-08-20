@@ -36,12 +36,18 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
 *///?} else
             pose().rotateAround(Axis.ZN.rotationDegrees(computers.hudData.roll), centerXF, centerYF, 0.0f)
 
+            if (!FAConfig.display.drawPitchOutsideFrame) {
+                HudFrame.scissor(this)
+            }
             if (FAConfig.display.showAttitude <= DisplayOptions.AttitudeDisplayMode.HORIZON_ONLY) {
                 renderHorizon()
             }
             if (FAConfig.display.showAttitude == DisplayOptions.AttitudeDisplayMode.HORIZON_AND_LADDER) {
                 renderPitchBars()
                 renderPitchLimits()
+            }
+            if (!FAConfig.display.drawPitchOutsideFrame) {
+                disableScissor()
             }
 
             pose().pop()
@@ -52,10 +58,6 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
     }
 
     private fun GuiGraphics.renderHorizon() {
-        if (!FAConfig.display.drawPitchOutsideFrame) {
-            HudFrame.scissor(this)
-        }
-
         ScreenSpace.getY(0.0f)?.let {
             val leftXEnd: Int = (centerXF - halfWidth * 0.025f).toInt()
             val leftXStart: Int = (leftXEnd - halfWidth * 0.3f).toInt()
@@ -67,17 +69,10 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
             hLine(rightXStart, rightXEnd, it, primaryColor)
             drawString("0", rightXEnd + 5, it - 3, primaryColor)
         }
-
-        if (!FAConfig.display.drawPitchOutsideFrame) {
-            disableScissor()
-        }
     }
 
     private fun GuiGraphics.renderPitchBars() {
         val step: Int = FAConfig.display.attitudeDegreeStep
-        if (!FAConfig.display.drawPitchOutsideFrame) {
-            HudFrame.scissor(this)
-        }
         val nextUp: Int = Mth.roundToward(computers.data.pitch.toInt(), step)
         for (i: Int in nextUp..90 step step) {
             drawPitchBar(i, (ScreenSpace.getY(i.toFloat()) ?: break))
@@ -87,16 +82,11 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
         for (i: Int in nextDown downTo -90 step step) {
             drawPitchBar(i, (ScreenSpace.getY(i.toFloat()) ?: break))
         }
-        if (!FAConfig.display.drawPitchOutsideFrame) {
-            disableScissor()
-        }
     }
 
     private fun GuiGraphics.renderPitchLimits() {
         val step: Int = FAConfig.display.attitudeDegreeStep / 2
-        if (!FAConfig.display.drawPitchOutsideFrame) {
-            HudFrame.scissor(this)
-        }
+
         val arrowText: Component = Component.literal("V")
 
         val maxInput: ControlInput? = computers.pitch.maximumPitch
@@ -124,10 +114,6 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
 
             pose().pop()
             min -= step
-        }
-
-        if (!FAConfig.display.drawPitchOutsideFrame) {
-            disableScissor()
         }
     }
 

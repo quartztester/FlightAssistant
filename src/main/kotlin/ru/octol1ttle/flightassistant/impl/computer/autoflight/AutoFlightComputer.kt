@@ -143,7 +143,7 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             return null
         }
 
-        return activeVerticalMode?.getControlInput(computers)?.copy(active = autopilot)
+        return activeVerticalMode?.getControlInput(computers)?.copy(active = autopilot, deltaTimeMultiplier = 1.5f)
     }
 
     override fun getHeadingInput(): ControlInput? {
@@ -151,7 +151,7 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             return null
         }
 
-        return activeLateralMode?.getControlInput(computers)?.copy(active = autopilot)
+        return activeLateralMode?.getControlInput(computers)?.copy(active = autopilot, deltaTimeMultiplier = 1.5f)
     }
 
     override fun getRollInput(): ControlInput? {
@@ -159,7 +159,7 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             return null
         }
 
-        return ControlInput(0.0f, ControlInput.Priority.NORMAL)
+        return ControlInput(0.0f, ControlInput.Priority.NORMAL, deltaTimeMultiplier = 2.0f)
     }
 
     override fun reset() {

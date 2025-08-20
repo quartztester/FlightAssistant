@@ -33,6 +33,10 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
 
     val position: Vec3
         get() = player.position()
+    val x: Double
+        get() = position.x
+    val z: Double
+        get() = position.z
     val altitude: Double
         get() = position.y
     val voidY: Int

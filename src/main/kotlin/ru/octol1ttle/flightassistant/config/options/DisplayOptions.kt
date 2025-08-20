@@ -50,7 +50,8 @@ class DisplayOptions {
 
     @SerialEntry
     var showFlightPathVector: Boolean = true
-    @SerialEntry
+
+    @SerialEntry @Deprecated("does anyone use this??")
     var flightPathVectorSize: Float = 1.0f
 
     @SerialEntry

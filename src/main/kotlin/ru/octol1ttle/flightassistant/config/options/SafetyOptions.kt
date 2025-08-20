@@ -42,7 +42,7 @@ class SafetyOptions {
     @SerialEntry
     var sinkRateAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
     @SerialEntry
-    var sinkRateLimitPitch: Boolean = true
+    var sinkRateLimitPitch: Boolean = true // TODO: this often triggers BEFORE the automatic recovery. they should trigger at the same time and be paired with each other.
     @SerialEntry
     var sinkRateAutoThrust: Boolean = true
     @SerialEntry
