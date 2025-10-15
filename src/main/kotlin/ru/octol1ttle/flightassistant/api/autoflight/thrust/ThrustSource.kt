@@ -17,16 +17,6 @@ interface ThrustSource {
     val supportsReverse: Boolean
 
     /**
-     * Defines the optimum climb pitch which should be used when this thrust source is active.
-     */
-    val optimumClimbPitch: Float
-
-    /**
-     * Defines the pitch which should be used for holding altitude when this thrust source is active.
-     */
-    val altitudeHoldPitch: Float
-
-    /**
      * @return whether this thrust source can be used right now. For example, there are fireworks in the player's hand that can be used.
      */
     fun isAvailable(): Boolean

@@ -11,6 +11,8 @@ import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
+import ru.octol1ttle.flightassistant.api.util.FATickCounter
+import ru.octol1ttle.flightassistant.api.util.FloatLerper
 import ru.octol1ttle.flightassistant.api.util.ScreenSpace
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 import ru.octol1ttle.flightassistant.config.FAConfig
@@ -18,6 +20,9 @@ import ru.octol1ttle.flightassistant.config.options.DisplayOptions
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 
 class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
+    private val minimumLerper: FloatLerper = FloatLerper()
+    private val maximumLerper: FloatLerper = FloatLerper()
+
     override fun allowedByConfig(): Boolean {
         return FAConfig.display.showAttitude != DisplayOptions.AttitudeDisplayMode.DISABLED
     }
@@ -91,8 +96,8 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
 
         val maxInput: ControlInput? = computers.pitch.maximumPitch
         val minInput: ControlInput? = computers.pitch.minimumPitch
-        var max: Float = maxInput?.target ?: 90.0f
-        var min: Float = (minInput?.target ?: -90.0f).coerceAtMost(max)
+        var max: Float = maximumLerper.get(maxInput?.target, FATickCounter.timePassed) ?: 90.0f
+        var min: Float = (minimumLerper.get(minInput?.target, FATickCounter.timePassed) ?: -90.0f).coerceAtMost(max)
 
         while (max <= 180) {
             val y: Int = ScreenSpace.getY(max) ?: break

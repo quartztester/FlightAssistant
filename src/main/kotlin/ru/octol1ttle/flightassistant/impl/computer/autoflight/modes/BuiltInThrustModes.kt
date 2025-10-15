@@ -22,6 +22,9 @@ data class TakeoffThrustMode(val data: FlightPlanComputer.DepartureData) : AutoF
 data class SpeedThrustMode(override val targetSpeed: Int) : AutoFlightComputer.ThrustMode, AutoFlightComputer.FollowsSpeedMode {
     override fun getControlInput(computers: ComputerBus): ControlInput {
         val currentThrust: Float = computers.thrust.current
+        if (FATickCounter.ticksPassed == 0) {
+            return ControlInput(currentThrust, ControlInput.Priority.NORMAL, Component.translatable("mode.flightassistant.thrust.speed"))
+        }
         val currentSpeed: Double = computers.data.forwardVelocityPerSecond.length()
         val acceleration: Double = computers.data.forwardAcceleration * 20.0
 

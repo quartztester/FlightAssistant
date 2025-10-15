@@ -43,24 +43,24 @@ abstract class Computer(val computers: ComputerBus) {
     /**
      * Called when another computer dispatches a ComputerEvent.
      */
-    open fun <Event : ComputerEvent> processEvent(event: Event) {}
+    open fun <Event : ComputerEvent> handleEvent(event: Event) {}
 
     /**
      * Called when another computer dispatches a ComputerQuery.
      */
-    open fun <Response> processQuery(query: ComputerQuery<Response>) {}
+    open fun <Response> handleQuery(query: ComputerQuery<Response>) {}
 
     /**
      * Called once after all computers have been registered. Subscribe to any events provided by other computers here.
      * Be careful calling other computers' code here! Depending on where events are invoked, a fault may cause a game crash.
      * Use [ComputerBus.guardedCall] to invoke computers safely or manually guard your call with [Computer.isDisabledOrFaulted]
      */
-    @Deprecated("Use ComputerBus.dispatchEvent and Computer.processEvent instead")
+    @Deprecated("Use ComputerBus.dispatchEvent and Computer.handleEvent instead")
     open fun subscribeToEvents() {}
 
     /**
      * Called once after [subscribeToEvents]. Invoke events that your computer provides here.
      */
-    @Deprecated("Use ComputerBus.dispatchEvent and Computer.processEvent instead")
+    @Deprecated("Use ComputerBus.dispatchEvent and Computer.handleEvent instead")
     open fun invokeEvents() {}
 }

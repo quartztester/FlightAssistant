@@ -327,7 +327,8 @@ mode.flightassistant:
     terrain_escape: ЗЕМЛ ИЗБЕЖ
     selected_pitch: УГОЛ
     altitude:
-      hold: ВЫС
+      hold: ВЫС УДЕРЖ
+      cruise: ВЫС КРЕЙС
       open:
         climb: СВ НАБОР
         descend: СВ СНИЖ
@@ -366,6 +367,17 @@ short.flightassistant:
 status.flightassistant:
   thrust: 'ТЯГА: %s'
   firework_count: 'ЧИСЛ ФРВК: %s'
+  flight_plan:
+    flight_phase:
+      on_ground: НА ЗЕМЛЕ
+      takeoff: ВЗЛЕТ
+      climb: НАБОР
+      cruise: КРЕЙСЕР
+      descend: СНИЖЕНИЕ
+      approach: ЗАХОД
+      landing: ПОСАДКА
+    waypoint_distance: 'ТОЧК ДИСТ: %s'
+    waypoint_time: 'ТОЧК ВРЕМ: %s'
 
 misc.flightassistant:
   waiting_for_world_load:

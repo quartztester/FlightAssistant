@@ -9,10 +9,15 @@ import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
 import ru.octol1ttle.flightassistant.api.display.HudFrame
+import ru.octol1ttle.flightassistant.api.util.FATickCounter
+import ru.octol1ttle.flightassistant.api.util.FloatLerper
 import ru.octol1ttle.flightassistant.api.util.ScreenSpace
 import ru.octol1ttle.flightassistant.api.util.extensions.*
 
 class FlightDirectorsDisplay(computers: ComputerBus) : Display(computers) {
+    private val pitchTargetLerper: FloatLerper = FloatLerper()
+    private val headingTargetLerper: FloatLerper = FloatLerper()
+    
     override fun allowedByConfig(): Boolean = true
 
     override fun render(guiGraphics: GuiGraphics) {
@@ -33,19 +38,19 @@ class FlightDirectorsDisplay(computers: ComputerBus) : Display(computers) {
 
             enableScissor(HudFrame.left, HudFrame.top, HudFrame.right, HudFrame.bottom)
 
-            val pitchTarget: Float? = computers.hudData.lerpedPitchInputTarget
             val pitchInput: ControlInput? = computers.pitch.activeInput
+            val pitchTarget: Float? = pitchTargetLerper.get(pitchInput?.target, FATickCounter.timePassed * 1.5f)
             if (pitchTarget != null && pitchInput != null && pitchInput.priority >= ControlInput.Priority.NORMAL) {
                 ScreenSpace.getY(pitchTarget)?.let {
-                    hLine(this.centerX - halfWidth, this.centerX + halfWidth, it.coerceIn(HudFrame.top..<HudFrame.bottom), primaryAdvisoryColor)
+                    hLine(this.centerX - halfWidth, this.centerX + halfWidth, it.coerceIn(HudFrame.top + 1..<HudFrame.bottom - 1), primaryAdvisoryColor)
                 }
             }
 
-            val headingTarget: Float? = computers.hudData.lerpedHeadingInputTarget
             val headingInput: ControlInput? = computers.heading.activeInput
+            val headingTarget: Float? = headingTargetLerper.get(headingInput?.target, FATickCounter.timePassed * 1.5f)
             if (headingTarget != null && headingInput != null && headingInput.priority >= ControlInput.Priority.NORMAL) {
                 ScreenSpace.getX(headingTarget)?.let {
-                    vLine(it.coerceIn(HudFrame.left..<HudFrame.right), this.centerY - halfWidth, this.centerY + halfWidth, primaryAdvisoryColor)
+                    vLine(it.coerceIn(HudFrame.left + 1..<HudFrame.right - 1), this.centerY - halfWidth, this.centerY + halfWidth, primaryAdvisoryColor)
                 }
             }
 

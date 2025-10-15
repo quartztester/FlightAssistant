@@ -97,25 +97,7 @@ class ThrustComputer(computers: ComputerBus) : Computer(computers) {
         }
     }
 
-    fun getOptimumClimbPitch(): Float {
-        val thrustSource: ThrustSource? = getThrustSource()
-        if (thrustSource != null) {
-            return thrustSource.optimumClimbPitch
-        }
-
-        return 55.0f
-    }
-
-    fun getAltitudeHoldPitch(): Float {
-        val thrustSource: ThrustSource? = getThrustSource()
-        if (thrustSource != null) {
-            return thrustSource.altitudeHoldPitch
-        }
-
-        return 5.0f
-    }
-
-    override fun <Response> processQuery(query: ComputerQuery<Response>) {
+    override fun <Response> handleQuery(query: ComputerQuery<Response>) {
         if (query is StatusDisplay.StatusMessageQuery) {
             // TODO: show actual thrust output and requested thrust (both by user and autoflight)
             if (getThrustSource() != null || current != 0.0f) {

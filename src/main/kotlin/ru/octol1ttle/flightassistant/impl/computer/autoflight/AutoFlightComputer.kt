@@ -1,5 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
+import java.util.Objects
 import kotlin.math.abs
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
@@ -34,12 +35,33 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
     var selectedVerticalMode: VerticalMode? = null
     var selectedLateralMode: LateralMode? = null
 
-    val activeThrustMode: ThrustMode?
-        get() = selectedThrustMode ?: computers.plan.getThrustMode()
-    val activeVerticalMode: VerticalMode?
-        get() = selectedVerticalMode ?: computers.plan.getVerticalMode()
-    val activeLateralMode: LateralMode?
-        get() = selectedLateralMode ?: computers.plan.getLateralMode()
+    // Allow modes to retain state if their input data hasn't changed
+    var activeThrustMode: ThrustMode? = null
+        get() {
+            val refreshed: ThrustMode? = selectedThrustMode ?: computers.plan.getThrustMode()
+            if (!Objects.equals(field, refreshed)) {
+                field = refreshed
+            }
+            return field
+        }
+
+    var activeVerticalMode: VerticalMode? = null
+        get() {
+            val refreshed: VerticalMode? = selectedVerticalMode ?: computers.plan.getVerticalMode()
+            if (!Objects.equals(field, refreshed)) {
+                field = refreshed
+            }
+            return field
+        }
+
+    var activeLateralMode: LateralMode? = null
+        get() {
+            val refreshed: LateralMode? = selectedLateralMode ?: computers.plan.getLateralMode()
+            if (!Objects.equals(field, refreshed)) {
+                field = refreshed
+            }
+            return field
+        }
 
     override fun subscribeToEvents() {
         ThrustControllerRegistrationCallback.EVENT.register { it.accept(this) }
@@ -89,27 +111,6 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
 
         pitchResistance = (pitchResistance - FATickCounter.timePassed * 10.0f).coerceAtLeast(0.0f)
         headingResistance = (headingResistance - FATickCounter.timePassed * 20.0f).coerceAtLeast(0.0f)
-
-        if (autoThrust) {
-            autoThrustAlert = false
-            if (computers.thrust.isDisabledOrFaulted()) {
-                setAutoThrust(false, alert = true)
-            }
-        }
-
-        if (autopilot) {
-            autopilotAlert = false
-
-            val pitchInput: ControlInput? = computers.pitch.activeInput
-            if (computers.pitch.isDisabledOrFaulted() || pitchInput != null && pitchInput.priority < ControlInput.Priority.NORMAL) {
-                setAutoPilot(false, alert = true)
-            }
-
-            val headingInput: ControlInput? = computers.heading.activeInput
-            if (computers.heading.isDisabledOrFaulted() || headingInput != null && headingInput.priority < ControlInput.Priority.NORMAL) {
-                setAutoPilot(false, alert = true)
-            }
-        }
     }
 
     fun setFlightDirectors(flightDirectors: Boolean) {

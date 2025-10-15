@@ -148,7 +148,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
     override fun <Event : ComputerEvent> dispatchEvent(event: Event) {
         for (computer: Computer in computers.values) {
             if (!computer.isDisabledOrFaulted()) {
-                guardedCall(computer) { it.processEvent(event) }
+                guardedCall(computer) { it.handleEvent(event) }
             }
         }
     }
@@ -156,7 +156,7 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
     override fun <Response> dispatchQuery(query: ComputerQuery<Response>): Collection<Response> {
         for (computer: Computer in computers.values) {
             if (!computer.isDisabledOrFaulted()) {
-                guardedCall(computer) { it.processQuery(query) }
+                guardedCall(computer) { it.handleQuery(query) }
             }
         }
 

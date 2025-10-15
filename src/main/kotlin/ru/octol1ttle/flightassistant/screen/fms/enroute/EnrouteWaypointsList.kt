@@ -105,9 +105,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
             guiGraphics.drawString(distance.roundToLong().toString(), (columnWidth * 5).toInt(), top, whiteColor, true)
 
             if (hasExtraSpace) {
-                val duration: Duration = Duration.ofSeconds((distance / computers.data.velocityPerSecond.horizontalDistance()).roundToLong())
-                val string: String = if (computers.data.flying) "${duration.toMinutesPart()}:${"%02d".format(duration.toSecondsPart())}" else "--:--"
-                guiGraphics.drawString(string, (columnWidth * 6).toInt(), top, whiteColor, true)
+                guiGraphics.drawString(computers.plan.getFormattedTime(distance), (columnWidth * 6).toInt(), top, whiteColor, true)
             }
         }
 

@@ -7,10 +7,9 @@ import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
 import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchControllerRegistrationCallback
-import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiter
-import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiterRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
+import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.event.EntityTurnEvents
 import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
@@ -18,7 +17,6 @@ import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriorit
 import ru.octol1ttle.flightassistant.api.util.requireIn
 
 class PitchComputer(computers: ComputerBus) : Computer(computers), FlightController {
-    private val limiters: MutableList<PitchLimiter> = ArrayList()
     private val controllers: MutableList<FlightController> = ArrayList()
     internal var manualOverride: Boolean = false
 
@@ -54,7 +52,6 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
     }
 
     override fun invokeEvents() {
-        PitchLimiterRegistrationCallback.EVENT.invoker().register(limiters::add)
         PitchControllerRegistrationCallback.EVENT.invoker().register(controllers::add)
     }
 
@@ -92,7 +89,7 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
     }
 
     private fun updateSafePitches() {
-        val maximums: List<ControlInput> = limiters.filterWorking().mapNotNull { it.getMaximumPitch() }.sortedBy { it.priority.value }
+        val maximums: List<ControlInput> = computers.dispatchQuery(MaximumPitchQuery()).sortedBy { it.priority.value }
         maximumPitch = maximums.getActiveHighestPriority().minByOrNull { it.target }
         val max: ControlInput? = maximumPitch
         if (max != null) {
@@ -100,7 +97,7 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
             max.deltaTimeMultiplier.requireIn(0.001f..Float.MAX_VALUE)
         }
 
-        val minimums: List<ControlInput> = limiters.filterWorking().mapNotNull { it.getMinimumPitch() }.sortedBy { it.priority.value }
+        val minimums: List<ControlInput> = computers.dispatchQuery(MinimumPitchQuery()).sortedBy { it.priority.value }
         minimumPitch = minimums.getActiveHighestPriority().maxByOrNull { it.target }
         val min: ControlInput? = minimumPitch
         if (min != null) {
@@ -155,6 +152,9 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
         maximumPitch = null
         activeInput = null
     }
+
+    class MinimumPitchQuery : ComputerQuery<ControlInput>()
+    class MaximumPitchQuery : ComputerQuery<ControlInput>()
 
     companion object {
         val ID: ResourceLocation = FlightAssistant.id("pitch")

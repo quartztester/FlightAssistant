@@ -1,4 +1,4 @@
-package ru.octol1ttle.flightassistant.screen.fms.departure
+package ru.octol1ttle.flightassistant.screen.fms.arrival
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
@@ -10,8 +10,9 @@ import ru.octol1ttle.flightassistant.api.util.extensions.toIntOrNullWithFallback
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 import ru.octol1ttle.flightassistant.screen.components.TypeStrictEditBox
+import ru.octol1ttle.flightassistant.screen.fms.departure.DepartureScreenState
 
-class DepartureScreen(parent: Screen) : FABaseScreen(parent, Component.translatable("menu.flightassistant.fms.departure")) {
+class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatable("menu.flightassistant.fms.arrival")) {
     private lateinit var discardChanges: Button
 
     override fun init() {

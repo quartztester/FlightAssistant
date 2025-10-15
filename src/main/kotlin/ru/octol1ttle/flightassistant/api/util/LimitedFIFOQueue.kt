@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.api.util
 
 class LimitedFIFOQueue<T>(private val maxSize: Int): Collection<T> {
-    private var backingList: MutableList<T> = ArrayList()
+    private val backingList: MutableList<T> = ArrayList()
 
     fun add(element: T) {
         backingList.add(0, element)

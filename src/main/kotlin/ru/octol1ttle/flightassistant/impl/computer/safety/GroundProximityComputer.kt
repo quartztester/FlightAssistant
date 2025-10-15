@@ -12,17 +12,17 @@ import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
 import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchControllerRegistrationCallback
-import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiter
-import ru.octol1ttle.flightassistant.api.autoflight.pitch.PitchLimiterRegistrationCallback
 import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegistrationCallback
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
+import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
 import ru.octol1ttle.flightassistant.api.util.inverseMin
 import ru.octol1ttle.flightassistant.api.util.requireIn
 import ru.octol1ttle.flightassistant.config.FAConfig
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.PitchComputer
 import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
 
-class GroundProximityComputer(computers: ComputerBus) : Computer(computers), PitchLimiter, FlightController {
+class GroundProximityComputer(computers: ComputerBus) : Computer(computers), FlightController {
     private var groundImpactTime: Double = Double.MAX_VALUE
     var groundImpactStatus: Status = Status.SAFE
         private set
@@ -32,7 +32,6 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Pit
 
     override fun subscribeToEvents() {
         ThrustControllerRegistrationCallback.EVENT.register { it.accept(this) }
-        PitchLimiterRegistrationCallback.EVENT.register { it.accept(this) }
         PitchControllerRegistrationCallback.EVENT.register { it.accept(this) }
     }
 
@@ -115,21 +114,19 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Pit
         return data.position.distanceTo(result.location) / data.forwardVelocityPerSecond.length()
     }
 
-    override fun getMinimumPitch(): ControlInput? {
-        if (groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateLimitPitch || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleLimitPitch) {
-            return ControlInput(
-                computers.data.pitch.coerceAtMost(computers.thrust.getAltitudeHoldPitch()),
+    override fun <Response> handleQuery(query: ComputerQuery<Response>) {
+        if (query is PitchComputer.MinimumPitchQuery && (groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateLimitPitch || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleLimitPitch)) {
+            query.respond(ControlInput(
+                computers.data.pitch.coerceAtMost(15.0f),
                 ControlInput.Priority.HIGH,
                 Component.translatable("mode.flightassistant.vertical.terrain_protection")
-            )
+            ))
         }
-
-        return null
     }
 
     override fun getThrustInput(): ControlInput? {
         if (groundImpactStatus <= Status.CAUTION && FAConfig.safety.sinkRateAutoThrust || obstacleImpactStatus <= Status.CAUTION && FAConfig.safety.obstacleAutoThrust) {
-            if (computers.data.pitch <= computers.thrust.getAltitudeHoldPitch()) {
+            if (computers.data.pitch <= 15.0f) {
                 return ControlInput(
                     0.0f,
                     ControlInput.Priority.HIGH,

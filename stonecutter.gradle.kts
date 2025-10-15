@@ -13,6 +13,7 @@ allprojects {
             filter { groups.forEach(::includeGroup) }
         }
 
+        mavenLocal()
         mavenCentral()
         strictMaven("https://maven.architectury.dev/", "dev.architectury")
         strictMaven("https://maven.fabricmc.net/", "net.fabricmc")

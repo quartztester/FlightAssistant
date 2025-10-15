@@ -324,6 +324,7 @@ mode.flightassistant:
     pitch: PITCH
     altitude:
       hold: ALT HOLD
+      cruise: ALT CRZ
       open:
         climb: OP CLB
         descend: OP DES
@@ -364,10 +365,17 @@ short.flightassistant:
 status.flightassistant:
   thrust: 'THR: %s'
   firework_count: 'FRWK CNT: %s'
-  flight_phase:
-    on_ground: ON GROUND
-    takeoff: TAKEOFF
-    climb: CLIMB
+  flight_plan:
+    phase:
+      on_ground: ON GROUND
+      takeoff: TAKEOFF
+      climb: CLIMB
+      cruise: CRUISE
+      descend: DESCEND
+      approach: APPROACH
+      landing: LANDING
+    waypoint_distance: 'WP DIST: %s'
+    waypoint_time: 'WP TIME: %s'
 
 misc.flightassistant:
   waiting_for_world_load:

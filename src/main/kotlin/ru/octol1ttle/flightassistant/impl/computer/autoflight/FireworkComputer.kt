@@ -24,8 +24,6 @@ import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
 class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Computer(computers), ThrustSource {
     override val priority: ThrustSource.Priority = ThrustSource.Priority.LOW
     override val supportsReverse: Boolean = false
-    override val optimumClimbPitch: Float = 55.0f
-    override val altitudeHoldPitch: Float = 2.0f
 
     private var safeFireworkCount: Int = 0
 
@@ -33,7 +31,7 @@ class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Comp
     var waitingForResponse: Boolean = false
     var lastActivationTime: Int = 0
 
-    var responseTimes: LimitedFIFOQueue<Int> = LimitedFIFOQueue(5)
+    val responseTimes: LimitedFIFOQueue<Int> = LimitedFIFOQueue(5)
 
     override fun subscribeToEvents() {
         ThrustSourceRegistrationCallback.EVENT.register { it.accept(this) }
@@ -152,7 +150,7 @@ class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Comp
         }
     }
 
-    override fun <Response> processQuery(query: ComputerQuery<Response>) {
+    override fun <Response> handleQuery(query: ComputerQuery<Response>) {
         if (query is StatusDisplay.StatusMessageQuery && computers.thrust.getThrustSource() == this) {
             query.respond(Component.translatable("status.flightassistant.firework_count", safeFireworkCount))
         }

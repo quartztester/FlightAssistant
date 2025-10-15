@@ -1,29 +1,37 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
+import java.time.Duration
+import kotlin.math.abs
+import kotlin.math.roundToLong
+import net.minecraft.SharedConstants
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
+import ru.octol1ttle.flightassistant.api.util.FATickCounter
+import ru.octol1ttle.flightassistant.api.util.LimitedFIFOQueue
 import ru.octol1ttle.flightassistant.api.util.extensions.distance2d
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.DirectCoordinatesLateralMode
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.ManagedAltitudeVerticalMode
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.SelectedAltitudeVerticalMode
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.SpeedReferenceVerticalMode
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.TakeoffThrustMode
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.TrackNavigationLateralMode
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.*
 import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
 
 class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     var currentPhase: FlightPhase = FlightPhase.ON_GROUND
         private set
+
     var departureData: DepartureData = DepartureData.DEFAULT
     val enrouteData: MutableList<EnrouteWaypoint> = ArrayList()
+    var arrivalData: ArrivalData = ArrivalData.DEFAULT
+
+    var groundSpeeds: LimitedFIFOQueue<Double> = LimitedFIFOQueue(SharedConstants.TICKS_PER_SECOND * 5)
 
     override fun tick() {
         currentPhase = updateFlightPhase()
         updateEnrouteData()
+        if (FATickCounter.ticksPassed != 0) {
+            groundSpeeds.add(computers.data.velocityPerSecond.horizontalDistance())
+        }
     }
 
     private fun getEnrouteOrigin(): EnrouteWaypoint? {
@@ -38,12 +46,15 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     }
 
     private fun isCloseTo(target: EnrouteWaypoint): Boolean {
-        return distance2d(target.coordinatesX, target.coordinatesZ, computers.data.x, computers.data.z) < computers.data.velocityPerSecond.horizontalDistance() * 3.0
+        return getDistanceToTarget(target) < computers.data.velocityPerSecond.horizontalDistance() * 3.0
     }
 
     private fun updateFlightPhase(): FlightPhase {
         if (!computers.data.flying) {
             if (!departureData.isDefault() && distance2d(departureData.coordinatesX, departureData.coordinatesZ, computers.data.x, computers.data.z) < 20) {
+                getEnrouteOrigin()?.active = null
+                getEnrouteTarget()?.active = null
+                enrouteData[0].active = EnrouteWaypoint.Active.TARGET
                 return FlightPhase.TAKEOFF
             }
             return FlightPhase.ON_GROUND
@@ -58,18 +69,25 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             return FlightPhase.TAKEOFF
         }
 
-        if (currentPhase == FlightPhase.CLIMB) {
+        val cruiseAltitude: Int? = enrouteData.maxOfOrNull { it.altitude }
+        if (cruiseAltitude == null) {
+            return FlightPhase.UNKNOWN
+        }
+        val diff: Double = cruiseAltitude - computers.data.altitude
+        if (abs(diff) <= 10) {
+            return FlightPhase.CRUISE
+        }
+        if (diff > 0) {
             return FlightPhase.CLIMB
+        }
+        if (diff < 0) {
+            return FlightPhase.DESCEND
         }
 
         return FlightPhase.UNKNOWN
     }
 
     private fun updateEnrouteData() {
-        if (enrouteData.isEmpty()) {
-            return
-        }
-
         val target: EnrouteWaypoint = getEnrouteTarget() ?: return
 
         if (isCloseTo(target)) {
@@ -85,31 +103,37 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         }
     }
 
+    fun getDistanceToTarget(target: EnrouteWaypoint): Double {
+        return distance2d(target.coordinatesX, target.coordinatesZ, computers.data.x, computers.data.z)
+    }
+
+    fun getFormattedTime(distance: Double): String {
+        val duration: Duration = Duration.ofSeconds((distance / groundSpeeds.average()).roundToLong())
+        return if (computers.data.flying) "${duration.toMinutesPart()}:${"%02d".format(duration.toSecondsPart())}" else "--:--"
+    }
+
     fun getThrustMode(): AutoFlightComputer.ThrustMode? {
         return when (currentPhase) {
             FlightPhase.TAKEOFF -> TakeoffThrustMode(departureData)
-            else -> null
+            else -> {
+                val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
+                return if (target.speed != 0) SpeedThrustMode(target.speed) else null
+            }
         }
     }
 
     fun getVerticalMode(): AutoFlightComputer.VerticalMode? {
         return when (currentPhase) {
             FlightPhase.TAKEOFF -> {
-                val target: EnrouteWaypoint? = getEnrouteTarget()
-                if (target != null && target.altitude - computers.data.altitude < 5) {
-                    return SelectedAltitudeVerticalMode(target.altitude)
-                }
-                return SpeedReferenceVerticalMode(departureData.minimumClimbSpeed)
+                val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
+                return if (target.altitude - computers.data.altitude > 10) SelectedAltitudeVerticalMode(target.altitude) else null
             }
-
-            FlightPhase.CLIMB -> {
-                if (enrouteData.isEmpty()) return null
+            else -> {
                 val origin: EnrouteWaypoint? = getEnrouteOrigin()
                 val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
                 if (origin != null) ManagedAltitudeVerticalMode(origin.coordinatesX, origin.coordinatesZ, origin.altitude, target.coordinatesX, target.coordinatesZ, target.altitude)
                 else SelectedAltitudeVerticalMode(target.altitude)
             }
-            else -> null
         }
     }
 
@@ -117,24 +141,28 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         return when (currentPhase) {
             FlightPhase.UNKNOWN -> null
             FlightPhase.TAKEOFF -> {
-                if (enrouteData.isEmpty()) return null
-                TrackNavigationLateralMode(departureData.coordinatesX, departureData.coordinatesZ, enrouteData[0].coordinatesX, enrouteData[0].coordinatesZ)
+                val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
+                TrackNavigationLateralMode(departureData.coordinatesX, departureData.coordinatesZ, target.coordinatesX, target.coordinatesZ)
             }
-
-            FlightPhase.CLIMB -> {
-                if (enrouteData.isEmpty()) return null
+            else -> {
                 val origin: EnrouteWaypoint? = getEnrouteOrigin()
                 val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
                 if (origin != null) TrackNavigationLateralMode(origin.coordinatesX, origin.coordinatesZ, target.coordinatesX, target.coordinatesZ)
                 else DirectCoordinatesLateralMode(target.coordinatesX, target.coordinatesZ)
             }
-            else -> null
         }
     }
 
-    override fun <Response> processQuery(query: ComputerQuery<Response>) {
+    override fun <Response> handleQuery(query: ComputerQuery<Response>) {
+        // TODO: config
         if (query is StatusDisplay.StatusMessageQuery && currentPhase != FlightPhase.UNKNOWN && (!departureData.isDefault() || enrouteData.isNotEmpty())) {
-            query.respond(Component.translatable("status.flightassistant.flight_phase.${currentPhase.name.lowercase()}"))
+            query.respond(Component.translatable("status.flightassistant.flight_plan.phase.${currentPhase.name.lowercase()}"))
+            val target: EnrouteWaypoint? = getEnrouteTarget()
+            if (target != null) {
+                val distance: Double = getDistanceToTarget(target)
+                query.respond(Component.translatable("status.flightassistant.flight_plan.waypoint_distance", distance.roundToLong().toString()))
+                query.respond(Component.translatable("status.flightassistant.flight_plan.waypoint_time", getFormattedTime(distance)))
+            }
         }
     }
 
@@ -150,10 +178,14 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         UNKNOWN,
         ON_GROUND,
         TAKEOFF,
-        CLIMB
+        CLIMB,
+        CRUISE,
+        DESCEND,
+        APPROACH,
+        LANDING
     }
 
-    data class DepartureData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val takeoffThrust: Float = 1.0f, val minimumClimbSpeed: Int = 15) {
+    data class DepartureData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val takeoffThrust: Float = 0.0f) {
         fun isDefault(): Boolean {
             return this == DEFAULT
         }
@@ -171,6 +203,21 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         enum class Active {
             ORIGIN,
             TARGET
+        }
+    }
+
+    data class ArrivalData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val minimums: Int = 0, val minimumsType: MinimumsType = MinimumsType.ABSOLUTE, val goAroundAltitude: Int = 0, val approachReEntryWaypointIndex: Int = 0) {
+        enum class MinimumsType {
+            ABSOLUTE,
+            RELATIVE
+        }
+
+        fun isDefault(): Boolean {
+            return this == DEFAULT
+        }
+
+        companion object {
+            val DEFAULT: ArrivalData = ArrivalData()
         }
     }
 }
