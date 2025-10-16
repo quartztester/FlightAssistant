@@ -20,7 +20,7 @@ fun radians(value: Double): Double {
     return (value * (PI / 180.0))
 }
 
-fun Float.requireFinite(): Float {
+fun Float.throwIfNotFinite(): Float {
     require(this.isFinite()) {
         "Float value invalid; expected finite value, got $this"
     }
@@ -28,8 +28,8 @@ fun Float.requireFinite(): Float {
     return this
 }
 
-fun Float.requireIn(range: ClosedFloatingPointRange<Float>): Float {
-    this.requireFinite()
+fun Float.throwIfNotInRange(range: ClosedFloatingPointRange<Float>): Float {
+    this.throwIfNotFinite()
     
     require(range.contains(this)) {
         "Float value invalid; expected [${range.start}; ${range.endInclusive}], got $this"
@@ -38,7 +38,7 @@ fun Float.requireIn(range: ClosedFloatingPointRange<Float>): Float {
     return this
 }
 
-fun Double.requireFinite(): Double {
+fun Double.throwIfNotFinite(): Double {
     require(this.isFinite()) {
         "Double value invalid; expected finite value, got $this"
     }
@@ -46,8 +46,8 @@ fun Double.requireFinite(): Double {
     return this
 }
 
-fun Double.requireIn(range: ClosedRange<Double>): Double {
-    this.requireFinite()
+fun Double.throwIfNotInRange(range: ClosedRange<Double>): Double {
+    this.throwIfNotFinite()
 
     require(range.contains(this)) {
         "Double value invalid; expected [${range.start}; ${range.endInclusive}], got $this"

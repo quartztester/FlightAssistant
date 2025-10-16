@@ -293,7 +293,15 @@ menu.flightassistant:
       add_waypoint: Add waypoint
       direct_to: Direct-to
       unsaved_changes: UNSAVED CHANGES
-    arrival: Arrival
+    arrival:
+      .: Arrival
+      minimums:
+        .: 'Minimums: '
+        absolute: ABS
+        relative: REL
+      landing_thrust: 'Landing thrust %:'
+      go_around_altitude: 'Go around altitude: '
+      approach_re_entry_waypoint_index: 'Approach re-entry waypoint index: '
     save: Save
     discard_changes: Discard changes
     coordinates: 'Coordinates: '

@@ -1,6 +1,5 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight.modes
 
-import jdk.internal.org.jline.utils.DiffHelper.diff
 import kotlin.math.abs
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Mth
@@ -30,7 +29,7 @@ data class SelectedAltitudeVerticalMode(override val targetAltitude: Int) : Auto
 
     override fun getControlInput(computers: ComputerBus): ControlInput {
         val diff: Double = targetAltitude - computers.data.altitude
-        val text: Component = if (abs(diff) <= 10.0f) {
+        val text: Component = if (abs(diff) <= 10.0) {
             Component.translatable("mode.flightassistant.vertical.altitude.hold")
         } else if (diff >= 0) {
             Component.translatable("mode.flightassistant.vertical.altitude.open.climb")
@@ -57,9 +56,11 @@ data class ManagedAltitudeVerticalMode(val originX: Int, val originZ: Int, val o
     private var lastPitchCommand: Float = 0.0f
 
     override fun getControlInput(computers: ComputerBus): ControlInput {
-        val totalDiff: Int = targetAltitude - originAltitude
+        val totalDiff: Double = targetAltitude - computers.data.altitude
         val text: Component =
-            if (abs(totalDiff) < 10) Component.translatable("mode.flightassistant.vertical.altitude.cruise")
+            if (abs(totalDiff) <= 10.0)
+                if (targetAltitude == computers.plan.getCruiseAltitude()) Component.translatable("mode.flightassistant.vertical.altitude.cruise")
+                else Component.translatable("mode.flightassistant.vertical.altitude.hold")
             else if (totalDiff > 0) Component.translatable("mode.flightassistant.vertical.altitude.managed.climb")
             else Component.translatable("mode.flightassistant.vertical.altitude.managed.descend")
 
@@ -70,18 +71,16 @@ data class ManagedAltitudeVerticalMode(val originX: Int, val originZ: Int, val o
         val origin: Vector2d = vec2dFromInts(originX, originZ)
         val track: Vector2d = vec2dFromInts(targetX, targetZ).sub(origin)
         val trackProgress: Double = getProgressOnTrack(track, origin, Vector2d(computers.data.x, computers.data.z))
+        val trackDiff: Int = targetAltitude - originAltitude
 
         val timeToTarget: Double = track.length() / computers.data.velocityPerSecond.horizontalDistance()
-        val targetVerticalSpeed: Double = totalDiff / timeToTarget
+        val targetVerticalSpeed: Double = trackDiff / timeToTarget
         val currentVerticalSpeed: Double = computers.data.velocityPerSecond.y
 
         val currentTarget: Double = Mth.lerp(trackProgress, originAltitude.toDouble(), targetAltitude.toDouble())
         val currentDiff: Double = currentTarget - computers.data.altitude
 
-        var target: Float = controller.calculate((targetVerticalSpeed + currentDiff).toFloat(), currentVerticalSpeed.toFloat(), computers.data.pitch)
-        if (abs(currentDiff) > 5.0f) {
-            target = if (totalDiff > 0) target.coerceIn(0.0f..70.0f) else target.coerceIn(-70.0f..0.0f)
-        }
+        val target: Float = controller.calculate((targetVerticalSpeed + currentDiff).toFloat(), currentVerticalSpeed.toFloat(), computers.data.pitch)
         lastPitchCommand = target
 
         return ControlInput(target, ControlInput.Priority.NORMAL, text)

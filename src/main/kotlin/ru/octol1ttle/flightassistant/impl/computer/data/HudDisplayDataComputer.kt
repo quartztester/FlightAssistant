@@ -4,7 +4,6 @@ import kotlin.math.atan2
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
@@ -12,7 +11,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.RenderMatrices
 import ru.octol1ttle.flightassistant.api.util.degrees
-import ru.octol1ttle.flightassistant.api.util.requireIn
+import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 
 class HudDisplayDataComputer(computers: ComputerBus, private val mc: Minecraft) : Computer(computers) {
     val player: LocalPlayer
@@ -32,7 +31,7 @@ class HudDisplayDataComputer(computers: ComputerBus, private val mc: Minecraft) 
         get() = lerpedPosition.y
 
     val roll: Float
-        get() = degrees(atan2(-RenderMatrices.worldSpaceMatrix.m10(), RenderMatrices.worldSpaceMatrix.m11())).requireIn(-180.0f..180.0f)
+        get() = degrees(atan2(-RenderMatrices.worldSpaceMatrix.m10(), RenderMatrices.worldSpaceMatrix.m11())).throwIfNotInRange(-180.0f..180.0f)
 
     override fun tick() {
         lerpedPosition = player.getPosition(FATickCounter.partialTick)

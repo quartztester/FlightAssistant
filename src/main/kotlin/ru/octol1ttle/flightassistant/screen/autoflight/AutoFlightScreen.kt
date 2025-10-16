@@ -21,10 +21,6 @@ class AutoFlightScreen(parent: Screen) : FABaseScreen(parent, Component.translat
     private lateinit var autoThrust: TextOnlyButton
     private lateinit var autopilot: TextOnlyButton
 
-    private lateinit var thrustCycler: CycleTextOnlyButton<AutoFlightScreenState.ThrustMode>
-    private lateinit var verticalCycler: CycleTextOnlyButton<AutoFlightScreenState.VerticalMode>
-    private lateinit var lateralCycler: CycleTextOnlyButton<AutoFlightScreenState.LateralMode>
-
     private val refreshableElements: MutableList<GuiEventListener> = ArrayList()
 
     override fun init() {
@@ -54,11 +50,11 @@ class AutoFlightScreen(parent: Screen) : FABaseScreen(parent, Component.translat
             })
 
         val thrustMode: SmartStringWidget = this.addRenderableWidget(SmartStringWidget(flightDirectors.baseX - 50, baseY, Component.translatable("menu.flightassistant.autoflight.thrust.mode")))
-        thrustCycler = this.addRenderableWidget(CycleTextOnlyButton(thrustMode.x + thrustMode.width, thrustMode.y, AutoFlightScreenState.ThrustMode.entries, state.thrustMode) { state.thrustMode = it; refreshEditBoxes() })
+        this.addRenderableWidget(CycleTextOnlyButton(thrustMode.x + thrustMode.width, thrustMode.y, AutoFlightScreenState.ThrustMode.entries, state.thrustMode) { state.thrustMode = it; refreshEditBoxes() })
         val verticalMode: SmartStringWidget = this.addRenderableWidget(SmartStringWidget(flightDirectors.baseX - 50, baseY + 12, Component.translatable("menu.flightassistant.autoflight.vertical.mode")))
-        verticalCycler = this.addRenderableWidget(CycleTextOnlyButton(verticalMode.x + verticalMode.width, verticalMode.y, AutoFlightScreenState.VerticalMode.entries, state.verticalMode) { state.verticalMode = it; refreshEditBoxes() })
+        this.addRenderableWidget(CycleTextOnlyButton(verticalMode.x + verticalMode.width, verticalMode.y, AutoFlightScreenState.VerticalMode.entries, state.verticalMode) { state.verticalMode = it; refreshEditBoxes() })
         val lateralMode: SmartStringWidget = this.addRenderableWidget(SmartStringWidget(flightDirectors.baseX - 50, baseY + 24, Component.translatable("menu.flightassistant.autoflight.lateral.mode")))
-        lateralCycler = this.addRenderableWidget(CycleTextOnlyButton(lateralMode.x + lateralMode.width, lateralMode.y, AutoFlightScreenState.LateralMode.entries, state.lateralMode) { state.lateralMode = it; refreshEditBoxes() })
+        this.addRenderableWidget(CycleTextOnlyButton(lateralMode.x + lateralMode.width, lateralMode.y, AutoFlightScreenState.LateralMode.entries, state.lateralMode) { state.lateralMode = it; refreshEditBoxes() })
 
         refreshEditBoxes()
 

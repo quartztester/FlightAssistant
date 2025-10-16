@@ -15,6 +15,7 @@ allprojects {
 
         mavenLocal()
         mavenCentral()
+        strictMaven("https://jitpack.io", "com.github.Octol1ttle")
         strictMaven("https://maven.architectury.dev/", "dev.architectury")
         strictMaven("https://maven.fabricmc.net/", "net.fabricmc")
         strictMaven("https://maven.isxander.dev/releases", "dev.isxander", "org.quiltmc.parsers")

@@ -14,7 +14,7 @@ import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.findShortestPath
-import ru.octol1ttle.flightassistant.api.util.requireIn
+import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 
 class RollComputer(computers: ComputerBus) : Computer(computers) {
     private val sources: MutableList<RollSource> = ArrayList()
@@ -35,7 +35,7 @@ class RollComputer(computers: ComputerBus) : Computer(computers) {
         val finalInput: ControlInput = inputs.getActiveHighestPriority().firstOrNull() ?: return
 
         if (computers.data.automationsAllowed() && finalInput.active) {
-            smoothSetRoll(rollSource, finalInput.target.requireIn(-180.0f..180.0f), finalInput.deltaTimeMultiplier.requireIn(0.001f..Float.MAX_VALUE))
+            smoothSetRoll(rollSource, finalInput.target.throwIfNotInRange(-180.0f..180.0f), finalInput.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE))
         }
     }
 

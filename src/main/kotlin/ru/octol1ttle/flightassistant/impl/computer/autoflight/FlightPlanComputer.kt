@@ -1,7 +1,6 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import java.time.Duration
-import kotlin.math.abs
 import kotlin.math.roundToLong
 import net.minecraft.SharedConstants
 import net.minecraft.network.chat.Component
@@ -27,26 +26,11 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     var groundSpeeds: LimitedFIFOQueue<Double> = LimitedFIFOQueue(SharedConstants.TICKS_PER_SECOND * 5)
 
     override fun tick() {
-        currentPhase = updateFlightPhase()
         updateEnrouteData()
+        currentPhase = updateFlightPhase()
         if (FATickCounter.ticksPassed != 0) {
             groundSpeeds.add(computers.data.velocityPerSecond.horizontalDistance())
         }
-    }
-
-    private fun getEnrouteOrigin(): EnrouteWaypoint? {
-        if (currentPhase == FlightPhase.TAKEOFF && !departureData.isDefault()) {
-            return departureData.toEnrouteWaypoint()
-        }
-        return enrouteData.singleOrNull { it.active == EnrouteWaypoint.Active.ORIGIN }
-    }
-
-    private fun getEnrouteTarget(): EnrouteWaypoint? {
-        return enrouteData.singleOrNull { it.active == EnrouteWaypoint.Active.TARGET }
-    }
-
-    private fun isCloseTo(target: EnrouteWaypoint): Boolean {
-        return getDistanceToTarget(target) < computers.data.velocityPerSecond.horizontalDistance() * 3.0
     }
 
     private fun updateFlightPhase(): FlightPhase {
@@ -61,27 +45,37 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         }
 
         if (currentPhase == FlightPhase.TAKEOFF) {
-            if (enrouteData.isNotEmpty()) {
-                if (enrouteData[0].altitude - computers.data.altitude < 5) {
-                    return FlightPhase.CLIMB
-                }
+            if (enrouteData.isNotEmpty() && enrouteData[0].altitude - computers.data.altitude <= 10.0) {
+                return FlightPhase.CLIMB
             }
             return FlightPhase.TAKEOFF
         }
 
-        val cruiseAltitude: Int? = enrouteData.maxOfOrNull { it.altitude }
-        if (cruiseAltitude == null) {
+        val target: EnrouteWaypoint? = getEnrouteTarget()
+        if (target == null) {
+            if (currentPhase == FlightPhase.APPROACH || currentPhase == FlightPhase.LANDING) {
+                return FlightPhase.LANDING
+            }
             return FlightPhase.UNKNOWN
         }
-        val diff: Double = cruiseAltitude - computers.data.altitude
-        if (abs(diff) <= 10) {
-            return FlightPhase.CRUISE
-        }
-        if (diff > 0) {
+
+        val cruiseAltitude: Int = getCruiseAltitude() ?: return FlightPhase.UNKNOWN
+        val firstCruise: Int = enrouteData.indexOf(enrouteData.firstOrNull { it.altitude == cruiseAltitude })
+        val lastCruise: Int = enrouteData.lastIndexOf(enrouteData.lastOrNull { it.altitude == cruiseAltitude })
+
+        val targetIndex: Int = enrouteData.indexOf(target)
+        if (targetIndex <= firstCruise) {
             return FlightPhase.CLIMB
         }
-        if (diff < 0) {
+        if (targetIndex <= lastCruise) {
+            return FlightPhase.CRUISE
+        }
+        if (targetIndex < enrouteData.size - 1) {
             return FlightPhase.DESCEND
+        }
+
+        if (!arrivalData.isDefault()) {
+            return FlightPhase.APPROACH
         }
 
         return FlightPhase.UNKNOWN
@@ -103,6 +97,25 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         }
     }
 
+    private fun getEnrouteOrigin(): EnrouteWaypoint? {
+        if (currentPhase == FlightPhase.TAKEOFF && !departureData.isDefault()) {
+            return departureData.toEnrouteWaypoint()
+        }
+        return enrouteData.singleOrNull { it.active == EnrouteWaypoint.Active.ORIGIN }
+    }
+
+    private fun getEnrouteTarget(): EnrouteWaypoint? {
+        return enrouteData.singleOrNull { it.active == EnrouteWaypoint.Active.TARGET }
+    }
+
+    private fun isCloseTo(target: EnrouteWaypoint): Boolean {
+        return getDistanceToTarget(target) < computers.data.velocityPerSecond.horizontalDistance() * 3.0
+    }
+
+    fun getCruiseAltitude(): Int? {
+        return enrouteData.maxOfOrNull { it.altitude }
+    }
+
     fun getDistanceToTarget(target: EnrouteWaypoint): Double {
         return distance2d(target.coordinatesX, target.coordinatesZ, computers.data.x, computers.data.z)
     }
@@ -115,6 +128,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     fun getThrustMode(): AutoFlightComputer.ThrustMode? {
         return when (currentPhase) {
             FlightPhase.TAKEOFF -> TakeoffThrustMode(departureData)
+            FlightPhase.LANDING -> LandingThrustMode(arrivalData)
             else -> {
                 val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
                 return if (target.speed != 0) SpeedThrustMode(target.speed) else null
@@ -126,7 +140,11 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         return when (currentPhase) {
             FlightPhase.TAKEOFF -> {
                 val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
-                return if (target.altitude - computers.data.altitude > 10) SelectedAltitudeVerticalMode(target.altitude) else null
+                return if (target.altitude - computers.data.altitude > 10.0) SelectedAltitudeVerticalMode(target.altitude) else null
+            }
+            FlightPhase.LANDING -> {
+                val approach = enrouteData.lastOrNull() ?: return null
+                ManagedAltitudeVerticalMode(approach.coordinatesX, approach.coordinatesZ, approach.altitude, arrivalData.coordinatesX, arrivalData.coordinatesZ, arrivalData.elevation)
             }
             else -> {
                 val origin: EnrouteWaypoint? = getEnrouteOrigin()
@@ -143,6 +161,10 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             FlightPhase.TAKEOFF -> {
                 val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
                 TrackNavigationLateralMode(departureData.coordinatesX, departureData.coordinatesZ, target.coordinatesX, target.coordinatesZ)
+            }
+            FlightPhase.LANDING -> {
+                val approach = enrouteData.lastOrNull() ?: return null
+                TrackNavigationLateralMode(approach.coordinatesX, approach.coordinatesZ, arrivalData.coordinatesX, arrivalData.coordinatesZ)
             }
             else -> {
                 val origin: EnrouteWaypoint? = getEnrouteOrigin()
@@ -206,7 +228,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         }
     }
 
-    data class ArrivalData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val minimums: Int = 0, val minimumsType: MinimumsType = MinimumsType.ABSOLUTE, val goAroundAltitude: Int = 0, val approachReEntryWaypointIndex: Int = 0) {
+    data class ArrivalData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val landingThrust: Float = 0.0f, val minimums: Int = 0, val minimumsType: MinimumsType = MinimumsType.ABSOLUTE, val goAroundAltitude: Int = 0, val approachReEntryWaypointIndex: Int = 0) {
         enum class MinimumsType {
             ABSOLUTE,
             RELATIVE

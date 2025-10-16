@@ -297,7 +297,15 @@ menu.flightassistant:
       add_waypoint: Добавить точку
       direct_to: Прямо-на
       unsaved_changes: НЕСОХРАНЕН ИЗМЕНЕНИЯ
-    arrival: Прибытие
+    arrival:
+      .: Прибытие
+      minimums:
+        .: 'Минимумы: '
+        absolute: АБС
+        relative: ОТН
+      landing_thrust: 'Посадочная тяга (%):'
+      go_around_altitude: 'Высота ухода на второй круг: '
+      approach_re_entry_waypoint_index: 'Номер точки для повторного захода на посадку: '
     save: Сохранить
     discard_changes: Отменить изменения
     coordinates: 'Координаты: '

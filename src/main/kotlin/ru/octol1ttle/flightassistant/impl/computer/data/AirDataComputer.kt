@@ -20,7 +20,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.degrees
 import ru.octol1ttle.flightassistant.api.util.extensions.bottomY
 import ru.octol1ttle.flightassistant.api.util.extensions.perSecond
-import ru.octol1ttle.flightassistant.api.util.requireIn
+import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 import ru.octol1ttle.flightassistant.config.FAConfig
 
 class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Computer(computers) {
@@ -43,7 +43,7 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
         get() = level.bottomY - 64
     var groundY: Double? = null
         private set(value) {
-            field = value?.requireIn(level.bottomY.toDouble()..Double.MAX_VALUE)
+            field = value?.throwIfNotInRange(level.bottomY.toDouble()..Double.MAX_VALUE)
         }
 
     private val fallDistance: Double
@@ -69,11 +69,11 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
         private set
 
     val pitch: Float
-        get() = -player.xRot.requireIn(-90.0f..90.0f)
+        get() = -player.xRot.throwIfNotInRange(-90.0f..90.0f)
     val yaw: Float
-        get() = Mth.wrapDegrees(player.yRot).requireIn(-180.0f..180.0f)
+        get() = Mth.wrapDegrees(player.yRot).throwIfNotInRange(-180.0f..180.0f)
     val heading: Float
-        get() = (yaw + 180.0f).requireIn(0.0f..360.0f)
+        get() = (yaw + 180.0f).throwIfNotInRange(0.0f..360.0f)
 
     val flightPitch: Float
         get() = degrees(asin(velocity.normalize().y).toFloat())

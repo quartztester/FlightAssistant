@@ -14,7 +14,7 @@ import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.event.EntityTurnEvents
 import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
-import ru.octol1ttle.flightassistant.api.util.requireIn
+import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 
 class PitchComputer(computers: ComputerBus) : Computer(computers), FlightController {
     private val controllers: MutableList<FlightController> = ArrayList()
@@ -80,7 +80,7 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
             if (!finalInput.priority.isHigherOrSame(maximumPitch?.priority)) {
                 target = target.coerceAtMost(maximumPitch!!.target)
             }
-            smoothSetPitch(computers.data.player, pitch, target.requireIn(-90.0f..90.0f), finalInput.deltaTimeMultiplier.requireIn(0.001f..Float.MAX_VALUE))
+            smoothSetPitch(computers.data.player, pitch, target.throwIfNotInRange(-90.0f..90.0f), finalInput.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE))
         }
     }
 
@@ -92,18 +92,10 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
         val maximums: List<ControlInput> = computers.dispatchQuery(MaximumPitchQuery()).sortedBy { it.priority.value }
         maximumPitch = maximums.getActiveHighestPriority().minByOrNull { it.target }
         val max: ControlInput? = maximumPitch
-        if (max != null) {
-            max.target.requireIn(-90.0f..90.0f)
-            max.deltaTimeMultiplier.requireIn(0.001f..Float.MAX_VALUE)
-        }
 
         val minimums: List<ControlInput> = computers.dispatchQuery(MinimumPitchQuery()).sortedBy { it.priority.value }
         minimumPitch = minimums.getActiveHighestPriority().maxByOrNull { it.target }
         val min: ControlInput? = minimumPitch
-        if (min != null) {
-            min.target.requireIn(-90.0f..90.0f)
-            min.deltaTimeMultiplier.requireIn(0.001f..Float.MAX_VALUE)
-        }
 
         if (max != null && min != null && max.priority.isHigherOrSame(min.priority)) {
             minimumPitch = min.copy(target = min.target.coerceAtMost(max.target))
@@ -153,8 +145,18 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
         activeInput = null
     }
 
-    class MinimumPitchQuery : ComputerQuery<ControlInput>()
-    class MaximumPitchQuery : ComputerQuery<ControlInput>()
+    class MinimumPitchQuery : ComputerQuery<ControlInput>() {
+        override fun validateResponse(response: ControlInput) {
+            response.target.throwIfNotInRange(-90.0f..90.0f)
+            response.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE)
+        }
+    }
+    class MaximumPitchQuery : ComputerQuery<ControlInput>() {
+        override fun validateResponse(response: ControlInput) {
+            response.target.throwIfNotInRange(-90.0f..90.0f)
+            response.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE)
+        }
+    }
 
     companion object {
         val ID: ResourceLocation = FlightAssistant.id("pitch")

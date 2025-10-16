@@ -17,7 +17,7 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
 import ru.octol1ttle.flightassistant.api.util.inverseMin
-import ru.octol1ttle.flightassistant.api.util.requireIn
+import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.base.PitchComputer
 import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
@@ -49,7 +49,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         val warningThreshold: Double = if (anyBlocksAbove) 1.5 else 3.0
         val recoverThreshold = 0.75
 
-        groundImpactTime = computeGroundImpactTime(data).requireIn(0.0..Double.MAX_VALUE)
+        groundImpactTime = computeGroundImpactTime(data).throwIfNotInRange(0.0..Double.MAX_VALUE)
         groundImpactStatus =
             if (data.fallDistanceSafe) {
                 Status.SAFE
@@ -65,7 +65,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
                 Status.RECOVER
             }
 
-        obstacleImpactTime = computeObstacleImpactTime(data, clearThreshold).requireIn(0.0..Double.MAX_VALUE)
+        obstacleImpactTime = computeObstacleImpactTime(data, clearThreshold).throwIfNotInRange(0.0..Double.MAX_VALUE)
 
         val damageOnCollision: Double = data.velocity.horizontalDistance() * 10 - 3
         obstacleImpactStatus =

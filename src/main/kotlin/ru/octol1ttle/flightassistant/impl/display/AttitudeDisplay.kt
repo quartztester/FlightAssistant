@@ -96,8 +96,8 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
 
         val maxInput: ControlInput? = computers.pitch.maximumPitch
         val minInput: ControlInput? = computers.pitch.minimumPitch
-        var max: Float = maximumLerper.get(maxInput?.target, FATickCounter.timePassed) ?: 90.0f
-        var min: Float = (minimumLerper.get(minInput?.target, FATickCounter.timePassed) ?: -90.0f).coerceAtMost(max)
+        var max: Float = maximumLerper.get(maxInput?.target, FATickCounter.timePassed * 2.0f) ?: 90.0f
+        var min: Float = (minimumLerper.get(minInput?.target, FATickCounter.timePassed * 2.0f) ?: -90.0f).coerceAtMost(max)
 
         while (max <= 180) {
             val y: Int = ScreenSpace.getY(max) ?: break

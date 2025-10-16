@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm")
     id("dev.isxander.modstitch.base") version "0.7.0-unstable"
     id("me.modmuss50.mod-publish-plugin")
-    id("me.fallenbreath.yamlang") version "1.4.2"
+    id("me.fallenbreath.yamlang") version "1.5.0"
 }
 
 fun prop(name: String) : String {
@@ -145,7 +145,13 @@ dependencies {
     modstitchModImplementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}")
 
     ifFindProperty("deps.dabr") {
-        modstitchModImplementation("nl.enjarai:do-a-barrel-roll:$it")
+        val legacyPermsApi: Boolean = loader == "fabric" && stonecutter.eval(minecraft, "<1.21.6")
+        modstitchModImplementation("nl.enjarai:do-a-barrel-roll:$it") {
+            if (legacyPermsApi) exclude("me.lucko")
+        }
+        if (legacyPermsApi) {
+            modstitchModImplementation("com.github.Octol1ttle:fabric-permissions-api:v0.2")
+        }
     }
 }
 
@@ -162,8 +168,8 @@ publishMods {
 
     modstitch.onEnable {
         file = modstitch.finalJarTask.flatMap { it.archiveFile }
+        additionalFiles.from(modstitch.namedJarTask.flatMap { it.archiveFile})
     }
-    //additionalFiles.from(modstitch.namedJarTask.get().archiveFile)
 
     displayName = "${mod.name} ${mod.version} for ${loader.replaceFirstChar { it.uppercase() }} ${property("mod.mc_title")}"
     version = "${mod.version}+mc$minecraft-$loader"

@@ -19,6 +19,16 @@ data class TakeoffThrustMode(val data: FlightPlanComputer.DepartureData) : AutoF
     }
 }
 
+data class LandingThrustMode(val data: FlightPlanComputer.ArrivalData) : AutoFlightComputer.ThrustMode {
+    override fun getControlInput(computers: ComputerBus): ControlInput {
+        return ControlInput(
+            data.landingThrust,
+            ControlInput.Priority.NORMAL,
+            Component.translatable("mode.flightassistant.thrust.landing")
+        )
+    }
+}
+
 data class SpeedThrustMode(override val targetSpeed: Int) : AutoFlightComputer.ThrustMode, AutoFlightComputer.FollowsSpeedMode {
     override fun getControlInput(computers: ComputerBus): ControlInput {
         val currentThrust: Float = computers.thrust.current
@@ -44,7 +54,7 @@ data class VerticalProfileThrustMode(val climbThrust: Float, val descendThrust: 
         if (verticalMode !is AutoFlightComputer.FollowsAltitudeMode) {
             return null
         }
-        val nearTarget: Boolean = abs(verticalMode.targetAltitude - computers.data.altitude) <= 5.0f
+        val nearTarget: Boolean = abs(verticalMode.targetAltitude - computers.data.altitude) <= 10.0f
         val useClimbThrust: Boolean = nearTarget || verticalMode.targetAltitude > computers.data.altitude
         return ControlInput(
             if (useClimbThrust) climbThrust else descendThrust,

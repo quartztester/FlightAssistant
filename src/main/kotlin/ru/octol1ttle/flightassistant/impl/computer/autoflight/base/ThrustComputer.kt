@@ -16,7 +16,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
-import ru.octol1ttle.flightassistant.api.util.requireIn
+import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
 
 class ThrustComputer(computers: ComputerBus) : Computer(computers) {
@@ -68,7 +68,7 @@ class ThrustComputer(computers: ComputerBus) : Computer(computers) {
         }
 
         noThrustSource = thrustSource == null && activeInput?.target != 0.0f
-        current.requireIn(-1.0f..1.0f)
+        current.throwIfNotInRange(-1.0f..1.0f)
 
         val active: Boolean = !noThrustSource && !reverseUnsupported
         activeInput = activeInput?.copy(active = active)
@@ -85,7 +85,7 @@ class ThrustComputer(computers: ComputerBus) : Computer(computers) {
     fun setTarget(target: Float, input: ControlInput? = null) {
         val oldThrust: Float = current
         if (oldThrust != target || input == null) {
-            current = target.requireIn(-1.0f..1.0f)
+            current = target.throwIfNotInRange(-1.0f..1.0f)
             ThrustChangeCallback.EVENT.invoker().onThrustChange(oldThrust, current, input)
             lastChangeAutomatic = input != null
         }

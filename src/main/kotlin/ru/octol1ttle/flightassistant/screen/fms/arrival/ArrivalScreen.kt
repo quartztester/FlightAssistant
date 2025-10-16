@@ -8,9 +8,10 @@ import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.util.extensions.toIntOrNullWithFallback
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
+import ru.octol1ttle.flightassistant.screen.components.CycleTextOnlyButton
 import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 import ru.octol1ttle.flightassistant.screen.components.TypeStrictEditBox
-import ru.octol1ttle.flightassistant.screen.fms.departure.DepartureScreenState
+import ru.octol1ttle.flightassistant.screen.fms.departure.DepartureScreen
 
 class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatable("menu.flightassistant.fms.arrival")) {
     private lateinit var discardChanges: Button
@@ -32,8 +33,20 @@ class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         val elevation: SmartStringWidget = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 16, Component.translatable("menu.flightassistant.fms.elevation")))
         this.addRenderableWidget(TypeStrictEditBox(elevation.x + elevation.width, elevation.y - 2, baseWidth, baseHeight, state.elevation, { state.elevation = it }, String::toIntOrNullWithFallback))
 
-        val takeoffThrust: SmartStringWidget = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 48, Component.translatable("menu.flightassistant.fms.departure.takeoff_thrust")))
-        this.addRenderableWidget(TypeStrictEditBox(takeoffThrust.x + takeoffThrust.width, takeoffThrust.y - 2, baseWidth, baseHeight, state.takeoffThrustPercent, { state.takeoffThrustPercent = it }, String::toIntOrNullWithFallback, { it in 0..100 }))
+        val landingThrust: SmartStringWidget = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 48, Component.translatable("menu.flightassistant.fms.arrival.landing_thrust")))
+        this.addRenderableWidget(TypeStrictEditBox(landingThrust.x + landingThrust.width, landingThrust.y - 2, baseWidth, baseHeight, state.landingThrustPercent, { state.landingThrustPercent = it }, String::toIntOrNullWithFallback, { it in 0..100 }))
+
+        val minimums = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 64, Component.translatable("menu.flightassistant.fms.arrival.minimums")))
+        val minimumsEditBox = this.addRenderableWidget(TypeStrictEditBox(minimums.x + minimums.width, minimums.y - 2, baseWidth, baseHeight, state.minimums, { state.minimums = it }, String::toIntOrNullWithFallback,
+            { if (state.minimumsType == ArrivalScreenState.MinimumsType.RELATIVE) it > 0 else true }))
+        this.addRenderableWidget(CycleTextOnlyButton(minimumsEditBox.x + minimumsEditBox.width + 5, minimumsEditBox.y + 2, ArrivalScreenState.MinimumsType.entries, state.minimumsType) { state.minimumsType = it; })
+
+        val goAroundAltitude = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 80, Component.translatable("menu.flightassistant.fms.arrival.go_around_altitude")))
+        this.addRenderableWidget(TypeStrictEditBox(goAroundAltitude.x + goAroundAltitude.width, goAroundAltitude.y - 2, baseWidth + 4, baseHeight, state.goAroundAltitude, { state.goAroundAltitude = it }, String::toIntOrNullWithFallback))
+
+        val approachReEntryWaypointIndex = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 96, Component.translatable("menu.flightassistant.fms.arrival.approach_re_entry_waypoint_index")))
+        this.addRenderableWidget(TypeStrictEditBox(approachReEntryWaypointIndex.x + approachReEntryWaypointIndex.width, approachReEntryWaypointIndex.y - 2, baseWidth + 4, baseHeight, state.approachReEntryWaypointIndex, { state.approachReEntryWaypointIndex = it }, String::toIntOrNullWithFallback,
+            { it >= 0 }))
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
             state = lastState.copy()
@@ -58,7 +71,7 @@ class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
     }
 
     companion object {
-        private var lastState: DepartureScreenState = DepartureScreenState()
-        private var state: DepartureScreenState = DepartureScreenState()
+        private var lastState = ArrivalScreenState()
+        private var state = ArrivalScreenState()
     }
 }
