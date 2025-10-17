@@ -29,6 +29,11 @@
             "flightassistant:master_warning"
         ]
     },
+    "minimums_reached": {
+        "sounds": [
+            "flightassistant:minimums_reached"
+        ]
+    },
     "pull_up": {
         "sounds": [
             "flightassistant:pull_up"

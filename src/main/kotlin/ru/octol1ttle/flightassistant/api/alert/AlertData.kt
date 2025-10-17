@@ -64,15 +64,21 @@ class AlertData(@Deprecated("Waiting for an enhanced priority system (.defineOrd
                 soundEvent("master_warning"),
                 LoopType.FADE_OUT
             ) { FAConfig.display.warningColor.rgb }
-        val THRUST_LOCKED =
+        val MINIMUMS_REACHED =
             AlertData(
                 800,
+                soundEvent("minimums_reached"),
+                LoopType.NONE
+            ) { FAConfig.display.cautionColor.rgb }
+        val THRUST_LOCKED =
+            AlertData(
+                900,
                 soundEvent("thrust_locked"),
                 LoopType.CONSTANT_VOLUME
             ) { FAConfig.display.cautionColor.rgb }
         val MASTER_CAUTION =
             AlertData(
-                900,
+                1000,
                 soundEvent("master_caution"),
                 LoopType.NONE
             ) { FAConfig.display.cautionColor.rgb }

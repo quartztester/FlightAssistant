@@ -6,7 +6,7 @@ class LimitedFIFOQueue<T>(private val maxSize: Int): Collection<T> {
     fun add(element: T) {
         backingList.add(0, element)
         if (backingList.size > maxSize) {
-            backingList.removeFirst()
+            backingList.removeLast()
         }
     }
 

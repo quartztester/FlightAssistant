@@ -65,9 +65,14 @@ alert.flightassistant:
     .: ПЛАН/П
     fault: ОТКАЗ СИСТ
     departure_elevation_disagree: НЕСОГЛ ВЫС ВЫЛЕТА
+    arrival_elevation_disagree:
+      .: НЕСОГЛ ВЫС ПРИБЫТИЯ
+      glide_slope_unreliable: ' ГЛИССАДА НЕНАДЕЖН'
+      autopilot_do_not_use: ' -АВТОПИЛОТ: НЕ ИСПОЛЬЗ'
   gpws:
     .: GPWS
     fault: ОТКАЗ
+    minimums_reached: ДОСТИГНУТЫ МИНИМУМЫ
     dont_sink: НЕ ПАДАЙ
     sink_rate: СКОР. СНИЖЕНИЯ
     terrain_ahead: ЗЕМЛЯ ВПЕРЕДИ
@@ -303,7 +308,7 @@ menu.flightassistant:
         .: 'Минимумы: '
         absolute: АБС
         relative: ОТН
-      landing_thrust: 'Посадочная тяга (%):'
+      landing_thrust: 'Посадочная тяга (%): '
       go_around_altitude: 'Высота ухода на второй круг: '
       approach_re_entry_waypoint_index: 'Номер точки для повторного захода на посадку: '
     save: Сохранить
@@ -326,6 +331,7 @@ mode.flightassistant:
     climb: ТЯГА НАБОР
     descend: ТЯГА СНИЖ
     takeoff: ТЯГА ВЫЛЕТ
+    landing: ТЯГА ПОСАД
   vertical:
     override: РУЧН УГОЛ
     void_protection: ПУСТ ЗАЩ

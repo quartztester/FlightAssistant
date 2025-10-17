@@ -29,11 +29,9 @@ import ru.octol1ttle.flightassistant.impl.alert.firework.FireworkExplosiveAlert
 import ru.octol1ttle.flightassistant.impl.alert.firework.FireworkNoResponseAlert
 import ru.octol1ttle.flightassistant.impl.alert.firework.FireworkSlowResponseAlert
 import ru.octol1ttle.flightassistant.impl.alert.flight_controls.ProtectionsLostAlert
+import ru.octol1ttle.flightassistant.impl.alert.flight_plan.ArrivalElevationDisagreeAlert
 import ru.octol1ttle.flightassistant.impl.alert.flight_plan.DepartureElevationDisagreeAlert
-import ru.octol1ttle.flightassistant.impl.alert.gpws.DontSinkAlert
-import ru.octol1ttle.flightassistant.impl.alert.gpws.PullUpAlert
-import ru.octol1ttle.flightassistant.impl.alert.gpws.SinkRateAlert
-import ru.octol1ttle.flightassistant.impl.alert.gpws.TerrainAheadAlert
+import ru.octol1ttle.flightassistant.impl.alert.gpws.*
 import ru.octol1ttle.flightassistant.impl.alert.navigation.ApproachingVoidDamageAltitudeAlert
 import ru.octol1ttle.flightassistant.impl.alert.navigation.NoChunksLoadedAlert
 import ru.octol1ttle.flightassistant.impl.alert.navigation.ReachedVoidDamageAltitudeAlert
@@ -110,6 +108,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
         register(
             AlertCategory(Component.translatable("alert.flightassistant.flight_plan"))
                 .add(ComputerFaultAlert(computers, FlightPlanComputer.ID, Component.translatable("alert.flightassistant.flight_plan.fault")))
+                .add(ArrivalElevationDisagreeAlert(computers))
                 .add(DepartureElevationDisagreeAlert(computers))
         )
         register(
@@ -119,6 +118,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
                 .add(SinkRateAlert(computers))
                 .add(TerrainAheadAlert(computers))
                 .add(DontSinkAlert(computers))
+                .add(MinimumsReachedAlert(computers))
         )
         register(
             AlertCategory(Component.translatable("alert.flightassistant.navigation"))

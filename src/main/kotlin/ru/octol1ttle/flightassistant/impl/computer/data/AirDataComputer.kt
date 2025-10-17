@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.core.Direction
+import net.minecraft.core.SectionPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.DamageTypeTags
 import net.minecraft.util.Mth
@@ -86,6 +87,10 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
         forwardVelocity = computeForwardVector(velocity)
         forwardVelocityPerSecond = forwardVelocity.perSecond()
         forwardAcceleration = forwardVelocity.length() - computeForwardVector(player.getDeltaMovementLerped(0.0f)).length()
+    }
+
+    fun isChunkLoaded(x: Int, z: Int): Boolean {
+        return level.chunkSource.hasChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))
     }
 
     fun automationsAllowed(checkFlying: Boolean = true): Boolean {

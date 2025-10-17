@@ -14,13 +14,13 @@ class ChunkStatusComputer(computers: ComputerBus) : Computer(computers) {
 
     override fun tick() {
         val chunkPos: ChunkPos = computers.data.player.chunkPosition()
-        val world: ClientChunkCache = computers.data.level.chunkSource
+        val chunkCache: ClientChunkCache = computers.data.level.chunkSource
 
         var unloadedClose = 0
         var unloadedFar = false
         for (x: Int in -3..3) {
             for (z: Int in -3..3) {
-                if (!world.hasChunk(chunkPos.x + x, chunkPos.z + z)) {
+                if (!chunkCache.hasChunk(chunkPos.x + x, chunkPos.z + z)) {
                     if (abs(x) <= 1 && abs(z) <= 1) {
                         unloadedClose++
                     } else {

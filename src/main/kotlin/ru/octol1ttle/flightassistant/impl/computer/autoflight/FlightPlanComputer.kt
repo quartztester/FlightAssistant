@@ -116,6 +116,16 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         return enrouteData.maxOfOrNull { it.altitude }
     }
 
+    fun isBelowMinimums(): Boolean {
+        if (currentPhase != FlightPhase.LANDING) {
+            return false
+        }
+        val minimums =
+            if (arrivalData.minimumsType == ArrivalData.MinimumsType.ABSOLUTE) arrivalData.minimums.toDouble()
+            else (computers.data.groundY ?: computers.data.voidY.toDouble()) + arrivalData.minimums
+        return computers.data.altitude <= minimums
+    }
+
     fun getDistanceToTarget(target: EnrouteWaypoint): Double {
         return distance2d(target.coordinatesX, target.coordinatesZ, computers.data.x, computers.data.z)
     }
