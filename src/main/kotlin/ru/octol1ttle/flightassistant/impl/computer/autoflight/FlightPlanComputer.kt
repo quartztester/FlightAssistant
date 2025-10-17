@@ -1,6 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import java.time.Duration
+import java.util.UUID
 import kotlin.math.roundToLong
 import net.minecraft.SharedConstants
 import net.minecraft.network.chat.Component
@@ -16,7 +17,7 @@ import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.*
 import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
 
 class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
-    var currentPhase: FlightPhase = FlightPhase.ON_GROUND
+    var currentPhase: FlightPhase = FlightPhase.UNKNOWN
         private set
 
     var departureData: DepartureData = DepartureData.DEFAULT
@@ -41,7 +42,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
                 enrouteData[0].active = EnrouteWaypoint.Active.TARGET
                 return FlightPhase.TAKEOFF
             }
-            return FlightPhase.ON_GROUND
+            return FlightPhase.UNKNOWN
         }
 
         if (currentPhase == FlightPhase.TAKEOFF) {
@@ -54,14 +55,17 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         val target: EnrouteWaypoint? = getEnrouteTarget()
         if (target == null) {
             if (currentPhase == FlightPhase.APPROACH || currentPhase == FlightPhase.LANDING) {
+                if (computers.thrust.current == 1.0f) {
+                    return FlightPhase.GO_AROUND
+                }
                 return FlightPhase.LANDING
             }
             return FlightPhase.UNKNOWN
         }
 
         val cruiseAltitude: Int = getCruiseAltitude() ?: return FlightPhase.UNKNOWN
-        val firstCruise: Int = enrouteData.indexOf(enrouteData.firstOrNull { it.altitude == cruiseAltitude })
-        val lastCruise: Int = enrouteData.lastIndexOf(enrouteData.lastOrNull { it.altitude == cruiseAltitude })
+        val firstCruise: Int = enrouteData.indexOfFirst { it.altitude == cruiseAltitude }
+        val lastCruise: Int = enrouteData.indexOfLast { it.altitude == cruiseAltitude }
 
         val targetIndex: Int = enrouteData.indexOf(target)
         if (targetIndex <= firstCruise) {
@@ -82,6 +86,11 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     }
 
     private fun updateEnrouteData() {
+        if (currentPhase == FlightPhase.GO_AROUND && computers.data.altitude >= arrivalData.goAroundAltitude) {
+            val approachReEntryWaypoint = enrouteData.getOrNull(arrivalData.approachReEntryWaypointIndex - 1)
+            approachReEntryWaypoint?.active = EnrouteWaypoint.Active.TARGET
+        }
+
         val target: EnrouteWaypoint = getEnrouteTarget() ?: return
 
         if (isCloseTo(target)) {
@@ -98,9 +107,6 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     }
 
     private fun getEnrouteOrigin(): EnrouteWaypoint? {
-        if (currentPhase == FlightPhase.TAKEOFF && !departureData.isDefault()) {
-            return departureData.toEnrouteWaypoint()
-        }
         return enrouteData.singleOrNull { it.active == EnrouteWaypoint.Active.ORIGIN }
     }
 
@@ -208,13 +214,13 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
 
     enum class FlightPhase {
         UNKNOWN,
-        ON_GROUND,
         TAKEOFF,
         CLIMB,
         CRUISE,
         DESCEND,
         APPROACH,
-        LANDING
+        LANDING,
+        GO_AROUND
     }
 
     data class DepartureData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val takeoffThrust: Float = 0.0f) {
@@ -222,16 +228,12 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             return this == DEFAULT
         }
 
-        fun toEnrouteWaypoint(): EnrouteWaypoint {
-            return EnrouteWaypoint(coordinatesX, coordinatesZ, elevation, active = EnrouteWaypoint.Active.ORIGIN)
-        }
-
         companion object {
             val DEFAULT: DepartureData = DepartureData()
         }
     }
 
-    data class EnrouteWaypoint(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val altitude: Int = 0, val speed: Int = 0, var active: Active? = null) {
+    data class EnrouteWaypoint(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val altitude: Int = 0, val speed: Int = 0, var active: Active? = null, val uuid: UUID = UUID.randomUUID()) {
         enum class Active {
             ORIGIN,
             TARGET

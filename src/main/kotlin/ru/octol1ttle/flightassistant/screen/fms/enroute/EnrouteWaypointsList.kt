@@ -1,6 +1,5 @@
 package ru.octol1ttle.flightassistant.screen.fms.enroute
 
-import java.time.Duration
 import kotlin.math.roundToLong
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics

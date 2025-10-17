@@ -383,13 +383,13 @@ status.flightassistant:
   firework_count: 'ЧИСЛ ФРВК: %s'
   flight_plan:
     flight_phase:
-      on_ground: НА ЗЕМЛЕ
       takeoff: ВЗЛЕТ
       climb: НАБОР
       cruise: КРЕЙСЕР
       descend: СНИЖЕНИЕ
       approach: ЗАХОД
       landing: ПОСАДКА
+      go_around: ВТОРОЙ КРУГ
     waypoint_distance: 'ТОЧК ДИСТ: %s'
     waypoint_time: 'ТОЧК ВРЕМ: %s'
 
