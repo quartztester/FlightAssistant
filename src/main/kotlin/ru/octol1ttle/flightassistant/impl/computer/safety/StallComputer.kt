@@ -32,12 +32,15 @@ class StallComputer(computers: ComputerBus) : Computer(computers), FlightControl
     }
 
     override fun getThrustInput(): ControlInput? {
-        if (FAConfig.safety.stallAutoThrust && status != Status.SAFE) {
+        if (status != Status.SAFE) {
             return ControlInput(
                 1.0f,
-                ControlInput.Priority.HIGHEST,
                 Component.translatable("mode.flightassistant.thrust.toga"),
-                active = status == Status.FULL_STALL
+                ControlInput.Priority.HIGHEST,
+                status =
+                    if (FAConfig.safety.stallAutoThrust)
+                        if (status == Status.FULL_STALL) ControlInput.Status.ACTIVE else ControlInput.Status.ARMED
+                    else ControlInput.Status.DISABLED
             )
         }
 
@@ -48,10 +51,10 @@ class StallComputer(computers: ComputerBus) : Computer(computers), FlightControl
         if (query is PitchComputer.MaximumPitchQuery && maximumSafePitch <= 90.0f && !computers.data.fallDistanceSafe) {
             query.respond(ControlInput(
                 maximumSafePitch,
-                ControlInput.Priority.HIGHEST,
                 Component.translatable("mode.flightassistant.vertical.stall_protection"),
+                ControlInput.Priority.HIGHEST,
                 1.5f,
-                FAConfig.safety.stallLimitPitch
+                if (FAConfig.safety.stallLimitPitch) ControlInput.Status.ACTIVE else ControlInput.Status.DISABLED
             ))
         }
     }

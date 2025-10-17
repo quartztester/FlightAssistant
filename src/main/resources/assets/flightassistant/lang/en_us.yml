@@ -345,11 +345,12 @@ mode.flightassistant:
       managed:
         climb: CLIMB
         descend: DESCEND
-    speed_reference: SPD REF
+    glide_slope: G/S
   lateral:
     heading: HDG
-    direct_coordinates: DIR NAV
+    direct_coordinates: DIR COORDS
     track_navigation: TRK NAV
+    localizer: LOC
 
 # TODO: stop using this
 short.flightassistant:

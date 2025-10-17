@@ -339,7 +339,7 @@ mode.flightassistant:
     stall_protection: СВАЛ ЗАЩ
     terrain_protection: ЗЕМЛ ЗАЩ
     terrain_escape: ЗЕМЛ ИЗБЕЖ
-    selected_pitch: УГОЛ
+    pitch: УГОЛ
     altitude:
       hold: ВЫС УДЕРЖ
       cruise: ВЫС КРЕЙС
@@ -349,10 +349,12 @@ mode.flightassistant:
       managed:
         climb: НАБОР
         descend: СНИЖ
-    speed_reference: СКОР СЛЕД
+    glide_slope: ГЛИССАДА
   lateral:
-    selected_heading: КУРС
-    selected_coordinates: КООРД
+    heading: КУРС
+    direct_coordinates: DIR COORDS
+    track_navigation: TRK NAV
+    localizer: ПОСАД.КУРС
 
 short.flightassistant:
   alert: ПРЕДУПР

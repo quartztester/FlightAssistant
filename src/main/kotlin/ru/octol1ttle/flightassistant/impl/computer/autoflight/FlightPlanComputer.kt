@@ -143,8 +143,8 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
 
     fun getThrustMode(): AutoFlightComputer.ThrustMode? {
         return when (currentPhase) {
-            FlightPhase.TAKEOFF -> TakeoffThrustMode(departureData)
-            FlightPhase.LANDING -> LandingThrustMode(arrivalData)
+            FlightPhase.TAKEOFF -> ConstantThrustMode(departureData.takeoffThrust, Component.translatable("mode.flightassistant.thrust.takeoff"))
+            FlightPhase.LANDING -> ConstantThrustMode(departureData.takeoffThrust, Component.translatable("mode.flightassistant.thrust.landing"))
             else -> {
                 val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
                 return if (target.speed != 0) SpeedThrustMode(target.speed) else null
@@ -161,6 +161,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             FlightPhase.LANDING -> {
                 val approach = enrouteData.lastOrNull() ?: return null
                 ManagedAltitudeVerticalMode(approach.coordinatesX, approach.coordinatesZ, approach.altitude, arrivalData.coordinatesX, arrivalData.coordinatesZ, arrivalData.elevation)
+                    .copy(textOverride = Component.translatable("mode.flightassistant.vertical.glide_slope"))
             }
             else -> {
                 val origin: EnrouteWaypoint? = getEnrouteOrigin()
@@ -181,6 +182,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             FlightPhase.LANDING -> {
                 val approach = enrouteData.lastOrNull() ?: return null
                 TrackNavigationLateralMode(approach.coordinatesX, approach.coordinatesZ, arrivalData.coordinatesX, arrivalData.coordinatesZ)
+                    .copy(textOverride = Component.translatable("mode.flightassistant.lateral.localizer"))
             }
             else -> {
                 val origin: EnrouteWaypoint? = getEnrouteOrigin()

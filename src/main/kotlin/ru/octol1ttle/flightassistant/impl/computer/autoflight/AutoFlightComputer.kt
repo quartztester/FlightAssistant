@@ -1,7 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
-import java.util.Objects
 import kotlin.math.abs
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
@@ -35,33 +35,14 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
     var selectedVerticalMode: VerticalMode? = null
     var selectedLateralMode: LateralMode? = null
 
-    // Allow modes to retain state if their input data hasn't changed
-    var activeThrustMode: ThrustMode? = null
-        get() {
-            val refreshed: ThrustMode? = selectedThrustMode ?: computers.plan.getThrustMode()
-            if (!Objects.equals(field, refreshed)) {
-                field = refreshed
-            }
-            return field
-        }
+    val activeThrustMode: ThrustMode?
+        get() = selectedThrustMode ?: computers.plan.getThrustMode()
 
-    var activeVerticalMode: VerticalMode? = null
-        get() {
-            val refreshed: VerticalMode? = selectedVerticalMode ?: computers.plan.getVerticalMode()
-            if (!Objects.equals(field, refreshed)) {
-                field = refreshed
-            }
-            return field
-        }
+    val activeVerticalMode: VerticalMode?
+        get() = selectedVerticalMode ?: computers.plan.getVerticalMode()
 
-    var activeLateralMode: LateralMode? = null
-        get() {
-            val refreshed: LateralMode? = selectedLateralMode ?: computers.plan.getLateralMode()
-            if (!Objects.equals(field, refreshed)) {
-                field = refreshed
-            }
-            return field
-        }
+    val activeLateralMode: LateralMode?
+        get() = selectedLateralMode ?: computers.plan.getLateralMode()
 
     override fun subscribeToEvents() {
         ThrustControllerRegistrationCallback.EVENT.register { it.accept(this) }
@@ -77,7 +58,7 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             if (computers.data.flying && autopilot) {
                 pitchResistance += abs(pitchDelta)
                 if (pitchResistance < 20.0f) {
-                    output.add(ControlInput(0.0f, ControlInput.Priority.NORMAL))
+                    output.add(ControlInput(0.0f, priority = ControlInput.Priority.NORMAL))
                     return@EntityTurn
                 }
                 setAutoPilot(false, alert = true)
@@ -89,7 +70,7 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             if (computers.data.flying && autopilot) {
                 headingResistance += abs(headingDelta)
                 if (headingResistance < 40.0f) {
-                    output.add(ControlInput(0.0f, ControlInput.Priority.NORMAL))
+                    output.add(ControlInput(0.0f, priority = ControlInput.Priority.NORMAL))
                     return@EntityTurn
                 }
                 setAutoPilot(false, alert = true)
@@ -144,7 +125,10 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             return null
         }
 
-        return activeVerticalMode?.getControlInput(computers)?.copy(active = autopilot, deltaTimeMultiplier = 1.5f)
+        val mode = activeVerticalMode ?: return null
+        val input = mode.getControlInput(computers) ?: return null
+        return input.copy(text = mode.textOverride ?: input.text, deltaTimeMultiplier = 1.5f,
+            status = if (autopilot) ControlInput.Status.ACTIVE else ControlInput.Status.ARMED)
     }
 
     override fun getHeadingInput(): ControlInput? {
@@ -152,7 +136,10 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             return null
         }
 
-        return activeLateralMode?.getControlInput(computers)?.copy(active = autopilot, deltaTimeMultiplier = 1.5f)
+        val mode = activeLateralMode ?: return null
+        val input = mode.getControlInput(computers) ?: return null
+        return input.copy(text = mode.textOverride ?: input.text, deltaTimeMultiplier = 1.5f,
+            status = if (autopilot) ControlInput.Status.ACTIVE else ControlInput.Status.ARMED)
     }
 
     override fun getRollInput(): ControlInput? {
@@ -160,7 +147,7 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             return null
         }
 
-        return ControlInput(0.0f, ControlInput.Priority.NORMAL, deltaTimeMultiplier = 2.0f)
+        return ControlInput(0.0f, deltaTimeMultiplier = 2.0f)
     }
 
     override fun reset() {
@@ -178,6 +165,8 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
     }
 
     interface AutoFlightMode {
+        val textOverride: Component?
+
         fun getControlInput(computers: ComputerBus): ControlInput?
     }
 

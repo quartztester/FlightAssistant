@@ -43,16 +43,17 @@ class VoidProximityComputer(computers: ComputerBus) : Computer(computers), Fligh
             query.respond(ControlInput(
                 (-90.0f + (computers.data.level.bottomY - (computers.data.altitude + computers.data.velocityPerSecond.y)) / 64.0f * 105.0f).toFloat()
                     .coerceIn(-35.0f..15.0f),
-                ControlInput.Priority.HIGH,
-                Component.translatable("mode.flightassistant.vertical.void_protection")
+                Component.translatable("mode.flightassistant.vertical.void_protection"),
+                ControlInput.Priority.HIGH
             ))
         }
     }
 
     override fun getPitchInput(): ControlInput? {
-        if (FAConfig.safety.voidAutoPitch && status <= Status.APPROACHING_DAMAGE_ALTITUDE) {
-            return ControlInput(90.0f, ControlInput.Priority.HIGH, Component.translatable("mode.flightassistant.vertical.void_escape"),
-                active = status == Status.REACHED_DAMAGE_ALTITUDE && computers.thrust.current == 1.0f && !computers.thrust.noThrustSource
+        if (status <= Status.APPROACHING_DAMAGE_ALTITUDE) {
+            return ControlInput(90.0f, Component.translatable("mode.flightassistant.vertical.void_escape"), ControlInput.Priority.HIGH,
+                status = if (status == Status.REACHED_DAMAGE_ALTITUDE && computers.thrust.current == 1.0f && !computers.thrust.noThrustSource) ControlInput.Status.ACTIVE
+                else ControlInput.Status.ARMED
             )
         }
 
@@ -63,9 +64,9 @@ class VoidProximityComputer(computers: ComputerBus) : Computer(computers), Fligh
         if (FAConfig.safety.voidAutoThrust && status <= Status.APPROACHING_DAMAGE_ALTITUDE) {
             return ControlInput(
                 1.0f,
-                ControlInput.Priority.HIGH,
                 Component.translatable("mode.flightassistant.thrust.toga"),
-                active = status == Status.REACHED_DAMAGE_ALTITUDE
+                ControlInput.Priority.HIGH,
+                status = if (status == Status.REACHED_DAMAGE_ALTITUDE) ControlInput.Status.ACTIVE else ControlInput.Status.ARMED
             )
         }
 

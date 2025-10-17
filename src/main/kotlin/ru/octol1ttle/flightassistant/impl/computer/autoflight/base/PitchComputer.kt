@@ -42,10 +42,10 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
 
                 val min: ControlInput? = this.minimumPitch
                 val max: ControlInput? = this.maximumPitch
-                if (max != null && max.active && pitchDelta > 0.0f && newPitch > max.target) {
-                    output.add(ControlInput(-(max.target - oldPitch).coerceAtLeast(0.0f), max.priority))
-                } else if (min != null && min.active && pitchDelta < 0.0f && newPitch < min.target) {
-                    output.add(ControlInput(-(min.target - oldPitch).coerceAtMost(0.0f), min.priority))
+                if (max != null && max.status == ControlInput.Status.ACTIVE && pitchDelta > 0.0f && newPitch > max.target) {
+                    output.add(ControlInput(-(max.target - oldPitch).coerceAtLeast(0.0f), priority = max.priority))
+                } else if (min != null && min.status == ControlInput.Status.ACTIVE && pitchDelta < 0.0f && newPitch < min.target) {
+                    output.add(ControlInput(-(min.target - oldPitch).coerceAtMost(0.0f), priority = min.priority))
                 }
             }
         }
@@ -72,7 +72,7 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
         }
 
         activeInput = finalInput
-        if (canMoveOrBlockPitch() && finalInput.active) {
+        if (canMoveOrBlockPitch() && finalInput.status == ControlInput.Status.ACTIVE) {
             var target: Float = finalInput.target
             if (!finalInput.priority.isHigherOrSame(minimumPitch?.priority)) {
                 target = target.coerceAtLeast(minimumPitch!!.target)

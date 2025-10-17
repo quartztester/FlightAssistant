@@ -118,36 +118,50 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         if (query is PitchComputer.MinimumPitchQuery && (groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateLimitPitch || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleLimitPitch)) {
             query.respond(ControlInput(
                 computers.data.pitch.coerceAtMost(15.0f),
-                ControlInput.Priority.HIGH,
-                Component.translatable("mode.flightassistant.vertical.terrain_protection")
+                Component.translatable("mode.flightassistant.vertical.terrain_protection"),
+                ControlInput.Priority.HIGH
             ))
         }
     }
 
+    private fun getControlInputStatus(status: Status, config: Boolean, forThrust: Boolean): ControlInput.Status? {
+        if (!config) return ControlInput.Status.DISABLED
+        val armThreshold = if (forThrust) Status.CAUTION else Status.WARNING
+        val activeThreshold = if (forThrust) Status.WARNING else Status.RECOVER
+        return if (status <= activeThreshold) ControlInput.Status.ACTIVE
+        else if (status <= armThreshold) ControlInput.Status.ARMED
+        else null
+    }
+
     override fun getThrustInput(): ControlInput? {
-        if (groundImpactStatus <= Status.CAUTION && FAConfig.safety.sinkRateAutoThrust || obstacleImpactStatus <= Status.CAUTION && FAConfig.safety.obstacleAutoThrust) {
-            if (computers.data.pitch <= 15.0f) {
-                return ControlInput(
-                    0.0f,
-                    ControlInput.Priority.HIGH,
-                    Component.translatable("mode.flightassistant.thrust.idle"),
-                    active = groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateAutoThrust || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleAutoThrust
-                )
-            }
+        if (computers.data.pitch > 15.0f) {
+            return null
+        }
+        val sinkRateInputStatus = getControlInputStatus(groundImpactStatus, FAConfig.safety.sinkRateAutoThrust, true)
+        val terrainInputStatus = getControlInputStatus(obstacleImpactStatus, FAConfig.safety.obstacleAutoThrust, true)
+        if (sinkRateInputStatus != null || terrainInputStatus != null) {
+            return ControlInput(
+                0.0f,
+                Component.translatable("mode.flightassistant.thrust.idle"),
+                ControlInput.Priority.HIGH,
+                status = ControlInput.Status.highest(sinkRateInputStatus, terrainInputStatus)
+            )
         }
 
         return null
     }
 
     override fun getPitchInput(): ControlInput? {
-        if (groundImpactStatus <= Status.WARNING && FAConfig.safety.sinkRateAutoPitch || obstacleImpactStatus <= Status.WARNING && FAConfig.safety.obstacleAutoPitch) {
+        val sinkRateInputStatus = getControlInputStatus(groundImpactStatus, FAConfig.safety.sinkRateAutoPitch, false)
+        val terrainInputStatus = getControlInputStatus(obstacleImpactStatus, FAConfig.safety.obstacleAutoPitch, false)
+        if (sinkRateInputStatus != null || terrainInputStatus != null) {
             val deltaTimeMultiplier: Double = inverseMin(groundImpactTime, obstacleImpactTime) ?: return null
             return ControlInput(
                 90.0f,
-                ControlInput.Priority.HIGH,
                 Component.translatable("mode.flightassistant.vertical.terrain_escape"),
+                ControlInput.Priority.HIGH,
                 deltaTimeMultiplier.toFloat(),
-                active = groundImpactStatus == Status.RECOVER && FAConfig.safety.sinkRateAutoPitch || obstacleImpactStatus == Status.RECOVER && FAConfig.safety.obstacleAutoPitch
+                ControlInput.Status.highest(sinkRateInputStatus, terrainInputStatus)
             )
         }
 
@@ -165,7 +179,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         RECOVER,
         WARNING,
         CAUTION,
-        SAFE
+        SAFE;
     }
 
     companion object {

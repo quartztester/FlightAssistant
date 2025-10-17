@@ -12,18 +12,14 @@ import ru.octol1ttle.flightassistant.api.util.extensions.getProgressOnTrack
 import ru.octol1ttle.flightassistant.api.util.extensions.vec2dFromInts
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.AutoFlightComputer
 
-data class PitchVerticalMode(override val targetPitch: Float) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsPitchMode {
+data class PitchVerticalMode(override val targetPitch: Float, override val textOverride: Component? = null) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsPitchMode {
     override fun getControlInput(computers: ComputerBus): ControlInput {
-        return ControlInput(
-            targetPitch,
-            ControlInput.Priority.NORMAL,
-            Component.translatable("mode.flightassistant.vertical.pitch")
-        )
+        return ControlInput(targetPitch, Component.translatable("mode.flightassistant.vertical.pitch"))
     }
 }
 
 // TODO: tick-based plsssssssss
-data class SelectedAltitudeVerticalMode(override val targetAltitude: Int) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsAltitudeMode {
+data class SelectedAltitudeVerticalMode(override val targetAltitude: Int, override val textOverride: Component? = null) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsAltitudeMode {
     private val controller: PIDController = PIDController(1.75f, 0.125f, 0.3f, 10, -70.0f, 70.0f)
     private var lastPitchCommand: Float = 0.0f
 
@@ -37,21 +33,20 @@ data class SelectedAltitudeVerticalMode(override val targetAltitude: Int) : Auto
             Component.translatable("mode.flightassistant.vertical.altitude.open.descend")
         }
         if (FATickCounter.ticksPassed == 0) {
-            return ControlInput(lastPitchCommand, ControlInput.Priority.NORMAL, text)
+            return ControlInput(lastPitchCommand, text)
         }
 
         var target: Float = controller.calculate(targetAltitude.toFloat(), computers.data.altitude.toFloat(), computers.data.pitch)
         if (abs(diff) > 10.0f) {
             target = if (diff > 0) target.coerceIn(0.0f..70.0f) else target.coerceIn(-70.0f..0.0f)
         }
-
         lastPitchCommand = target
 
-        return ControlInput(target, ControlInput.Priority.NORMAL, text)
+        return ControlInput(target, text)
     }
 }
 
-data class ManagedAltitudeVerticalMode(val originX: Int, val originZ: Int, val originAltitude: Int, val targetX: Int, val targetZ: Int, override val targetAltitude: Int) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsAltitudeMode {
+data class ManagedAltitudeVerticalMode(val originX: Int, val originZ: Int, val originAltitude: Int, val targetX: Int, val targetZ: Int, override val targetAltitude: Int, override val textOverride: Component? = null) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsAltitudeMode {
     private val controller: PIDController = PIDController(1.75f, 0.125f, 0.3f, 10, -70.0f, 70.0f)
     private var lastPitchCommand: Float = 0.0f
 
@@ -65,7 +60,7 @@ data class ManagedAltitudeVerticalMode(val originX: Int, val originZ: Int, val o
             else Component.translatable("mode.flightassistant.vertical.altitude.managed.descend")
 
         if (FATickCounter.ticksPassed == 0) {
-            return ControlInput(lastPitchCommand, ControlInput.Priority.NORMAL, text)
+            return ControlInput(lastPitchCommand, text)
         }
 
         val origin: Vector2d = vec2dFromInts(originX, originZ)
@@ -83,6 +78,6 @@ data class ManagedAltitudeVerticalMode(val originX: Int, val originZ: Int, val o
         val target: Float = controller.calculate((targetVerticalSpeed + currentDiff).toFloat(), currentVerticalSpeed.toFloat(), computers.data.pitch)
         lastPitchCommand = target
 
-        return ControlInput(target, ControlInput.Priority.NORMAL, text)
+        return ControlInput(target, text)
     }
 }
