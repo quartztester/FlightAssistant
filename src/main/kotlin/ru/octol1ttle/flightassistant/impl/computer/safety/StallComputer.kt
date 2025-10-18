@@ -47,7 +47,7 @@ class StallComputer(computers: ComputerBus) : Computer(computers), FlightControl
     override fun <Response> handleQuery(query: ComputerQuery<Response>) {
         if (query is PitchComputer.MaximumPitchQuery && maximumSafePitch <= 90.0f && !computers.data.fallDistanceSafe) {
             query.respond(ControlInput(
-                maximumSafePitch,
+                maximumSafePitch - 5.0f,
                 Component.translatable("mode.flightassistant.vertical.stall_protection"),
                 ControlInput.Priority.HIGHEST,
                 1.5f,
