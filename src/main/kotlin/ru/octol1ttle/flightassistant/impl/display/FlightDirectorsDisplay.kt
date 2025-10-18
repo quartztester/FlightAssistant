@@ -21,7 +21,7 @@ class FlightDirectorsDisplay(computers: ComputerBus) : Display(computers) {
     override fun allowedByConfig(): Boolean = true
 
     override fun render(guiGraphics: GuiGraphics) {
-        if (!computers.autoflight.flightDirectors) {
+        if (!computers.autoflight.flightDirectors || computers.hudData.isViewMirrored) {
             return
         }
 

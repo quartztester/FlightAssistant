@@ -25,5 +25,5 @@ fun String.toFloatOrNullWithFallback(): Float? {
 }
 
 fun String.formatRoot(vararg args: Any?): String {
-    return this.format(Locale.ROOT, args)
+    return this.format(Locale.ROOT, *args)
 }

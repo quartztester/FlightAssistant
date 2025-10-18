@@ -50,6 +50,9 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
             if (FAConfig.display.showAttitude == DisplayOptions.AttitudeDisplayMode.HORIZON_AND_LADDER) {
                 renderPitchBars()
                 renderPitchLimits()
+                drawPitchReferenceMark(47.5f)
+                drawPitchReferenceMark(-2.2f)
+                drawPitchReferenceMark(-38.5f)
             }
             if (!FAConfig.display.drawPitchOutsideFrame) {
                 disableScissor()
@@ -122,18 +125,23 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
         }
     }
 
+    private fun GuiGraphics.drawPitchReferenceMark(pitch: Float) {
+        val y = ScreenSpace.getY(pitch) ?: return
+
+        val color: Int = getPitchBarColor(pitch)
+        val leftXEnd: Int = (centerXF - halfWidth * 0.025f).toInt()
+        val leftXStart: Int = (leftXEnd - halfWidth * 0.05f).toInt()
+        hLineDashed(leftXStart, leftXEnd, y, 2, color)
+
+        val rightXStart: Int = (centerXF + halfWidth * 0.025f).toInt()
+        val rightXEnd: Int = (rightXStart + halfWidth * 0.05f).toInt()
+        hLineDashed(rightXStart, rightXEnd, y, 2, color)
+    }
+
     private fun GuiGraphics.drawPitchBar(pitch: Int, y: Int) {
         if (pitch == 0) return
 
-        val min: ControlInput? = computers.pitch.minimumPitch
-        val max: ControlInput? = computers.pitch.maximumPitch
-        val color: Int =
-            if (max != null && pitch > max.target)
-                if (max.status == ControlInput.Status.ACTIVE) warningColor else cautionColor
-            else if (min != null && pitch < min.target)
-                if (min.status == ControlInput.Status.ACTIVE) warningColor else cautionColor
-            else
-                primaryColor
+        val color: Int = getPitchBarColor(pitch.toFloat())
 
         val leftXEnd: Int = (centerXF - halfWidth * 0.05f).toInt()
         val leftXStart: Int = (leftXEnd - halfWidth * 0.075f).toInt()
@@ -146,6 +154,17 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
         hLineDashed(rightXStart, rightXEnd, y, if (pitch < 0) 3 else 1, color)
         vLine(rightXEnd, y, y + 5 * pitch.sign, color)
         drawString(pitch.toString(), rightXEnd + 4, if (pitch > 0) y else y - 4, color)
+    }
+
+    private fun getPitchBarColor(pitch: Float): Int {
+        val min: ControlInput? = computers.pitch.minimumPitch
+        val max: ControlInput? = computers.pitch.maximumPitch
+        return if (max != null && pitch > max.target)
+            if (max.status == ControlInput.Status.ACTIVE) warningColor else cautionColor
+        else if (min != null && pitch < min.target)
+            if (min.status == ControlInput.Status.ACTIVE) warningColor else cautionColor
+        else
+            primaryColor
     }
 
     private fun GuiGraphics.renderPitchTarget(x: Int, y: Int) {
