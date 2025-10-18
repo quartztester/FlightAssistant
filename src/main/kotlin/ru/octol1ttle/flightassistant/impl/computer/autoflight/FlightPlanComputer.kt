@@ -195,7 +195,6 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
 
     fun getLateralMode(): AutoFlightComputer.LateralMode? {
         return when (currentPhase) {
-            FlightPhase.UNKNOWN -> null
             FlightPhase.TAKEOFF -> {
                 val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
                 TrackNavigationLateralMode(departureData.coordinatesX, departureData.coordinatesZ, target.coordinatesX, target.coordinatesZ)
