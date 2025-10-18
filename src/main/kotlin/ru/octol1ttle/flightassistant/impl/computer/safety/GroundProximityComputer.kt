@@ -55,7 +55,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
                 Status.SAFE
             } else if (groundImpactStatus == Status.SAFE && (data.velocityPerSecond.y > -10 || groundImpactTime > cautionThreshold)) {
                 Status.SAFE
-            } else if (data.velocityPerSecond.y > -7.5 || groundImpactTime > clearThreshold) {
+            } else if (data.velocityPerSecond.y > -8.5 || groundImpactTime > clearThreshold) {
                 Status.SAFE
             } else if (groundImpactStatus >= Status.CAUTION && groundImpactTime > warningThreshold) {
                 Status.CAUTION
@@ -73,7 +73,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
                 Status.SAFE
             } else if (obstacleImpactStatus == Status.SAFE && (damageOnCollision < data.player.health * 0.5f || obstacleImpactTime > groundImpactTime * 1.1f || obstacleImpactTime > cautionThreshold)) {
                 Status.SAFE
-            } else if (damageOnCollision < data.player.health * 0.25f || obstacleImpactTime > groundImpactTime * 1.5f || obstacleImpactTime > clearThreshold) {
+            } else if (damageOnCollision < data.player.health * 0.25f || obstacleImpactTime > groundImpactTime * 1.2f || obstacleImpactTime > clearThreshold) {
                 Status.SAFE
             } else if (obstacleImpactStatus >= Status.CAUTION && obstacleImpactTime > warningThreshold) {
                 Status.CAUTION

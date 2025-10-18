@@ -75,10 +75,10 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
         if (canMoveOrBlockPitch() && finalInput.status == ControlInput.Status.ACTIVE) {
             var target: Float = finalInput.target
             if (!finalInput.priority.isHigherOrSame(minimumPitch?.priority)) {
-                target = target.coerceAtLeast(minimumPitch!!.target)
+                target = target.coerceAtLeast(minimumPitch!!.target + 1.0f)
             }
             if (!finalInput.priority.isHigherOrSame(maximumPitch?.priority)) {
-                target = target.coerceAtMost(maximumPitch!!.target)
+                target = target.coerceAtMost(maximumPitch!!.target - 1.0f)
             }
             smoothSetPitch(computers.data.player, pitch, target.throwIfNotInRange(-90.0f..90.0f), finalInput.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE))
         }
@@ -109,17 +109,11 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
 
         val max: ControlInput? = maximumPitch
         if (max != null && computers.data.pitch > max.target) {
-            if (computers.data.pitch - max.target < 5.0f) {
-                return max.copy(text = null)
-            }
             return max
         }
 
         val min: ControlInput? = minimumPitch
         if (min != null && computers.data.pitch < min.target) {
-            if (min.target - computers.data.pitch < 5.0f) {
-                return min.copy(text = null)
-            }
             return min
         }
 

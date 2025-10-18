@@ -32,7 +32,7 @@ data class VerticalSpeedVerticalMode(val targetVerticalSpeed: Double, override v
     }
 
     companion object {
-        private val controller: PIDController = PIDController(1.75, 0.125, 0.3, 10, -70.0, 70.0)
+        private val controller: PIDController = PIDController(1.8, 0.1, 0.35, 10, -85.0, 85.0)
         private var lastPitchCommand: Float = 0.0f
     }
 }
