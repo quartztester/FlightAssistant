@@ -41,7 +41,11 @@ data class ControlInput(val target: Float, val text: Component? = null, val prio
                 return if (first < second) first else second
             }
 
-            // TODO: fromBoolean
+            fun fromBooleans(active: Boolean, available: Boolean = true, enabled: Boolean = true): Status {
+                return if (!enabled) DISABLED
+                else if (!available) UNAVAILABLE
+                else if (!active) ARMED else ACTIVE
+            }
         }
     }
 }

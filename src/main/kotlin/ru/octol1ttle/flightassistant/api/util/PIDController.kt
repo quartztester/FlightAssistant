@@ -1,28 +1,28 @@
 package ru.octol1ttle.flightassistant.api.util
 
-class PIDController(proportional: Float, integral: Float, private val derivative: Float, filterConstant: Int, private val minimumValue: Float, private val maximumValue: Float) {
+class PIDController(proportional: Double, integral: Double, private val derivative: Double, filterConstant: Int, private val minimumValue: Double, private val maximumValue: Double) {
     private val a0 = proportional + integral * FATickCounter.TICK_TIME
     private val a1 = -proportional
 
-    private var lastLastError = 0.0f
-    private var lastError = 0.0f
-    private var error = 0.0f
+    private var lastLastError = 0.0
+    private var lastError = 0.0
+    private var error = 0.0
 
-    private var output: Float? = null
+    private var output: Double? = null
 
     private val a0d = derivative * FATickCounter.TICK_TIME
-    private val a1d = -2.0f * derivative * FATickCounter.TICK_TIME
+    private val a1d = -2.0 * derivative * FATickCounter.TICK_TIME
     private val a2d = derivative * FATickCounter.TICK_TIME
 
     private val tau = derivative / (proportional * filterConstant)
     private val alpha = FATickCounter.TICK_TIME / (2 * tau)
 
-    private var d0 = 0.0f
-    private var d1 = 0.0f
-    private var fd0 = 0.0f
-    private var fd1 = 0.0f
+    private var d0 = 0.0
+    private var d1 = 0.0
+    private var fd0 = 0.0
+    private var fd1 = 0.0
 
-    fun calculate(target: Float, current: Float, startOutput: Float): Float {
+    fun calculate(target: Double, current: Double, startOutput: Double): Double {
         lastLastError = lastError
         lastError = error
         error = target - current

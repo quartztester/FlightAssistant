@@ -18,11 +18,27 @@ data class PitchVerticalMode(override val targetPitch: Float, override val textO
     }
 }
 
+data class VerticalSpeedVerticalMode(val targetVerticalSpeed: Double, override val textOverride: Component? = null) : AutoFlightComputer.VerticalMode {
+    override fun getControlInput(computers: ComputerBus): ControlInput {
+        if (FATickCounter.ticksPassed == 0) {
+            return ControlInput(lastPitchCommand)
+        }
+
+        val currentVerticalSpeed: Double = computers.data.velocityPerSecond.y
+        val target: Float = controller.calculate(targetVerticalSpeed, currentVerticalSpeed, computers.data.pitch.toDouble()).toFloat()
+        lastPitchCommand = target
+
+        return ControlInput(target)
+    }
+
+    companion object {
+        private val controller: PIDController = PIDController(1.75, 0.125, 0.3, 10, -70.0, 70.0)
+        private var lastPitchCommand: Float = 0.0f
+    }
+}
+
 // TODO: tick-based plsssssssss
 data class SelectedAltitudeVerticalMode(override val targetAltitude: Int, override val textOverride: Component? = null) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsAltitudeMode {
-    private val controller: PIDController = PIDController(1.75f, 0.125f, 0.3f, 10, -70.0f, 70.0f)
-    private var lastPitchCommand: Float = 0.0f
-
     override fun getControlInput(computers: ComputerBus): ControlInput {
         val diff: Double = targetAltitude - computers.data.altitude
         val text: Component = if (abs(diff) <= 10.0) {
@@ -32,24 +48,12 @@ data class SelectedAltitudeVerticalMode(override val targetAltitude: Int, overri
         } else {
             Component.translatable("mode.flightassistant.vertical.altitude.open.descend")
         }
-        if (FATickCounter.ticksPassed == 0) {
-            return ControlInput(lastPitchCommand, text)
-        }
 
-        var target: Float = controller.calculate(targetAltitude.toFloat(), computers.data.altitude.toFloat(), computers.data.pitch)
-        if (abs(diff) > 10.0f) {
-            target = if (diff > 0) target.coerceIn(0.0f..70.0f) else target.coerceIn(-70.0f..0.0f)
-        }
-        lastPitchCommand = target
-
-        return ControlInput(target, text)
+        return VerticalSpeedVerticalMode((targetAltitude - computers.data.altitude) / 2.0).getControlInput(computers).copy(text = text)
     }
 }
 
 data class ManagedAltitudeVerticalMode(val originX: Int, val originZ: Int, val originAltitude: Int, val targetX: Int, val targetZ: Int, override val targetAltitude: Int, override val textOverride: Component? = null) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsAltitudeMode {
-    private val controller: PIDController = PIDController(1.75f, 0.125f, 0.3f, 10, -70.0f, 70.0f)
-    private var lastPitchCommand: Float = 0.0f
-
     override fun getControlInput(computers: ComputerBus): ControlInput {
         val totalDiff: Double = targetAltitude - computers.data.altitude
         val text: Component =
@@ -59,10 +63,6 @@ data class ManagedAltitudeVerticalMode(val originX: Int, val originZ: Int, val o
             else if (totalDiff > 0) Component.translatable("mode.flightassistant.vertical.altitude.managed.climb")
             else Component.translatable("mode.flightassistant.vertical.altitude.managed.descend")
 
-        if (FATickCounter.ticksPassed == 0) {
-            return ControlInput(lastPitchCommand, text)
-        }
-
         val origin: Vector2d = vec2dFromInts(originX, originZ)
         val track: Vector2d = vec2dFromInts(targetX, targetZ).sub(origin)
         val trackProgress: Double = getProgressOnTrack(track, origin, Vector2d(computers.data.x, computers.data.z))
@@ -70,14 +70,10 @@ data class ManagedAltitudeVerticalMode(val originX: Int, val originZ: Int, val o
 
         val timeToTarget: Double = track.length() / computers.data.velocityPerSecond.horizontalDistance()
         val targetVerticalSpeed: Double = trackDiff / timeToTarget
-        val currentVerticalSpeed: Double = computers.data.velocityPerSecond.y
 
         val currentTarget: Double = Mth.lerp(trackProgress, originAltitude.toDouble(), targetAltitude.toDouble())
         val currentDiff: Double = currentTarget - computers.data.altitude
 
-        val target: Float = controller.calculate((targetVerticalSpeed + currentDiff).toFloat(), currentVerticalSpeed.toFloat(), computers.data.pitch)
-        lastPitchCommand = target
-
-        return ControlInput(target, text)
+        return VerticalSpeedVerticalMode(targetVerticalSpeed + currentDiff).getControlInput(computers).copy(text = text)
     }
 }

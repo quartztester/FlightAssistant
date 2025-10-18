@@ -37,10 +37,7 @@ class StallComputer(computers: ComputerBus) : Computer(computers), FlightControl
                 1.0f,
                 Component.translatable("mode.flightassistant.thrust.toga"),
                 ControlInput.Priority.HIGHEST,
-                status =
-                    if (FAConfig.safety.stallAutoThrust)
-                        if (status == Status.FULL_STALL) ControlInput.Status.ACTIVE else ControlInput.Status.ARMED
-                    else ControlInput.Status.DISABLED
+                status = ControlInput.Status.fromBooleans(status == Status.FULL_STALL, enabled = FAConfig.safety.stallAutoThrust)
             )
         }
 
@@ -54,7 +51,7 @@ class StallComputer(computers: ComputerBus) : Computer(computers), FlightControl
                 Component.translatable("mode.flightassistant.vertical.stall_protection"),
                 ControlInput.Priority.HIGHEST,
                 1.5f,
-                if (FAConfig.safety.stallLimitPitch) ControlInput.Status.ACTIVE else ControlInput.Status.DISABLED
+                ControlInput.Status.fromBooleans(true, enabled = FAConfig.safety.stallLimitPitch)
             ))
         }
     }

@@ -102,7 +102,7 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
         while (max <= 180) {
             val y: Int = ScreenSpace.getY(max) ?: break
 
-            drawMiddleAlignedString(arrowText, centerX, y - 9, if (maxInput?.active == true) warningColor else cautionColor)
+            drawMiddleAlignedString(arrowText, centerX, y - 9, if (maxInput?.status == ControlInput.Status.ACTIVE) warningColor else cautionColor)
 
             max += step
         }
@@ -115,7 +115,7 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
             /*pose().rotate(ru.octol1ttle.flightassistant.api.util.radians(180.0f))
 *///?} else
             pose().mulPose(Axis.ZN.rotationDegrees(180.0f)) // Flip upside down
-            drawMiddleAlignedString(arrowText, 0, -9, if (minInput?.active == true) warningColor else cautionColor)
+            drawMiddleAlignedString(arrowText, 0, -9, if (minInput?.status == ControlInput.Status.ACTIVE) warningColor else cautionColor)
 
             pose().pop()
             min -= step
@@ -129,9 +129,9 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
         val max: ControlInput? = computers.pitch.maximumPitch
         val color: Int =
             if (max != null && pitch > max.target)
-                if (max.active) warningColor else cautionColor
+                if (max.status == ControlInput.Status.ACTIVE) warningColor else cautionColor
             else if (min != null && pitch < min.target)
-                if (min.active) warningColor else cautionColor
+                if (min.status == ControlInput.Status.ACTIVE) warningColor else cautionColor
             else
                 primaryColor
 

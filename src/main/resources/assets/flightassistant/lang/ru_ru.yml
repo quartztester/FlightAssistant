@@ -76,6 +76,8 @@ alert.flightassistant:
     dont_sink: НЕ ПАДАЙ
     sink_rate: СКОР. СНИЖЕНИЯ
     terrain_ahead: ЗЕМЛЯ ВПЕРЕДИ
+    too_low_terrain: СЛИШКОМ НИЗКО - ЗЕМЛЯ
+    below_glide_slope: НИЖЕ ГЛИССАДЫ
     pull_up: ТЯНИ ВВЕРХ
   navigation:
     .: НАВИГАЦ
@@ -350,11 +352,13 @@ mode.flightassistant:
         climb: НАБОР
         descend: СНИЖ
     glide_slope: ГЛИССАДА
+    go_around: ВТ.КР ВЫС
   lateral:
     heading: КУРС
-    direct_coordinates: DIR COORDS
-    track_navigation: TRK NAV
+    direct_coordinates: ПРЯМ КООРД
+    track_navigation: НАВ ТРАЕКТ
     localizer: ПОСАД.КУРС
+    go_around: ВТ.КР КУРС
 
 short.flightassistant:
   alert: ПРЕДУПР

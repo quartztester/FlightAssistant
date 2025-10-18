@@ -51,7 +51,7 @@ class ThrustComputer(computers: ComputerBus) : Computer(computers) {
         noThrustSource = false
         reverseUnsupported = false
 
-        if (finalInput?.active == true && !FAKeyMappings.isHoldingThrust()) {
+        if (finalInput?.status == ControlInput.Status.ACTIVE && !FAKeyMappings.isHoldingThrust()) {
             setTarget(finalInput.target, finalInput)
             activeInput = finalInput
             thrustLocked = false
@@ -71,7 +71,7 @@ class ThrustComputer(computers: ComputerBus) : Computer(computers) {
         current.throwIfNotInRange(-1.0f..1.0f)
 
         val active: Boolean = !noThrustSource && !reverseUnsupported
-        activeInput = activeInput?.copy(active = active)
+        activeInput = activeInput?.copy(status = if (active) activeInput!!.status else ControlInput.Status.UNAVAILABLE)
 
         if (computers.data.automationsAllowed()) {
             thrustSource?.tickThrust(current.coerceIn((if (thrustSource.supportsReverse) -1.0f else 0.0f)..1.0f))

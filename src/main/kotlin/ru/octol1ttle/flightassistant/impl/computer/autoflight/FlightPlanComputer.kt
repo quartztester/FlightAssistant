@@ -6,6 +6,8 @@ import kotlin.math.roundToLong
 import net.minecraft.SharedConstants
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
+import org.joml.Vector2d
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
@@ -13,6 +15,8 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.LimitedFIFOQueue
 import ru.octol1ttle.flightassistant.api.util.extensions.distance2d
+import ru.octol1ttle.flightassistant.api.util.extensions.getProgressOnTrack
+import ru.octol1ttle.flightassistant.api.util.extensions.vec2dFromInts
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.*
 import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
 
@@ -39,7 +43,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             if (!departureData.isDefault() && distance2d(departureData.coordinatesX, departureData.coordinatesZ, computers.data.x, computers.data.z) < 20) {
                 getEnrouteOrigin()?.active = null
                 getEnrouteTarget()?.active = null
-                enrouteData[0].active = EnrouteWaypoint.Active.TARGET
+                enrouteData.firstOrNull()?.active = EnrouteWaypoint.Active.TARGET
                 return FlightPhase.TAKEOFF
             }
             return FlightPhase.UNKNOWN
@@ -54,6 +58,12 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
 
         val target: EnrouteWaypoint? = getEnrouteTarget()
         if (target == null) {
+            if (enrouteData.isEmpty() || arrivalData.isDefault()) {
+                return FlightPhase.UNKNOWN
+            }
+            if (currentPhase == FlightPhase.GO_AROUND && (computers.data.altitude < arrivalData.goAroundAltitude || enrouteData.size > arrivalData.approachReEntryWaypointIndex)) {
+                return FlightPhase.GO_AROUND
+            }
             if (currentPhase == FlightPhase.APPROACH || currentPhase == FlightPhase.LANDING) {
                 if (computers.thrust.current == 1.0f) {
                     return FlightPhase.GO_AROUND
@@ -74,20 +84,16 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         if (targetIndex <= lastCruise) {
             return FlightPhase.CRUISE
         }
-        if (targetIndex < enrouteData.size - 1) {
+        if (targetIndex < enrouteData.size - 1 || arrivalData.isDefault()) {
             return FlightPhase.DESCEND
         }
 
-        if (!arrivalData.isDefault()) {
-            return FlightPhase.APPROACH
-        }
-
-        return FlightPhase.UNKNOWN
+        return FlightPhase.APPROACH
     }
 
     private fun updateEnrouteData() {
         if (currentPhase == FlightPhase.GO_AROUND && computers.data.altitude >= arrivalData.goAroundAltitude) {
-            val approachReEntryWaypoint = enrouteData.getOrNull(arrivalData.approachReEntryWaypointIndex - 1)
+            val approachReEntryWaypoint = enrouteData.getOrNull(arrivalData.approachReEntryWaypointIndex)
             approachReEntryWaypoint?.active = EnrouteWaypoint.Active.TARGET
         }
 
@@ -122,6 +128,16 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         return enrouteData.maxOfOrNull { it.altitude }
     }
 
+    fun getCurrentGlideSlopeTarget(): Double? {
+        val origin = enrouteData.lastOrNull() ?: return null
+        val originVec = vec2dFromInts(origin.coordinatesX, origin.coordinatesZ)
+        val targetVec = vec2dFromInts(arrivalData.coordinatesX, arrivalData.coordinatesZ)
+
+        val track: Vector2d = targetVec.sub(originVec)
+        val trackProgress: Double = getProgressOnTrack(track, originVec, Vector2d(computers.data.x, computers.data.z))
+        return Mth.lerp(trackProgress, origin.altitude.toDouble(), arrivalData.elevation.toDouble())
+    }
+
     fun isBelowMinimums(): Boolean {
         if (currentPhase != FlightPhase.LANDING) {
             return false
@@ -144,7 +160,8 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     fun getThrustMode(): AutoFlightComputer.ThrustMode? {
         return when (currentPhase) {
             FlightPhase.TAKEOFF -> ConstantThrustMode(departureData.takeoffThrust, Component.translatable("mode.flightassistant.thrust.takeoff"))
-            FlightPhase.LANDING -> ConstantThrustMode(departureData.takeoffThrust, Component.translatable("mode.flightassistant.thrust.landing"))
+            FlightPhase.LANDING -> ConstantThrustMode(arrivalData.landingThrust, Component.translatable("mode.flightassistant.thrust.landing"))
+            FlightPhase.GO_AROUND -> ConstantThrustMode(1.0f, Component.translatable("mode.flightassistant.thrust.toga"))
             else -> {
                 val target: EnrouteWaypoint = getEnrouteTarget() ?: return null
                 return if (target.speed != 0) SpeedThrustMode(target.speed) else null
@@ -162,6 +179,9 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
                 val approach = enrouteData.lastOrNull() ?: return null
                 ManagedAltitudeVerticalMode(approach.coordinatesX, approach.coordinatesZ, approach.altitude, arrivalData.coordinatesX, arrivalData.coordinatesZ, arrivalData.elevation)
                     .copy(textOverride = Component.translatable("mode.flightassistant.vertical.glide_slope"))
+            }
+            FlightPhase.GO_AROUND -> {
+                SelectedAltitudeVerticalMode(arrivalData.goAroundAltitude, Component.translatable("mode.flightassistant.vertical.go_around"))
             }
             else -> {
                 val origin: EnrouteWaypoint? = getEnrouteOrigin()
@@ -183,6 +203,9 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
                 val approach = enrouteData.lastOrNull() ?: return null
                 TrackNavigationLateralMode(approach.coordinatesX, approach.coordinatesZ, arrivalData.coordinatesX, arrivalData.coordinatesZ)
                     .copy(textOverride = Component.translatable("mode.flightassistant.lateral.localizer"))
+            }
+            FlightPhase.GO_AROUND -> {
+                HeadingLateralMode(computers.data.heading.toInt(), Component.translatable("mode.flightassistant.lateral.go_around"))
             }
             else -> {
                 val origin: EnrouteWaypoint? = getEnrouteOrigin()

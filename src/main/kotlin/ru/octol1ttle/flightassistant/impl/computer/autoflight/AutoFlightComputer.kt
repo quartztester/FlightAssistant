@@ -117,7 +117,9 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             return null
         }
 
-        return activeThrustMode?.getControlInput(computers)
+        val mode = activeThrustMode ?: return null
+        val input = mode.getControlInput(computers) ?: return null
+        return input.copy(text = mode.textOverride ?: input.text)
     }
 
     override fun getPitchInput(): ControlInput? {
@@ -127,8 +129,7 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
 
         val mode = activeVerticalMode ?: return null
         val input = mode.getControlInput(computers) ?: return null
-        return input.copy(text = mode.textOverride ?: input.text, deltaTimeMultiplier = 1.5f,
-            status = if (autopilot) ControlInput.Status.ACTIVE else ControlInput.Status.ARMED)
+        return input.copy(text = mode.textOverride ?: input.text, deltaTimeMultiplier = 1.5f, status = ControlInput.Status.fromBooleans(autopilot))
     }
 
     override fun getHeadingInput(): ControlInput? {
@@ -138,8 +139,7 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
 
         val mode = activeLateralMode ?: return null
         val input = mode.getControlInput(computers) ?: return null
-        return input.copy(text = mode.textOverride ?: input.text, deltaTimeMultiplier = 1.5f,
-            status = if (autopilot) ControlInput.Status.ACTIVE else ControlInput.Status.ARMED)
+        return input.copy(text = mode.textOverride ?: input.text, deltaTimeMultiplier = 1.5f, status = ControlInput.Status.fromBooleans(autopilot))
     }
 
     override fun getRollInput(): ControlInput? {

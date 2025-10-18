@@ -72,6 +72,8 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
     dont_sink: DON'T SINK
     sink_rate: SINK RATE
     terrain_ahead: TERRAIN AHEAD
+    too_low_terrain: TOO LOW - TERRAIN
+    below_glide_slope: BELOW G/S
     pull_up: PULL UP
   stall:
     .: STALL
@@ -346,11 +348,13 @@ mode.flightassistant:
         climb: CLIMB
         descend: DESCEND
     glide_slope: G/S
+    go_around: GA ALT
   lateral:
     heading: HDG
     direct_coordinates: DIR COORDS
     track_navigation: TRK NAV
     localizer: LOC
+    go_around: GA HDG
 
 # TODO: stop using this
 short.flightassistant:

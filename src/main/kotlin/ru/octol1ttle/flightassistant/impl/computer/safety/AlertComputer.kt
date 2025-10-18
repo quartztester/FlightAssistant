@@ -115,9 +115,12 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
             AlertCategory(Component.translatable("alert.flightassistant.gpws"))
                 .add(ComputerFaultAlert(computers, GroundProximityComputer.ID, Component.translatable("alert.flightassistant.gpws.fault")))
                 .add(PullUpAlert(computers))
+                .add(BelowGlideSlopeWarningAlert(computers))
                 .add(SinkRateAlert(computers))
                 .add(TerrainAheadAlert(computers))
+                .add(BelowGlideSlopeAlert(computers))
                 .add(DontSinkAlert(computers))
+                .add(TooLowTerrainAlert(computers))
                 .add(MinimumsReachedAlert(computers))
         )
         register(
@@ -271,6 +274,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
     }
 
     override fun reset() {
+        alertsFaulted = false
         categories.forEach { it.activeAlerts.clear() }
         categories.forEach { it.ignoredAlerts.clear() }
         sounds.values.forEach { soundManager.stop(it) }

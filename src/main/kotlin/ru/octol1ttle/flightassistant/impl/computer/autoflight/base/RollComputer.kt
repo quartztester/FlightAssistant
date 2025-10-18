@@ -34,7 +34,7 @@ class RollComputer(computers: ComputerBus) : Computer(computers) {
         }
         val finalInput: ControlInput = inputs.getActiveHighestPriority().firstOrNull() ?: return
 
-        if (computers.data.automationsAllowed() && finalInput.active) {
+        if (computers.data.automationsAllowed() && finalInput.status == ControlInput.Status.ACTIVE) {
             smoothSetRoll(rollSource, finalInput.target.throwIfNotInRange(-180.0f..180.0f), finalInput.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE))
         }
     }

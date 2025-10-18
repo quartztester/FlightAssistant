@@ -39,7 +39,7 @@ class HeadingComputer(computers: ComputerBus) : Computer(computers) {
         }
 
         activeInput = finalInput
-        if (computers.data.automationsAllowed() && finalInput.active) {
+        if (computers.data.automationsAllowed() && finalInput.status == ControlInput.Status.ACTIVE) {
             smoothSetHeading(computers.data.player, heading, finalInput.target.throwIfNotInRange(0.0f..360.0f), finalInput.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE))
         }
     }

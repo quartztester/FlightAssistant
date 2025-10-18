@@ -77,7 +77,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
             }
 
             val indexX: Int = (width * (0.4f / this.columns)).toInt()
-            guiGraphics.drawString((index + 1).toString(), indexX, top, ChatFormatting.WHITE.color!!, true)
+            guiGraphics.drawString(index.toString(), indexX, top, ChatFormatting.WHITE.color!!, true)
             val activeSymbol: String? = getActiveSymbol()
             if (activeSymbol != null) {
                 guiGraphics.drawString(activeSymbol, indexX - 15, top, primaryAdvisoryColor, true)
