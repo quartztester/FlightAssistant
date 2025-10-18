@@ -40,7 +40,7 @@ class HeadingDisplay(computers: ComputerBus) : Display(computers) {
         val headingInt: Int = computers.data.heading.roundToInt()
 
         renderOutline(x - 11, y, 23, 11, primaryColor)
-        drawMiddleAlignedString("%03d".format(headingInt), x, y + 2, primaryColor)
+        drawMiddleAlignedString("%03d".formatRoot(headingInt), x, y + 2, primaryColor)
     }
 
     private fun GuiGraphics.renderHeadingScale(x: Int, y: Int) {
@@ -108,7 +108,7 @@ class HeadingDisplay(computers: ComputerBus) : Display(computers) {
     private fun GuiGraphics.renderHeadingTarget(x: Int, y: Int) {
         val active: AutoFlightComputer.LateralMode? = computers.autoflight.activeLateralMode
         if (computers.autoflight.getHeadingInput() != null && active is AutoFlightComputer.FollowsHeadingMode) {
-            drawMiddleAlignedString("%03d".format(active.targetHeading), x, y, primaryAdvisoryColor)
+            drawMiddleAlignedString("%03d".formatRoot(active.targetHeading), x, y, primaryAdvisoryColor)
         }
     }
 

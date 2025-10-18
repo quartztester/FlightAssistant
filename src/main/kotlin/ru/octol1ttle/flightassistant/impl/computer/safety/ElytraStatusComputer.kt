@@ -14,6 +14,7 @@ import net.minecraft.world.item.enchantment.Enchantments
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
+import ru.octol1ttle.flightassistant.api.util.extensions.formatRoot
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.config.options.DisplayOptions
 import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
@@ -121,7 +122,7 @@ class ElytraStatusComputer(computers: ComputerBus) : Computer(computers) {
                     2 -> Mth.quantize(duration.toSecondsPart().toDouble(), 15)
                     else -> Mth.quantize(duration.toSecondsPart().toDouble(), 30)
                 }
-                Component.literal("${duration.toMinutesPart()}:${"%02d".format(seconds)}")
+                Component.literal("${duration.toMinutesPart()}:${"%02d".formatRoot(seconds)}")
             }
         }
     }

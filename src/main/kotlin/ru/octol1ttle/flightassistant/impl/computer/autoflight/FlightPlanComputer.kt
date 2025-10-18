@@ -15,6 +15,7 @@ import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.LimitedFIFOQueue
 import ru.octol1ttle.flightassistant.api.util.extensions.distance2d
+import ru.octol1ttle.flightassistant.api.util.extensions.formatRoot
 import ru.octol1ttle.flightassistant.api.util.extensions.getProgressOnTrack
 import ru.octol1ttle.flightassistant.api.util.extensions.vec2dFromInts
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.*
@@ -154,7 +155,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
 
     fun getFormattedTime(distance: Double): String {
         val duration: Duration = Duration.ofSeconds((distance / groundSpeeds.average()).roundToLong())
-        return if (computers.data.flying) "${duration.toMinutesPart()}:${"%02d".format(duration.toSecondsPart())}" else "--:--"
+        return if (computers.data.flying) "${duration.toMinutesPart()}:${"%02d".formatRoot(duration.toSecondsPart())}" else "--:--"
     }
 
     fun getThrustMode(): AutoFlightComputer.ThrustMode? {
