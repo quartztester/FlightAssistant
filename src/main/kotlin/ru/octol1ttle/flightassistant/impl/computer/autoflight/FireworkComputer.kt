@@ -37,7 +37,7 @@ class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Comp
         ThrustSourceRegistrationCallback.EVENT.register { it.accept(this) }
         InteractionEvent.RIGHT_CLICK_ITEM.register(InteractionEvent.RightClickItem { player, hand ->
             val stack: ItemStack = player.getItemInHand(hand)
-            if (player.level().isClientSide() && stack.item is FireworkRocketItem) {
+            if (player.level().isClientSide() && computers.data.flying && stack.item is FireworkRocketItem) {
                 val explosive = FAConfig.safety.fireworkLockExplosive && !isEmptyOrSafe(player, hand)
                 val anyTerrainAhead = FAConfig.safety.fireworkLockObstacles && anyTerrainAhead()
                 if (explosive || anyTerrainAhead) {
