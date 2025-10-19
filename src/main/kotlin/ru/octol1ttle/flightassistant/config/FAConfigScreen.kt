@@ -449,6 +449,11 @@ object FAConfigScreen {
                 binding(current::fireworkLockExplosive, defaults.fireworkLockExplosive)
                 controller(tickBox())
             }
+            rootOptions.register("firework.lock_obstacles") {
+                setSafetyName()
+                binding(current::fireworkLockObstacles, defaults.fireworkLockObstacles)
+                controller(tickBox())
+            }
         }
     }
 

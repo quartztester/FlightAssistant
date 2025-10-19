@@ -224,6 +224,7 @@ config.flightassistant:
         .: Fireworks
         explosive_alert: Alert when holding explosive fireworks
         lock_explosive: Lock explosive fireworks
+        lock_obstacles: Lock fireworks near obstacles
 
 menu.flightassistant:
   .: FlightAssistant setup screen

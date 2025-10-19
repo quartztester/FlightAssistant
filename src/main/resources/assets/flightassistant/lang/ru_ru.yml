@@ -228,6 +228,7 @@ config.flightassistant:
         .: Фейерверки
         explosive_alert: Предупреждать при взятии взрывоопасных фейерверков
         lock_explosive: Блокировать использование взрывоопасных фейерверков
+        lock_obstacles: Блокировать использование фейерверков рядом с препятствиями
 
 menu.flightassistant:
   .: Настройки FlightAssistant

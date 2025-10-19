@@ -32,6 +32,16 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
     var obstacleImpactStatus: Status = Status.SAFE
         private set
 
+    private var anyBlocksAbove = false
+    val safeThreshold: Double
+        get() = if (anyBlocksAbove) 7.5 else 10.0
+    val cautionThreshold: Double
+        get() = if (anyBlocksAbove) 7.5 else 10.0
+    val warningThreshold: Double
+        get() = if (anyBlocksAbove) 7.5 else 10.0
+    val recoverThreshold: Double
+        get() = if (anyBlocksAbove) 7.5 else 10.0
+
     var groundY: Double? = null
     val groundOrVoidY: Double
         get() = if (groundY == null || groundY == Double.MAX_VALUE) computers.data.voidY.toDouble()
@@ -54,11 +64,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
             return
         }
 
-        val anyBlocksAbove: Boolean = data.level.getHeight(Heightmap.Types.MOTION_BLOCKING, data.player.blockX, data.player.blockZ) > data.player.y
-        val clearThreshold: Double = if (anyBlocksAbove) 7.5 else 10.0
-        val cautionThreshold: Double = if (anyBlocksAbove) 3.0 else 7.5
-        val warningThreshold: Double = if (anyBlocksAbove) 1.5 else 3.0
-        val recoverThreshold = 0.75
+        anyBlocksAbove = data.level.getHeight(Heightmap.Types.MOTION_BLOCKING, data.player.blockX, data.player.blockZ) > data.player.y
 
         groundImpactTime = computeGroundImpactTime(data).throwIfNotInRange(0.0..Double.MAX_VALUE)
         groundImpactStatus =
@@ -66,7 +72,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
                 Status.SAFE
             } else if (groundImpactStatus == Status.SAFE && (data.velocityPerSecond.y > -10 || groundImpactTime > cautionThreshold)) {
                 Status.SAFE
-            } else if (data.velocityPerSecond.y > -8.5 || groundImpactTime > clearThreshold) {
+            } else if (data.velocityPerSecond.y > -8.5 || groundImpactTime > safeThreshold) {
                 Status.SAFE
             } else if (groundImpactStatus >= Status.CAUTION && groundImpactTime > warningThreshold) {
                 Status.CAUTION
@@ -76,7 +82,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
                 Status.RECOVER
             }
 
-        obstacleImpactTime = computeObstacleImpactTime(data, clearThreshold).throwIfNotInRange(0.0..Double.MAX_VALUE)
+        obstacleImpactTime = computeObstacleImpactTime(data, safeThreshold).throwIfNotInRange(0.0..Double.MAX_VALUE)
 
         val damageOnCollision: Double = data.velocity.horizontalDistance() * 10 - 3
         obstacleImpactStatus =
@@ -84,7 +90,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
                 Status.SAFE
             } else if (obstacleImpactStatus == Status.SAFE && (damageOnCollision < data.player.health * 0.5f || obstacleImpactTime > groundImpactTime * 1.1f || obstacleImpactTime > cautionThreshold)) {
                 Status.SAFE
-            } else if (damageOnCollision < data.player.health * 0.25f || obstacleImpactTime > groundImpactTime * 1.2f || obstacleImpactTime > clearThreshold) {
+            } else if (damageOnCollision < data.player.health * 0.25f || obstacleImpactTime > groundImpactTime * 1.2f || obstacleImpactTime > safeThreshold) {
                 Status.SAFE
             } else if (obstacleImpactStatus >= Status.CAUTION && obstacleImpactTime > warningThreshold) {
                 Status.CAUTION
@@ -120,20 +126,24 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
 
     private fun computeObstacleImpactTime(data: AirDataComputer, lookAheadTime: Double): Double {
         val end: Vec3 = data.position.add(data.forwardVelocityPerSecond.multiply(lookAheadTime, 0.0, lookAheadTime))
-        val result: BlockHitResult = data.level.clip(
+        return computeObstacleImpactTime(end, computers.data.forwardVelocityPerSecond)
+    }
+
+    fun computeObstacleImpactTime(raycastEnd: Vec3, velocity: Vec3): Double {
+        val result: BlockHitResult = computers.data.level.clip(
             ClipContext(
-                data.position,
-                end,
+                computers.data.position,
+                raycastEnd,
                 ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.ANY,
-                data.player
+                computers.data.player
             )
         )
         if (result.type != HitResult.Type.BLOCK) {
             return Double.MAX_VALUE
         }
 
-        return data.position.distanceTo(result.location) / data.forwardVelocityPerSecond.length()
+        return computers.data.position.distanceTo(result.location) / velocity.length()
     }
 
     override fun <Response> handleQuery(query: ComputerQuery<Response>) {
@@ -195,6 +205,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         groundImpactStatus = Status.SAFE
         obstacleImpactTime = Double.MAX_VALUE
         obstacleImpactStatus = Status.SAFE
+        anyBlocksAbove = false
         groundY = null
     }
 
