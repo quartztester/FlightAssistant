@@ -399,6 +399,36 @@ object FAConfigScreen {
                 binding(current::obstacleAutoPitch, defaults.obstacleAutoPitch)
                 controller(tickBox())
             }
+            rootOptions.register("gpws.altitude_loss_with_toga.enabled") {
+                setSafetyName()
+                binding(current::altitudeLossAlert, defaults.altitudeLossAlert)
+                controller(tickBox())
+            }
+            rootOptions.register("gpws.altitude_loss_with_toga.alert_method") {
+                setSafetyName()
+                binding(current::altitudeLossAlertMethod, defaults.altitudeLossAlertMethod)
+                controller(enumSwitch(SafetyOptions.AlertMethod::class.java))
+            }
+            rootOptions.register("gpws.unsafe_terrain_clearance.enabled") {
+                setSafetyName()
+                binding(current::unsafeTerrainClearanceAlert, defaults.unsafeTerrainClearanceAlert)
+                controller(tickBox())
+            }
+            rootOptions.register("gpws.unsafe_terrain_clearance.alert_method") {
+                setSafetyName()
+                binding(current::unsafeTerrainClearanceAlertMethod, defaults.unsafeTerrainClearanceAlertMethod)
+                controller(enumSwitch(SafetyOptions.AlertMethod::class.java))
+            }
+            rootOptions.register("gpws.below_glide_slope.alert_mode") {
+                setSafetyName()
+                binding(current::belowGlideSlopeAlertMode, defaults.belowGlideSlopeAlertMode)
+                controller(enumSwitch(SafetyOptions.AlertMode::class.java))
+            }
+            rootOptions.register("gpws.below_glide_slope.alert_method") {
+                setSafetyName()
+                binding(current::belowGlideSlopeAlertMethod, defaults.belowGlideSlopeAlertMethod)
+                controller(enumSwitch(SafetyOptions.AlertMethod::class.java))
+            }
 
             rootOptions.registerLabel(
                 "firework",

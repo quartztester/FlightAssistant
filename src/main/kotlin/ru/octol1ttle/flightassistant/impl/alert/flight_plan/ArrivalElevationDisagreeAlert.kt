@@ -22,7 +22,7 @@ class ArrivalElevationDisagreeAlert(computers: ComputerBus) : Alert(computers), 
         }
         val x = computers.plan.arrivalData.coordinatesX
         val z = computers.plan.arrivalData.coordinatesZ
-        if (!computers.data.isChunkLoaded(x, z)) {
+        if (!computers.chunk.isLoaded(x, z)) {
             return false
         }
         val actualElevation: Int = computers.data.level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z)
@@ -31,7 +31,7 @@ class ArrivalElevationDisagreeAlert(computers: ComputerBus) : Alert(computers), 
 
     override fun render(guiGraphics: GuiGraphics, firstLineX: Int, otherLinesX: Int, firstLineY: Int): Int {
         var i = 0
-        guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_plan.arrival_elevation_disagree"), firstLineX, firstLineY, cautionColor)
+        i += guiGraphics.drawString(Component.translatable("alert.flightassistant.flight_plan.arrival_elevation_disagree"), firstLineX, firstLineY, cautionColor)
         var y = firstLineY + 1
 
         y += 10

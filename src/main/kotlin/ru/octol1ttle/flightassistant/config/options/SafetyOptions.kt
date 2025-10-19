@@ -42,7 +42,7 @@ class SafetyOptions {
     @SerialEntry
     var sinkRateAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
     @SerialEntry
-    var sinkRateLimitPitch: Boolean = true // TODO: this often triggers BEFORE the automatic recovery. they should trigger at the same time and be paired with each other.
+    var sinkRateLimitPitch: Boolean = true
     @SerialEntry
     var sinkRateAutoThrust: Boolean = true
     @SerialEntry
@@ -58,6 +58,21 @@ class SafetyOptions {
     var obstacleAutoThrust: Boolean = true
     @SerialEntry
     var obstacleAutoPitch: Boolean = true
+
+    @SerialEntry
+    var altitudeLossAlert: Boolean = true
+    @SerialEntry
+    var altitudeLossAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
+
+    @SerialEntry
+    var unsafeTerrainClearanceAlert: Boolean = true
+    @SerialEntry
+    var unsafeTerrainClearanceAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
+
+    @SerialEntry
+    var belowGlideSlopeAlertMode: AlertMode = AlertMode.WARNING_AND_CAUTION
+    @SerialEntry
+    var belowGlideSlopeAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
 
     @SerialEntry
     var fireworkExplosiveAlert: Boolean = true

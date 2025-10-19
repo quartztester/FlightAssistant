@@ -38,7 +38,7 @@ data class VerticalProfileThrustMode(val climbThrust: Float, val descendThrust: 
         if (verticalMode !is AutoFlightComputer.FollowsAltitudeMode) {
             return null
         }
-        val nearTarget: Boolean = abs(verticalMode.targetAltitude - computers.data.altitude) <= 10.0f
+        val nearTarget: Boolean = abs(verticalMode.targetAltitude - computers.data.altitude) <= 5.0f
         val useClimbThrust: Boolean = nearTarget || verticalMode.targetAltitude > computers.data.altitude
         return ControlInput(
             if (useClimbThrust) climbThrust else descendThrust,

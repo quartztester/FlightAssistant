@@ -211,6 +211,15 @@ config.flightassistant:
           limit_pitch: Limit pitch when terrain is detected
           auto_thrust: Automatically reduce thrust when terrain is detected
           auto_pitch: Automatically raise pitch to escape from terrain
+        altitude_loss_with_toga:
+          enabled: Alert about altitude loss during takeoff/go around
+          alert_method: Altitude loss during takeoff/go around alert method
+        unsafe_terrain_clearance:
+          enabled: Alert about unsafe terrain clearance when on a flight plan
+          alert_method: Unsafe terrain clearance alert method
+        below_glide_slope:
+          alert_mode: Below glide slope alert mode
+          alert_method: Below glide slope alert method
       firework:
         .: Fireworks
         explosive_alert: Alert when holding explosive fireworks
