@@ -42,7 +42,7 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
         get() =
             if (computers.gpws.groundY == null || computers.gpws.groundY!! == Double.MAX_VALUE) Double.MAX_VALUE
 //? if >=1.21.5 {
-            /*else max(player.fallDistance, altitude - groundY!!)
+            /*else max(player.fallDistance, altitude - computers.gpws.groundY!!)
 *///?} else
             else max(player.fallDistance.toDouble(), altitude - computers.gpws.groundY!!)
 
