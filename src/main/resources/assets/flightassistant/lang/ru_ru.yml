@@ -310,6 +310,7 @@ menu.flightassistant:
       minimum_climb_speed: 'Минимальная скорость набора: '
     enroute:
       .: Маршрут
+      delete_all: Удалить все
       add_waypoint: Добавить точку
       direct_to: Прямо-на
       unsaved_changes: НЕСОХРАНЕН ИЗМЕНЕНИЯ

@@ -306,6 +306,7 @@ menu.flightassistant:
       minimum_climb_speed: 'Minimum climb speed: '
     enroute:
       .: Enroute
+      delete_all: Delete all
       add_waypoint: Add waypoint
       direct_to: Direct-to
       unsaved_changes: UNSAVED CHANGES

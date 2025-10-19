@@ -16,6 +16,7 @@ import ru.octol1ttle.flightassistant.screen.FABaseScreen
 import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 
 class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatable("menu.flightassistant.fms.enroute")) {
+    private lateinit var deleteAll: Button
     private lateinit var discardChanges: Button
     private lateinit var save: Button
     private lateinit var done: Button
@@ -32,6 +33,11 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         }
 
         val list: EnrouteWaypointsList = this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize, computers, state))
+
+        deleteAll = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.enroute.delete_all")) {
+            state.waypoints.clear()
+            list.rebuildEntries()
+        }.bounds(10, this.height - Y0 * 2 + 5, 80, 20).build())
 
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.enroute.add_waypoint")) {
             state.waypoints.add(EnrouteScreenState.Waypoint(active = if (state.waypoints.isEmpty()) FlightPlanComputer.EnrouteWaypoint.Active.TARGET else null))
@@ -54,6 +60,8 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        deleteAll.active = state.waypoints.isNotEmpty()
+
         val hasUnsavedChanges: Boolean = !state.equals(EnrouteScreenState.load(computers.plan))
         save.active = hasUnsavedChanges
         discardChanges.active = hasUnsavedChanges
