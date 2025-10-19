@@ -310,6 +310,11 @@ menu.flightassistant:
       minimum_climb_speed: 'Минимальная скорость набора: '
     enroute:
       .: Маршрут
+      legend:
+        hover: Наведись для легенды
+        origin: '%s - точка "откуда"'
+        target: '%s - точка "куда"'
+        direct-to: '%s - точка "куда" (напрямую)'
       delete_all: Удалить все
       add_waypoint: Добавить точку
       direct_to: Прямо-на

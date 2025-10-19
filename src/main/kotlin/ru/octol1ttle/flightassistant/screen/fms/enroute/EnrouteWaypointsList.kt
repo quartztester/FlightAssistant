@@ -111,9 +111,9 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
         private fun getActiveSymbol(): String? {
             val active: FlightPlanComputer.EnrouteWaypoint.Active = state.active ?: return null
             return when (active) {
-                FlightPlanComputer.EnrouteWaypoint.Active.ORIGIN -> "→"
+                FlightPlanComputer.EnrouteWaypoint.Active.ORIGIN -> FROM_SYMBOL
                 FlightPlanComputer.EnrouteWaypoint.Active.TARGET -> {
-                    if (list.state.waypoints.any { it.active == FlightPlanComputer.EnrouteWaypoint.Active.ORIGIN }) "▶"
+                    if (list.state.waypoints.any { it.active == FlightPlanComputer.EnrouteWaypoint.Active.ORIGIN }) TO_SYMBOL
                     else DIRECT_TO_SYMBOL
                 }
             }
@@ -137,7 +137,9 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
 
     companion object {
         private const val ITEM_HEIGHT: Int = 12
-        private const val DIRECT_TO_SYMBOL: String = "⏭"
+        const val FROM_SYMBOL: String = "→"
+        const val TO_SYMBOL: String = "▶"
+        const val DIRECT_TO_SYMBOL: String = "⏭"
         private val DIRECT_TO_TOOLTIP_TEXT: Component = Component.translatable("menu.flightassistant.fms.enroute.direct_to")
     }
 }

@@ -37,7 +37,7 @@ class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
 
         val minimums = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 64, Component.translatable("menu.flightassistant.fms.arrival.minimums")))
         val minimumsEditBox = this.addRenderableWidget(TypeStrictEditBox(minimums.x + minimums.width, minimums.y - 2, baseWidth, baseHeight, state.minimums, { state.minimums = it }, String::toIntOrNullWithFallback,
-            { if (state.minimumsType == ArrivalScreenState.MinimumsType.RELATIVE) it > 0 else true }))
+            { if (state.minimumsType == ArrivalScreenState.MinimumsType.RELATIVE) it >= 0 else true }))
         this.addRenderableWidget(CycleTextOnlyButton(minimumsEditBox.x + minimumsEditBox.width + 5, minimumsEditBox.y + 2, ArrivalScreenState.MinimumsType.entries, state.minimumsType) { state.minimumsType = it; })
 
         val goAroundAltitude = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 80, Component.translatable("menu.flightassistant.fms.arrival.go_around_altitude")))

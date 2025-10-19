@@ -306,6 +306,11 @@ menu.flightassistant:
       minimum_climb_speed: 'Minimum climb speed: '
     enroute:
       .: Enroute
+      legend:
+        hover: Hover for legend
+        origin: '%s - FROM waypoint'
+        target: '%s - TO waypoint'
+        direct-to: '%s - DIRECT-TO waypoint'
       delete_all: Delete all
       add_waypoint: Add waypoint
       direct_to: Direct-to
