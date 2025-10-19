@@ -15,6 +15,7 @@ import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.extensions.formatRoot
+import ru.octol1ttle.flightassistant.api.util.extensions.notClimbable
 import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.config.options.DisplayOptions
 import ru.octol1ttle.flightassistant.impl.computer.data.AirDataComputer
@@ -51,9 +52,9 @@ class ElytraStatusComputer(computers: ComputerBus) : Computer(computers) {
             /*net.minecraft.world.entity.EquipmentSlot.VALUES.any { data.player.getItemBySlot(it) == activeElytra && net.minecraft.world.entity.LivingEntity.canGlideUsing(data.player.getItemBySlot(it), it) }
 *///?} else
             data.player.armorSlots.contains(activeElytra) && net.minecraft.world.item.ElytraItem.isFlyEnabled(activeElytra!!)
-        val isInsideBlock: Boolean = !data.player.blockStateOn.isAir
+        val noneClimbable: Boolean = data.player.blockStateOn.notClimbable(data.player) && data.player.feetBlockState.notClimbable(data.player)
         val lookingToClutch: Boolean = data.pitch <= -70.0f
-        if (FAConfig.safety.elytraAutoOpen && !flying && !data.fallDistanceSafe && hasUsableElytra && !isInsideBlock && !lookingToClutch) {
+        if (FAConfig.safety.elytraAutoOpen && !flying && !data.fallDistanceSafe && hasUsableElytra && noneClimbable && !lookingToClutch) {
             sendSwitchState(data)
         }
     }
