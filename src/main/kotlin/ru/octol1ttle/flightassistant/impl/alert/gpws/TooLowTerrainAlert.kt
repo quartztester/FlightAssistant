@@ -26,9 +26,13 @@ class TooLowTerrainAlert(computers: ComputerBus) : Alert(computers), CenteredAle
             return false
         }
 
-        val altitudeAboveGround = computers.data.altitude - (computers.data.groundY ?: return false)
+        if (!computers.data.flying) {
+            maxRadarAltitude = 0.0
+            return false
+        }
+        val altitudeAboveGround = computers.data.altitude - (computers.gpws.groundY ?: return false)
         maxRadarAltitude = max(maxRadarAltitude, altitudeAboveGround)
-        if (maxRadarAltitude < 15) {
+        if (maxRadarAltitude < 15.0) {
             return false
         }
 
@@ -40,7 +44,7 @@ class TooLowTerrainAlert(computers: ComputerBus) : Alert(computers), CenteredAle
             FlightPlanComputer.FlightPhase.CRUISE,
             FlightPlanComputer.FlightPhase.DESCEND,
             FlightPlanComputer.FlightPhase.APPROACH -> {
-                altitudeAboveGround < 15
+                altitudeAboveGround < 15.0
             }
             FlightPlanComputer.FlightPhase.LANDING -> {
                 val glideSlopeDeviation = computers.plan.getCurrentGlideSlopeTarget()!! - computers.data.altitude
