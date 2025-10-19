@@ -105,6 +105,10 @@ class SafetyOptions {
         this.obstacleAutoThrust = false
         this.obstacleAutoPitch = false
 
+        this.altitudeLossAlert = false
+        this.unsafeTerrainClearanceAlert = false
+        this.belowGlideSlopeAlertMode = AlertMode.DISABLED
+
         this.fireworkExplosiveAlert = false
         this.fireworkLockExplosive = false
         return this
@@ -160,7 +164,7 @@ class SafetyOptions {
         }
 
         companion object {
-            fun min(a: AlertMethod, b: AlertMethod): AlertMethod {
+            fun max(a: AlertMethod, b: AlertMethod): AlertMethod {
                 return if (a <= b) a else b
             }
         }

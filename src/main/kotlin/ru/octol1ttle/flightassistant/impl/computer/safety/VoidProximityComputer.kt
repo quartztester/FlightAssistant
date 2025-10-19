@@ -24,7 +24,7 @@ class VoidProximityComputer(computers: ComputerBus) : Computer(computers), Fligh
     }
 
     override fun tick() {
-        status = if (computers.data.groundY != null) {
+        status = if (computers.gpws.groundY != null) {
             Status.ABOVE_GROUND
         } else {
             val heightAboveDamageAltitude: Double = computers.data.altitude - computers.data.voidY

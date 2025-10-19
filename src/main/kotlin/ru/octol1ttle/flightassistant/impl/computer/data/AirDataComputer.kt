@@ -5,14 +5,10 @@ import kotlin.math.max
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.player.LocalPlayer
-import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.DamageTypeTags
 import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.level.ClipContext
-import net.minecraft.world.phys.BlockHitResult
-import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
@@ -41,18 +37,14 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
         get() = position.y
     val voidY: Int
         get() = level.bottomY - 64
-    var groundY: Double? = null
-        private set(value) {
-            field = value?.throwIfNotInRange(level.bottomY.toDouble()..Double.MAX_VALUE)
-        }
 
     private val fallDistance: Double
         get() =
-            if (groundY == null || groundY!! == Double.MAX_VALUE) Double.MAX_VALUE
+            if (computers.gpws.groundY == null || computers.gpws.groundY!! == Double.MAX_VALUE) Double.MAX_VALUE
 //? if >=1.21.5 {
             /*else max(player.fallDistance, altitude - groundY!!)
 *///?} else
-            else max(player.fallDistance.toDouble(), altitude - groundY!!)
+            else max(player.fallDistance.toDouble(), altitude - computers.gpws.groundY!!)
 
     val fallDistanceSafe: Boolean
         get() = player.isInWater || fallDistance <= player.maxFallDistance || isInvulnerableTo(player.damageSources().fall())
@@ -79,7 +71,6 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
         get() = degrees(asin(velocity.normalize().y).toFloat())
 
     override fun tick() {
-        groundY = computeGroundLevel()
         forwardVelocity = computeForwardVector(velocity)
         forwardVelocityPerSecond = forwardVelocity.perSecond()
         forwardAcceleration = forwardVelocity.length() - computeForwardVector(player.getDeltaMovementLerped(0.0f)).length()
@@ -101,27 +92,6 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
                 || player.abilities.mayfly && source.`is`(DamageTypeTags.IS_FALL)
     }
 
-    private fun computeGroundLevel(): Double? {
-        if (!computers.chunk.isCurrentLoaded) {
-            return groundY
-        }
-
-        val minY: Double = level.bottomY.toDouble().coerceAtLeast(altitude - 2500)
-        val result: BlockHitResult = level.clip(
-            ClipContext(
-                position,
-                position.with(Direction.Axis.Y, minY),
-                ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.ANY,
-                player
-            )
-        )
-        if (result.type == HitResult.Type.MISS) {
-            return if (result.location.y > level.bottomY) Double.MAX_VALUE else null
-        }
-        return result.location.y
-    }
-
     fun computeForwardVector(vector: Vec3): Vec3 {
         val normalizedLookAngle: Vec3 = player.lookAngle.normalize()
         val normalizedVector: Vec3 = vector.normalize()
@@ -129,8 +99,8 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
     }
 
     override fun reset() {
-        groundY = null
         forwardVelocity = Vec3.ZERO
+        forwardVelocityPerSecond = Vec3.ZERO
         forwardAcceleration = 0.0
     }
 

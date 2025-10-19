@@ -21,7 +21,7 @@ class DepartureElevationDisagreeAlert(computers: ComputerBus) : Alert(computers)
         }
         val x = computers.plan.departureData.coordinatesX
         val z = computers.plan.departureData.coordinatesZ
-        if (!computers.data.isChunkLoaded(x, z)) {
+        if (!computers.chunk.isLoaded(x, z)) {
             return false
         }
         val actualElevation: Int = computers.data.level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z)

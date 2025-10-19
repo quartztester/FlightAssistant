@@ -3,6 +3,7 @@ package ru.octol1ttle.flightassistant.impl.computer.safety
 import kotlin.math.max
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.phys.BlockHitResult
@@ -16,6 +17,7 @@ import ru.octol1ttle.flightassistant.api.autoflight.thrust.ThrustControllerRegis
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
+import ru.octol1ttle.flightassistant.api.util.extensions.bottomY
 import ru.octol1ttle.flightassistant.api.util.inverseMin
 import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 import ru.octol1ttle.flightassistant.config.FAConfig
@@ -30,12 +32,21 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
     var obstacleImpactStatus: Status = Status.SAFE
         private set
 
+    var groundY: Double? = null
+    val groundOrVoidY: Double
+        get() = if (groundY == null || groundY == Double.MAX_VALUE) computers.data.voidY.toDouble()
+        else groundY!!
+
     override fun subscribeToEvents() {
         ThrustControllerRegistrationCallback.EVENT.register { it.accept(this) }
         PitchControllerRegistrationCallback.EVENT.register { it.accept(this) }
     }
 
     override fun tick() {
+        if (computers.chunk.isCurrentLoaded) {
+            groundY = computeGroundY()?.throwIfNotInRange(computers.data.level.bottomY.toDouble()..Double.MAX_VALUE)
+        }
+
         val data: AirDataComputer = computers.data
         if (!data.flying || data.player.isInWater) {
             groundImpactStatus = Status.SAFE
@@ -84,16 +95,22 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
             }
     }
 
+    private fun computeGroundY(): Double? {
+        val playerBoundingBox = computers.data.player.boundingBox
+        val minY: Double = computers.data.level.bottomY.toDouble().coerceAtLeast(computers.data.altitude - 2500.0)
+        val diffFromMinY = Vec3(0.0, minY - playerBoundingBox.minY, 0.0)
+        val collisionResult = Entity.collideBoundingBox(computers.data.player, diffFromMinY, playerBoundingBox, computers.data.level, emptyList())
+        if (collisionResult == diffFromMinY) {
+            return null
+        }
+        return collisionResult.y + playerBoundingBox.minY
+    }
+
     private fun computeGroundImpactTime(data: AirDataComputer): Double {
         if (data.velocity.y >= 0.0) {
             return Double.MAX_VALUE
         }
-
-        val groundLevel: Double? = data.groundY
-        val impactLevel: Double =
-            if (groundLevel == null || groundLevel == Double.MAX_VALUE) data.voidY.toDouble()
-            else groundLevel
-        return max(0.0, data.altitude - impactLevel) / -data.velocityPerSecond.y
+        return max(0.0, data.altitude - groundOrVoidY) / -data.velocityPerSecond.y
     }
 
     private fun computeObstacleImpactTime(data: AirDataComputer, lookAheadTime: Double): Double {
@@ -173,6 +190,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         groundImpactStatus = Status.SAFE
         obstacleImpactTime = Double.MAX_VALUE
         obstacleImpactStatus = Status.SAFE
+        groundY = null
     }
 
     enum class Status {

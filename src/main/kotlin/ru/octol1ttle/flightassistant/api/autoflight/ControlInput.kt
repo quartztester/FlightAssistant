@@ -38,7 +38,7 @@ data class ControlInput(val target: Float, val text: Component? = null, val prio
             fun highest(first: Status?, second: Status?): Status {
                 if (first == null) return second ?: DISABLED
                 if (second == null) return first
-                return if (first < second) first else second
+                return if (first <= second) first else second
             }
 
             fun fromBooleans(active: Boolean, available: Boolean = true, enabled: Boolean = true): Status {

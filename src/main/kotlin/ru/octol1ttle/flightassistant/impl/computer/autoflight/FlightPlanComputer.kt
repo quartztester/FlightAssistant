@@ -145,7 +145,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         }
         val minimums =
             if (arrivalData.minimumsType == ArrivalData.MinimumsType.ABSOLUTE) arrivalData.minimums.toDouble()
-            else (computers.data.groundY ?: computers.data.voidY.toDouble()) + arrivalData.minimums
+            else computers.gpws.groundOrVoidY + arrivalData.minimums
         return computers.data.altitude <= minimums
     }
 
@@ -231,6 +231,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
 
     override fun reset() {
         currentPhase = FlightPhase.UNKNOWN
+        groundSpeeds.clear()
     }
 
     companion object {
