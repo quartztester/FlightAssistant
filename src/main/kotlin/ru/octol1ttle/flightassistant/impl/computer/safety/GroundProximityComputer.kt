@@ -96,14 +96,19 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
     }
 
     private fun computeGroundY(): Double? {
+        if (!computers.chunk.isCurrentLoaded) {
+            return groundY
+        }
         val playerBoundingBox = computers.data.player.boundingBox
         val minY: Double = computers.data.level.bottomY.toDouble().coerceAtLeast(computers.data.altitude - 2500.0)
         val diffFromMinY = Vec3(0.0, minY - playerBoundingBox.minY, 0.0)
         val collisionResult = Entity.collideBoundingBox(computers.data.player, diffFromMinY, playerBoundingBox, computers.data.level, emptyList())
-        if (collisionResult == diffFromMinY) {
-            return null
+
+        val groundY = collisionResult.y + playerBoundingBox.minY
+        if (collisionResult.y + playerBoundingBox.maxY == minY || collisionResult == diffFromMinY) {
+            return if (groundY > computers.data.level.bottomY) Double.MAX_VALUE else null
         }
-        return collisionResult.y + playerBoundingBox.minY
+        return groundY
     }
 
     private fun computeGroundImpactTime(data: AirDataComputer): Double {

@@ -30,7 +30,7 @@ class TooLowTerrainAlert(computers: ComputerBus) : Alert(computers), CenteredAle
             maxRadarAltitude = 0.0
             return false
         }
-        val altitudeAboveGround = computers.data.altitude - (computers.gpws.groundY ?: return false)
+        val altitudeAboveGround = computers.data.altitude - computers.gpws.groundOrVoidY
         maxRadarAltitude = max(maxRadarAltitude, altitudeAboveGround)
         if (maxRadarAltitude < 15.0) {
             return false
