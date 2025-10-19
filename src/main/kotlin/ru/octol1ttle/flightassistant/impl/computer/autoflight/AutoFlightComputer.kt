@@ -81,8 +81,9 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
     }
 
     override fun tick() {
-        if (computers.protections.protectionsLost || !computers.data.isCurrentChunkLoaded) {
-            reset()
+        if (computers.protections.protectionsLost || !computers.chunk.isCurrentLoaded) {
+            setAutoThrust(false, alert = true)
+            setAutoPilot(false, alert = true)
             return
         }
 
