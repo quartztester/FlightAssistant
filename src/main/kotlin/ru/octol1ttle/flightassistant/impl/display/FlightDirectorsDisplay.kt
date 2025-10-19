@@ -13,12 +13,15 @@ import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.FloatLerper
 import ru.octol1ttle.flightassistant.api.util.ScreenSpace
 import ru.octol1ttle.flightassistant.api.util.extensions.*
+import ru.octol1ttle.flightassistant.config.FAConfig
 
 class FlightDirectorsDisplay(computers: ComputerBus) : Display(computers) {
     private val pitchTargetLerper: FloatLerper = FloatLerper()
     private val headingTargetLerper: FloatLerper = FloatLerper()
     
-    override fun allowedByConfig(): Boolean = true
+    override fun allowedByConfig(): Boolean {
+        return FAConfig.display.showFlightDirectors
+    }
 
     override fun render(guiGraphics: GuiGraphics) {
         if (!computers.autoflight.flightDirectors || computers.hudData.isViewMirrored) {

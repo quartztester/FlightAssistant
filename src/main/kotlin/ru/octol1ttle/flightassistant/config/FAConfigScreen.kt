@@ -250,6 +250,11 @@ object FAConfigScreen {
                 binding(current::showAutomationModes, defaults.showAutomationModes)
                 controller(tickBox())
             }
+            rootOptions.register("misc.flight_directors") {
+                setDisplayName()
+                binding(current::showFlightDirectors, defaults.showFlightDirectors)
+                controller(tickBox())
+            }
         }
     }
 
