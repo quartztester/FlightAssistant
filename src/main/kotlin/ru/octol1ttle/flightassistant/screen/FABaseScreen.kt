@@ -4,6 +4,7 @@ import kotlin.properties.Delegates
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
+import ru.octol1ttle.flightassistant.FAKeyMappings
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 
@@ -32,4 +33,15 @@ abstract class FABaseScreen(val parent: Screen?, title: Component) : Screen(titl
     }
 
     override fun isPauseScreen(): Boolean = false
+
+    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+			return true
+		} else if (FAKeyMappings.openFlightAssistantSetup.matches(keyCode, scanCode)) {
+			this.onClose()
+			return true
+		}
+
+        return false
+    }
 }

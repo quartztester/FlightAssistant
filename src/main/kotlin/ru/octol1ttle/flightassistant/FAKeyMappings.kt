@@ -11,20 +11,20 @@ import ru.octol1ttle.flightassistant.screen.FlightAssistantSetupScreen
 object FAKeyMappings {
     internal val keyMappings: MutableList<KeyMapping> = ArrayList()
 
-    private lateinit var toggleEnabled: KeyMapping
+    lateinit var toggleEnabled: KeyMapping
 
-    private lateinit var openFlightAssistantSetup: KeyMapping
+    lateinit var openFlightAssistantSetup: KeyMapping
 
-    private lateinit var autopilotDisconnect: KeyMapping
-    private lateinit var manualPitchOverride: KeyMapping
+    lateinit var autopilotDisconnect: KeyMapping
+    lateinit var manualPitchOverride: KeyMapping
 
-    private lateinit var hideCurrentAlert: KeyMapping
-    private lateinit var showHiddenAlert: KeyMapping
+    lateinit var hideCurrentAlert: KeyMapping
+    lateinit var showHiddenAlert: KeyMapping
 
-    private lateinit var setIdle: KeyMapping
-    private lateinit var decreaseThrust: KeyMapping
-    private lateinit var increaseThrust: KeyMapping
-    private lateinit var setToga: KeyMapping
+    lateinit var setIdle: KeyMapping
+    lateinit var decreaseThrust: KeyMapping
+    lateinit var increaseThrust: KeyMapping
+    lateinit var setToga: KeyMapping
 
     fun setup() {
         toggleEnabled = addKeyMapping("toggle_enabled", -1)
