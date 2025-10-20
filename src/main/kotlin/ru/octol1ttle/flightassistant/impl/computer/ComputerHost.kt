@@ -3,6 +3,7 @@ package ru.octol1ttle.flightassistant.impl.computer
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
+import ru.octol1ttle.flightassistant.FlightAssistant.profiler
 import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.api.computer.*
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
@@ -118,9 +119,9 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
             return
         }
 
-        mc.profiler.push("flightassistant:computer_host")
+        profiler.push("flightassistant:computer_host")
         for ((id: ResourceLocation, computer: Computer) in computers) {
-            mc.profiler.push(id.toString())
+            profiler.push(id.toString())
             if (!computer.isDisabledOrFaulted()) {
                 try {
                     repeat(FATickCounter.ticksPassed) {
@@ -133,9 +134,9 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
                     FlightAssistant.logger.error("Exception ticking computer with identifier: $id", t)
                 }
             }
-            mc.profiler.pop()
+            profiler.pop()
         }
-        mc.profiler.pop()
+        profiler.pop()
     }
 
     @Deprecated("Will be private")
