@@ -67,15 +67,17 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
 
     private fun GuiGraphics.renderHorizon() {
         ScreenSpace.getY(0.0f)?.let {
+            val color = getPitchBarColor(0.0f)
+
             val leftXEnd: Int = (centerXF - halfWidth * 0.025f).toInt()
             val leftXStart: Int = (leftXEnd - halfWidth * 0.3f).toInt()
-            drawRightAlignedString("0", leftXStart - 3, it - 3, primaryColor)
-            hLine(leftXStart, leftXEnd, it, primaryColor)
+            drawRightAlignedString("0", leftXStart - 3, it - 3, color)
+            hLine(leftXStart, leftXEnd, it, color)
 
             val rightXStart: Int = (centerXF + halfWidth * 0.025f).toInt()
             val rightXEnd: Int = (rightXStart + halfWidth * 0.3f).toInt()
-            hLine(rightXStart, rightXEnd, it, primaryColor)
-            drawString("0", rightXEnd + 5, it - 3, primaryColor)
+            hLine(rightXStart, rightXEnd, it, color)
+            drawString("0", rightXEnd + 5, it - 3, color)
         }
     }
 
