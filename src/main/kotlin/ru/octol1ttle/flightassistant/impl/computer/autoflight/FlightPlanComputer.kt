@@ -12,7 +12,6 @@ import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
-import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.LimitedFIFOQueue
 import ru.octol1ttle.flightassistant.api.util.extensions.distance2d
 import ru.octol1ttle.flightassistant.api.util.extensions.formatRoot
@@ -34,9 +33,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     override fun tick() {
         updateEnrouteData()
         currentPhase = updateFlightPhase()
-        if (FATickCounter.ticksPassed != 0) {
-            groundSpeeds.add(computers.data.velocityPerSecond.horizontalDistance())
-        }
+        groundSpeeds.add(computers.data.velocityPerSecond.horizontalDistance())
     }
 
     private fun updateFlightPhase(): FlightPhase {

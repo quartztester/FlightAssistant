@@ -6,7 +6,6 @@ import net.minecraft.util.Mth
 import org.joml.Vector2d
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
-import ru.octol1ttle.flightassistant.api.util.FATickCounter
 import ru.octol1ttle.flightassistant.api.util.PIDController
 import ru.octol1ttle.flightassistant.api.util.extensions.getProgressOnTrack
 import ru.octol1ttle.flightassistant.api.util.extensions.vec2dFromInts
@@ -20,24 +19,17 @@ data class PitchVerticalMode(override val targetPitch: Float, override val textO
 
 data class VerticalSpeedVerticalMode(val targetVerticalSpeed: Double, override val textOverride: Component? = null) : AutoFlightComputer.VerticalMode {
     override fun getControlInput(computers: ComputerBus): ControlInput {
-        if (FATickCounter.ticksPassed == 0) {
-            return ControlInput(lastPitchCommand)
-        }
-
         val currentVerticalSpeed: Double = computers.data.velocityPerSecond.y
         val target: Float = controller.calculate(targetVerticalSpeed, currentVerticalSpeed, computers.data.pitch.toDouble()).toFloat()
-        lastPitchCommand = target
 
         return ControlInput(target)
     }
 
     companion object {
         private val controller: PIDController = PIDController(1.8, 0.1, 0.35, 10, -85.0, 85.0)
-        private var lastPitchCommand: Float = 0.0f
     }
 }
 
-// TODO: tick-based plsssssssss
 data class SelectedAltitudeVerticalMode(override val targetAltitude: Int, override val textOverride: Component? = null) : AutoFlightComputer.VerticalMode, AutoFlightComputer.FollowsAltitudeMode {
     override fun getControlInput(computers: ComputerBus): ControlInput {
         val diff: Double = targetAltitude - computers.data.altitude

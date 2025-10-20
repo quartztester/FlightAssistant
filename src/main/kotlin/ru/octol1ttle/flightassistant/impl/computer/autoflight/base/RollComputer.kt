@@ -25,9 +25,7 @@ class RollComputer(computers: ComputerBus) : Computer(computers) {
         RollControllerRegistrationCallback.EVENT.invoker().register(controllers::add)
     }
 
-    override fun tick() {
-        val rollSource: RollSource = sources.filterWorking().singleOrNull { computers.guardedCall(it, RollSource::isActive) == true } ?: return
-
+    override fun renderTick() {
         val inputs: List<ControlInput> = controllers.filterWorking().mapNotNull { computers.guardedCall(it, FlightController::getRollInput) }.sortedBy { it.priority.value }
         if (inputs.isEmpty()) {
             return
@@ -35,6 +33,7 @@ class RollComputer(computers: ComputerBus) : Computer(computers) {
         val finalInput: ControlInput = inputs.getActiveHighestPriority().firstOrNull() ?: return
 
         if (computers.data.automationsAllowed() && finalInput.status == ControlInput.Status.ACTIVE) {
+            val rollSource: RollSource = sources.filterWorking().singleOrNull { computers.guardedCall(it, RollSource::isActive) == true } ?: return
             smoothSetRoll(rollSource, finalInput.target.throwIfNotInRange(-180.0f..180.0f), finalInput.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE))
         }
     }

@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.FlightAssistant
+import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.display.Display
@@ -103,6 +104,8 @@ internal object HudDisplayHost: ModuleController<Display> {
             return
         }
 
+        mc.profiler.push("flightassistant:hud_display_host")
+
         HudFrame.updateDimensions()
         ScreenSpace.updateViewport()
 
@@ -115,6 +118,7 @@ internal object HudDisplayHost: ModuleController<Display> {
                 return
             }
 
+            mc.profiler.push(id.toString())
             if (!display.enabled || !RenderMatrices.ready) {
                 try {
                     display.renderFaulted(guiGraphics)
@@ -133,6 +137,8 @@ internal object HudDisplayHost: ModuleController<Display> {
                 display.enabled = false
                 FlightAssistant.logger.error("Exception rendering display with identifier: $id", t)
             }
+            mc.profiler.pop()
         }
+        mc.profiler.pop()
     }
 }

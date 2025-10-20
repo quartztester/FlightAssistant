@@ -27,12 +27,19 @@ abstract class Computer(val computers: ComputerBus) {
     }
 
     /**
-     * Called once per level render
+     * Called once per tick
      *
      * If this method throws an exception or error, it is caught and the computer is considered "faulted".
      * It won't be ticked until it is reset and an alert about the issue will be displayed
      */
-    abstract fun tick()
+    open fun tick() {}
+
+    /**
+     * Called once per level render.
+     *
+     * @see tick
+     */
+    open fun renderTick() {}
 
     /**
      * Called when this computer should be reset. This computer's state should be reset to the initial ("everything is good") state.

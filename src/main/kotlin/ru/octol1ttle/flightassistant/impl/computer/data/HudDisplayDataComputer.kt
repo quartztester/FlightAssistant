@@ -33,7 +33,7 @@ class HudDisplayDataComputer(computers: ComputerBus, private val mc: Minecraft) 
     val roll: Float
         get() = degrees(atan2(-RenderMatrices.worldSpaceMatrix.m10(), RenderMatrices.worldSpaceMatrix.m11())).throwIfNotInRange(-180.0f..180.0f)
 
-    override fun tick() {
+    override fun renderTick() {
         lerpedPosition = player.getPosition(FATickCounter.partialTick)
         lerpedVelocity = player.getDeltaMovementLerped(FATickCounter.partialTick)
         lerpedForwardVelocity = computers.data.computeForwardVector(lerpedVelocity)

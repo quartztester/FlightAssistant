@@ -118,17 +118,24 @@ internal object ComputerHost : ModuleController<Computer>, ComputerBus {
             return
         }
 
+        mc.profiler.push("flightassistant:computer_host")
         for ((id: ResourceLocation, computer: Computer) in computers) {
+            mc.profiler.push(id.toString())
             if (!computer.isDisabledOrFaulted()) {
                 try {
-                    computer.tick()
+                    repeat(FATickCounter.ticksPassed) {
+                        computer.tick()
+                    }
+                    computer.renderTick()
                 } catch (t: Throwable) {
                     onComputerFault(computer)
 
                     FlightAssistant.logger.error("Exception ticking computer with identifier: $id", t)
                 }
             }
+            mc.profiler.pop()
         }
+        mc.profiler.pop()
     }
 
     @Deprecated("Will be private")

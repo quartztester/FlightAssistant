@@ -63,7 +63,6 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
             return
         }
 
-        val pitch: Float = computers.data.pitch
         val finalInput: ControlInput? = inputs.getActiveHighestPriority().maxByOrNull { it.target }
         if (finalInput == null) {
             activeInput = null
@@ -71,15 +70,20 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
         }
 
         activeInput = finalInput
-        if (canMoveOrBlockPitch() && finalInput.status == ControlInput.Status.ACTIVE) {
-            var target: Float = finalInput.target
-            if (!finalInput.priority.isHigherOrSame(minimumPitch?.priority)) {
+    }
+
+    override fun renderTick() {
+        val input = activeInput ?: return
+
+        if (canMoveOrBlockPitch() && input.status == ControlInput.Status.ACTIVE) {
+            var target: Float = input.target
+            if (!input.priority.isHigherOrSame(minimumPitch?.priority)) {
                 target = target.coerceAtLeast(minimumPitch!!.target + 1.0f)
             }
-            if (!finalInput.priority.isHigherOrSame(maximumPitch?.priority)) {
+            if (!input.priority.isHigherOrSame(maximumPitch?.priority)) {
                 target = target.coerceAtMost(maximumPitch!!.target - 1.0f)
             }
-            smoothSetPitch(computers.data.player, pitch, target.throwIfNotInRange(-90.0f..90.0f), finalInput.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE))
+            smoothSetPitch(computers.data.player, computers.data.pitch, target.throwIfNotInRange(-90.0f..90.0f), input.deltaTimeMultiplier.throwIfNotInRange(0.001f..Float.MAX_VALUE))
         }
     }
 
@@ -132,7 +136,6 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
     }
 
     override fun reset() {
-        manualOverride = true
         minimumPitch = null
         maximumPitch = null
         activeInput = null
