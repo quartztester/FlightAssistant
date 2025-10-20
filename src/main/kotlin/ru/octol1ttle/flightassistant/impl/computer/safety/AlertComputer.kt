@@ -101,7 +101,7 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
                 .add(
                     ComputerFaultAlert(
                         computers, PitchComputer.ID, Component.translatable("alert.flightassistant.flight_controls.pitch_fault"), listOf(
-                            Component.translatable("alert.flightassistant.flight_controls.pitch_fault.use_manual_pitch"),
+                            Component.translatable("alert.flightassistant.flight_controls.pitch_fault.use_automation_override"),
                 )))
                 .add(ProtectionsLostAlert(computers))
         )

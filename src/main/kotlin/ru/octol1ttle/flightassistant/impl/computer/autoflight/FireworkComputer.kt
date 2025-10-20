@@ -40,7 +40,7 @@ class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Comp
             if (player.level().isClientSide() && computers.data.flying && stack.item is FireworkRocketItem) {
                 val explosive = FAConfig.safety.fireworkLockExplosive && !isEmptyOrSafe(player, hand)
                 val anyTerrainAhead = FAConfig.safety.fireworkLockObstacles && anyTerrainAhead()
-                if (explosive || anyTerrainAhead) {
+                if (computers.data.automationsAllowed() && (explosive || anyTerrainAhead)) {
 //? if >=1.21.2 {
                     /*return@RightClickItem net.minecraft.world.InteractionResult.FAIL
 *///?} else

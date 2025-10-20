@@ -27,6 +27,9 @@ class AutomationModesDisplay(computers: ComputerBus) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
+        if (FAKeyMappings.globalAutomationOverride.isDown) {
+            return
+        }
         renderThrustMode(guiGraphics)
         renderPitchMode(guiGraphics)
         renderInput(guiGraphics, headingDisplay, computers.heading.activeInput)
@@ -76,10 +79,6 @@ class AutomationModesDisplay(computers: ComputerBus) : Display(computers) {
     }
 
     private fun renderPitchMode(guiGraphics: GuiGraphics) {
-        if (computers.pitch.manualOverride) {
-            pitchDisplay.render(guiGraphics, Component.translatable("mode.flightassistant.vertical.override").setColor(cautionColor), ControlInput.Status.ACTIVE, cautionColor)
-            return
-        }
         renderInput(guiGraphics, pitchDisplay, computers.pitch.activeInput)
     }
 
@@ -103,12 +102,14 @@ class AutomationModesDisplay(computers: ComputerBus) : Display(computers) {
             text.appendWithSeparation(Component.translatable("short.flightassistant.autopilot"))
         }
 
-        automationStatusDisplay.render(
-            guiGraphics,
-            if (text.siblings.isNotEmpty()) text else null, ControlInput.Status.ACTIVE,
+        val color =
             if (computers.autoflight.autopilotAlert) warningColor
             else if (computers.autoflight.autoThrustAlert) cautionColor
             else null
+        automationStatusDisplay.render(
+            guiGraphics,
+            if (text.siblings.isNotEmpty()) text else null, ControlInput.Status.ACTIVE,
+            if (FATickCounter.totalTicks % 20 >= 10) color else null
         )
     }
 

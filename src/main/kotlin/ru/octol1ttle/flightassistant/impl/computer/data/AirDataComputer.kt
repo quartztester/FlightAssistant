@@ -10,6 +10,7 @@ import net.minecraft.tags.DamageTypeTags
 import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.phys.Vec3
+import ru.octol1ttle.flightassistant.FAKeyMappings
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
@@ -77,6 +78,9 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
     }
 
     fun automationsAllowed(checkFlying: Boolean = true): Boolean {
+        if (FAKeyMappings.globalAutomationOverride.isDown) {
+            return false
+        }
         return (!checkFlying || flying) && (FAConfig.global.automationsAllowedInOverlays || (mc.screen == null && mc.overlay == null))
     }
 

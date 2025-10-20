@@ -16,7 +16,7 @@ object FAKeyMappings {
     lateinit var openFlightAssistantSetup: KeyMapping
 
     lateinit var autopilotDisconnect: KeyMapping
-    lateinit var manualPitchOverride: KeyMapping
+    lateinit var globalAutomationOverride: KeyMapping
 
     lateinit var hideCurrentAlert: KeyMapping
     lateinit var showHiddenAlert: KeyMapping
@@ -31,7 +31,7 @@ object FAKeyMappings {
         openFlightAssistantSetup = addKeyMapping("open_flightassistant_setup", GLFW.GLFW_KEY_KP_ENTER)
 
         autopilotDisconnect = addKeyMapping("autopilot_disconnect", GLFW.GLFW_KEY_CAPS_LOCK) // TODO: replace with "Toggle FD", "Toggle A/T", "Toggle AP"
-        manualPitchOverride = addKeyMapping("manual_pitch_override", GLFW.GLFW_KEY_RIGHT_ALT)
+        globalAutomationOverride = addKeyMapping("global_automation_override", GLFW.GLFW_KEY_LEFT_ALT)
 
         hideCurrentAlert = addKeyMapping("hide_current_alert", GLFW.GLFW_KEY_KP_0)
         showHiddenAlert = addKeyMapping("show_hidden_alert", GLFW.GLFW_KEY_KP_DECIMAL)
@@ -65,7 +65,6 @@ object FAKeyMappings {
             }
             computers.autoflight.setAutoPilot(false, alert = false)
         }
-        computers.pitch.manualOverride = manualPitchOverride.isDown
 
         while (hideCurrentAlert.consumeClick()) {
             computers.alert.hideCurrentAlert()

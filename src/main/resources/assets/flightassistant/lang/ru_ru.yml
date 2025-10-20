@@ -52,7 +52,7 @@ alert.flightassistant:
     .: УПР/ПОЛЕТ
     pitch_fault:
       .: ОТКАЗ ОГРАН УГЛА НАКЛ
-      use_manual_pitch: ' -РУЧН УПР УГЛ НАКЛ: ИСПОЛЬЗ'
+      use_automation_override: ' -ПРИНУД ОТКЛ АВТОМАТ: ИСПОЛЬЗ'
     protections_lost:
       .: ЗАЩИТЫ ПОТЕРЯНЫ
       enable_air_data: ' -КОМП ДАННЫХ ПОЛЕТА: ВЫКЛ ЗАТЕМ ВКЛ'
@@ -425,7 +425,7 @@ key.flightassistant:
   toggle_enabled: Включить/выключить мод
   open_flight_setup: Открыть экран настройки полёта
   autopilot_disconnect: Отключить автопилот
-  manual_pitch_override: Принудительное ручное управление углом наклона (зажать)
+  global_automation_override: Принудительное отключение автоматики (зажать)
   hide_current_alert: Скрыть активное предупреждение
   show_hidden_alert: Показать скрытое предупреждение
   thrust:

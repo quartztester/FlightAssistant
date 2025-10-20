@@ -3,6 +3,7 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight
 import kotlin.math.abs
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
+import ru.octol1ttle.flightassistant.FAKeyMappings
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.autoflight.ControlInput
 import ru.octol1ttle.flightassistant.api.autoflight.FlightController
@@ -87,7 +88,8 @@ class AutoFlightComputer(computers: ComputerBus) : Computer(computers), FlightCo
             return
         }
 
-        if (computers.pitch.manualOverride) {
+        if (FAKeyMappings.globalAutomationOverride.isDown) {
+            setAutoThrust(false, alert = false)
             setAutoPilot(false, alert = false)
         }
 

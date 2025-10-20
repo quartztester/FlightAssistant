@@ -18,7 +18,6 @@ import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 
 class PitchComputer(computers: ComputerBus) : Computer(computers), FlightController {
     private val controllers: MutableList<FlightController> = ArrayList()
-    internal var manualOverride: Boolean = false
 
     var minimumPitch: ControlInput? = null
         private set
@@ -85,7 +84,7 @@ class PitchComputer(computers: ComputerBus) : Computer(computers), FlightControl
     }
 
     private fun canMoveOrBlockPitch(): Boolean {
-        return !manualOverride && !computers.protections.protectionsLost && computers.data.automationsAllowed()
+        return computers.data.automationsAllowed() && !computers.protections.protectionsLost
     }
 
     private fun updateSafePitches() {

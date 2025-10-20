@@ -48,7 +48,7 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
     .: F/CTL
     pitch_fault:
       .: PITCH LIMIT FAULT
-      use_manual_pitch: ' -MAN PITCH OVRD: USE'
+      use_automation_override: ' -AUTOMATION OVERRIDE: USE'
     protections_lost:
       .: PROTECT LOST
       enable_air_data: ' -AIR DATA: OFF THEN ON'
@@ -332,7 +332,6 @@ menu.flightassistant:
 
 mode.flightassistant:
   thrust:
-    override: THR OVRD # TODO: single key to override all
     manual:
       .: MAN THR
       reverse: MAN REV
@@ -347,7 +346,6 @@ mode.flightassistant:
     takeoff: THR TO # TODO: fix confusion with TOGA somehow
     landing: THR LAND
   vertical:
-    override: PITCH OVRD # TODO: single key to override all
     void_protection: VOID PROT
     void_escape: VOID ESC
     stall_protection: STALL PROT
@@ -422,7 +420,7 @@ key.flightassistant:
   toggle_enabled: Toggle mod enabled
   open_flightassistant_setup: Open FlightAssistant setup screen
   autopilot_disconnect: Disconnect autopilot
-  manual_pitch_override: Manual pitch override (hold)
+  global_automation_override: Global automation override (hold)
   hide_current_alert: Hide currently active alert
   show_hidden_alert: Show last hidden alert
   thrust:
