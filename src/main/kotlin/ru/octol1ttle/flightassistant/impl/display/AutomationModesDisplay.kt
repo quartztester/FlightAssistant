@@ -27,9 +27,6 @@ class AutomationModesDisplay(computers: ComputerBus) : Display(computers) {
     }
 
     override fun render(guiGraphics: GuiGraphics) {
-        if (FAKeyMappings.globalAutomationOverride.isDown) {
-            return
-        }
         renderThrustMode(guiGraphics)
         renderPitchMode(guiGraphics)
         renderInput(guiGraphics, headingDisplay, computers.heading.activeInput)
@@ -40,15 +37,14 @@ class AutomationModesDisplay(computers: ComputerBus) : Display(computers) {
         val thrustUnusable: Boolean = computers.thrust.noThrustSource || computers.thrust.reverseUnsupported
 
         val input: ControlInput? = computers.thrust.activeInput
+        if ((input != null && FAKeyMappings.isHoldingThrust()) || FAKeyMappings.globalAutomationOverride.isDown) {
+            thrustDisplay.render(guiGraphics, Component.translatable("mode.flightassistant.thrust.override").setColor(cautionColor), ControlInput.Status.ACTIVE, cautionColor)
+            return
+        }
+
         if (input != null) {
-            if (FAKeyMappings.isHoldingThrust()) {
-                thrustDisplay.render(guiGraphics, Component.translatable("mode.flightassistant.thrust.override").setColor(cautionColor), ControlInput.Status.ACTIVE, cautionColor)
-            } else {
-                thrustDisplay.render(
-                    guiGraphics, input.text, input.status,
-                    if (thrustUnusable || input.status == ControlInput.Status.ACTIVE && input.priority < ControlInput.Priority.NORMAL) cautionColor else null
-                )
-            }
+            thrustDisplay.render(guiGraphics, input.text, input.status,
+                if (thrustUnusable || input.status == ControlInput.Status.ACTIVE && input.priority < ControlInput.Priority.NORMAL) cautionColor else null)
             return
         }
 
@@ -79,6 +75,10 @@ class AutomationModesDisplay(computers: ComputerBus) : Display(computers) {
     }
 
     private fun renderPitchMode(guiGraphics: GuiGraphics) {
+        if (FAKeyMappings.globalAutomationOverride.isDown) {
+            pitchDisplay.render(guiGraphics, Component.translatable("mode.flightassistant.vertical.override").setColor(cautionColor), ControlInput.Status.ACTIVE, cautionColor)
+            return
+        }
         renderInput(guiGraphics, pitchDisplay, computers.pitch.activeInput)
     }
 
@@ -108,8 +108,8 @@ class AutomationModesDisplay(computers: ComputerBus) : Display(computers) {
             else null
         automationStatusDisplay.render(
             guiGraphics,
-            if (text.siblings.isNotEmpty()) text else null, ControlInput.Status.ACTIVE,
-            if (FATickCounter.totalTicks % 20 >= 10) color else null
+            if (text.siblings.isNotEmpty() || color != null) text else null, ControlInput.Status.ACTIVE,
+            if (FATickCounter.totalTicks % 20 >= 10 || color == null) color else emptyColor
         )
     }
 

@@ -423,7 +423,7 @@ misc.flightassistant:
 key.flightassistant:
   .: FlightAssistant
   toggle_enabled: Включить/выключить мод
-  open_flight_setup: Открыть экран настройки полёта
+  open_flightassistant_setup: Открыть экран настройки FlightAssistant
   autopilot_disconnect: Отключить автопилот
   global_automation_override: Принудительное отключение автоматики (зажать)
   hide_current_alert: Скрыть активное предупреждение

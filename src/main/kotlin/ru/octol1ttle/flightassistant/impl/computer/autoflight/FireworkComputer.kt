@@ -116,8 +116,7 @@ class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Comp
 
     private fun anyTerrainAhead(): Boolean {
         val velocity = computers.data.player.forward.scale(FIREWORK_SPEED.toDouble())
-        val end = computers.data.position.add(velocity.scale(computers.gpws.cautionThreshold))
-        return computers.gpws.computeObstacleImpactTime(end, velocity) <= computers.gpws.warningThreshold
+        return computers.gpws.computeObstacleImpactTime(velocity, computers.gpws.cautionThreshold) <= computers.gpws.warningThreshold
     }
 
     private fun tryActivateFirework(player: Player) {

@@ -1,6 +1,7 @@
 package ru.octol1ttle.flightassistant.impl.computer.data
 
 import kotlin.math.asin
+import kotlin.math.atan2
 import kotlin.math.max
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
@@ -70,6 +71,8 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
 
     val flightPitch: Float
         get() = degrees(asin(velocity.normalize().y).toFloat())
+    val flightYaw: Float
+        get() = degrees(atan2(-velocity.x, velocity.z).toFloat())
 
     override fun tick() {
         forwardVelocity = computeForwardVector(velocity)
