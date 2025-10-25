@@ -6,7 +6,6 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.ClipContext
-import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
@@ -32,13 +31,12 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
     var obstacleImpactStatus: Status = Status.SAFE
         private set
 
-    private var anyBlocksAbove = false
     val safeThreshold: Double
-        get() = if (anyBlocksAbove) 5.0 else 10.0
+        get() = 10.0
     val cautionThreshold: Double
-        get() = if (anyBlocksAbove) 3.0 else 7.5
+        get() = 7.5
     val warningThreshold: Double
-        get() = if (anyBlocksAbove) 1.5 else 3.0
+        get() = 3.0
     val recoverThreshold: Double
         get() = 0.75
 
@@ -63,7 +61,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
             return
         }
 
-        anyBlocksAbove = computers.data.level.getHeight(Heightmap.Types.MOTION_BLOCKING, computers.data.player.blockX, computers.data.player.blockZ) > computers.data.player.y
+        val isRecoveryUnsafe = computeIsRecoveryUnsafe()
 
         groundImpactTime = computeGroundImpactTime().throwIfNotInRange(0.0..Double.MAX_VALUE)
         groundImpactStatus = computeStatus(groundImpactStatus,
@@ -73,16 +71,24 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
             { groundImpactTime <= recoverThreshold }
         )
 
-        obstacleImpactTime = computeObstacleImpactTime(computers.data.velocityPerSecond, safeThreshold).throwIfNotInRange(0.0..Double.MAX_VALUE)
         val thresholdMultiplier = computeThresholdMultiplier()
+        val safe = max(recoverThreshold, safeThreshold * thresholdMultiplier)
+        val caution = max(recoverThreshold, cautionThreshold * thresholdMultiplier)
+        val warning = max(recoverThreshold, warningThreshold * thresholdMultiplier)
+
+        obstacleImpactTime = computeObstacleImpactTime(computers.data.velocityPerSecond, safe).throwIfNotInRange(0.0..Double.MAX_VALUE)
         val damageOnCollision: Double = computers.data.velocity.horizontalDistance() * 10 - 3
         val invulnerable = computers.data.isInvulnerableTo(computers.data.player.damageSources().flyIntoWall())
         obstacleImpactStatus = computeStatus(obstacleImpactStatus,
             { invulnerable || damageOnCollision < computers.data.player.health * 0.25f || obstacleImpactTime > groundImpactTime * 1.2f || obstacleImpactTime >= safeThreshold * thresholdMultiplier },
-            { abs(computers.data.yaw - computers.data.flightYaw) < 10.0f && damageOnCollision >= computers.data.player.health * 0.5f && obstacleImpactTime < groundImpactTime * 1.1f && obstacleImpactTime <= cautionThreshold * thresholdMultiplier },
-            { obstacleImpactTime <= warningThreshold * thresholdMultiplier },
+            { abs(computers.data.yaw - computers.data.flightYaw) < 10.0f && damageOnCollision >= computers.data.player.health * 0.5f && obstacleImpactTime < groundImpactTime * 1.1f && obstacleImpactTime <= caution },
+            { !isRecoveryUnsafe && obstacleImpactTime <= warning },
             { obstacleImpactTime <= recoverThreshold },
         )
+    }
+
+    fun raycast(offset: Vec3): BlockHitResult {
+        return computers.data.level.clip(ClipContext(computers.data.position, computers.data.position.add(offset), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, computers.data.player))
     }
 
     private fun computeGroundY(): Double? {
@@ -101,8 +107,23 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         return groundY
     }
 
+    private fun computeIsRecoveryUnsafe(): Boolean {
+        val pitch = max(0, computers.data.pitch.toInt())
+        val interval = 15
+
+        for (i in 90 downTo pitch step interval) {
+            val offset = Vec3.directionFromRotation(-i.toFloat(), computers.data.yaw)
+            val result = raycast(offset.scale(computers.data.velocityPerSecond.length() * recoverThreshold))
+            if (result.type != HitResult.Type.BLOCK) {
+                 return false
+            }
+        }
+
+        return true
+    }
+
     private fun computeThresholdMultiplier(): Double {
-        val maxRaycastDistance = computers.data.forwardVelocityPerSecond.length() * safeThreshold
+        val maxRaycastDistance = computers.data.velocityPerSecond.length() * cautionThreshold
 
         val xzOffsets = listOf(-1.0, 0.0, 1.0)
         val yOffsets = listOf(-1.0, 0.0, 1.0)
@@ -113,17 +134,9 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
             if (offset.lengthSqr() == 0.0) {
                 continue
             }
-            val raycast: BlockHitResult = computers.data.level.clip(
-                ClipContext(
-                    computers.data.position,
-                    computers.data.position.add(offset),
-                    ClipContext.Block.COLLIDER,
-                    ClipContext.Fluid.ANY,
-                    computers.data.player
-                )
-            )
-            if (raycast.type == HitResult.Type.BLOCK) {
-                distances.add(computers.data.position.distanceTo(raycast.location))
+            val result: BlockHitResult = raycast(offset)
+            if (result.type == HitResult.Type.BLOCK) {
+                distances.add(computers.data.position.distanceTo(result.location))
             }
         }}}
 
@@ -160,15 +173,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
     }
 
     fun computeObstacleImpactTime(velocity: Vec3, lookAheadTime: Double): Double {
-        val result: BlockHitResult = computers.data.level.clip(
-            ClipContext(
-                computers.data.position,
-                computers.data.position.add(velocity.scale(lookAheadTime)),
-                ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.ANY,
-                computers.data.player
-            )
-        )
+        val result: BlockHitResult = raycast(velocity.scale(lookAheadTime))
         if (result.type != HitResult.Type.BLOCK) {
             return Double.MAX_VALUE
         }
@@ -235,7 +240,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         groundImpactStatus = Status.SAFE
         obstacleImpactTime = Double.MAX_VALUE
         obstacleImpactStatus = Status.SAFE
-        groundY = null
+        groundY = Double.MAX_VALUE
     }
 
     enum class Status {

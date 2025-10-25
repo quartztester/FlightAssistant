@@ -54,7 +54,7 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
     val velocity: Vec3
         get() = player.deltaMovement
     val velocityPerSecond: Vec3
-        get() = player.deltaMovement.perSecond()
+        get() = velocity.perSecond()
     var forwardVelocity: Vec3 = Vec3.ZERO
         private set
     var forwardVelocityPerSecond: Vec3 = Vec3.ZERO
