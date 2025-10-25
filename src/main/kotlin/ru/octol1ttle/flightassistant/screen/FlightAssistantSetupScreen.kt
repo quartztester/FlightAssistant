@@ -17,7 +17,7 @@ class FlightAssistantSetupScreen : FABaseScreen(null, Component.translatable("me
     override fun init() {
         super.init()
 
-        this.addRenderableWidget(StringWidget(0, 15, this.width, this.font.lineHeight, this.title, this.font))
+        this.addRenderableWidget(StringWidget(0, 7, this.width, this.font.lineHeight, this.title, this.font))
 
         this.addRenderableWidget(StringWidget(0, this.centerY - 80, this.width, this.font.lineHeight, Component.translatable("menu.flightassistant.system"), this.font))
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.system.manage_displays")) {

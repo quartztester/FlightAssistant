@@ -13,6 +13,7 @@ import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
 import ru.octol1ttle.flightassistant.api.util.extensions.font
 import ru.octol1ttle.flightassistant.screen.components.FABaseList
+import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 
 class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, controller: ModuleController<*>) : FABaseList<SystemManagementList.Entry>(y0, y1, width, ITEM_HEIGHT) {
     init {
@@ -23,8 +24,8 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
 
     class Entry(val xOffset: Int, private val listWidth: Int, private val identifier: ResourceLocation, displayName: Component, private val controller: ModuleController<*>) : ContainerObjectSelectionList.Entry<Entry>() {
         private val displayName: StringWidget = StringWidget(xOffset, 0, this.listWidth / 2, 9, displayName, font).alignLeft()
-        private val faultText: StringWidget = StringWidget(xOffset, 0, this.listWidth / 6, 9, FAULT_TEXT, font)
-        private val offText: StringWidget = StringWidget(xOffset, 0, this.listWidth / 6, 9, OFF_TEXT, font)
+        private val faultText: StringWidget = SmartStringWidget(xOffset, 0, FAULT_TEXT).alignRight()
+        private val offText: StringWidget = SmartStringWidget(xOffset, 0, OFF_TEXT).alignRight()
         private val toggleButton: Button = Button.builder(OFF_TEXT) {
             controller.toggleEnabled(identifier)
         }.pos(xOffset, 0).size(60, 18).build()
@@ -44,12 +45,12 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
                 else ON_TEXT
             toggleButton.render(guiGraphics, mouseX, mouseY, partialTick)
 
-            offText.x = toggleButton.x - this.listWidth / 12 - font.width(OFF_TEXT)
+            offText.x = toggleButton.x - 10 - font.width(OFF_TEXT)
             offText.y = top
             offText.setColor((if (controller.isEnabled(identifier)) ChatFormatting.DARK_GRAY else ChatFormatting.WHITE).color!!)
             offText.render(guiGraphics, mouseX, mouseY, partialTick)
 
-            faultText.x = offText.x - font.width(FAULT_TEXT)
+            faultText.x = offText.x - offText.width / 2 - font.width(FAULT_TEXT)
             faultText.y = top
             faultText.setColor(if (controller.isFaulted(identifier)) cautionColor else ChatFormatting.DARK_GRAY.color!!)
             faultText.render(guiGraphics, mouseX, mouseY, partialTick)
