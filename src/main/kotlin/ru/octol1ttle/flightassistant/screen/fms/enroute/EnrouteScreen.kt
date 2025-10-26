@@ -54,7 +54,7 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         )).setTooltip(Tooltip.create(LEGEND_TOOLTIP_TEXT))
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
-            state = EnrouteScreenState.load(computers.plan)
+            state = EnrouteScreenState.load(computers.plan.enrouteData)
             this.rebuildWidgets()
         }.pos(this.width - 290, this.height - 30).width(100).build())
 
@@ -71,7 +71,7 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
         deleteAll.active = state.waypoints.isNotEmpty()
 
-        val hasUnsavedChanges: Boolean = !state.equals(EnrouteScreenState.load(computers.plan))
+        val hasUnsavedChanges: Boolean = !state.equals(EnrouteScreenState.load(computers.plan.enrouteData))
         save.active = hasUnsavedChanges
         discardChanges.active = hasUnsavedChanges
         done.active = !hasUnsavedChanges
@@ -95,5 +95,9 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         )
 
         private var state: EnrouteScreenState = EnrouteScreenState()
+
+        fun reload(waypoints: List<FlightPlanComputer.EnrouteWaypoint>) {
+            state = EnrouteScreenState.load(waypoints)
+        }
     }
 }

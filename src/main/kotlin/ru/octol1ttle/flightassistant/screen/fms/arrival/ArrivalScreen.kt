@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.util.extensions.toIntOrNullWithFallback
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 import ru.octol1ttle.flightassistant.screen.components.CycleTextOnlyButton
 import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
@@ -37,8 +38,8 @@ class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
 
         val minimums = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 64, Component.translatable("menu.flightassistant.fms.arrival.minimums")))
         val minimumsEditBox = this.addRenderableWidget(TypeStrictEditBox(minimums.x + minimums.width, minimums.y - 2, baseWidth, baseHeight, state.minimums, { state.minimums = it }, String::toIntOrNullWithFallback,
-            { if (state.minimumsType == ArrivalScreenState.MinimumsType.RELATIVE) it >= 0 else true }))
-        this.addRenderableWidget(CycleTextOnlyButton(minimumsEditBox.x + minimumsEditBox.width + 5, minimumsEditBox.y + 2, ArrivalScreenState.MinimumsType.entries, state.minimumsType) { state.minimumsType = it; })
+            { if (state.minimumsType == FlightPlanComputer.ArrivalData.MinimumsType.RELATIVE) it >= 0 else true }))
+        this.addRenderableWidget(CycleTextOnlyButton(minimumsEditBox.x + minimumsEditBox.width + 5, minimumsEditBox.y + 2, FlightPlanComputer.ArrivalData.MinimumsType.entries, state.minimumsType) { state.minimumsType = it; })
 
         val goAroundAltitude = this.addRenderableWidget(SmartStringWidget(baseX, baseY + 80, Component.translatable("menu.flightassistant.fms.arrival.go_around_altitude")))
         this.addRenderableWidget(TypeStrictEditBox(goAroundAltitude.x + goAroundAltitude.width, goAroundAltitude.y - 2, baseWidth + 4, baseHeight, state.goAroundAltitude, { state.goAroundAltitude = it }, String::toIntOrNullWithFallback))
@@ -48,7 +49,7 @@ class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
             { it >= 0 }))
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
-            state = lastState.copy()
+            state = ArrivalScreenState.load(computers.plan.arrivalData)
             this.rebuildWidgets()
         }.pos(this.width - 200, this.height - 30).width(100).build())
 
@@ -58,19 +59,21 @@ class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
     }
 
     override fun onClose() {
-        lastState = state.copy()
         state.save(computers.plan)
         super.onClose()
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        discardChanges.active = state != lastState
+        discardChanges.active = state != ArrivalScreenState.load(computers.plan.arrivalData)
 
         super.render(guiGraphics, mouseX, mouseY, delta)
     }
 
     companion object {
-        private var lastState = ArrivalScreenState()
         private var state = ArrivalScreenState()
+
+        fun reload(data: FlightPlanComputer.ArrivalData) {
+            state = ArrivalScreenState.load(data)
+        }
     }
 }

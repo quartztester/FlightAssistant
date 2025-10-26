@@ -1,9 +1,12 @@
 package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
+import dev.isxander.yacl3.api.NameableEnum
 import java.time.Duration
 import java.util.UUID
 import kotlin.math.abs
 import kotlin.math.roundToLong
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import net.minecraft.SharedConstants
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
@@ -27,7 +30,8 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         private set
 
     var departureData: DepartureData = DepartureData.DEFAULT
-    val enrouteData: MutableList<EnrouteWaypoint> = ArrayList()
+    var enrouteData: MutableList<EnrouteWaypoint> = ArrayList()
+        private set
     var arrivalData: ArrivalData = ArrivalData.DEFAULT
 
     var groundSpeeds: LimitedFIFOQueue<Double> = LimitedFIFOQueue(SharedConstants.TICKS_PER_SECOND * 5)
@@ -262,6 +266,12 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         }
     }
 
+    fun load(plan: FlightPlan) {
+        departureData = plan.departure
+        enrouteData = ArrayList(plan.enroute)
+        arrivalData = plan.arrival
+    }
+
     override fun reset() {
         currentPhase = FlightPhase.UNKNOWN
         groundSpeeds.clear()
@@ -282,6 +292,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         GO_AROUND
     }
 
+    @Serializable
     data class DepartureData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val takeoffThrust: Float = 0.0f) {
         fun isDefault(): Boolean {
             return this == DEFAULT
@@ -296,7 +307,8 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         }
     }
 
-    data class EnrouteWaypoint(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val altitude: Int = 0, val speed: Int = 0, var active: Active? = null, val uuid: UUID = UUID.randomUUID()) {
+    @Serializable
+    data class EnrouteWaypoint(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val altitude: Int = 0, val speed: Int = 0, @Transient var active: Active? = null, @Transient val uuid: UUID = UUID.randomUUID()) {
         enum class Active {
             ORIGIN,
             TARGET
@@ -307,10 +319,15 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         }
     }
 
+    @Serializable
     data class ArrivalData(val coordinatesX: Int = 0, val coordinatesZ: Int = 0, val elevation: Int = 0, val landingThrust: Float = 0.0f, val minimums: Int = 0, val minimumsType: MinimumsType = MinimumsType.ABSOLUTE, val goAroundAltitude: Int = 0, val approachReEntryWaypointIndex: Int = 0) {
-        enum class MinimumsType {
-            ABSOLUTE,
-            RELATIVE
+        enum class MinimumsType(@JvmField val displayName: Component) : NameableEnum {
+            ABSOLUTE(Component.translatable("menu.flightassistant.fms.arrival.minimums.absolute")),
+            RELATIVE(Component.translatable("menu.flightassistant.fms.arrival.minimums.relative"));
+
+            override fun getDisplayName(): Component {
+                return this.displayName
+            }
         }
 
         fun isDefault(): Boolean {
@@ -324,5 +341,10 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         companion object {
             val DEFAULT: ArrivalData = ArrivalData()
         }
+    }
+
+    @Serializable
+    data class FlightPlan(val departure: DepartureData, val enroute: List<EnrouteWaypoint>, val arrival: ArrivalData) {
+        constructor(flightPlan: FlightPlanComputer) : this(flightPlan.departureData, flightPlan.enrouteData, flightPlan.arrivalData)
     }
 }

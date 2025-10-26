@@ -332,6 +332,8 @@ menu.flightassistant:
       go_around_altitude: 'Высота ухода на второй круг: '
       approach_re_entry_waypoint_index: 'Номер точки для повторного захода на посадку: '
     save: Сохранить
+    load: Загрузить
+    error: Произошла ошибка! Пожалуйста, проверьте журнал игры для подробностей
     discard_changes: Отменить изменения
     coordinates: 'Координаты: '
     elevation: 'Высота: '

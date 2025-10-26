@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization")
     id("dev.isxander.modstitch.base") version "0.7.0-unstable"
     id("me.modmuss50.mod-publish-plugin")
     id("me.fallenbreath.yamlang") version "1.5.0"
@@ -130,6 +131,8 @@ modstitch {
 // If you want to create proxy configurations for more source sets, such as client source sets,
 // use the modstitch.createProxyConfigurations(sourceSets["client"]) function.
 dependencies {
+    modstitchImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+
     modstitch.loom {
         modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fapi")}")
         modstitchModImplementation("net.fabricmc:fabric-language-kotlin:${property("deps.flk")}+kotlin.2.1.0")

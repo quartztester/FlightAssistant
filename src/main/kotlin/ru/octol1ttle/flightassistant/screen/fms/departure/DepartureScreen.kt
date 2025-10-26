@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.api.util.extensions.toIntOrNullWithFallback
+import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.screen.FABaseScreen
 import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 import ru.octol1ttle.flightassistant.screen.components.TypeStrictEditBox
@@ -35,7 +36,7 @@ class DepartureScreen(parent: Screen) : FABaseScreen(parent, Component.translata
         this.addRenderableWidget(TypeStrictEditBox(takeoffThrust.x + takeoffThrust.width, takeoffThrust.y - 2, baseWidth, baseHeight, state.takeoffThrustPercent, { state.takeoffThrustPercent = it }, String::toIntOrNullWithFallback, { it in 0..100 }))
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
-            state = lastState.copy()
+            state = DepartureScreenState.load(computers.plan.departureData)
             this.rebuildWidgets()
         }.pos(this.width - 200, this.height - 30).width(100).build())
 
@@ -45,19 +46,21 @@ class DepartureScreen(parent: Screen) : FABaseScreen(parent, Component.translata
     }
 
     override fun onClose() {
-        lastState = state.copy()
         state.save(computers.plan)
         super.onClose()
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
-        discardChanges.active = state != lastState
+        discardChanges.active = state != DepartureScreenState.load(computers.plan.departureData)
 
         super.render(guiGraphics, mouseX, mouseY, delta)
     }
 
     companion object {
-        private var lastState: DepartureScreenState = DepartureScreenState()
         private var state: DepartureScreenState = DepartureScreenState()
+
+        fun reload(data: FlightPlanComputer.DepartureData) {
+            state = DepartureScreenState.load(data)
+        }
     }
 }

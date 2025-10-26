@@ -38,8 +38,8 @@ class EnrouteScreenState(
     }
 
     companion object {
-        fun load(flightPlan: FlightPlanComputer): EnrouteScreenState {
-            return EnrouteScreenState(flightPlan.enrouteData.map { Waypoint(it) }.toMutableList())
+        fun load(waypoints: List<FlightPlanComputer.EnrouteWaypoint>): EnrouteScreenState {
+            return EnrouteScreenState(waypoints.map { Waypoint(it) }.toMutableList())
         }
     }
 }

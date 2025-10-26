@@ -328,6 +328,8 @@ menu.flightassistant:
       go_around_altitude: 'Go around altitude: '
       approach_re_entry_waypoint_index: 'Approach re-entry waypoint index: '
     save: Save
+    load: Load
+    error: An error occurred! Please check the log for details
     discard_changes: Discard changes
     coordinates: 'Coordinates: '
     elevation: 'Elevation: '
