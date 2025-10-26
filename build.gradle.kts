@@ -177,7 +177,7 @@ publishMods {
     displayName = "${mod.name} ${mod.version} for ${loader.replaceFirstChar { it.uppercase() }} ${property("mod.mc_title")}"
     version = "${mod.version}+mc$minecraft-$loader"
     changelog = rootProject.file("CHANGELOG.md").readText()
-    type = ALPHA
+    type = BETA
     modLoaders.add(loader)
     if (loader == "fabric") {
         modLoaders.add("quilt")
