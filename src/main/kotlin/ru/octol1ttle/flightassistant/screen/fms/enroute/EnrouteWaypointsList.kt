@@ -1,7 +1,6 @@
 package ru.octol1ttle.flightassistant.screen.fms.enroute
 
 import kotlin.math.roundToLong
-import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
@@ -77,7 +76,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
             }
 
             val indexX: Int = (width * (0.4f / this.columns)).toInt()
-            guiGraphics.drawString(index.toString(), indexX, top, ChatFormatting.WHITE.color!!, true)
+            guiGraphics.drawString(index.toString(), indexX, top, whiteColor, true)
             val activeSymbol: String? = getActiveSymbol()
             if (activeSymbol != null) {
                 guiGraphics.drawString(activeSymbol, indexX - 15, top, primaryAdvisoryColor, true)

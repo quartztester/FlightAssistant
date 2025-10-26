@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Style
 import net.minecraft.util.Mth
 import ru.octol1ttle.flightassistant.api.util.extensions.appendWithSeparation
 import ru.octol1ttle.flightassistant.api.util.extensions.font
+import ru.octol1ttle.flightassistant.api.util.extensions.whiteColor
 
 class CycleTextOnlyButton<E : NameableEnum>(x: Int, y: Int, private val entries: List<E>, var selected: E, private val onValueChange: Consumer<E>) : AbstractButton(x, y, 0, font.lineHeight, Component.empty()) {
     private var index: Int
@@ -28,7 +29,7 @@ class CycleTextOnlyButton<E : NameableEnum>(x: Int, y: Int, private val entries:
         val message: Component = TextOnlyButton.getMessageComponent(this)
 
         this.width = font.width(message)
-        guiGraphics.drawString(font, message, this.x, this.y, ChatFormatting.WHITE.color!!)
+        guiGraphics.drawString(font, message, this.x, this.y, whiteColor)
     }
 
     override fun onPress() {
