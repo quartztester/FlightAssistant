@@ -102,7 +102,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
             val distance: Double = distance2d(state.coordinatesX, state.coordinatesZ, computers.data.x, computers.data.z)
             guiGraphics.drawString(distance.roundToLong().toString(), (columnWidth * 5).toInt(), top, whiteColor, true)
 
-            if (hasExtraSpace) {
+            if (!this.hovering || hasExtraSpace) {
                 guiGraphics.drawString(computers.plan.getFormattedTime(distance), (columnWidth * 6).toInt(), top, whiteColor, true)
             }
         }
