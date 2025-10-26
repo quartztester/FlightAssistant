@@ -419,16 +419,6 @@ object FAConfigScreen {
                 binding(current::altitudeLossAlertMethod, defaults.altitudeLossAlertMethod)
                 controller(enumSwitch(SafetyOptions.AlertMethod::class.java))
             }
-            rootOptions.register("gpws.unsafe_terrain_clearance.enabled") {
-                setSafetyName()
-                binding(current::unsafeTerrainClearanceAlert, defaults.unsafeTerrainClearanceAlert)
-                controller(tickBox())
-            }
-            rootOptions.register("gpws.unsafe_terrain_clearance.alert_method") {
-                setSafetyName()
-                binding(current::unsafeTerrainClearanceAlertMethod, defaults.unsafeTerrainClearanceAlertMethod)
-                controller(enumSwitch(SafetyOptions.AlertMethod::class.java))
-            }
             rootOptions.register("gpws.below_glide_slope.alert_mode") {
                 setSafetyName()
                 binding(current::belowGlideSlopeAlertMode, defaults.belowGlideSlopeAlertMode)

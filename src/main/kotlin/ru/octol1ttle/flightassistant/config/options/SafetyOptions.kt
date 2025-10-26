@@ -65,11 +65,6 @@ class SafetyOptions {
     var altitudeLossAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
 
     @SerialEntry
-    var unsafeTerrainClearanceAlert: Boolean = true
-    @SerialEntry
-    var unsafeTerrainClearanceAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
-
-    @SerialEntry
     var belowGlideSlopeAlertMode: AlertMode = AlertMode.WARNING_AND_CAUTION
     @SerialEntry
     var belowGlideSlopeAlertMethod: AlertMethod = AlertMethod.SCREEN_AND_AUDIO
@@ -108,7 +103,6 @@ class SafetyOptions {
         this.obstacleAutoPitch = false
 
         this.altitudeLossAlert = false
-        this.unsafeTerrainClearanceAlert = false
         this.belowGlideSlopeAlertMode = AlertMode.DISABLED
 
         this.fireworkExplosiveAlert = false

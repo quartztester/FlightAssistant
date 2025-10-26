@@ -216,9 +216,6 @@ config.flightassistant:
         altitude_loss_with_toga:
           enabled: Alert about altitude loss during takeoff/go around
           alert_method: Altitude loss during takeoff/go around alert method
-        unsafe_terrain_clearance:
-          enabled: Alert about unsafe terrain clearance when enroute
-          alert_method: Unsafe terrain clearance alert method
         below_glide_slope:
           alert_mode: Below glide slope alert mode
           alert_method: Below glide slope alert method
