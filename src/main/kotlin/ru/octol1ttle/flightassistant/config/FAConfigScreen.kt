@@ -255,6 +255,11 @@ object FAConfigScreen {
                 binding(current::showFlightDirectors, defaults.showFlightDirectors)
                 controller(tickBox())
             }
+            rootOptions.register("misc.course_deviation") {
+                setDisplayName()
+                binding(current::showCourseDeviation, defaults.showCourseDeviation)
+                controller(tickBox())
+            }
         }
     }
 

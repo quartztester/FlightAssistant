@@ -76,6 +76,8 @@ class DisplayOptions {
     var showAutomationModes: Boolean = true
     @SerialEntry
     var showFlightDirectors: Boolean = true
+    @SerialEntry
+    var showCourseDeviation: Boolean = true
 
     internal fun setMinimal(): DisplayOptions {
         this.showAttitude = AttitudeDisplayMode.DISABLED
@@ -85,6 +87,7 @@ class DisplayOptions {
         this.showAltitudeScale = false
         this.showFlightPathVector = false
         this.showVerticalSpeed = false
+        this.showCourseDeviation = false
         return this
     }
 
@@ -106,6 +109,7 @@ class DisplayOptions {
         this.showStatusMessages = false
         this.showAutomationModes = false
         this.showFlightDirectors = false
+        this.showCourseDeviation = false
         return this
     }
 

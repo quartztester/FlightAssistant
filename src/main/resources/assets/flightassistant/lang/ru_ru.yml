@@ -173,6 +173,7 @@ config.flightassistant:
         status_messages: Отображать сообщения о статусе
         automation_modes: Отображать режимы автоматизации
         flight_directors: Отображать указатели полёта
+        course_deviation: Отображать отклонение от курса
     safety:
       alert_volume: Громкость звуков предупреждений
       consider_invulnerability: Выключать предупреждения и защиты во время неуязвимости
@@ -393,11 +394,13 @@ short.flightassistant:
   ground: ЗЕМЛ
   ground_speed: 'Г/С%s'
   heading: КУРС
+  lateral_deviation: Г/ОТКЛ
   infinite: БЕСК
   radar_altitude: Р/ВЫС
   speed: СКОР
   status: СТАТУС
   time: ВРЕМ
+  vertical_deviation: В/ОТКЛ
   vertical_speed: 'В/С%s'
   void: ПУСТ
 

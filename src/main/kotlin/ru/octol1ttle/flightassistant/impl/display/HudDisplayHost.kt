@@ -69,6 +69,7 @@ internal object HudDisplayHost: ModuleController<Display> {
         register(AttitudeDisplay.ID, AttitudeDisplay(computers))
         register(AutomationModesDisplay.ID, AutomationModesDisplay(computers))
         register(CoordinatesDisplay.ID, CoordinatesDisplay(computers))
+        register(CourseDeviationDisplay.ID, CourseDeviationDisplay(computers))
         register(ElytraDurabilityDisplay.ID, ElytraDurabilityDisplay(computers))
         register(FlightDirectorsDisplay.ID, FlightDirectorsDisplay(computers))
         register(FlightPathDisplay.ID, FlightPathDisplay(computers))

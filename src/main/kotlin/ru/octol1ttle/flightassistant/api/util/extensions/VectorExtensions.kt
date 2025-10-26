@@ -8,6 +8,10 @@ fun Vec3.perSecond(): Vec3 {
     return this.scale(SharedConstants.TICKS_PER_SECOND.toDouble())
 }
 
+fun Vec3.toVector2d(): Vector2d {
+    return Vector2d(this.x, this.z)
+}
+
 fun distance2d(x1: Int, z1: Int, x2: Double, z2: Double): Double {
     return Vector2d.distance(x1.toDouble(), z1.toDouble(), x2, z2)
 }

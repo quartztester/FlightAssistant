@@ -18,7 +18,7 @@ import ru.octol1ttle.flightassistant.api.util.LimitedFIFOQueue
 import ru.octol1ttle.flightassistant.api.util.extensions.distance2d
 import ru.octol1ttle.flightassistant.api.util.extensions.formatRoot
 import ru.octol1ttle.flightassistant.api.util.extensions.getProgressOnTrack
-import ru.octol1ttle.flightassistant.api.util.extensions.vec2dFromInts
+import ru.octol1ttle.flightassistant.api.util.extensions.toVector2d
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.modes.*
 import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
 
@@ -128,14 +128,58 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         return enrouteData.maxOfOrNull { it.altitude }
     }
 
-    fun getCurrentGlideSlopeTarget(): Double? {
-        val origin = enrouteData.lastOrNull() ?: return null
-        val originVec = vec2dFromInts(origin.coordinatesX, origin.coordinatesZ)
-        val targetVec = vec2dFromInts(arrivalData.coordinatesX, arrivalData.coordinatesZ)
+    fun getLateralDeviation(position: Vec3): Double? {
+        if (enrouteData.isEmpty()) {
+            return null
+        }
+        val origin: Vec3
+        val target: Vec3
+        when (currentPhase) {
+            FlightPhase.TAKEOFF -> {
+                origin = departureData.vec3()
+                target = enrouteData.first().vec3()
+            }
+            FlightPhase.LANDING -> {
+                origin = enrouteData.last().vec3()
+                target = arrivalData.vec3()
+            }
+            else -> {
+                origin = getEnrouteOrigin()?.vec3() ?: return null
+                target = getEnrouteTarget()!!.vec3()
+            }
+        }
 
-        val track: Vector2d = targetVec.sub(originVec)
-        val trackProgress: Double = getProgressOnTrack(track, originVec, Vector2d(computers.data.x, computers.data.z))
-        return Mth.lerp(trackProgress, origin.altitude.toDouble(), arrivalData.elevation.toDouble())
+        val origin2d = origin.toVector2d()
+        val track = target.toVector2d().sub(origin2d)
+        val toEntity = position.toVector2d().sub(origin2d)
+        val cross = track.x * toEntity.y - track.y * toEntity.x
+        return cross / track.length()
+    }
+
+    fun getVerticalDeviation(position: Vec3): Double? {
+        if (enrouteData.isEmpty()) {
+            return null
+        }
+        val origin: Vec3
+        val target: Vec3
+        when (currentPhase) {
+            FlightPhase.TAKEOFF -> {
+                origin = departureData.vec3()
+                target = enrouteData.first().vec3()
+            }
+            FlightPhase.LANDING -> {
+                origin = enrouteData.last().vec3()
+                target = arrivalData.vec3()
+            }
+            else -> {
+                origin = getEnrouteOrigin()?.vec3() ?: return null
+                target = getEnrouteTarget()!!.vec3()
+            }
+        }
+
+        val track = target.toVector2d().sub(origin.toVector2d())
+        val trackProgress = getProgressOnTrack(track, origin.toVector2d(), Vector2d(position.x, position.z))
+        return Mth.lerp(trackProgress, origin.y, target.y) - position.y
     }
 
     fun getDistanceToTarget(target: EnrouteWaypoint): Double {

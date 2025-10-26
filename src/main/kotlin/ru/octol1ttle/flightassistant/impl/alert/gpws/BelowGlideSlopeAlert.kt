@@ -26,7 +26,7 @@ class BelowGlideSlopeAlert(computers: ComputerBus) : Alert(computers), CenteredA
             return false
         }
 
-        val glideSlopeDeviation = computers.plan.getCurrentGlideSlopeTarget()!! - computers.data.altitude
+        val glideSlopeDeviation = computers.plan.getVerticalDeviation(computers.data.position)!!
         return glideSlopeDeviation > 5
     }
 

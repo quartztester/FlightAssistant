@@ -169,6 +169,7 @@ config.flightassistant:
         status_messages: Show status messages
         automation_modes: Show automation modes
         flight_directors: Show flight directors
+        course_deviation: Show course deviation
     safety:
       alert_volume: Alert sound volume
       consider_invulnerability: Disable alerts and protections when invulnerable
@@ -390,11 +391,13 @@ short.flightassistant:
   ground: GRND
   ground_speed: 'G/S%s'
   heading: HDG
+  lateral_deviation: L/DEV
   infinite: INFN
   radar_altitude: R/ALT
   speed: SPD
   status: STATUS
   time: TIME
+  vertical_deviation: V/DEV
   vertical_speed: 'V/S%s'
   void: VOID
 

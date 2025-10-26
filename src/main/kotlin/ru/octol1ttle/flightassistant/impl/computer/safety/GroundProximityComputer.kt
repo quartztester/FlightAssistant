@@ -227,7 +227,7 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         val sinkRateInputStatus = getControlInputStatus(groundImpactStatus, FAConfig.safety.sinkRateAutoPitch, false)
         val terrainInputStatus = getControlInputStatus(obstacleImpactStatus, FAConfig.safety.obstacleAutoPitch, false)
         if (sinkRateInputStatus != null || terrainInputStatus != null) {
-            val deltaTimeMultiplier: Double = inverseMin(groundImpactTime, obstacleImpactTime) ?: return null
+            val deltaTimeMultiplier: Double = max(1.0, inverseMin(groundImpactTime, obstacleImpactTime) ?: return null)
             return ControlInput(
                 90.0f,
                 Component.translatable("mode.flightassistant.vertical.terrain_escape"),
