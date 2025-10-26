@@ -32,7 +32,7 @@ val GuiGraphics.centerY: Int
 
 const val emptyColor: Int = 0
 
-val whiteColor: Int = ChatFormatting.WHITE.color!!
+val whiteColor: Int = ChatFormatting.WHITE.color!! or (255 shl 24)
 
 val primaryColor: Int
     get() = FAConfig.display.primaryColor.rgb
