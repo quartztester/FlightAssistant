@@ -59,30 +59,30 @@ class AlertData(@Deprecated("Waiting for an enhanced priority system (.defineOrd
                 soundEvent("dont_sink"),
                 LoopType.CONSTANT_VOLUME
             ) { FAConfig.display.cautionColor.rgb }
-        val TOO_LOW_TERRAIN =
-            AlertData(
-                800,
-                soundEvent("too_low_terrain"),
-                LoopType.CONSTANT_VOLUME
-            ) { FAConfig.display.cautionColor.rgb }
         val FORCE_AUTOPILOT_OFF =
             AlertData(
-                900,
+                800,
                 soundEvent("autopilot_off"),
                 LoopType.CONSTANT_VOLUME
             ) { FAConfig.display.warningColor.rgb }
         val PLAYER_AUTOPILOT_OFF =
             AlertData(
-                1000,
+                900,
                 soundEvent("autopilot_off"),
                 LoopType.NONE
             ) { FAConfig.display.warningColor.rgb }
         val MASTER_WARNING =
             AlertData(
-                1100,
+                1000,
                 soundEvent("master_warning"),
                 LoopType.FADE_OUT
             ) { FAConfig.display.warningColor.rgb }
+        val CAUTION_TERRAIN =
+            AlertData(
+                1100,
+                soundEvent("caution_terrain"),
+                LoopType.NONE
+            ) { FAConfig.display.cautionColor.rgb }
         val MINIMUMS_REACHED =
             AlertData(
                 1200,

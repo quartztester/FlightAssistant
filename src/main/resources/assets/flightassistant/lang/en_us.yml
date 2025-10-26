@@ -65,6 +65,8 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
      .: ARRIVAL ELEV DISAGREE
      glide_slope_unreliable: ' G/S UNRELIABLE'
      autopilot_do_not_use: ' -AUTOPILOT: DO NOT USE'
+    obstacles_on_path: OBSTACLES ON PATH
+    descent_too_steep: DESCENT TOO STEEP
   gpws:
     .: GPWS
     fault: FAULT
@@ -72,7 +74,6 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
     dont_sink: DON'T SINK
     sink_rate: SINK RATE
     terrain_ahead: TERRAIN AHEAD
-    too_low_terrain: TOO LOW - TERRAIN
     below_glide_slope: BELOW G/S
     pull_up: PULL UP
   stall:

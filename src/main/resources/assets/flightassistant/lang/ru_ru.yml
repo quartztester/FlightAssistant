@@ -69,6 +69,8 @@ alert.flightassistant:
       .: НЕСОГЛ ВЫС ПРИБЫТИЯ
       glide_slope_unreliable: ' ГЛИССАДА НЕНАДЕЖН'
       autopilot_do_not_use: ' -АВТОПИЛОТ: НЕ ИСПОЛЬЗ'
+    obstacles_on_path: ПРЕПЯТСТВИЯ НА ПУТИ
+    descent_too_steep: СПУСК СЛИШКОМ КРУТОЙ
   gpws:
     .: GPWS
     fault: ОТКАЗ
@@ -76,7 +78,6 @@ alert.flightassistant:
     dont_sink: НЕ ПАДАЙ
     sink_rate: СКОР. СНИЖЕНИЯ
     terrain_ahead: ЗЕМЛЯ ВПЕРЕДИ
-    too_low_terrain: СЛИШКОМ НИЗКО - ЗЕМЛЯ
     below_glide_slope: НИЖЕ ГЛИССАДЫ
     pull_up: ТЯНИ ВВЕРХ
   navigation:
@@ -404,7 +405,7 @@ status.flightassistant:
   thrust: 'ТЯГА: %s'
   firework_count: 'ЧИСЛ ФРВК: %s'
   flight_plan:
-    flight_phase:
+    phase:
       takeoff: ВЗЛЕТ
       climb: НАБОР
       cruise: КРЕЙСЕР

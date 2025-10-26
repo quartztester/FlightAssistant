@@ -31,6 +31,8 @@ import ru.octol1ttle.flightassistant.impl.alert.firework.FireworkSlowResponseAle
 import ru.octol1ttle.flightassistant.impl.alert.flight_controls.ProtectionsLostAlert
 import ru.octol1ttle.flightassistant.impl.alert.flight_plan.ArrivalElevationDisagreeAlert
 import ru.octol1ttle.flightassistant.impl.alert.flight_plan.DepartureElevationDisagreeAlert
+import ru.octol1ttle.flightassistant.impl.alert.flight_plan.DescentTooSteepAlert
+import ru.octol1ttle.flightassistant.impl.alert.flight_plan.ObstaclesOnPathAlert
 import ru.octol1ttle.flightassistant.impl.alert.gpws.*
 import ru.octol1ttle.flightassistant.impl.alert.navigation.ApproachingVoidDamageAltitudeAlert
 import ru.octol1ttle.flightassistant.impl.alert.navigation.NoChunksLoadedAlert
@@ -110,6 +112,8 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
                 .add(ComputerFaultAlert(computers, FlightPlanComputer.ID, Component.translatable("alert.flightassistant.flight_plan.fault")))
                 .add(ArrivalElevationDisagreeAlert(computers))
                 .add(DepartureElevationDisagreeAlert(computers))
+                .add(ObstaclesOnPathAlert(computers))
+                .add(DescentTooSteepAlert(computers))
         )
         register(
             AlertCategory(Component.translatable("alert.flightassistant.gpws"))
@@ -120,7 +124,6 @@ class AlertComputer(computers: ComputerBus, private val soundManager: SoundManag
                 .add(TerrainAheadAlert(computers))
                 .add(BelowGlideSlopeAlert(computers))
                 .add(DontSinkAlert(computers))
-                .add(TooLowTerrainAlert(computers))
                 .add(MinimumsReachedAlert(computers))
         )
         register(

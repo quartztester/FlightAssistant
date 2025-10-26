@@ -19,6 +19,11 @@
             "flightassistant:below_glide_slope_warning"
         ]
     },
+    "caution_terrain": {
+        "sounds": [
+            "flightassistant:caution_terrain"
+        ]
+    },
     "dont_sink": {
         "sounds": [
             "flightassistant:dont_sink"
@@ -62,11 +67,6 @@
     "thrust_locked": {
         "sounds": [
             "flightassistant:thrust_locked"
-        ]
-    },
-    "too_low_terrain": {
-        "sounds": [
-            "flightassistant:too_low_terrain"
         ]
     }
 }

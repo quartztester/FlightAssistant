@@ -2,11 +2,13 @@ package ru.octol1ttle.flightassistant.impl.computer.autoflight
 
 import java.time.Duration
 import java.util.UUID
+import kotlin.math.abs
 import kotlin.math.roundToLong
 import net.minecraft.SharedConstants
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
+import net.minecraft.world.phys.Vec3
 import org.joml.Vector2d
 import ru.octol1ttle.flightassistant.FlightAssistant
 import ru.octol1ttle.flightassistant.api.computer.Computer
@@ -48,7 +50,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         }
 
         if (currentPhase == FlightPhase.TAKEOFF) {
-            if (enrouteData.isNotEmpty() && enrouteData[0].altitude - computers.data.altitude <= 10.0) {
+            if (enrouteData.isNotEmpty() && enrouteData.first().altitude - computers.data.altitude <= 10.0) {
                 return FlightPhase.CLIMB
             }
             return FlightPhase.TAKEOFF
@@ -59,7 +61,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             if (enrouteData.isEmpty() || arrivalData.isDefault()) {
                 return FlightPhase.UNKNOWN
             }
-            if (currentPhase == FlightPhase.GO_AROUND && (computers.data.altitude < arrivalData.goAroundAltitude || enrouteData.size > arrivalData.approachReEntryWaypointIndex)) {
+            if (currentPhase == FlightPhase.GO_AROUND && (abs(computers.data.altitude - arrivalData.goAroundAltitude) > 5.0 || enrouteData.size > arrivalData.approachReEntryWaypointIndex)) {
                 return FlightPhase.GO_AROUND
             }
             if (currentPhase == FlightPhase.APPROACH || currentPhase == FlightPhase.LANDING) {
@@ -90,7 +92,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     }
 
     private fun updateEnrouteData() {
-        if (currentPhase == FlightPhase.GO_AROUND && computers.data.altitude >= arrivalData.goAroundAltitude) {
+        if (currentPhase == FlightPhase.GO_AROUND && computers.thrust.current < 1.0f && abs(computers.data.altitude - arrivalData.goAroundAltitude) <= 5.0) {
             val approachReEntryWaypoint = enrouteData.getOrNull(arrivalData.approachReEntryWaypointIndex)
             approachReEntryWaypoint?.active = EnrouteWaypoint.Active.TARGET
         }
@@ -134,16 +136,6 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         val track: Vector2d = targetVec.sub(originVec)
         val trackProgress: Double = getProgressOnTrack(track, originVec, Vector2d(computers.data.x, computers.data.z))
         return Mth.lerp(trackProgress, origin.altitude.toDouble(), arrivalData.elevation.toDouble())
-    }
-
-    fun isBelowMinimums(): Boolean {
-        if (currentPhase != FlightPhase.LANDING) {
-            return false
-        }
-        val minimums =
-            if (arrivalData.minimumsType == ArrivalData.MinimumsType.ABSOLUTE) arrivalData.minimums.toDouble()
-            else computers.gpws.groundOrVoidY + arrivalData.minimums
-        return computers.data.altitude <= minimums
     }
 
     fun getDistanceToTarget(target: EnrouteWaypoint): Double {
@@ -251,6 +243,10 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             return this == DEFAULT
         }
 
+        fun vec3(): Vec3 {
+            return Vec3(coordinatesX.toDouble(), elevation.toDouble(), coordinatesZ.toDouble())
+        }
+
         companion object {
             val DEFAULT: DepartureData = DepartureData()
         }
@@ -260,6 +256,10 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
         enum class Active {
             ORIGIN,
             TARGET
+        }
+
+        fun vec3(): Vec3 {
+            return Vec3(coordinatesX.toDouble(), altitude.toDouble(), coordinatesZ.toDouble())
         }
     }
 
@@ -271,6 +271,10 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
 
         fun isDefault(): Boolean {
             return this == DEFAULT
+        }
+
+        fun vec3(): Vec3 {
+            return Vec3(coordinatesX.toDouble(), elevation.toDouble(), coordinatesZ.toDouble())
         }
 
         companion object {

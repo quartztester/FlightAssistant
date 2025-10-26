@@ -80,14 +80,14 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         val damageOnCollision: Double = computers.data.velocity.horizontalDistance() * 10 - 3
         val invulnerable = computers.data.isInvulnerableTo(computers.data.player.damageSources().flyIntoWall())
         obstacleImpactStatus = computeStatus(obstacleImpactStatus,
-            { invulnerable || damageOnCollision < computers.data.player.health * 0.25f || obstacleImpactTime > groundImpactTime * 1.2f || obstacleImpactTime >= safeThreshold * thresholdMultiplier },
-            { abs(computers.data.yaw - computers.data.flightYaw) < 10.0f && damageOnCollision >= computers.data.player.health * 0.5f && obstacleImpactTime < groundImpactTime * 1.1f && obstacleImpactTime <= caution },
+            { invulnerable || damageOnCollision < computers.data.player.health * 0.25f || obstacleImpactTime * 1.2f > groundImpactTime || obstacleImpactTime >= safeThreshold * thresholdMultiplier },
+            { abs(computers.data.yaw - computers.data.flightYaw) < 10.0f && damageOnCollision >= computers.data.player.health * 0.5f && obstacleImpactTime * 1.1f < groundImpactTime && obstacleImpactTime <= caution },
             { !isRecoveryUnsafe && obstacleImpactTime <= warning },
             { obstacleImpactTime <= recoverThreshold },
         )
     }
 
-    fun raycast(offset: Vec3): BlockHitResult {
+    private fun raycast(offset: Vec3): BlockHitResult {
         return computers.data.level.clip(ClipContext(computers.data.position, computers.data.position.add(offset), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, computers.data.player))
     }
 
@@ -103,6 +103,11 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
         val groundY = collisionResult.y + playerBoundingBox.minY
         if (collisionResult.y + playerBoundingBox.maxY == minY || collisionResult == diffFromMinY) {
             return if (groundY > computers.data.level.bottomY) Double.MAX_VALUE else null
+        }
+
+        val raycast = raycast(Vec3(0.0, minY - computers.data.position.y, 0.0))
+        if (raycast.type == HitResult.Type.BLOCK) {
+            return max(raycast.location.y, groundY)
         }
         return groundY
     }
