@@ -28,6 +28,7 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
       flightassistant:attitude: ATT DSPL FAULT
       flightassistant:automation_modes: AUTO MODE DSPL FAULT
       flightassistant:coordinates: COORD DSPL FAULT
+      flightassistant:course_deviation: CRS DEV DSPL FAULT
       flightassistant:elytra_durability: EL/DURA DSPL FAULT
       flightassistant:flight_directors: FLT DIR DSPL FAULT
       flightassistant:flight_path: F/PATH DSPL FAULT
@@ -243,6 +244,7 @@ menu.flightassistant:
         flightassistant:attitude: Attitude display
         flightassistant:automation_modes: Automation modes display
         flightassistant:coordinates: Coordinates display
+        flightassistant:course_deviation: Course deviation display
         flightassistant:elytra_durability: Elytra durability display
         flightassistant:flight_directors: Flight directors display
         flightassistant:flight_path: Flight path display

@@ -32,6 +32,7 @@ alert.flightassistant:
       flightassistant:attitude: ОТКАЗ ИНД ОРИЕНТ
       flightassistant:automation_modes: ОТКАЗ ИНД АВТО РЕЖИМ
       flightassistant:coordinates: ОТКАЗ ИНД КООРД
+      flightassistant:course_deviation: ОТКАД ИНД ОТКЛ КУРС
       flightassistant:elytra_durability: ОТКАЗ ИНД ПРЧН/ЭЛ
       flightassistant:flight_directors: ОТКАЗ ИНД УКАЗ/П
       flightassistant:flight_path: ОТКАЗ ИНД ВЕКТ/П
@@ -247,6 +248,7 @@ menu.flightassistant:
         flightassistant:attitude: Авиагоризонт
         flightassistant:automation_modes: Индикатор режимов автоматизации
         flightassistant:coordinates: Индикатор координат
+        flightassistant:course_deviation: Индикатор отклонения от курса
         flightassistant:elytra_durability: Индикатор прочности элитр
         flightassistant:flight_directors: Индикатор указателей полёта
         flightassistant:flight_path: Индикатор пути полёта
