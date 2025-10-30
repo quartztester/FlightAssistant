@@ -2,7 +2,6 @@ package ru.octol1ttle.flightassistant.screen.fms.arrival
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
@@ -18,8 +17,6 @@ class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
 
     override fun init() {
         super.init()
-
-        this.addRenderableWidget(StringWidget(0, 7, this.width, 9, this.title, this.font))
 
         val baseX: Int = this.width / 3
         val baseY: Int = this.height / 3

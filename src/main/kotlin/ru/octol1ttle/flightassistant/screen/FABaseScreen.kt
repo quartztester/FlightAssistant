@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FAKeyMappings
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
+import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 
 abstract class FABaseScreen(val parent: Screen?, title: Component) : Screen(title) {
     protected val computers: ComputerBus = ComputerHost
@@ -16,6 +17,8 @@ abstract class FABaseScreen(val parent: Screen?, title: Component) : Screen(titl
     override fun init() {
         this.centerX = this.width / 2
         this.centerY = this.height / 2
+
+        this.addRenderableWidget(SmartStringWidget(this.centerX, 7, this.title).alignCenter())
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
@@ -34,6 +37,18 @@ abstract class FABaseScreen(val parent: Screen?, title: Component) : Screen(titl
 
     override fun isPauseScreen(): Boolean = false
 
+//? if >=1.21.9 {
+    /*override fun keyPressed(event: KeyEvent): Boolean {
+        if (super.keyPressed(event)) {
+            return true
+        } else if (FAKeyMappings.openFlightAssistantSetup.matches(event)) {
+            this.onClose()
+            return true
+        }
+
+        return false
+    }
+*///?} else {
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         if (super.keyPressed(keyCode, scanCode, modifiers)) {
 			return true
@@ -44,4 +59,5 @@ abstract class FABaseScreen(val parent: Screen?, title: Component) : Screen(titl
 
         return false
     }
+//?}
 }

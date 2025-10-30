@@ -4,7 +4,6 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
-import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.network.chat.Component
@@ -23,16 +22,21 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
     }
 
     class Entry(val xOffset: Int, private val listWidth: Int, private val identifier: ResourceLocation, displayName: Component, private val controller: ModuleController<*>) : ContainerObjectSelectionList.Entry<Entry>() {
-        private val displayName: StringWidget = StringWidget(xOffset, 0, this.listWidth / 2, 9, displayName, font).alignLeft()
-        private val faultText: StringWidget = SmartStringWidget(xOffset, 0, FAULT_TEXT).alignRight()
-        private val offText: StringWidget = SmartStringWidget(xOffset, 0, OFF_TEXT).alignRight()
-        private val toggleButton: Button = Button.builder(OFF_TEXT) {
+        private val displayName = SmartStringWidget(xOffset, 0, displayName).alignLeft()
+        private val faultText = SmartStringWidget(xOffset, 0, FAULT_TEXT).alignRight()
+        private val offText = SmartStringWidget(xOffset, 0, OFF_TEXT).alignRight()
+        private val toggleButton = Button.builder(OFF_TEXT) {
             controller.toggleEnabled(identifier)
         }.pos(xOffset, 0).size(60, 18).build()
 
         val children = listOf(this.displayName, faultText, offText, toggleButton)
 
+//? if >=1.21.9 {
+        /*override fun renderContent(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
+            val top = contentY
+*///?} else {
         override fun render(guiGraphics: GuiGraphics, index: Int, top: Int, left: Int, width: Int, height: Int, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
+    //?}
             displayName.x = this.xOffset
             displayName.y = top
             displayName.render(guiGraphics, mouseX, mouseY, partialTick)

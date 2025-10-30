@@ -4,7 +4,6 @@ import kotlin.math.max
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.CommonComponents
@@ -27,8 +26,6 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
 
     override fun init() {
         super.init()
-
-        this.addRenderableWidget(StringWidget(0, 7, this.width, 9, this.title, this.font))
 
         val columnsSizeWithMargin: Float = COLUMNS.size + HOVERING_COLUMNS_MARGIN
         val optimumColumnsSize: Float = (if (this.width / columnsSizeWithMargin >= 75) columnsSizeWithMargin else COLUMNS.size.toFloat())

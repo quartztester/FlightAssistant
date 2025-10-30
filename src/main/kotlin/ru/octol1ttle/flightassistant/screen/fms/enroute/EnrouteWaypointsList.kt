@@ -19,7 +19,7 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
         rebuildEntries()
     }
 
-    class Entry(val width: Int, val columns: Float, val computers: ComputerBus, val state: EnrouteScreenState.Waypoint, val list: EnrouteWaypointsList) : ContainerObjectSelectionList.Entry<Entry>() {
+    class Entry(@JvmField val width: Int, val columns: Float, val computers: ComputerBus, val state: EnrouteScreenState.Waypoint, val list: EnrouteWaypointsList) : ContainerObjectSelectionList.Entry<Entry>() {
         private val columnWidth: Float = width / this.columns
 
         private val xEditBox = TypeStrictEditBox(0, 0, columnWidth.toInt(), font.lineHeight, state.coordinatesX, { state.coordinatesX = it }, String::toIntOrNullWithFallback)
@@ -52,7 +52,13 @@ class EnrouteWaypointsList(y0: Int, y1: Int, width: Int, val columns: Float, val
 
         private var lastFlightPlanActive: FlightPlanComputer.EnrouteWaypoint.Active? = state.active
 
+//? if >=1.21.9 {
+        /*override fun renderContent(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
+            val top = contentY
+            val index = list.children().indexOf(this)
+*///?} else {
         override fun render(guiGraphics: GuiGraphics, index: Int, top: Int, left: Int, width: Int, height: Int, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
+//?}
             this.index = index
             this.hovering = hovering
 

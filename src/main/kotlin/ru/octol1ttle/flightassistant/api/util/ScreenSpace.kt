@@ -87,7 +87,7 @@ object ScreenSpace {
     }
 
     fun getY(pitch: Float): Int? {
-        val vec: Vector3f = fromWorldSpace(Vec3.directionFromRotation(-pitch, mc.entityRenderDispatcher.camera.yRot), true)
+        val vec: Vector3f = fromWorldSpace(Vec3.directionFromRotation(-pitch, mc.entityRenderDispatcher.camera!!.yRot), true)
         if (!isVisible(vec)) {
             return null
         }

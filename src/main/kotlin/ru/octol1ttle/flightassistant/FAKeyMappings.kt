@@ -9,6 +9,14 @@ import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.screen.FlightAssistantSetupScreen
 
 object FAKeyMappings {
+//? if >=1.21.9 {
+    /*private val DEFAULT_CATEGORY = KeyMapping.Category.register(FlightAssistant.id("main"))
+    private val THRUST_CATEGORY = KeyMapping.Category.register(FlightAssistant.id("thrust"))
+*///?} else {
+    private const val DEFAULT_CATEGORY = "key.flightassistant"
+    private const val THRUST_CATEGORY = "key.flightassistant.thrust"
+//?}
+
     internal val keyMappings: MutableList<KeyMapping> = ArrayList()
 
     lateinit var toggleEnabled: KeyMapping
@@ -36,12 +44,15 @@ object FAKeyMappings {
         hideCurrentAlert = addKeyMapping("hide_current_alert", GLFW.GLFW_KEY_KP_0)
         showHiddenAlert = addKeyMapping("show_hidden_alert", GLFW.GLFW_KEY_KP_DECIMAL)
 
-        setIdle = addKeyMapping("set_idle", GLFW.GLFW_KEY_LEFT, "key.flightassistant.thrust")
-        decreaseThrust = addKeyMapping("decrease_thrust", GLFW.GLFW_KEY_DOWN, "key.flightassistant.thrust")
-        increaseThrust = addKeyMapping("increase_thrust", GLFW.GLFW_KEY_UP, "key.flightassistant.thrust")
-        setToga = addKeyMapping("set_toga", GLFW.GLFW_KEY_RIGHT, "key.flightassistant.thrust")
+        setIdle = addKeyMapping("set_idle", GLFW.GLFW_KEY_LEFT, THRUST_CATEGORY)
+        decreaseThrust = addKeyMapping("decrease_thrust", GLFW.GLFW_KEY_DOWN, THRUST_CATEGORY)
+        increaseThrust = addKeyMapping("increase_thrust", GLFW.GLFW_KEY_UP, THRUST_CATEGORY)
+        setToga = addKeyMapping("set_toga", GLFW.GLFW_KEY_RIGHT, THRUST_CATEGORY)
     }
 
+//? if >=1.21.9 {
+    /*private fun addKeyMapping(translationKey: String, code: Int, category: KeyMapping.Category = DEFAULT_CATEGORY): KeyMapping {
+*///?} else
     private fun addKeyMapping(translationKey: String, code: Int, category: String = "key.flightassistant"): KeyMapping {
         val keyBinding = KeyMapping("${category}.${translationKey}", InputConstants.Type.KEYSYM, code, category)
         keyMappings.add(keyBinding)

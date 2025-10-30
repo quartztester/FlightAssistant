@@ -17,6 +17,7 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.degrees
 import ru.octol1ttle.flightassistant.api.util.extensions.bottomY
+import ru.octol1ttle.flightassistant.api.util.extensions.getLerpedDeltaMovement
 import ru.octol1ttle.flightassistant.api.util.extensions.perSecond
 import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 import ru.octol1ttle.flightassistant.config.FAConfig
@@ -77,7 +78,7 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
     override fun tick() {
         forwardVelocity = computeForwardVector(velocity)
         forwardVelocityPerSecond = forwardVelocity.perSecond()
-        forwardAcceleration = forwardVelocity.length() - computeForwardVector(player.getDeltaMovementLerped(0.0f)).length()
+        forwardAcceleration = forwardVelocity.length() - computeForwardVector(player.getLerpedDeltaMovement(0.0f)).length()
     }
 
     fun automationsAllowed(checkFlying: Boolean = true): Boolean {

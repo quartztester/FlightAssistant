@@ -9,7 +9,6 @@ import kotlinx.serialization.json.Json
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
-import net.minecraft.client.gui.components.StringWidget
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
 import org.lwjgl.PointerBuffer
@@ -22,6 +21,7 @@ import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 import ru.octol1ttle.flightassistant.screen.autoflight.AutoFlightScreen
+import ru.octol1ttle.flightassistant.screen.components.SmartStringWidget
 import ru.octol1ttle.flightassistant.screen.fms.arrival.ArrivalScreen
 import ru.octol1ttle.flightassistant.screen.fms.departure.DepartureScreen
 import ru.octol1ttle.flightassistant.screen.fms.enroute.EnrouteScreen
@@ -33,9 +33,7 @@ class FlightAssistantSetupScreen : FABaseScreen(null, Component.translatable("me
     override fun init() {
         super.init()
 
-        this.addRenderableWidget(StringWidget(0, 7, this.width, this.font.lineHeight, this.title, this.font))
-
-        this.addRenderableWidget(StringWidget(0, this.centerY - 80, this.width, this.font.lineHeight, Component.translatable("menu.flightassistant.system"), this.font))
+        this.addRenderableWidget(SmartStringWidget(this.centerX, this.centerY - 80, Component.translatable("menu.flightassistant.system")).alignCenter())
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.system.manage_displays")) {
             this.minecraft!!.setScreen(
                 SystemManagementScreen(
@@ -55,7 +53,7 @@ class FlightAssistantSetupScreen : FABaseScreen(null, Component.translatable("me
             this.minecraft!!.setScreen(AutoFlightScreen(this))
         }.pos(this.centerX - 80, this.centerY - 30).width(160).build())
 
-        this.addRenderableWidget(StringWidget(0, this.centerY + 5, this.width, this.font.lineHeight, Component.translatable("menu.flightassistant.fms"), this.font))
+        this.addRenderableWidget(SmartStringWidget(this.centerX, this.centerY + 5, Component.translatable("menu.flightassistant.fms")).alignCenter())
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.departure")) {
             this.minecraft!!.setScreen(DepartureScreen(this))
         }.pos(this.centerX - 130, this.centerY + 20).width(80).build())

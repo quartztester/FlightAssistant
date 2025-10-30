@@ -44,6 +44,11 @@ modstitch {
 
     val j21: Boolean = stonecutter.eval(minecraft, ">=1.20.6")
     javaVersion = if (j21) 21 else 17
+
+    java {
+        withSourcesJar()
+    }
+
     kotlin {
         jvmToolchain(if (j21) 21 else 17)
     }
@@ -171,8 +176,8 @@ publishMods {
 
     modstitch.onEnable {
         file = modstitch.finalJarTask.flatMap { it.archiveFile }
-        additionalFiles.from(modstitch.namedJarTask.flatMap { it.archiveFile})
     }
+    //additionalFiles.from(tasks.named<SourceTask>("sourcesJar").flatMap { it.archiveFile })
 
     displayName = "${mod.name} ${mod.version} for ${loader.replaceFirstChar { it.uppercase() }} ${property("mod.mc_title")}"
     version = "${mod.version}+mc$minecraft-$loader"

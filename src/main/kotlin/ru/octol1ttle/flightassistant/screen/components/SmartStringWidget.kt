@@ -8,4 +8,20 @@ class SmartStringWidget(x: Int, y: Int, component: Component) : StringWidget(x, 
     init {
         this.alignLeft()
     }
+
+//? if >=1.21.9 {
+    /*fun alignLeft(): SmartStringWidget {
+        return this
+    }
+
+    fun alignCenter(): SmartStringWidget {
+        this.x -= this.width / 2
+        return this
+    }
+
+    fun alignRight(): SmartStringWidget {
+        this.x -= this.width
+        return this
+    }
+*///?}
 }

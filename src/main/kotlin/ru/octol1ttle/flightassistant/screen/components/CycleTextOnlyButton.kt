@@ -32,6 +32,15 @@ class CycleTextOnlyButton<E : NameableEnum>(x: Int, y: Int, private val entries:
         guiGraphics.drawString(font, message, this.x, this.y, whiteColor)
     }
 
+//? if >=1.21.9 {
+    /*override fun onPress(input: InputWithModifiers) {
+        if (input.hasShiftDown()) {
+            this.cycleValue(-1)
+        } else {
+            this.cycleValue(1)
+        }
+    }
+*///?} else {
     override fun onPress() {
         if (Screen.hasShiftDown()) {
             this.cycleValue(-1)
@@ -39,6 +48,7 @@ class CycleTextOnlyButton<E : NameableEnum>(x: Int, y: Int, private val entries:
             this.cycleValue(1)
         }
     }
+//?}
 
     private fun cycleValue(delta: Int) {
         this.index = Mth.positiveModulo(this.index + delta, this.entries.size)
