@@ -13,8 +13,8 @@ object FAKeyMappings {
     /*private val DEFAULT_CATEGORY = KeyMapping.Category.register(FlightAssistant.id("main"))
     private val THRUST_CATEGORY = KeyMapping.Category.register(FlightAssistant.id("thrust"))
 *///?} else {
-    private const val DEFAULT_CATEGORY = "key.flightassistant"
-    private const val THRUST_CATEGORY = "key.flightassistant.thrust"
+    private const val DEFAULT_CATEGORY = "key.category.flightassistant.main"
+    private const val THRUST_CATEGORY = "key.category.flightassistant.thrust"
 //?}
 
     internal val keyMappings: MutableList<KeyMapping> = ArrayList()
@@ -52,9 +52,11 @@ object FAKeyMappings {
 
 //? if >=1.21.9 {
     /*private fun addKeyMapping(translationKey: String, code: Int, category: KeyMapping.Category = DEFAULT_CATEGORY): KeyMapping {
-*///?} else
-    private fun addKeyMapping(translationKey: String, code: Int, category: String = "key.flightassistant"): KeyMapping {
+        val keyBinding = KeyMapping("key.category.flightassistant.${category.id.path}.${translationKey}", InputConstants.Type.KEYSYM, code, category)
+*///?} else {
+    private fun addKeyMapping(translationKey: String, code: Int, category: String = DEFAULT_CATEGORY): KeyMapping {
         val keyBinding = KeyMapping("${category}.${translationKey}", InputConstants.Type.KEYSYM, code, category)
+//?}
         keyMappings.add(keyBinding)
         return keyBinding
     }

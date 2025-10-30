@@ -422,14 +422,15 @@ misc.flightassistant:
     .: WAITING FOR WORLD LOAD
     maximum_time: (MAX 3 SECONDS)
 
-key.flightassistant:
-  .: FlightAssistant
-  toggle_enabled: Toggle mod enabled
-  open_flightassistant_setup: Open FlightAssistant setup screen
-  autopilot_disconnect: Disconnect autopilot
-  global_automation_override: Global automation override (hold)
-  hide_current_alert: Hide currently active alert
-  show_hidden_alert: Show last hidden alert
+key.category.flightassistant:
+  main:
+    .: FlightAssistant
+    toggle_enabled: Toggle mod enabled
+    open_flightassistant_setup: Open FlightAssistant setup screen
+    autopilot_disconnect: Disconnect autopilot
+    global_automation_override: Global automation override (hold)
+    hide_current_alert: Hide currently active alert
+    show_hidden_alert: Show last hidden alert
   thrust:
     .: 'FlightAssistant: Thrust'
     decrease_thrust: Decrease thrust

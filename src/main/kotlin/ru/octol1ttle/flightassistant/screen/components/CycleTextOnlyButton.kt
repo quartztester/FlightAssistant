@@ -41,7 +41,7 @@ class CycleTextOnlyButton<E : NameableEnum>(x: Int, y: Int, private val entries:
     }
 *///?} else {
     override fun onPress() {
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.gui.screens.Screen.hasShiftDown()) {
             this.cycleValue(-1)
         } else {
             this.cycleValue(1)
