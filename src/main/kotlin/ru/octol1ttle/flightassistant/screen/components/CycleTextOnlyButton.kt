@@ -6,7 +6,6 @@ import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractButton
 import net.minecraft.client.gui.narration.NarrationElementOutput
-import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
@@ -33,7 +32,7 @@ class CycleTextOnlyButton<E : NameableEnum>(x: Int, y: Int, private val entries:
     }
 
 //? if >=1.21.9 {
-    /*override fun onPress(input: InputWithModifiers) {
+    /*override fun onPress(input: net.minecraft.client.input.InputWithModifiers) {
         if (input.hasShiftDown()) {
             this.cycleValue(-1)
         } else {

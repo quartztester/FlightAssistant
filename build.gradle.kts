@@ -177,7 +177,7 @@ publishMods {
     modstitch.onEnable {
         file = modstitch.finalJarTask.flatMap { it.archiveFile }
     }
-    //additionalFiles.from(tasks.named<SourceTask>("sourcesJar").flatMap { it.archiveFile })
+    additionalFiles.from(tasks.named<Jar>("sourcesJar").flatMap { it.archiveFile })
 
     displayName = "${mod.name} ${mod.version} for ${loader.replaceFirstChar { it.uppercase() }} ${property("mod.mc_title")}"
     version = "${mod.version}+mc$minecraft-$loader"
