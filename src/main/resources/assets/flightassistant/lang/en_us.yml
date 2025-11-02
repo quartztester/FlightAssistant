@@ -55,7 +55,7 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
       enable_air_data: ' -AIR DATA: OFF THEN ON'
       enable_pitch: ' -PITCH SYS: OFF THEN ON'
       enable_prot_sys: ' -PROT SYS: OFF THEN ON'
-      max_pitch: ' MAX PITCH: 55* UP'
+      max_pitch: ' MAX PITCH: 45* UP'
       min_pitch: ' MIN PITCH: 35* DOWN'
       maneuver_with_care: ' MANEUVER WITH CARE'
   flight_plan:

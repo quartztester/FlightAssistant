@@ -59,7 +59,7 @@ alert.flightassistant:
       enable_air_data: ' -КОМП ДАННЫХ ПОЛЕТА: ВЫКЛ ЗАТЕМ ВКЛ'
       enable_pitch: ' -КОМП УГЛА НАКЛ: ВЫКЛ ЗАТЕМ ВКЛ'
       enable_prot_sys: ' -КОМП ЗАЩИТ: ВЫКЛ ЗАТЕМ ВКЛ'
-      max_pitch: ' МАКС УГОЛ НАКЛ: 55* ВВЕРХ'
+      max_pitch: ' МАКС УГОЛ НАКЛ: 45* ВВЕРХ'
       min_pitch: ' МИН УГОЛ НАКЛ: 35* ВНИЗ'
       maneuver_with_care: ' МАНЕВРИРУЙ С ОСТОРОЖНОСТЬЮ'
   flight_plan:
