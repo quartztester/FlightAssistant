@@ -22,9 +22,9 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
     }
 
     class Entry(val xOffset: Int, private val listWidth: Int, private val identifier: ResourceLocation, displayName: Component, private val controller: ModuleController<*>) : ContainerObjectSelectionList.Entry<Entry>() {
-        private val displayName = SmartStringWidget(xOffset, 0, displayName).alignLeft()
-        private val faultText = SmartStringWidget(xOffset, 0, FAULT_TEXT).alignRight()
-        private val offText = SmartStringWidget(xOffset, 0, OFF_TEXT).alignRight()
+        private val displayName = SmartStringWidget(xOffset, 0, displayName).leftAligned()
+        private val faultText = SmartStringWidget(xOffset, 0, FAULT_TEXT).rightAligned()
+        private val offText = SmartStringWidget(xOffset, 0, OFF_TEXT).rightAligned()
         private val toggleButton = Button.builder(OFF_TEXT) {
             controller.toggleEnabled(identifier)
         }.pos(xOffset, 0).size(60, 18).build()

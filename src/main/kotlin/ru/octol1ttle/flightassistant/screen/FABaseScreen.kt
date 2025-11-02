@@ -18,7 +18,7 @@ abstract class FABaseScreen(val parent: Screen?, title: Component) : Screen(titl
         this.centerX = this.width / 2
         this.centerY = this.height / 2
 
-        this.addRenderableWidget(SmartStringWidget(this.centerX, 7, this.title).alignCenter())
+        this.addRenderableWidget(SmartStringWidget(this.centerX, 7, this.title).middleAligned())
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {

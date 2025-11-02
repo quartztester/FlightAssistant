@@ -33,7 +33,7 @@ class FlightAssistantSetupScreen : FABaseScreen(null, Component.translatable("me
     override fun init() {
         super.init()
 
-        this.addRenderableWidget(SmartStringWidget(this.centerX, this.centerY - 80, Component.translatable("menu.flightassistant.system")).alignCenter())
+        this.addRenderableWidget(SmartStringWidget(this.centerX, this.centerY - 80, Component.translatable("menu.flightassistant.system")).middleAligned())
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.system.manage_displays")) {
             this.minecraft!!.setScreen(
                 SystemManagementScreen(
@@ -53,7 +53,7 @@ class FlightAssistantSetupScreen : FABaseScreen(null, Component.translatable("me
             this.minecraft!!.setScreen(AutoFlightScreen(this))
         }.pos(this.centerX - 80, this.centerY - 30).width(160).build())
 
-        this.addRenderableWidget(SmartStringWidget(this.centerX, this.centerY + 5, Component.translatable("menu.flightassistant.fms")).alignCenter())
+        this.addRenderableWidget(SmartStringWidget(this.centerX, this.centerY + 5, Component.translatable("menu.flightassistant.fms")).middleAligned())
         this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.departure")) {
             this.minecraft!!.setScreen(DepartureScreen(this))
         }.pos(this.centerX - 130, this.centerY + 20).width(80).build())
