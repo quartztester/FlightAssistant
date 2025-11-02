@@ -57,7 +57,7 @@ class DisplayOptions {
     @SerialEntry
     var showElytraDurability: Boolean = true
     @SerialEntry
-    var elytraDurabilityUnits: DurabilityUnits = DurabilityUnits.PERCENTAGE
+    var elytraDurabilityUnits: DurabilityUnits = DurabilityUnits.TIME
 
     @SerialEntry
     var showCoordinates: Boolean = true
