@@ -16,12 +16,12 @@ class DaBRThrustComputer(computers: ComputerBus) : Computer(computers), ThrustSo
 
     override fun subscribeToEvents() {
         ThrustEvents.MODIFY_THRUST_INPUT.register({
-
-            if (!computers.thrust.isDisabledOrFaulted()) {
+            if (computers.data.automationsAllowed() && !computers.thrust.isDisabledOrFaulted()) {
                 // TODO: config option *sigh*
                 computers.thrust.tickTarget(sign(it).toFloat())
                 return@register computers.thrust.current.toDouble()
             }
+
             return@register it
         }, 10)
     }
