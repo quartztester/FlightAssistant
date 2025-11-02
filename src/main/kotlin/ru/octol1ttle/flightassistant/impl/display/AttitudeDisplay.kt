@@ -33,26 +33,28 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
         }
 
         with(guiGraphics) {
+            val centerX: Float = centerXF - 0.5f
+
             pose().push()
 //? if <1.21.6
             pose().translate(0.0f, 0.0f, -200.0f)
 //? if >=1.21.6 {
-            /*pose().rotateAbout(ru.octol1ttle.flightassistant.api.util.radians(-computers.hudData.roll), centerXF, centerYF)
+            /*pose().rotateAbout(ru.octol1ttle.flightassistant.api.util.radians(-computers.hudData.roll), centerX, centerYF)
 *///?} else
-            pose().rotateAround(Axis.ZN.rotationDegrees(computers.hudData.roll), centerXF, centerYF, 0.0f)
+            pose().rotateAround(Axis.ZN.rotationDegrees(computers.hudData.roll), centerX, centerYF, 0.0f)
 
             if (!FAConfig.display.drawPitchOutsideFrame) {
                 HudFrame.scissor(this)
             }
             if (FAConfig.display.showAttitude <= DisplayOptions.AttitudeDisplayMode.HORIZON_ONLY) {
-                renderHorizon()
+                renderHorizon(centerX)
             }
             if (FAConfig.display.showAttitude == DisplayOptions.AttitudeDisplayMode.HORIZON_AND_LADDER) {
-                renderPitchBars()
-                renderPitchLimits()
-                drawPitchReferenceMark(47.5f)
-                drawPitchReferenceMark(-2.2f)
-                drawPitchReferenceMark(-38.5f)
+                renderPitchBars(centerX)
+                renderPitchLimits(centerX)
+                drawPitchReferenceMark(47.5f, centerX)
+                drawPitchReferenceMark(-2.2f, centerX)
+                drawPitchReferenceMark(-38.5f, centerX)
             }
             if (!FAConfig.display.drawPitchOutsideFrame) {
                 disableScissor()
@@ -60,41 +62,41 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
 
             pose().pop()
             if (FAConfig.display.showAutomationModes) {
-                renderPitchTarget(centerX - 6, centerY - 10)
+                renderPitchTarget(this.centerX - 6, centerY - 10)
             }
         }
     }
 
-    private fun GuiGraphics.renderHorizon() {
+    private fun GuiGraphics.renderHorizon(centerX: Float) {
         ScreenSpace.getY(0.0f)?.let {
             val color = getPitchBarColor(0.0f)
 
-            val leftXEnd: Int = (centerXF - halfWidth * 0.025f).toInt()
+            val leftXEnd: Int = (centerX - halfWidth * 0.025f).toInt()
             val leftXStart: Int = (leftXEnd - halfWidth * 0.3f).toInt()
             drawRightAlignedString("0", leftXStart - 3, it - 3, color)
             hLine(leftXStart, leftXEnd, it, color)
 
-            val rightXStart: Int = (centerXF + halfWidth * 0.025f).toInt()
+            val rightXStart: Int = (centerX + halfWidth * 0.025f).toInt()
             val rightXEnd: Int = (rightXStart + halfWidth * 0.3f).toInt()
             hLine(rightXStart, rightXEnd, it, color)
             drawString("0", rightXEnd + 5, it - 3, color)
         }
     }
 
-    private fun GuiGraphics.renderPitchBars() {
+    private fun GuiGraphics.renderPitchBars(centerX: Float) {
         val step: Int = FAConfig.display.attitudeDegreeStep
         val nextUp: Int = Mth.roundToward(computers.data.pitch.toInt(), step)
         for (i: Int in nextUp..90 step step) {
-            drawPitchBar(i, (ScreenSpace.getY(i.toFloat()) ?: break))
+            drawPitchBar(i, centerX, (ScreenSpace.getY(i.toFloat()) ?: break))
         }
 
         val nextDown: Int = Mth.quantize(computers.data.pitch.toDouble(), step)
         for (i: Int in nextDown downTo -90 step step) {
-            drawPitchBar(i, (ScreenSpace.getY(i.toFloat()) ?: break))
+            drawPitchBar(i, centerX, (ScreenSpace.getY(i.toFloat()) ?: break))
         }
     }
 
-    private fun GuiGraphics.renderPitchLimits() {
+    private fun GuiGraphics.renderPitchLimits(centerX: Float) {
         val step: Int = FAConfig.display.attitudeDegreeStep / 2
 
         val arrowText: Component = Component.literal("V")
@@ -107,7 +109,7 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
         while (max <= 180) {
             val y: Int = ScreenSpace.getY(max) ?: break
 
-            drawMiddleAlignedString(arrowText, centerX, y - 9, if (maxInput?.status == ControlInput.Status.ACTIVE) warningColor else cautionColor)
+            drawMiddleAlignedString(arrowText, centerX.toInt(), y - 9, if (maxInput?.status == ControlInput.Status.ACTIVE) warningColor else cautionColor)
 
             max += step
         }
@@ -115,7 +117,7 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
             val y: Int = ScreenSpace.getY(min) ?: break
             pose().push()
 
-            pose().translate(centerXF, y.toFloat() /*? if <1.21.6 {*/, 0.0f /*?}*/) // Rotate around the middle of the arrow
+            pose().translate(centerX, y.toFloat() /*? if <1.21.6 {*/, 0.0f /*?}*/) // Rotate around the middle of the arrow
 //? if >=1.21.6 {
             /*pose().rotate(ru.octol1ttle.flightassistant.api.util.radians(180.0f))
 *///?} else
@@ -127,31 +129,31 @@ class AttitudeDisplay(computers: ComputerBus) : Display(computers) {
         }
     }
 
-    private fun GuiGraphics.drawPitchReferenceMark(pitch: Float) {
+    private fun GuiGraphics.drawPitchReferenceMark(pitch: Float, centerX: Float) {
         val y = ScreenSpace.getY(pitch) ?: return
 
         val color: Int = getPitchBarColor(pitch)
-        val leftXEnd: Int = (centerXF - halfWidth * 0.025f).toInt()
+        val leftXEnd: Int = (centerX - halfWidth * 0.025f).toInt()
         val leftXStart: Int = (leftXEnd - halfWidth * 0.05f).toInt()
         hLineDashed(leftXStart, leftXEnd, y, 2, color)
 
-        val rightXStart: Int = (centerXF + halfWidth * 0.025f).toInt()
+        val rightXStart: Int = (centerX + halfWidth * 0.025f).toInt()
         val rightXEnd: Int = (rightXStart + halfWidth * 0.05f).toInt()
         hLineDashed(rightXStart, rightXEnd, y, 2, color)
     }
 
-    private fun GuiGraphics.drawPitchBar(pitch: Int, y: Int) {
+    private fun GuiGraphics.drawPitchBar(pitch: Int, centerX: Float, y: Int) {
         if (pitch == 0) return
 
         val color: Int = getPitchBarColor(pitch.toFloat())
 
-        val leftXEnd: Int = (centerXF - halfWidth * 0.05f).toInt()
+        val leftXEnd: Int = (centerX - halfWidth * 0.05f).toInt()
         val leftXStart: Int = (leftXEnd - halfWidth * 0.075f).toInt()
         drawRightAlignedString(pitch.toString(), leftXStart - 2, if (pitch > 0) y else y - 4, color)
         vLine(leftXStart, y, y + 5 * pitch.sign, color)
         hLineDashed(leftXStart, leftXEnd, y, if (pitch < 0) 3 else 1, color)
 
-        val rightXStart: Int = (centerXF + halfWidth * 0.05f).toInt()
+        val rightXStart: Int = (centerX + halfWidth * 0.05f).toInt()
         val rightXEnd: Int = (rightXStart + halfWidth * 0.075f).toInt()
         hLineDashed(rightXStart, rightXEnd, y, if (pitch < 0) 3 else 1, color)
         vLine(rightXEnd, y, y + 5 * pitch.sign, color)
