@@ -35,7 +35,7 @@ class CourseDeviationDisplay(computers: ComputerBus) : Display(computers) {
     }
 
     private fun GuiGraphics.renderVerticalDeviation() {
-        val deviation = (computers.plan.getVerticalDeviation(computers.hudData.lerpedPosition) ?: return).coerceIn(-12.5, 12.5)
+        val deviation = (computers.plan.getVerticalDeviation(computers.hudData.lerpedPosition) ?: return).coerceIn(-11.25, 11.25)
         val pixelsPerBlock = 4
 
         val step = 5
