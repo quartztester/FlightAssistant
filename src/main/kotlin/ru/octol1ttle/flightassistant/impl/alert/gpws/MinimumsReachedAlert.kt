@@ -8,7 +8,6 @@ import ru.octol1ttle.flightassistant.api.alert.ECAMAlert
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
 import ru.octol1ttle.flightassistant.api.util.extensions.drawString
-import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer
 import ru.octol1ttle.flightassistant.impl.computer.autoflight.FlightPlanComputer.FlightPhase
 
 class MinimumsReachedAlert(computers: ComputerBus) : Alert(computers), ECAMAlert {
@@ -25,10 +24,8 @@ class MinimumsReachedAlert(computers: ComputerBus) : Alert(computers), ECAMAlert
             return true
         }
 
-        val minimums =
-            if (computers.plan.arrivalData.minimumsType == FlightPlanComputer.ArrivalData.MinimumsType.ABSOLUTE) computers.plan.arrivalData.minimums.toDouble()
-            else computers.plan.computers.gpws.groundOrVoidY + computers.plan.arrivalData.minimums
-        reached = computers.plan.computers.data.altitude <= minimums
+        val minimums = computers.plan.getMinimums() ?: return false
+        reached = computers.data.altitude <= minimums
         return reached
     }
 

@@ -3,7 +3,7 @@ package ru.octol1ttle.flightassistant.api.computer
 /**
  * A class responsible for computing data and providing it to [ru.octol1ttle.flightassistant.api.display.Display]s and [ru.octol1ttle.flightassistant.api.alert.Alert]s
  */
-abstract class Computer(val computers: ComputerBus) {
+abstract class Computer(protected val computers: ComputerBus) {
     /**
      * Whether or not this computer is enabled. Disabled computers do not tick.
      */

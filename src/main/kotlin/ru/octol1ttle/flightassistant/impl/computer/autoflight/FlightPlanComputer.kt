@@ -28,13 +28,13 @@ import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
 class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
     var currentPhase: FlightPhase = FlightPhase.UNKNOWN
         private set
+    var groundSpeeds: LimitedFIFOQueue<Double> = LimitedFIFOQueue(SharedConstants.TICKS_PER_SECOND * 5)
+        private set
 
     var departureData: DepartureData = DepartureData.DEFAULT
     var enrouteData: MutableList<EnrouteWaypoint> = ArrayList()
         private set
     var arrivalData: ArrivalData = ArrivalData.DEFAULT
-
-    var groundSpeeds: LimitedFIFOQueue<Double> = LimitedFIFOQueue(SharedConstants.TICKS_PER_SECOND * 5)
 
     override fun tick() {
         updateEnrouteData()
@@ -126,6 +126,15 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
 
     private fun isCloseTo(target: EnrouteWaypoint): Boolean {
         return getDistanceToTarget(target) < computers.data.velocityPerSecond.horizontalDistance() * 3.0
+    }
+
+    fun getMinimums(): Double? {
+        if (computers.plan.arrivalData.isDefault()) {
+            return null
+        }
+
+        return if (computers.plan.arrivalData.minimumsType == ArrivalData.MinimumsType.ABSOLUTE) computers.plan.arrivalData.minimums.toDouble()
+        else computers.gpws.groundOrVoidY + computers.plan.arrivalData.minimums
     }
 
     fun getCruiseAltitude(): Int? {
