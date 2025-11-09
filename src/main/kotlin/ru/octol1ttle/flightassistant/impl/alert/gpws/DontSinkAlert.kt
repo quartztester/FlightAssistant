@@ -25,7 +25,7 @@ class DontSinkAlert(computers: ComputerBus) : Alert(computers), CenteredAlert {
             return false
         }
         if ((computers.plan.currentPhase == FlightPlanComputer.FlightPhase.TAKEOFF || computers.plan.currentPhase == FlightPlanComputer.FlightPhase.GO_AROUND)
-            && !computers.data.fallDistanceSafe && computers.data.velocity.y < 0) {
+            && !computers.data.fallDistanceSafe && computers.data.velocityPerSecond.y <= -1.0) {
             age += FATickCounter.ticksPassed
         } else {
             age = 0
