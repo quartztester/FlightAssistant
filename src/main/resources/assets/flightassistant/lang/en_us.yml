@@ -83,12 +83,12 @@ alert.flightassistant: # TODO: get rid of alert categories, more flexible alert 
   navigation:
     .: NAV
     air_data_fault: AIR DATA FAULT
-    chunk_status_fault: CHUNK STATUS FAULT
-    void_proximity_fault: VOID PROX FAULT
-    slow_chunk_loading: SLOW CHUNK LOADING
-    no_chunks_loaded: NO CHUNKS LOADED
     approaching_void_damage_altitude: APPR.ING VOID DMG ALT
+    chunk_status_fault: CHUNK STATUS FAULT
+    no_chunks_loaded: NO CHUNKS LOADED
     reached_void_damage_altitude: REACHED VOID DMG ALT
+    slow_chunk_loading: SLOW CHUNK LOADING
+    void_proximity_fault: VOID PROX FAULT
   thrust:
     .: THRUST
     fault: SYS FAULT

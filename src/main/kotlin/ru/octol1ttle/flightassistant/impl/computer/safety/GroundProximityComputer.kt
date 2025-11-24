@@ -142,6 +142,8 @@ class GroundProximityComputer(computers: ComputerBus) : Computer(computers), Fli
             val result: BlockHitResult = raycast(offset)
             if (result.type == HitResult.Type.BLOCK) {
                 distances.add(computers.data.position.distanceTo(result.location))
+            } else {
+                distances.add(maxRaycastDistance)
             }
         }}}
 

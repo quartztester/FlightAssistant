@@ -224,8 +224,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             }
             FlightPhase.LANDING -> {
                 val approach = enrouteData.lastOrNull() ?: return null
-                ManagedAltitudeVerticalMode(approach.coordinatesX, approach.coordinatesZ, approach.altitude, arrivalData.coordinatesX, arrivalData.coordinatesZ, arrivalData.elevation)
-                    .copy(textOverride = Component.translatable("mode.flightassistant.vertical.glide_slope"))
+                ManagedAltitudeVerticalMode(approach.coordinatesX, approach.coordinatesZ, approach.altitude, arrivalData.coordinatesX, arrivalData.coordinatesZ, arrivalData.elevation, Component.translatable("mode.flightassistant.vertical.glide_slope"))
             }
             FlightPhase.GO_AROUND -> {
                 SelectedAltitudeVerticalMode(arrivalData.goAroundAltitude, Component.translatable("mode.flightassistant.vertical.go_around"))
@@ -247,8 +246,7 @@ class FlightPlanComputer(computers: ComputerBus) : Computer(computers) {
             }
             FlightPhase.LANDING -> {
                 val approach = enrouteData.lastOrNull() ?: return null
-                TrackNavigationLateralMode(approach.coordinatesX, approach.coordinatesZ, arrivalData.coordinatesX, arrivalData.coordinatesZ)
-                    .copy(textOverride = Component.translatable("mode.flightassistant.lateral.localizer"))
+                TrackNavigationLateralMode(approach.coordinatesX, approach.coordinatesZ, arrivalData.coordinatesX, arrivalData.coordinatesZ, Component.translatable("mode.flightassistant.lateral.localizer"))
             }
             FlightPhase.GO_AROUND -> {
                 HeadingLateralMode(computers.data.heading.toInt(), Component.translatable("mode.flightassistant.lateral.go_around"))
