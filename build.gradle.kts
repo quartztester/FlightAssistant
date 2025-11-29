@@ -39,6 +39,10 @@ base { archivesName.set("${mod.id}-$loader") }
 group = mod.group
 version = "${mod.version}+mc$minecraft"
 
+tasks.withType<Jar> {
+    from(rootDir.resolve("LICENSE"))
+}
+
 modstitch {
     minecraftVersion = minecraft
 
