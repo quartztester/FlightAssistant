@@ -86,6 +86,11 @@ object ScreenSpace {
         return vec.x.toInt()
     }
 
+    //? if >=1.21.11 {
+    /*private val net.minecraft.client.Camera.yRot: Float
+        get() = this.yRot()
+    *///?}
+
     fun getY(pitch: Float): Int? {
         val vec: Vector3f = fromWorldSpace(Vec3.directionFromRotation(-pitch, mc.entityRenderDispatcher.camera!!.yRot), true)
         if (!isVisible(vec)) {

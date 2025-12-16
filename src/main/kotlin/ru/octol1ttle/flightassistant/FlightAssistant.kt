@@ -15,6 +15,14 @@ import ru.octol1ttle.flightassistant.config.FAConfig
 import ru.octol1ttle.flightassistant.impl.computer.ComputerHost
 import ru.octol1ttle.flightassistant.impl.display.HudDisplayHost
 
+//? if >=1.21.11 {
+/*private val net.minecraft.client.Camera.xRot: Float
+    get() = this.xRot()
+
+private val net.minecraft.client.Camera.yRot: Float
+    get() = this.yRot()
+*///?}
+
 object FlightAssistant {
     const val MOD_ID: String = "flightassistant"
     internal val mc: Minecraft = Minecraft.getInstance()

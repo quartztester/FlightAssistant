@@ -24,7 +24,11 @@ class CycleTextOnlyButton<E : NameableEnum>(x: Int, y: Int, private val entries:
         refreshMessage()
     }
 
-    override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+//? if >=1.21.11 {
+    /*override fun renderContents(
+*///?} else
+    override fun renderWidget(
+        guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         val message: Component = TextOnlyButton.getMessageComponent(this)
 
         this.width = font.width(message)

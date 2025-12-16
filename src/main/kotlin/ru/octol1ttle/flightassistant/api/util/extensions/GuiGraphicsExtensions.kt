@@ -152,7 +152,11 @@ fun org.joml.Matrix3x2fStack.pop() {
 
 //? if >=1.21.9 {
 /*fun GuiGraphics.renderOutline(x: Int, y: Int, width: Int, height: Int, color: Int) {
-    submitOutline(x, y, width, height, color)
+//? if >=1.21.11 {
+    /^renderOutline(
+^///?} else
+    submitOutline(
+        x, y, width, height, color)
     renderDeferredElements()
 }
 *///?}

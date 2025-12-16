@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
     id("dev.isxander.modstitch.base") version "0.7.0-unstable"
+    id("fabric-loom") version "1.14.6" apply false
     id("me.modmuss50.mod-publish-plugin")
     id("me.fallenbreath.yamlang") version "1.5.0"
 }
@@ -68,7 +69,7 @@ modstitch {
         modName = mod.name
         modVersion = mod.version
 
-        fun <K, V> MapProperty<K, V>.populate(block: MapProperty<K, V>.() -> Unit) {
+        fun <K : Any, V : Any> MapProperty<K, V>.populate(block: MapProperty<K, V>.() -> Unit) {
             block()
         }
 
