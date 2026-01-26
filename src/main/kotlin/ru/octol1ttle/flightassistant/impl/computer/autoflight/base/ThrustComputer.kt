@@ -14,8 +14,8 @@ import ru.octol1ttle.flightassistant.api.computer.Computer
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
 import ru.octol1ttle.flightassistant.api.computer.ComputerQuery
 import ru.octol1ttle.flightassistant.api.util.FATickCounter
+import ru.octol1ttle.flightassistant.api.util.extensions.asPercentage
 import ru.octol1ttle.flightassistant.api.util.extensions.filterWorking
-import ru.octol1ttle.flightassistant.api.util.extensions.formatRoot
 import ru.octol1ttle.flightassistant.api.util.extensions.getActiveHighestPriority
 import ru.octol1ttle.flightassistant.api.util.throwIfNotInRange
 import ru.octol1ttle.flightassistant.impl.display.StatusDisplay
@@ -102,7 +102,7 @@ class ThrustComputer(computers: ComputerBus) : Computer(computers) {
         if (query is StatusDisplay.StatusMessageQuery) {
             // TODO: show actual thrust output and requested thrust (both by user and autoflight)
             if (getThrustSource() != null || current != 0.0f) {
-                query.respond(Component.translatable("status.flightassistant.thrust", "%.1f".formatRoot(current * 100) + "%"))
+                query.respond(Component.translatable("status.flightassistant.thrust", current.asPercentage()))
             }
         }
     }
