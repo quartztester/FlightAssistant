@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.TextColor
 import net.minecraft.resources.ResourceLocation
 import ru.octol1ttle.flightassistant.api.ModuleController
 import ru.octol1ttle.flightassistant.api.util.extensions.cautionColor
@@ -31,7 +32,10 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
 
         val children = listOf(this.displayName, faultText, offText, toggleButton)
 
-//? if >=1.21.9 {
+//? if >=26.1 {
+        /*override fun extractContent(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
+            val top = this.y
+*///?} elif >=1.21.9 {
         /*override fun renderContent(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
             val top = contentY
 *///?} else {
@@ -39,7 +43,11 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
     //?}
             displayName.x = this.xOffset
             displayName.y = top
+//? if >=26.1 {
+            /*displayName.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
+*///?} else {
             displayName.render(guiGraphics, mouseX, mouseY, partialTick)
+//?}
 
             toggleButton.x = this.listWidth - toggleButton.width - 5
             toggleButton.y = top - toggleButton.height / 4 - 1
@@ -47,17 +55,37 @@ class SystemManagementList(y0: Int, y1: Int, width: Int, baseKey: String, contro
                 if (controller.isEnabled(identifier))
                     if (controller.modulesResettable) OFF_RESET_TEXT else OFF_TEXT
                 else ON_TEXT
+//? if >=26.1 {
+            /*toggleButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
+*///?} else {
             toggleButton.render(guiGraphics, mouseX, mouseY, partialTick)
+//?}
 
             offText.x = toggleButton.x - 10 - font.width(OFF_TEXT)
             offText.y = top
+//? if >=26.2 {
+            /*offText.setColor((if (controller.isEnabled(identifier)) TextColor.DARK_GRAY else TextColor.WHITE).getValue())
+*///?} else {
             offText.setColor((if (controller.isEnabled(identifier)) ChatFormatting.DARK_GRAY else ChatFormatting.WHITE).color!!)
+//?}
+//? if >=26.1 {
+            /*offText.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
+*///?} else {
             offText.render(guiGraphics, mouseX, mouseY, partialTick)
+//?}
 
             faultText.x = offText.x - offText.width / 2 - font.width(FAULT_TEXT)
             faultText.y = top
+//? if >=26.2 {
+            /*faultText.setColor(if (controller.isFaulted(identifier)) cautionColor else TextColor.DARK_GRAY.getValue())
+*///?} else {
             faultText.setColor(if (controller.isFaulted(identifier)) cautionColor else ChatFormatting.DARK_GRAY.color!!)
+//?}
+//? if >=26.1 {
+            /*faultText.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
+*///?} else {
             faultText.render(guiGraphics, mouseX, mouseY, partialTick)
+//?}
         }
 
         override fun children(): List<GuiEventListener> {

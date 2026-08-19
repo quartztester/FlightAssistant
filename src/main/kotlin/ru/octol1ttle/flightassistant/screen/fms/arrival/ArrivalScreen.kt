@@ -60,10 +60,18 @@ class ArrivalScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         super.onClose()
     }
 
+//? if >=26.1 {
+    /*override fun extractRenderState(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+*///?} else {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+//?}
         discardChanges.active = state != ArrivalScreenState.load(computers.plan.arrivalData)
 
+//? if >=26.1 {
+        /*super.extractRenderState(guiGraphics, mouseX, mouseY, delta)
+*///?} else {
         super.render(guiGraphics, mouseX, mouseY, delta)
+//?}
     }
 
     companion object {

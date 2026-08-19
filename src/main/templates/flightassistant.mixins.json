@@ -10,9 +10,11 @@
         "gui.GuiMixinLayeredDraw",
         "gui.GuiMixinLegacy",
         "gui.GuiMixinNew",
+        ${hud_mixin}
         "level_renderer.LevelRendererMixinLegacy",
         "level_renderer.LevelRendererMixinNewest",
         "level_renderer.LevelRendererMixinNewestest",
+        ${level_renderer_mixin}
         "level_renderer.LevelRendererMixinOld",
         "sound.SoundEngineMixin",
         "sound.SoundManagerMixin"

@@ -8,6 +8,7 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.FormattedText
+import net.minecraft.network.chat.TextColor
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.config.FAConfig
 
@@ -33,7 +34,11 @@ val GuiGraphics.centerY: Int
 
 const val emptyColor: Int = 0
 
+//? if >=26.2 {
+/*val whiteColor: Int = TextColor.WHITE.getValue() or (255 shl 24)
+*///?} else {
 val whiteColor: Int = ChatFormatting.WHITE.color!! or (255 shl 24)
+//?}
 
 val primaryColor: Int
     get() = FAConfig.display.primaryColor.rgb
@@ -60,6 +65,16 @@ fun GuiGraphics.fusedTranslateScale(x: Float, y: Float, scale: Float) {
     pose().translate(x, y /*? if <1.21.6 {*/, 0.0f /*?}*/)
     pose().scale(scale, scale /*? if <1.21.6 {*/, 1.0f /*?}*/)
 }
+
+//? if >=26.1 {
+/*fun GuiGraphics.hLine(x1: Int, x2: Int, y: Int, color: Int) {
+    horizontalLine(x1, x2, y, color)
+}
+
+fun GuiGraphics.vLine(x: Int, y1: Int, y2: Int, color: Int) {
+    verticalLine(x, y1, y2, color)
+}
+*///?}
 
 fun GuiGraphics.hLineDashed(
     x1: Int, x2: Int, y: Int,
@@ -88,15 +103,27 @@ fun textWidth(text: String): Int {
 }
 
 fun GuiGraphics.drawString(text: String, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+//? if >=26.1 {
+    /*this.text(font, text, x, y, color, shadow)
+*///?} else {
     drawString(font, text, x, y, color, shadow)
+//?}
 }
 
 fun GuiGraphics.drawRightAlignedString(text: String, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+//? if >=26.1 {
+    /*this.text(font, text, x - font.width(text), y, color, shadow)
+*///?} else {
     drawString(font, text, x - font.width(text), y, color, shadow)
+//?}
 }
 
 fun GuiGraphics.drawMiddleAlignedString(text: String, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+//? if >=26.1 {
+    /*this.text(font, text, x - font.width(text) / 2 + 1, y, color, shadow)
+*///?} else {
     drawString(font, text, x - font.width(text) / 2 + 1, y, color, shadow)
+//?}
 }
 
 fun textWidth(formattedText: FormattedText): Int {
@@ -104,7 +131,11 @@ fun textWidth(formattedText: FormattedText): Int {
 }
 
 fun GuiGraphics.drawString(text: Component, x: Int, y: Int, color: Int, shadow: Boolean = false): Int {
+//? if >=26.1 {
+    /*this.text(font, text, x, y, color, shadow)
+*///?} else {
     drawString(font, text, x, y, color, shadow)
+//?}
     return 1
 }
 
@@ -117,11 +148,19 @@ private fun getContrasting(original: Int): Int {
 }
 
 fun GuiGraphics.drawRightAlignedString(text: Component, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+//? if >=26.1 {
+    /*this.text(font, text, x - textWidth(text), y, color, shadow)
+*///?} else {
     drawString(font, text, x - textWidth(text), y, color, shadow)
+//?}
 }
 
 fun GuiGraphics.drawMiddleAlignedString(text: Component, x: Int, y: Int, color: Int, shadow: Boolean = false) {
+//? if >=26.1 {
+    /*this.text(font, text, x - textWidth(text) / 2 + 1, y, color, shadow)
+*///?} else {
     drawString(font, text, x - textWidth(text) / 2 + 1, y, color, shadow)
+//?}
 }
 
 fun GuiGraphics.drawHighlightedCenteredText(text: Component, x: Int, y: Int, color: Int, highlight: Boolean, shadow: Boolean = false) {
@@ -156,13 +195,18 @@ fun org.joml.Matrix3x2fStack.pop() {
     popMatrix()
 }
 
-//? if >=1.21.9 {
+//? if >=26.1 {
 /*fun GuiGraphics.renderOutline(x: Int, y: Int, width: Int, height: Int, color: Int) {
-//? if >=1.21.11 {
-    /^renderOutline(
-^///?} else
-    submitOutline(
-        x, y, width, height, color)
+    outline(x, y, width, height, color)
+}
+*///?} elif >=1.21.11 {
+/*fun GuiGraphics.renderOutline(x: Int, y: Int, width: Int, height: Int, color: Int) {
+    renderOutline(x, y, width, height, color)
+    renderDeferredElements()
+}
+*///?} elif >=1.21.9 {
+/*fun GuiGraphics.renderOutline(x: Int, y: Int, width: Int, height: Int, color: Int) {
+    submitOutline(x, y, width, height, color)
     renderDeferredElements()
 }
 *///?}

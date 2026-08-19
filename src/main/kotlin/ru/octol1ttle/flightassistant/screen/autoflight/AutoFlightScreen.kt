@@ -2,6 +2,7 @@ package ru.octol1ttle.flightassistant.screen.autoflight
 
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.TextColor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.screens.Screen
@@ -60,12 +61,20 @@ class AutoFlightScreen(parent: Screen) : FABaseScreen(parent, Component.translat
         }.pos(this.width - 90, this.height - 30).width(80).build())
     }
 
+//? if >=26.1 {
+    /*override fun extractRenderState(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+*///?} else {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+//?}
         updateButton(flightDirectors, "menu.flightassistant.autoflight.flight_directors", computers.autoflight.flightDirectors)
         updateButton(autoThrust, "menu.flightassistant.autoflight.auto_thrust", computers.autoflight.autoThrust)
         updateButton(autopilot, "menu.flightassistant.autoflight.autopilot", computers.autoflight.autopilot)
 
+//? if >=26.1 {
+        /*super.extractRenderState(guiGraphics, mouseX, mouseY, delta)
+*///?} else {
         super.render(guiGraphics, mouseX, mouseY, delta)
+//?}
     }
 
     override fun onClose() {
@@ -151,7 +160,11 @@ class AutoFlightScreen(parent: Screen) : FABaseScreen(parent, Component.translat
     companion object {
         private fun updateButton(button: TextOnlyButton, baseKey: String, status: Boolean) {
             button.message = Component.translatable(baseKey, Component.translatable("menu.flightassistant.autoflight.${if (status) "enabled" else "disabled"}"))
+//? if >=26.2 {
+            /*button.color = if (status) TextColor.GREEN.getValue() else TextColor.RED.getValue()
+*///?} else {
             button.color = if (status) ChatFormatting.GREEN.color!! else ChatFormatting.RED.color!!
+//?}
         }
 
         val state: AutoFlightScreenState = AutoFlightScreenState()

@@ -9,9 +9,13 @@ import kotlinx.serialization.json.Json
 import net.minecraft.ChatFormatting
 import net.minecraft.Util
 import net.minecraft.client.gui.GuiGraphics
+//? if >=26.2 {
+    /*import net.minecraft.client.setScreen
+*///?}
 import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.TextColor
 import org.lwjgl.PointerBuffer
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.util.tinyfd.TinyFileDialogs
@@ -126,11 +130,23 @@ class FlightAssistantSetupScreen : FABaseScreen(null, Component.translatable("me
         }.pos(this.width - 90, this.height - 30).width(80).build())
     }
 
+//? if >=26.1 {
+    /*override fun extractRenderState(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+*///?} else {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+//?}
+//? if >=26.1 {
+        /*super.extractRenderState(guiGraphics, mouseX, mouseY, delta)
+*///?} else {
         super.render(guiGraphics, mouseX, mouseY, delta)
+//?}
 
         if (saveLoadError) {
+//? if >=26.2 {
+            /*guiGraphics.drawMiddleAlignedString(Component.translatable("menu.flightassistant.fms.error"), this.centerX, this.centerY + 75, TextColor.RED.getValue(), true)
+*///?} else {
             guiGraphics.drawMiddleAlignedString(Component.translatable("menu.flightassistant.fms.error"), this.centerX, this.centerY + 75, ChatFormatting.RED.color!!, true)
+//?}
         }
     }
 

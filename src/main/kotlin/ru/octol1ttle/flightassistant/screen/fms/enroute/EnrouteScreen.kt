@@ -3,6 +3,7 @@ package ru.octol1ttle.flightassistant.screen.fms.enroute
 import kotlin.math.max
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.TextColor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.Screen
@@ -30,7 +31,11 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         val columnsSizeWithMargin: Float = COLUMNS.size + HOVERING_COLUMNS_MARGIN
         val optimumColumnsSize: Float = (if (this.width / columnsSizeWithMargin >= 75) columnsSizeWithMargin else COLUMNS.size.toFloat())
         COLUMNS.forEachIndexed { i, component ->
+//? if >=26.2 {
+            /*this.addRenderableWidget(SmartStringWidget((this.width * (max(0.4f, i.toFloat()) / optimumColumnsSize)).toInt(), Y0, component).setColor(TextColor.GRAY.getValue()))
+*///?} else {
             this.addRenderableWidget(SmartStringWidget((this.width * (max(0.4f, i.toFloat()) / optimumColumnsSize)).toInt(), Y0, component).setColor(ChatFormatting.GRAY.color!!))
+//?}
         }
 
         val list: EnrouteWaypointsList = this.addRenderableWidget(EnrouteWaypointsList(Y0 + 10, this.height - Y0 * 2, this.width, optimumColumnsSize, computers, state))
@@ -47,7 +52,11 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
 
         @Suppress("UsePropertyAccessSyntax")
         this.addRenderableWidget(SmartStringWidget(10, this.height - 24,
+//? if >=26.2 {
+            /*Component.translatable("menu.flightassistant.fms.enroute.legend.hover").setStyle(Style.EMPTY.withItalic(true).withColor(TextColor.GRAY.getValue()))
+*///?} else {
             Component.translatable("menu.flightassistant.fms.enroute.legend.hover").setStyle(Style.EMPTY.withItalic(true).withColor(ChatFormatting.GRAY.color!!))
+//?}
         )).setTooltip(Tooltip.create(LEGEND_TOOLTIP_TEXT))
 
         discardChanges = this.addRenderableWidget(Button.builder(Component.translatable("menu.flightassistant.fms.discard_changes")) { _: Button? ->
@@ -65,7 +74,11 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         }.pos(this.width - 90, this.height - 30).width(80).build())
     }
 
+//? if >=26.1 {
+    /*override fun extractRenderState(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+*///?} else {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+//?}
         deleteAll.active = state.waypoints.isNotEmpty()
 
         val hasUnsavedChanges: Boolean = !state.equals(EnrouteScreenState.load(computers.plan.enrouteData))
@@ -73,11 +86,19 @@ class EnrouteScreen(parent: Screen) : FABaseScreen(parent, Component.translatabl
         discardChanges.active = hasUnsavedChanges
         done.active = !hasUnsavedChanges
 
+//? if >=26.1 {
+        /*super.extractRenderState(guiGraphics, mouseX, mouseY, delta)
+*///?} else {
         super.render(guiGraphics, mouseX, mouseY, delta)
+//?}
 
         if (hasUnsavedChanges) {
             val text: Component = Component.translatable("menu.flightassistant.fms.enroute.unsaved_changes")
+//? if >=26.2 {
+            /*guiGraphics.drawMiddleAlignedString(text, this.width / 4, 7, TextColor.YELLOW.getValue(), true)
+*///?} else {
             guiGraphics.drawMiddleAlignedString(text, this.width / 4, 7, ChatFormatting.YELLOW.color!!, true)
+//?}
         }
     }
 

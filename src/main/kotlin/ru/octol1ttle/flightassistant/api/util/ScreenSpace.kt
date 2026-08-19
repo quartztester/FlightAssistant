@@ -5,14 +5,21 @@ import org.jetbrains.annotations.Contract
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector4f
-import org.lwjgl.opengl.GL11
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 
 object ScreenSpace {
     private var viewport: IntArray = IntArray(4)
 
     internal fun updateViewport() {
-        GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewport)
+        // 26.1+: GUI rendering is *extracted* at the start of the frame, before the GL viewport is
+        // set for the world render. Reading the GL viewport here can return a stale viewport left by
+        // an earlier pass (e.g. the 512x256 particle-atlas target), which made ScreenSpace positions
+        // flip between correct and wrong values every few frames. The projection math always assumes
+        // the full-window viewport, so use the window dimensions directly.
+        viewport[0] = 0
+        viewport[1] = 0
+        viewport[2] = mc.window.width
+        viewport[3] = mc.window.height
     }
 
     /**

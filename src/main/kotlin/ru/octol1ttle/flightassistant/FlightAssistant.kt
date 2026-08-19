@@ -52,7 +52,13 @@ object FlightAssistant {
 
             RenderMatrices.projectionMatrix.set(projectionMatrix)
             RenderMatrices.worldSpaceMatrix.set(frustumMatrix)
-            RenderMatrices.modelViewMatrix.set(RenderSystem.getModelViewMatrix())
+            RenderMatrices.modelViewMatrix.set(
+//? if >=26.2 {
+                /*RenderSystem.getModelViewMatrixCopy()
+*///?} else {
+                RenderSystem.getModelViewMatrix()
+//?}
+            )
 
             RenderMatrices.worldSpaceNoRollMatrix.set(Matrix4f().apply {
                 rotate(Axis.XP.rotationDegrees(camera.xRot))

@@ -3,6 +3,9 @@ package ru.octol1ttle.flightassistant.screen
 import kotlin.properties.Delegates
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
+//? if >=26.2 {
+    /*import net.minecraft.client.setScreen
+*///?}
 import net.minecraft.network.chat.Component
 import ru.octol1ttle.flightassistant.FAKeyMappings
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
@@ -21,14 +24,22 @@ abstract class FABaseScreen(val parent: Screen?, title: Component) : Screen(titl
         this.addRenderableWidget(SmartStringWidget(this.centerX, 7, this.title).middleAligned())
     }
 
+//? if >=26.1 {
+    /*override fun extractRenderState(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+*///?} else {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+//?}
 //? if <1.21.6 {
         this.renderBackground(
             guiGraphics
             /*? if >=1.21 {*//*, mouseX, mouseY, delta *///?}
         )
 //?}
+//? if >=26.1 {
+        /*super.extractRenderState(guiGraphics, mouseX, mouseY, delta)
+*///?} else {
         super.render(guiGraphics, mouseX, mouseY, delta)
+//?}
     }
 
     override fun onClose() {

@@ -41,7 +41,9 @@ class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Comp
                 val explosive = FAConfig.safety.fireworkLockExplosive && !isEmptyOrSafe(player, hand)
                 val anyTerrainAhead = FAConfig.safety.fireworkLockObstacles && anyTerrainAhead()
                 if (computers.data.automationsAllowed() && (explosive || anyTerrainAhead)) {
-//? if >=1.21.2 {
+//? if >=26.1 {
+                    /*return@RightClickItem dev.architectury.event.EventResult.interruptFalse()
+*///?} elif >=1.21.2 {
                     /*return@RightClickItem net.minecraft.world.InteractionResult.FAIL
 *///?} else
                     return@RightClickItem dev.architectury.event.CompoundEventResult.interruptFalse(stack)
@@ -53,7 +55,9 @@ class FireworkComputer(computers: ComputerBus, private val mc: Minecraft) : Comp
                 }
             }
 
-//? if >=1.21.2 {
+//? if >=26.1 {
+            /*return@RightClickItem dev.architectury.event.EventResult.pass()
+*///?} elif >=1.21.2 {
             /*return@RightClickItem net.minecraft.world.InteractionResult.PASS
 *///?} else
             return@RightClickItem dev.architectury.event.CompoundEventResult.pass()

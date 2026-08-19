@@ -1,8 +1,9 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
-    id("dev.isxander.modstitch.base") version "0.7.0-unstable"
-    id("fabric-loom") version "1.14.6" apply false
+    id("dev.isxander.modstitch.base") version "0.8.5"
+    id("net.fabricmc.fabric-loom-remap") version "1.14.6" apply false
+    id("net.fabricmc.fabric-loom") version "1.17.11" apply false
     id("me.modmuss50.mod-publish-plugin")
     id("me.fallenbreath.yamlang") version "1.5.0"
 }
@@ -47,15 +48,17 @@ tasks.withType<Jar> {
 modstitch {
     minecraftVersion = minecraft
 
+    val j25: Boolean = stonecutter.eval(minecraft, ">=26")
     val j21: Boolean = stonecutter.eval(minecraft, ">=1.20.6")
-    javaVersion = if (j21) 21 else 17
+    val targetJava = if (j25) 25 else if (j21) 21 else 17
+    javaVersion = targetJava
 
     java {
         withSourcesJar()
     }
 
     kotlin {
-        jvmToolchain(if (j21) 21 else 17)
+        jvmToolchain(targetJava)
     }
 
     // If parchment doesnt exist for a version yet you can safely
@@ -81,6 +84,8 @@ modstitch {
             put("fml", if (loader == "neoforge") "1" else "45")
             put("mnd", if (loader == "neoforge") "type = \"required\"" else "mandatory = true")
             put("refmap", if (loader == "forge") refmapString else "")
+            put("hud_mixin", if (stonecutter.eval(minecraft, ">=26.2")) "\"gui.HudMixin\"," else "")
+            put("level_renderer_mixin", if (stonecutter.eval(minecraft, ">=26.2")) "\"level_renderer.LevelRendererMixin26\"," else "")
         }
 
         overwriteProjectVersionAndGroup = false
@@ -145,7 +150,9 @@ dependencies {
 
     modstitch.loom {
         modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fapi")}")
-        modstitchModImplementation("net.fabricmc:fabric-language-kotlin:${property("deps.flk")}+kotlin.2.1.0")
+        val fabricLanguageKotlin = findProperty("deps.flk_full")?.toString()
+            ?: "${property("deps.flk")}+kotlin.2.3.0"
+        modstitchModImplementation("net.fabricmc:fabric-language-kotlin:$fabricLanguageKotlin")
         modstitchModImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")
     }
 

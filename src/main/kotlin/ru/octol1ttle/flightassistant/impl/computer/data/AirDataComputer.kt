@@ -87,7 +87,12 @@ class AirDataComputer(computers: ComputerBus, private val mc: Minecraft) : Compu
         if (FAKeyMappings.globalAutomationOverride.isDown) {
             return false
         }
-        return (!checkFlying || flying) && (FAConfig.global.automationsAllowedInOverlays || (mc.screen == null && mc.overlay == null))
+//? if >=26.2 {
+        /*val noOverlay: Boolean = mc.gui.screen() == null && mc.gui.overlay() == null
+*///?} else {
+        val noOverlay: Boolean = mc.screen == null && mc.overlay == null
+//?}
+        return (!checkFlying || flying) && (FAConfig.global.automationsAllowedInOverlays || noOverlay)
     }
 
     fun isInvulnerableTo(source: DamageSource): Boolean {

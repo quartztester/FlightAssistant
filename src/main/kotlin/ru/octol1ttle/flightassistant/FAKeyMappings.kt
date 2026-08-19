@@ -2,6 +2,9 @@ package ru.octol1ttle.flightassistant
 
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.KeyMapping
+//? if >=26.2 {
+    /*import net.minecraft.client.setScreen
+*///?}
 import org.lwjgl.glfw.GLFW
 import ru.octol1ttle.flightassistant.FlightAssistant.mc
 import ru.octol1ttle.flightassistant.api.computer.ComputerBus
